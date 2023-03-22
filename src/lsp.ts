@@ -68,42 +68,80 @@ connection.onInitialize((_params: InitializeParams) => {
 
 connection.onDidOpenTextDocument(async (params) => {
   const string = JSON.stringify(params);
-  wingCompiler.invoke(wingc, "wingc_on_did_open_text_document", string);
+  try {
+    wingCompiler.invoke(wingc, "wingc_on_did_open_text_document", string);
+
+  } catch (e) {
+    console.log(11, e)
+    s.reportError(e);
+    // connection.dispose();
+  }
 });
+let s = self
 connection.onDidChangeTextDocument(async (params) => {
   const string = JSON.stringify(params);
-  wingCompiler.invoke(wingc, "wingc_on_did_change_text_document", string);
+  try {
+    wingCompiler.invoke(wingc, "wingc_on_did_change_text_document", string);
+  } catch (e) {
+    console.log(22, e)
+    // messageReader.dispose();
+    // connection.dispose();
+    // s.close();
+    s.reportError(e);
+  }
 });
+
 connection.onCompletion(async (params) => {
-  const result = wingCompiler.invoke(
-    wingc,
-    "wingc_on_completion",
-    JSON.stringify(params)
-  ) as string;
-  return JSON.parse(result) as CompletionItem[];
+  try {
+    const result = wingCompiler.invoke(
+      wingc,
+      "wingc_on_completion",
+      JSON.stringify(params)
+    ) as string;
+    return JSON.parse(result) as CompletionItem[];
+
+  } catch (e) {
+    console.log(33, e)
+    s.reportError(e);
+    // connection.dispose();
+  }
 });
 connection.onDocumentSymbol(async (params) => {
-  const result = wingCompiler.invoke(
-    wingc,
-    "wingc_on_document_symbol",
-    JSON.stringify(params)
-  );
-  if (result == 0) {
-    return null;
-  } else {
-    return JSON.parse(result as string) as DocumentSymbol[];
+  try {
+
+    const result = wingCompiler.invoke(
+      wingc,
+      "wingc_on_document_symbol",
+      JSON.stringify(params)
+    );
+    if (result == 0) {
+      return null;
+    } else {
+      return JSON.parse(result as string) as DocumentSymbol[];
+    }
+  } catch (e) {
+    console.log(44, e)
+    s.reportError(e);
+    // connection.dispose();
   }
 });
 connection.onHover(async (params) => {
-  const result = wingCompiler.invoke(
-    wingc,
-    "wingc_on_hover",
-    JSON.stringify(params)
-  );
-  if (result == 0) {
-    return null;
-  } else {
-    return JSON.parse(result as string) as Hover;
+  try {
+
+    const result = wingCompiler.invoke(
+      wingc,
+      "wingc_on_hover",
+      JSON.stringify(params)
+    );
+    if (result == 0) {
+      return null;
+    } else {
+      return JSON.parse(result as string) as Hover;
+    }
+  } catch (e) {
+    console.log(55, e)
+    s.reportError(e);
+    // connection.dispose();
   }
 });
 connection.listen()

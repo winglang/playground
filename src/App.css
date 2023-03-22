@@ -1,6 +1,5 @@
 #root {
-  margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   text-align: center;
 }
 
@@ -42,4 +41,9 @@
 
 .editors {
   display: flex;
+}
+
+iframe {
+  height: 90vh;
+  width: 67vw;
 }
