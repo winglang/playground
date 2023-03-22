@@ -72,6 +72,53 @@ async function wireGrammers(monaco: any) {
   return wireTmGrammars(monaco, registry, grammers);
 }
 
+const startLsp = () => {
+  const lspWorker = new LspWorker()
+  setTimeout(() => {
+    const reader = new BrowserMessageReader(lspWorker);
+    const writer = new BrowserMessageWriter(lspWorker);
+    const languageClient = createLanguageClient({ reader, writer });
+    languageClient.start();
+    
+    lspWorker.onerror = debounce((ev) => {
+      lspWorker.terminate();
+      setTimeout(() => {
+        startLsp();
+      }, 5000);
+    }, 500);
+    reader.onClose(() => {
+      languageClient.stop()
+    });
+    
+    function createLanguageClient(transports: any) {
+      return new MonacoLanguageClient({
+        name: 'Wing Language Client',
+        clientOptions: {
+          // use a language id as a document selector
+          documentSelector: [{ language: 'wing' }],
+          // disable the default error handler
+          errorHandler: {
+            error: () => {
+              console.log('lsp connection error')
+              return ({ action: ErrorAction.Shutdown })
+            },
+            closed: () => {
+              console.log('lsp connection closed')
+              return ({ action: CloseAction.Restart })
+            }
+          }
+        },
+        // create a language client connection to the server running in the web worker
+        connectionProvider: {
+          get: () => {
+            return Promise.resolve(transports);
+          }
+        }
+      });
+    }
+  }, 4500)
+}
+
 enum LoadingStatus {
   Init = "Initializing WebContainer...",
   Install = "Installing dependencies...",
@@ -91,7 +138,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
     const containerRef = useRef<WebContainer>();
     const ref = createRef<HTMLDivElement>();
-    const [compileResult, setCompileResult] = useState("");
+    const refIframe = useRef(null);
+    const [iframSrc, setIframeSrc] = useState("");
+    const [isCompiling, setIsCompiling] = useState(false);
     const [loadingStatus, setLoadingStatus] = useState(LoadingStatus.Init);
 
     let lspWebSocket: WebSocket;
@@ -113,7 +162,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     const editorDidMount = async (editor: any, monaco: any) => {
       editorRef.current = editor
-      const lspWorker = new LspWorker()
+      startLsp();
       
       // install Monaco language client services
       MonacoServices.install(monaco);
@@ -126,79 +175,60 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       initContainer().then(async instance => {
         containerRef.current = instance
         setLoadingStatus(LoadingStatus.Install)
-        await installDependencies(containerRef.current);
+        const consoleUrl = await installDependencies(containerRef.current);
+        setIframeSrc(consoleUrl)
         setLoadingStatus(LoadingStatus.Eval)
-        evaluateCode(undefined);
+        evaluateCode(undefined, isCompiling);
       });
 
-      setTimeout(() => {
-        const reader = new BrowserMessageReader(lspWorker);
-        const writer = new BrowserMessageWriter(lspWorker);
-        const languageClient = createLanguageClient({ reader, writer });
-        languageClient.start();
-        
-        reader.onClose(() => languageClient.stop());
-        
-        function createLanguageClient(transports: any) {
-          return new MonacoLanguageClient({
-            name: 'Wing Language Client',
-            clientOptions: {
-              // use a language id as a document selector
-              documentSelector: [{ language: 'wing' }],
-              // disable the default error handler
-              errorHandler: {
-                error: () => ({ action: ErrorAction.Continue }),
-                closed: () => ({ action: CloseAction.DoNotRestart })
-              }
-            },
-            // create a language client connection to the server running in the web worker
-            connectionProvider: {
-              get: () => {
-                return Promise.resolve(transports);
-              }
-            }
-          });
-        }
-      }, 3000)
+      
+
+      
   
     };
 
-    const evaluateCode = debounce(async (value: string | undefined) => {
-      if (!containerRef.current) {
+    const evaluateCode = debounce(async (value: string | undefined, isCompiling: boolean) => {
+      if (!containerRef.current || isCompiling) {
         return
       }
       
       console.log('evaluating...')
 
-      setCompileResult("")
+      setIsCompiling(true)
       setLoadingStatus(LoadingStatus.Eval)
 
-      await prepareForEvaluation(containerRef.current, value)
-
+      
       try {
-        const [compileResult, testCode] = await Promise.all([compile(containerRef.current), test(containerRef.current)])
+        let testCode;
+        let compileValue = value;
+        do {
+          compileValue = editorRef.current?.getValue()
+          await prepareForEvaluation(containerRef.current, compileValue)
+          testCode = await test(containerRef.current)
+        } while (compileValue !== editorRef.current?.getValue());
         if (testCode !== 0) {
           setLoadingStatus(LoadingStatus.TestFailure)
         } else {
           setLoadingStatus(LoadingStatus.Succeeded)
         }
-        setCompileResult(compileResult);
       } catch (e) {
         setLoadingStatus(LoadingStatus.CompileError)
+      } finally {
+        setIsCompiling(false)
       }
     }, 700)
 
-    const onChange = (value: string | undefined, ev: monaco.editor.IModelContentChangedEvent) => {
-      evaluateCode(value)
+    const onChange = (value: string | undefined, isCompiling: boolean, ev: monaco.editor.IModelContentChangedEvent) => {
+      evaluateCode(value, isCompiling)
     }
 
     const getTestStyle = (status: LoadingStatus) => {
       if (status === LoadingStatus.CompileError || status === LoadingStatus.TestFailure) {
-        return { background: "#f44747" }
+        return { background: "#f44747", color: "white" }
       } else if (status === LoadingStatus.Succeeded) {
-        return { background: "#4EC9B0" }
+        return { background: "#4EC9B0", color: "white" }
       } else {
-        return { background: "#0000005c" }
+        return { background: "#000000c9", color: "white" }
       }
     }
 
@@ -210,28 +240,34 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         }
     }, []);
 
-
     return (
       <div>
         <div className='editors'>
           <Editor
-            height="60vh"
-            width="500px"
+            height="90vh"
+            width="30vw"
             theme="vs-dark"
             path={"source.w"}
             defaultLanguage={"wing"}
             defaultValue={defaultCode}
             onMount={editorDidMount}
             beforeMount={editorWillMount}
-            onChange={onChange}
+            onChange={(value, event) => { onChange(value, isCompiling, event) }}
             />
-          <Editor
+          <iframe
+            src={iframSrc}
+            height="90vh"
+            // width="500px"
+            allowFullScreen={true}
+            ref={refIframe}
+          ></iframe>
+          {/* <Editor
             height="60vh"
             width="500px"
             theme="vs-dark"
             defaultLanguage={"json"}
             value={compileResult}
-            />
+            /> */}
         </div>
         <div className="status" style={getTestStyle(loadingStatus)}>{loadingStatus}</div>
       </div>

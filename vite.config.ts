@@ -40,6 +40,7 @@ export default defineConfig({
   },
   build: {
     target: "es2022",
+    
     commonjsOptions: {
       // This is needed because winglang is symlinked
       include: [/winglang/, /node_modules/],
