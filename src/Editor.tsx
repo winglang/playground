@@ -33,7 +33,7 @@ import { debounce } from 'lodash';
 import wingJson from './grammers/wing.tmLanguage.json'
 import LspWorker from './lsp.js?worker'
 import files from './files';
-import { initContainer, installDependencies, compile, test, prepareForEvaluation } from './containers';
+import { initContainer, installDependencies, prepareForEvaluation } from './containers';
 
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
@@ -125,7 +125,7 @@ enum LoadingStatus {
   Eval = "Compiling/Running tests...",
   CompileError = "Compilation Error",
   TestFailure = "Tests Failed",
-  Succeeded = "Compilation Succeeded/Tests Passed"
+  Succeeded = "Ready"
 }
 
 export const ReactMonacoEditor: React.FC<EditorProps> = ({
@@ -180,11 +180,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         setLoadingStatus(LoadingStatus.Eval)
         evaluateCode(undefined, isCompiling);
       });
-
-      
-
-      
-  
     };
 
     const evaluateCode = debounce(async (value: string | undefined, isCompiling: boolean) => {
@@ -197,20 +192,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       setIsCompiling(true)
       setLoadingStatus(LoadingStatus.Eval)
 
-      
       try {
-        let testCode;
         let compileValue = value;
         do {
           compileValue = editorRef.current?.getValue()
           await prepareForEvaluation(containerRef.current, compileValue)
-          testCode = await test(containerRef.current)
         } while (compileValue !== editorRef.current?.getValue());
-        if (testCode !== 0) {
-          setLoadingStatus(LoadingStatus.TestFailure)
-        } else {
-          setLoadingStatus(LoadingStatus.Succeeded)
-        }
+        setLoadingStatus(LoadingStatus.Succeeded)
       } catch (e) {
         setLoadingStatus(LoadingStatus.CompileError)
       } finally {
@@ -261,13 +249,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             allowFullScreen={true}
             ref={refIframe}
           ></iframe>
-          {/* <Editor
-            height="60vh"
-            width="500px"
-            theme="vs-dark"
-            defaultLanguage={"json"}
-            value={compileResult}
-            /> */}
         </div>
         <div className="status" style={getTestStyle(loadingStatus)}>{loadingStatus}</div>
       </div>

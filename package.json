@@ -6,13 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "update": "npx tsx scripts/updatePlayground.ts"
   },
   "dependencies": {
     "@cowasm/memfs": "^3.5.1",
     "@monaco-editor/react": "^4.4.6",
+    "@octokit/request": "^6.2.3",
     "@webcontainer/api": "^1.0.2",
-    "@winglang/sdk": "^0.5.81",
+    "@winglang/sdk": "latest",
     "buffer": "^6.0.3",
     "color": "^4.2.3",
     "lodash": "^4.17.21",
@@ -24,10 +26,11 @@
     "onigasm": "^2.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "tar": "^6.1.13",
     "vite-plugin-node-polyfills": "^0.7.0",
     "vscode-json-languageservice": "^5.3.1",
     "vscode-ws-jsonrpc": "^2.0.2",
-    "winglang": "^0.5.81"
+    "winglang": "latest"
   },
   "devDependencies": {
     "@types/color": "^3.0.3",
@@ -35,6 +38,9 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react": "^3.1.0",
+    "glob": "^9.3.2",
+    "npx": "^10.2.2",
+    "tsx": "^3.12.6",
     "typescript": "^4.9.3",
     "vite": "^4.1.0"
   }
