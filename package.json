@@ -14,7 +14,7 @@
     "@monaco-editor/react": "^4.4.6",
     "@octokit/request": "^6.2.3",
     "@webcontainer/api": "^1.0.2",
-    "@winglang/sdk": "latest",
+    "@winglang/sdk": "^0.8.4",
     "buffer": "^6.0.3",
     "color": "^4.2.3",
     "lodash": "^4.17.21",
@@ -30,7 +30,7 @@
     "vite-plugin-node-polyfills": "^0.7.0",
     "vscode-json-languageservice": "^5.3.1",
     "vscode-ws-jsonrpc": "^2.0.2",
-    "winglang": "latest"
+    "winglang": "^0.8.4"
   },
   "devDependencies": {
     "@types/color": "^3.0.3",
