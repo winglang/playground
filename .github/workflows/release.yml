@@ -49,6 +49,7 @@ jobs:
 
             [Workflow Run]: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
+            [skip ci]
             ------
 
             *Automatically created via the "release" workflow*
