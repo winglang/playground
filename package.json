@@ -13,7 +13,7 @@
     "@cowasm/memfs": "^3.5.1",
     "@monaco-editor/react": "^4.4.6",
     "@octokit/request": "^6.2.3",
-    "@webcontainer/api": "^1.0.2",
+    "@webcontainer/api": "^1.1.0",
     "@winglang/sdk": "^0.8.7",
     "buffer": "^6.0.3",
     "color": "^4.2.3",
@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@types/color": "^3.0.3",
-    "@types/lodash": "^4.14.191",
+    "@types/lodash": "^4.14.192",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@vercel/ncc": "^0.36.1",
@@ -44,7 +44,7 @@
     "glob": "^9.3.2",
     "npx": "^10.2.2",
     "tsx": "^3.12.6",
-    "typescript": "^4.9.3",
-    "vite": "^4.1.0"
+    "typescript": "^5.0.2",
+    "vite": "^4.2.1"
   }
 }
