@@ -10,6 +10,19 @@ import consoleCode from "../console-build/console.server.js?url";
 import consoleUrl from "../console-build/console.tgz?url";
 
 export async function initContainer(): Promise<WebContainer> {
+  const jsExamples = import.meta.glob('../examples/*.js', { as: 'raw' });
+  const examples = await Promise.all(Object.keys(jsExamples).map(async e => { 
+    const contents = await jsExamples[e]();
+    return {
+      [e.split("/").pop()!]: {
+        file: {
+          contents
+        }
+      }
+    }
+  }));
+
+
   const [winglangSdkData, winglangData, codespanWasmData, expressData,
     tarGzCodeString, consoleCodeString, allConsoleCode] = await Promise.all([
     fetch(winglangSdkUrl).then((d) => d.arrayBuffer()), 
@@ -31,6 +44,7 @@ export async function initContainer(): Promise<WebContainer> {
     { 'tar.gz.js': { file: { contents: tarGzCodeString } } },
     { 'console.server.js': { file: { contents: consoleCodeString } } },
     { 'console.tgz': { file: { contents: new Uint8Array(allConsoleCode) } } },
+    ...examples
   ));
   return webcontainerInstance
 }
