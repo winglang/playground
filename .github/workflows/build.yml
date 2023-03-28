@@ -11,6 +11,26 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.actor == 'dependabot[bot]' }} || github.actor == 'monadabot'
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: main
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm install
+      - name: Build playground
+        run: npm run build
+      - name: "Publish Preview Wing Playground"
+        uses: amondnet/vercel-action@v25.1.0
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: .
+          github-comment: false
       - name: Dependabot metadata
         id: metadata
         uses: dependabot/fetch-metadata@v1
