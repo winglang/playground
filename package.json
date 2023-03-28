@@ -14,7 +14,7 @@
     "@monaco-editor/react": "^4.4.6",
     "@octokit/request": "^6.2.3",
     "@webcontainer/api": "^1.0.2",
-    "@winglang/sdk": "^0.8.4",
+    "@winglang/sdk": "^0.8.7",
     "buffer": "^6.0.3",
     "color": "^4.2.3",
     "lodash": "^4.17.21",
