@@ -59,6 +59,15 @@ export default {
             }
           }
         }
+      },
+      'aws-cdk-lib': {
+        directory: {
+          'index.js': {
+            file: {
+              contents: "exports = {}"
+            }
+          }
+        }
       }
     }
   },

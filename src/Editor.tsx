@@ -35,6 +35,10 @@ import LspWorker from './lsp.js?worker'
 import files from './files';
 import { initContainer, installDependencies, prepareForEvaluation } from './containers';
 
+import { Dropdown } from 'semantic-ui-react'
+
+const examplesImports = import.meta.glob('../examples/*.*', { as: 'raw' });
+const examples = await Promise.all(Object.keys(examplesImports).map(async e => ({ text: e.split('/').pop(), value: await examplesImports[e]() })));
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
@@ -228,6 +232,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         }
     }, []);
 
+    const onFileChange = async (event: any, data: any) => {
+      editorRef.current?.setValue(data.value);
+
+    }
+
     return (
       <div>
         <div className='editors'>
@@ -250,7 +259,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             ref={refIframe}
           ></iframe>
         </div>
-        <div className="status" style={getTestStyle(loadingStatus)}>{loadingStatus}</div>
+        <div>
+          <Dropdown text='File' options={examples} onChange={onFileChange} />
+          <div className="status" style={getTestStyle(loadingStatus)}>{loadingStatus}</div>
+        </div>
       </div>
     );
 };
