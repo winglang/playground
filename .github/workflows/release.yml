@@ -37,36 +37,13 @@ jobs:
           working-directory: .
           github-comment: false
           vercel-args: "--prod "
-      - name: Create Pull Request
-        id: create-pr
-        uses: peter-evans/create-pull-request@v3
+      - name: Commit files
+        run: |
+          git config user.name "monabot"
+          git config user.email "monabot@monada.co"
+          git commit -a -m "Auto update assets [skip ci]"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
         with:
-          token: ${{ secrets.PROJEN_GITHUB_TOKEN }}
-          commit-message: |-
-            feat: update playground
-
-            Updates the Wing playground. See details in [workflow run].
-
-            [Workflow Run]: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-            [skip ci]
-            ------
-
-            *Automatically created via the "release" workflow*
-          branch: github-actions/update-playground
-          title: "feat: update playground"
-          body: |-
-            feat: update playground
-
-            Updates the Wing playground. See details in [workflow run].
-
-            [Workflow Run]: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-            ------
-
-            *Automatically created via the "release" workflow*
-          author: monabot <monabot@monada.co>
-          committer: monabot <monabot@monada.co>
-          signoff: true
-          labels: documentation
-          delete-branch: true
+          github_token: ${{ secrets.PROJEN_GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
