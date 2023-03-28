@@ -42,7 +42,7 @@ const updateWing = async () => {
 
   console.log("Packing Wing CLI...")
   const wingDistDir = path.join(currentDir, "../node_modules/winglang/dist_webpack");
-  await fs.rm(wingDistDir, { recursive: true });
+  await fs.rm(wingDistDir, { recursive: true, force: true });
   await fs.mkdir(wingDistDir, { recursive: true });
   await webpack(wingDistDir, require.resolve("../node_modules/winglang/dist/cli.js"), {
     externals: ["codespan-wasm", "@winglang/sdk"]
@@ -58,7 +58,7 @@ const updateWing = async () => {
 
   console.log("Packing Wing SDK...")
   const sdkDistDir = path.join(currentDir, "../node_modules/@winglang/sdk/dist_webpack");
-  await fs.rm(sdkDistDir, { recursive: true });
+  await fs.rm(sdkDistDir, { recursive: true, force: true });
   await fs.mkdir(sdkDistDir, { recursive: true });
 
   const externals = Object.keys(sdkPackageJson.dependencies).filter(m => {
