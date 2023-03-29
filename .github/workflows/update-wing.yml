@@ -1,4 +1,4 @@
-name: Build
+name: Update Wing Version
 
 on:
   schedule:
@@ -9,7 +9,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  dependabot:
+  update-wing-version:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
