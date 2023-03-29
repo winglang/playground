@@ -94109,6 +94109,7 @@ var runCompile = async ({
   const wingSrcDir = import_node_path.default.dirname(wingSrcFile);
   return chokidar.watch(wingSrcDir, {
     ignored: /(^|[/\\])\../,
+    depth: 0,
     persistent: true
   }).on("change", async () => {
     log2.info(
