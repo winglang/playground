@@ -1,9 +1,13 @@
 name: Release Wing Playground
+
 on:
   push:
     branches:
       - main
   workflow_dispatch: {}
+  schedule:
+    - cron: 0 * * * *
+
 jobs:
   release:
     name: Release Wing Playground
@@ -22,6 +26,8 @@ jobs:
           node-version: 18
       - name: Install dependencies
         run: npm install
+      - name: Update wing version
+        run: npm update winglang @winglang/sdk
       - name: Update assets
         run: npx tsx scripts/updatePlayground.ts
         env:
