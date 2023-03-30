@@ -95121,21 +95121,30 @@ var createAppRouter = () => {
         })
       })
     ).query(async ({ ctx, input }) => {
-      return ctx.logs().filter(
+      return ctx.logger.messages.filter(
         (entry) => input.filters.level[entry.level] && entry.timestamp && entry.timestamp >= input.filters.timestamp && (!input.filters.text || `${entry.message}${entry.ctx?.sourcePath}`.toLowerCase().includes(input.filters.text.toLowerCase()))
       );
     }),
     "app.error": createProcedure.query(({ ctx }) => {
       return ctx.errorMessage();
     }),
-    "app.explorerTree": createProcedure.query(async ({ ctx }) => {
+    "app.explorerTree": createProcedure.input(
+      z.object({
+        showTests: z.boolean().optional()
+      }).optional()
+    ).query(async ({ ctx, input }) => {
       const simulator = await ctx.simulator();
       const { tree } = simulator.tree().rawData();
-      return createExplorerItemFromConstructTreeNode(tree, simulator);
+      return createExplorerItemFromConstructTreeNode(
+        tree,
+        simulator,
+        input?.showTests
+      );
     }),
     "app.childRelationships": createProcedure.input(
       z.object({
-        path: z.string().optional()
+        path: z.string().optional(),
+        showTests: z.boolean().optional()
       })
     ).query(async ({ ctx, input }) => {
       const simulator = await ctx.simulator();
@@ -95144,7 +95153,7 @@ var createAppRouter = () => {
       const node = nodeMap.get(input.path);
       const children2 = nodeMap.getAll(node?.children ?? []);
       return children2.filter((node2) => {
-        return !node2.display?.hidden && !isTest.test(node2.path);
+        return !node2.display?.hidden && (input.showTests || !isTest.test(node2.path));
       }).map((node2) => ({
         node: {
           id: node2.id,
@@ -95157,7 +95166,7 @@ var createAppRouter = () => {
             return;
           }
           const node3 = nodeMap.get(resource);
-          return !node3.display?.hidden && !isTest.test(node3.path);
+          return !node3.display?.hidden && (input.showTests || !isTest.test(node3.path));
         }).map((connection) => {
           const node3 = nodeMap.get(connection.resource);
           return {
@@ -95174,7 +95183,7 @@ var createAppRouter = () => {
             return;
           }
           const node3 = nodeMap.get(resource);
-          return !node3.display?.hidden && !isTest.test(node3.path);
+          return !node3.display?.hidden && (input.showTests || !isTest.test(node3.path));
         }).map((connection) => {
           const node3 = nodeMap.get(connection.resource);
           return {
@@ -95235,10 +95244,11 @@ var createAppRouter = () => {
     }),
     "app.nodeMetadata": createProcedure.input(
       z.object({
-        path: z.string().optional()
+        path: z.string().optional(),
+        showTests: z.boolean().optional()
       })
     ).query(async ({ ctx, input }) => {
-      const { path: path3 } = input;
+      const { path: path3, showTests } = input;
       if (!path3) {
         throw new TRPCError({
           code: "NOT_FOUND",
@@ -95262,7 +95272,7 @@ var createAppRouter = () => {
         }
       ).filter((connection) => {
         const node2 = nodeMap.get(connection.resource);
-        return !node2?.display?.hidden && !isTest.test(node2?.path ?? "");
+        return !node2?.display?.hidden && showTests && !isTest.test(node2?.path ?? "");
       });
       const config = getResourceConfig(path3, simulator);
       return {
@@ -95303,13 +95313,19 @@ var createAppRouter = () => {
         };
       });
     }),
-    "app.map": createProcedure.query(async ({ ctx }) => {
+    "app.map": createProcedure.input(
+      z.object({
+        showTests: z.boolean().optional()
+      }).optional()
+    ).query(async ({ ctx, input }) => {
       const simulator = await ctx.simulator();
       const { tree } = simulator.tree().rawData();
       const nodeMap = buildConstructTreeNodeMap(tree);
-      const nodes = [createMapNodeFromConstructTreeNode(tree, simulator)];
+      const nodes = [
+        createMapNodeFromConstructTreeNode(tree, simulator, input?.showTests)
+      ];
       const edges = (0, import_lodash.default)(
-        createMapEdgeFromConstructTreeNode(tree, nodeMap),
+        createMapEdgeFromConstructTreeNode(tree, nodeMap, input?.showTests),
         (edge) => edge.id
       );
       return {
@@ -95329,20 +95345,20 @@ var createAppRouter = () => {
   });
   return { router };
 };
-function createExplorerItemFromConstructTreeNode(node, simulator) {
+function createExplorerItemFromConstructTreeNode(node, simulator, showTests = false) {
   return {
     id: node.path,
     label: node.id,
     type: getResourceType(node, simulator),
     display: node.display,
     childItems: node.children ? Object.values(node.children).filter((node2) => {
-      return !node2.display?.hidden && !isTest.test(node2.path);
+      return !node2.display?.hidden && (showTests || !isTest.test(node2.path));
     }).map(
       (node2) => createExplorerItemFromConstructTreeNode(node2, simulator)
     ) : void 0
   };
 }
-function createMapNodeFromConstructTreeNode(node, simulator) {
+function createMapNodeFromConstructTreeNode(node, simulator, showTests = false) {
   return {
     id: node.path,
     data: {
@@ -95351,18 +95367,18 @@ function createMapNodeFromConstructTreeNode(node, simulator) {
       display: node.display
     },
     children: node.children ? Object.values(node.children).filter((node2) => {
-      return !node2.display?.hidden && !isTest.test(node2.path);
+      return !node2.display?.hidden && (showTests || !isTest.test(node2.path));
     }).map((node2) => createMapNodeFromConstructTreeNode(node2, simulator)) : void 0
   };
 }
-function createMapEdgeFromConstructTreeNode(node, nodeMap) {
-  if (node.display?.hidden || isTest.test(node.path)) {
+function createMapEdgeFromConstructTreeNode(node, nodeMap, showTests = false) {
+  if (node.display?.hidden || !showTests && isTest.test(node.path)) {
     return [];
   }
   return [
     ...node.attributes?.["wing:resource:connections"]?.filter(({ direction, resource }) => {
       const node2 = nodeMap.get(resource);
-      const shouldRemove = node2.display?.hidden || isTest.test(node2.path);
+      const shouldRemove = node2.display?.hidden || !showTests && isTest.test(node2.path);
       if (direction === "inbound" && !shouldRemove) {
         return true;
       }
@@ -95374,7 +95390,7 @@ function createMapEdgeFromConstructTreeNode(node, nodeMap) {
       };
     }) ?? [],
     ...Object.values(node.children ?? {})?.map(
-      (child) => createMapEdgeFromConstructTreeNode(child, nodeMap)
+      (child) => createMapEdgeFromConstructTreeNode(child, nodeMap, showTests)
     ) ?? []
   ].flat();
 }
@@ -95632,51 +95648,44 @@ var createQueueRouter = () => {
 };
 
 // src/router/test.ts
-var getTracesMessages = (traces) => {
-  return traces.filter((trace) => trace.type === "log" && trace.data?.message).map((trace) => trace.data?.message);
-};
 var getTestName = (testPath) => {
   const test = testPath.split("/").pop() ?? testPath;
   return test.replace(/test: /g, "");
 };
-var generateLogs = (logger, logs) => {
-  for (const log2 of logs) {
-    logger.log({
-      type: "title",
-      message: `Test: ${getTestName(log2.path)}`,
-      timestamp: Date.now()
-    });
-    const messages = getTracesMessages(log2.traces);
-    for (const message2 of messages) {
-      if (message2) {
-        logger.log({
-          type: "log",
-          message: message2,
-          timestamp: log2.timestamp
-        });
-      }
-    }
-    if (log2.error) {
-      logger.log({
-        type: "log",
-        message: log2.error,
-        timestamp: log2.timestamp
-      });
-    }
-    logger.log({
-      type: log2.error ? "fail" : "success",
-      message: `Test ${log2.error ? "failed" : "succeeded"} (${log2.time}ms)`,
-      timestamp: Date.now()
-    });
-  }
-  const testPassed = logs.filter((output) => !output.error);
-  const time = logs.reduce((value, output) => value + output.time, 0);
-  const message = `Tests completed: ${testPassed.length}/${logs.length} passed. (${time}ms)`;
-  logger.log({
-    type: "summary",
-    message,
-    timestamp: Date.now()
+var runTest = async (simulator, resourcePath, logger) => {
+  logger.log("Reloading simulator...", "console", {
+    messageType: "info"
   });
+  await simulator.reload();
+  const client = simulator.getResource(resourcePath);
+  let result = {
+    response: "",
+    error: "",
+    path: resourcePath,
+    time: 0
+  };
+  const startTime = Date.now();
+  try {
+    result.response = await client.invoke("");
+    logger.log(
+      `Test "${getTestName(resourcePath)}" succeeded (${Date.now() - startTime}ms)`,
+      "console",
+      {
+        messageType: "success"
+      }
+    );
+  } catch (error3) {
+    result.error = isErrorLike(error3) ? error3.message : String(error3);
+    logger.log(
+      `Test "${getTestName(resourcePath)} failed (${Date.now() - startTime}ms)`,
+      "console",
+      {
+        messageType: "fail"
+      }
+    );
+  }
+  result.time = Date.now() - startTime;
+  return result;
 };
 var createTestRouter = () => {
   return createRouter({
@@ -95689,50 +95698,26 @@ var createTestRouter = () => {
         resourcePath: z.string()
       })
     ).mutation(async ({ input, ctx }) => {
-      const simulator = await ctx.simulator();
-      const startTime = Date.now();
-      const result = await simulator.runTest(input.resourcePath);
-      const endTime = Date.now();
-      const error3 = result.error?.split("\n")[0];
-      const log2 = {
-        timestamp: Date.now(),
-        time: endTime - startTime,
-        ...result,
-        error: error3
-      };
-      generateLogs(ctx.testLogger, [log2]);
-      return log2;
+      return await runTest(
+        await ctx.simulator(),
+        input.resourcePath,
+        ctx.logger
+      );
     }),
     "test.runAll": createProcedure.mutation(async ({ ctx }) => {
       const simulator = await ctx.simulator();
       const testList = simulator.listTests();
-      const logs = [];
-      for (const testName of testList) {
-        const startTime = Date.now();
-        const result = await simulator.runTest(testName);
-        const endTime = Date.now();
-        const error3 = result.error?.split("\n")[0];
-        logs.push({
-          timestamp: Date.now(),
-          time: endTime - startTime,
-          ...result,
-          error: error3
-        });
+      const result = [];
+      for (const resourcePath of testList) {
+        result.push(await runTest(simulator, resourcePath, ctx.logger));
       }
-      generateLogs(ctx.testLogger, logs);
-      return logs;
-    }),
-    "test.logs": createProcedure.input(
-      z.object({
-        filters: z.object({
-          timestamp: z.number(),
-          text: z.string()
-        })
-      })
-    ).query(async ({ input, ctx }) => {
-      return ctx.testLogger.messages.filter(
-        (entry) => (!entry.timestamp || entry.timestamp >= input.filters.timestamp) && (!input.filters.text || entry.message.toLowerCase().includes(input.filters.text.toLowerCase()))
-      );
+      const testPassed = result.filter((r2) => r2.error === "");
+      const time = result.reduce((accumulator, r2) => accumulator + r2.time, 0);
+      const message = `Tests completed: ${testPassed.length}/${testList.length} passed. (${time}ms)`;
+      ctx.logger.log(message, "console", {
+        messageType: "summary"
+      });
+      return result;
     })
   });
 };
@@ -95814,7 +95799,6 @@ var createExpressServer = async ({
   emitter,
   cloudAppStateService,
   log: log2,
-  testLogger,
   updater,
   requestedPort
 }) => {
@@ -95827,9 +95811,6 @@ var createExpressServer = async ({
         const sim = await simulatorPromise;
         return sim.get();
       },
-      logs() {
-        return consoleLogger.messages;
-      },
       async appDetails() {
         return {
           wingVersion: await getWingVersion()
@@ -95838,7 +95819,7 @@ var createExpressServer = async ({
       errorMessage() {
         return errorMessage();
       },
-      testLogger,
+      logger: consoleLogger,
       emitter,
       cloudAppStateService,
       updater
@@ -100155,16 +100136,6 @@ var createWingApp = async ({
   );
 };
 
-// src/utils/testLogger.ts
-var createTestLogger = () => {
-  return {
-    messages: new Array(),
-    log(log2) {
-      this.messages.push(log2);
-    }
-  };
-};
-
 // src/index.ts
 var createConsoleServer = async ({
   inputFile,
@@ -100227,7 +100198,6 @@ var createConsoleServer = async ({
     },
     emitter,
     log: log2,
-    testLogger: createTestLogger(),
     updater,
     requestedPort
   });
