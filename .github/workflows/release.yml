@@ -39,9 +39,6 @@ jobs:
           working-directory: .
           github-comment: false
           vercel-args: "--prod "
-      - name: Setup upterm session
-        if: always()
-        uses: lhotari/action-upterm@v1
       - name: Commit files
         run: |
           git config user.name "monabot"

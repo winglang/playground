@@ -159,11 +159,13 @@ console.verbose = console.log
 let consoleServer
 cc.createConsoleServer({
   log: console,
-  inputFile: "./test.w",
+  wingfile: "./test.w",
   requestedPort : 34443
 }).then((server) => {
   consoleServer = server
   console.log(consoleServer.port);
+}).catch((err) => {
+  console.error(err)
 });
 
         `,
