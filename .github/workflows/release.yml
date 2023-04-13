@@ -39,13 +39,3 @@ jobs:
           working-directory: .
           github-comment: false
           vercel-args: "--prod "
-      - name: Commit files
-        run: |
-          git config user.name "monabot"
-          git config user.email "monabot@monada.co"
-          git commit -a -m "Auto update assets [skip ci]"
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.PROJEN_GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
