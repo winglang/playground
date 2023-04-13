@@ -23,3 +23,10 @@ dist-ssr
 *.sln
 *.sw?
 .vercel
+
+console-build/console.tgz
+console-build/playground-console.tgz
+
+wing/wingc.wasm
+wing/winglang-webpack.tgz
+wing/winglang-sdk-webpack.tgz
