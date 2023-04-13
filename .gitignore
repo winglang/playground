@@ -24,6 +24,7 @@ dist-ssr
 *.sw?
 .vercel
 
+console-build/console.server.js
 console-build/console.tgz
 console-build/playground-console.tgz
 
