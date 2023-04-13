@@ -24,6 +24,10 @@ jobs:
         run: npm install
       - name: Update wing version
         run: npm update winglang @winglang/sdk
+      - name: Update assets
+        run: npx tsx scripts/updatePlayground.ts
+        env:
+          GITHUB_TOKEN: ${{ secrets.PROJEN_GITHUB_TOKEN }}
       - name: Build playground
         run: npm run build
       - name: Check Changed files
