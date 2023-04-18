@@ -60,6 +60,15 @@ export default {
           }
         }
       },
+      'vm2': {
+        directory: {
+          'empty': {
+            file: {
+              contents: ""
+            }
+          }
+        }
+      },
       'aws-cdk-lib': {
         directory: {
           'index.js': {
@@ -84,6 +93,7 @@ const unzip = () => {
     targz.x({ file: 'wing.tgz', C: 'node_modules/winglang/dist', preservePaths: true }),
     targz.x({ file: 'express.tgz', C: 'node_modules/express', preservePaths: true }),
     targz.x({ file: 'codespan-wasm.tgz', C: 'node_modules/codespan-wasm', preservePaths: true }),
+    targz.x({ file: 'vm2.tgz', C: 'node_modules/vm2', preservePaths: true }),
     targz.x({ file: 'console.tgz', C: './static' })
   ])
 }

@@ -62,7 +62,7 @@ const updateWing = async () => {
   await fs.mkdir(sdkDistDir, { recursive: true });
 
   const externals = Object.keys(sdkPackageJson.dependencies).filter(m => {
-    const exclude = ["@aws-sdk", "aws", "@azure", "@cdktf"]
+    const exclude = ["vm2", "@aws-sdk", "aws", "@azure", "@cdktf"]
     return exclude.filter(e => m.startsWith(e)).length > 0;
   });
   await webpack(sdkDistDir, require.resolve("../node_modules/@winglang/sdk/lib/index.js"), {

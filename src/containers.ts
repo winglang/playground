@@ -4,6 +4,7 @@ import files from './files';
 import winglangSdkUrl from '../wing/winglang-sdk-webpack.tgz?url'
 import winglangUrl from '../wing/winglang-webpack.tgz?url'
 import codespanWasmUrl from '../wing/codespan-wasm.tgz?url'
+import vm2Url from '../wing/vm2.tgz?url'
 import expressUrl from './assets/express.tgz?url'
 import tarGzCode from "./assets/tar.gz.js?url";
 import consoleCode from "../console-build/console.server.js?url";
@@ -23,12 +24,13 @@ export async function initContainer(): Promise<WebContainer> {
   }));
 
 
-  const [winglangSdkData, winglangData, codespanWasmData, expressData,
+  const [winglangSdkData, winglangData, expressData, codespanWasmData, vm2Data,
     tarGzCodeString, consoleCodeString, allConsoleCode] = await Promise.all([
     fetch(winglangSdkUrl).then((d) => d.arrayBuffer()), 
     fetch(winglangUrl).then((d) => d.arrayBuffer()),
     fetch(expressUrl).then((d) => d.arrayBuffer()),
     fetch(codespanWasmUrl).then((d) => d.arrayBuffer()),
+    fetch(vm2Url).then((d) => d.arrayBuffer()),
     fetch(tarGzCode).then((d) => d.text()),
     fetch(consoleCode).then((d) => d.text()),
     fetch(consoleUrl).then((d) => d.arrayBuffer()),
@@ -39,8 +41,9 @@ export async function initContainer(): Promise<WebContainer> {
   await webcontainerInstance.mount(Object.assign({}, files as any, 
     { 'sdk.tgz': { file: { contents: new Uint8Array(winglangSdkData) } } },
     { 'wing.tgz': { file: { contents: new Uint8Array(winglangData) } } },
-    { 'express.tgz': { file: { contents: new Uint8Array(codespanWasmData) } } },
-    { 'codespan-wasm.tgz': { file: { contents: new Uint8Array(expressData) } } },
+    { 'express.tgz': { file: { contents: new Uint8Array(expressData)} } },
+    { 'codespan-wasm.tgz': { file: { contents: new Uint8Array(codespanWasmData) } } },
+    { 'vm2.tgz': { file: { contents: new Uint8Array(vm2Data) } } },
     { 'tar.gz.js': { file: { contents: tarGzCodeString } } },
     { 'console.server.js': { file: { contents: consoleCodeString } } },
     { 'console.tgz': { file: { contents: new Uint8Array(allConsoleCode) } } },
@@ -108,6 +111,6 @@ export async function prepareForEvaluation(webcontainerInstance: WebContainer, c
   if (!content) {
     return
   }
-  
+
   return webcontainerInstance.fs.writeFile('test.w', content)
 }
