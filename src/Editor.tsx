@@ -241,6 +241,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       <div>
         <div className='editors'>
           <Editor
+            data-testid="editor"
             height="90vh"
             width="30vw"
             theme="vs-dark"
@@ -252,6 +253,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             onChange={(value, event) => { onChange(value, isCompiling, event) }}
             />
           <iframe
+            id='console'
             src={iframSrc}
             height="90vh"
             // width="500px"
