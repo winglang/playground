@@ -15,7 +15,7 @@ let bucket = new cloud.Bucket();
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 // Here we are able to interact with infra config of the bucket
-bucket.public = true;
+bucket.stateful = true;
 
 // An `inflight` represents code that runs later, on other machines,
 // and can interact with any cloud resource.
