@@ -12,6 +12,19 @@ export default {
           }
         }
       },
+      'constructs': {
+        directory: {
+          'lib': {
+            directory: {
+              'index.js': {
+                file: {
+                  contents: ''
+                }
+              }
+            }
+          }
+        }
+      },
       '@winglang': {
         directory: {
           'sdk': {

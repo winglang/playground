@@ -69,6 +69,10 @@ const updateWing = async () => {
     externals
   });
 
+  console.log("Compressing Wing inflight files...")
+  const inflighFlights = await glob(path.join(currentDir, "../node_modules/@winglang/sdk/lib/target-sim") + "/**/*inflight*");
+  await Promise.all(inflighFlights.map(f => fs.cp(f, path.join(sdkDistDir, basename(f)))));
+
   console.log("Compressing Wing SDK...")
   await tar.create({
     file: path.join(currentDir, "../wing/winglang-sdk-webpack.tgz"),
@@ -94,7 +98,7 @@ const updateConsole = async () => {
   const asset = release.data.assets.find((asset) => asset.name === "playground-console.tgz");
   console.log("Assets:", asset);
 
-  await updateAsset("console", asset, "./console-build/playground-console.tgz");
+  // await updateAsset("console", asset, "./console-build/playground-console.tgz");
 
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), Date.now().toString()));
   
@@ -108,17 +112,22 @@ const updateConsole = async () => {
   await fs.rm(path.join(dir, "console/app/dist/vite/electron"), { recursive: true, force: true });
 
   console.log("Injecting html code...");
-  const htmlToInject = await fs.readFile(path.join(dirname(fileURLToPath(import.meta.url)), "./index.html"), "utf-8");
-  const appHtml = await fs.readFile(path.join(dir, "console/app/dist/vite/index.html"), "utf-8");
+  const sourceHtmlPath = path.join(dirname(fileURLToPath(import.meta.url)), "../console-build/dist/index.html");
+  const targetHtmlPath = path.join(dir, "console/app/dist/vite/index.html");
+  const appHtml = await fs.readFile(sourceHtmlPath, "utf-8");
   const cssFiles = await glob(path.join(dir, "console/app/dist/vite") + "/**/*.css");
   const css = await fs.readFile(cssFiles[0], "utf-8");
   const cssToInject = `<style>
 ${css}
 </style>`
-  const html = appHtml
-    .replace("<head>\n", `<head>\n${htmlToInject}\n${cssToInject}\n`);
-  await fs.writeFile(path.join(dir, "console/app/dist/vite/index.html"), html, "utf-8");
+  const html = appHtml.replace("<head>\n", `<head>\n${cssToInject}\n`);
+  await fs.writeFile(targetHtmlPath, html, "utf-8");
 
+  console.log("Copying generated ui scripts...")
+  await fs.rm(path.join(dir, "console/app/dist/vite/assets"), { recursive: true, force: true });
+  await fs.mkdir(path.join(dir, "console/app/dist/vite/assets"), { recursive: true });
+  await fs.cp(path.join(dir, "console/ui/dist/index.global.js"), path.join(dir, "console/app/dist/vite/assets/console.ui.js"));
+  await fs.cp(path.join(dirname(fileURLToPath(import.meta.url)), "../console-build/dist/assets/index.js"), path.join(dir, "console/app/dist/vite/assets/index.js"));
 
   console.log("Creating the console ui archive...");
   await tar.create({

@@ -25,10 +25,20 @@ const wingsdkPackageJsonContent = await import(
   "@winglang/sdk/package.json?raw"
 ).then((i) => i.default);
 
+const constructsJSIIContent = await import("constructs/.jsii?raw").then(
+  (i) => i.default
+);
+const constructsPackageJsonContent = await import(
+  "constructs/package.json?raw"
+).then((i) => i.default);
+
 const fs = createFsFromVolume(
   Volume.fromJSON({
     "/wingsdk/package.json": wingsdkPackageJsonContent,
     "/wingsdk/.jsii": wingsdkJSIIContent,
+    "/node_modules/constructs/.jsii": constructsJSIIContent,
+    "/node_modules/constructs/package.json": constructsPackageJsonContent,
+    "/node_modules/constructs/lib/index.js": "",
   })
 );
 let wasmFetchData = await fetch(wingcURL).then((d) => d.arrayBuffer());
