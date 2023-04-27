@@ -20,6 +20,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+      - name: Install console dependencies
+        run: npm install
+        working-directory: console-build
+      - name: Build console
+        run: npm run build
+        working-directory: console-build
       - name: Install dependencies
         run: npm install
       - name: Update wing version
