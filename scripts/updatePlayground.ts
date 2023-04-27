@@ -98,7 +98,7 @@ const updateConsole = async () => {
   const asset = release.data.assets.find((asset) => asset.name === "playground-console.tgz");
   console.log("Assets:", asset);
 
-  // await updateAsset("console", asset, "./console-build/playground-console.tgz");
+  await updateAsset("console", asset, "./console-build/playground-console.tgz");
 
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), Date.now().toString()));
   
