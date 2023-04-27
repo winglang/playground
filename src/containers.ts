@@ -117,10 +117,15 @@ export async function test(webcontainerInstance: WebContainer, ): Promise<number
   return compileProcess.exit;
 }
 
-export async function prepareForEvaluation(webcontainerInstance: WebContainer, content?: string): Promise<void | undefined> {
+export async function prepareForEvaluation(webcontainerInstance: WebContainer, content?: string, fileName?: string): Promise<void | undefined> {
   if (!content) {
     return
   }
 
-  return webcontainerInstance.fs.writeFile('test.w', content)
+  let localName = 'test.w';
+  if (!fileName?.endsWith('.w')) {
+    localName = fileName!;
+  }
+
+  return webcontainerInstance.fs.writeFile(localName, content)
 }

@@ -4,13 +4,14 @@ import util from "node:util";
 import { compile, Target } from 'winglang/dist/commands/compile';
 import { readFile, writeFile, readdir } from "node:fs/promises";
 import { join } from 'node:path';
+import Zip from 'adm-zip';
 
 export interface Request {
   code: string;
   target: Target;
 }
 
-const headers = {
+const cors = {
   'Access-Control-Allow-Headers': '*',
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': '*',
@@ -41,7 +42,7 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
   if (!event.body) {
     return {
       statusCode: 400,
-      headers,
+      headers: cors,
       body: JSON.stringify({
         message: 'no body',
       }),
@@ -55,23 +56,32 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
     await writeFile(wingFile, request.code, "utf-8");
     await util.promisify(exec)(`./node_modules/.bin/wing compile ${wingFile} -t ${request.target}`);
     const outDir = join('/tmp', 'target', `${rand}.${targetToExtension(request.target)}`);
-    const fileList = await walk(outDir);
-    const files = await Promise.all(fileList.filter(f => !f.endsWith(".zip")).map(async f => {
-      const contents = await readFile(f, 'utf-8')
-      return { name: f, contents };
-    }));
+
+    let zip = new Zip();
+    zip.addLocalFolder(outDir);
+    let buffer: Buffer = zip.toBuffer();
+
+    // const fileList = await walk(outDir);
+    // const files = await Promise.all(fileList.filter(f => !f.endsWith(".zip")).map(async f => {
+    //   const contents = await readFile(f, 'utf-8')
+    //   return { name: f, contents };
+    // }));
+
+    // headers: Object.assign({}, cors, {
+    //   'Content-Type': 'application/zip, application/octet-stream',
+    //   'Content-disposition': `attachment; filename=wing.zip`
+    // }),
+  
     return {
       statusCode: 200,
-      headers,
-      body: JSON.stringify({
-        files,
-      }),
+      headers: cors,
+      body: buffer.toString('base64'),
     };
   } catch (err) {
     console.log(`Error: ${JSON.stringify(err, null, 2)}`);
     return {
-      statusCode: 200,
-      headers,
+      statusCode: 500,
+      headers: cors,
       body: JSON.stringify({
         error: err,
       }),

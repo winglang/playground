@@ -6,7 +6,7 @@ export default {
           'wing': {
             file: {
               contents: `#!/usr/bin/env node
-
+              process.version = 'v18.14.2';
               require("../winglang/dist/index.js");`
             }
           }

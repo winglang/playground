@@ -199,15 +199,15 @@ export function Tree({ onFileOpen, tree }: TreeProps) {
   const plugins = [traits, rovingFocus, selections, dnd];
 
   return (
-    <div className="flex h-full p-3 pt-0 bg-slate-50">
+    <div className="flex h-full p-3 pt-0 bg-[#1E293B] text-[#f1f0f1]">
       <div ref={windowRef} className="flex h-full">
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full pt-[5px]">
           {virtualize.map((props) => {
             props.style = {};
             return (
               <div className="flex" key={props.key}>
               <Node  plugins={plugins} {...props}>
-                <div className="flex flex-row h-full py-0.5">
+                <div className="flex flex-row h-full py-1">
                 {isDir(props.node) ? (
                   props.node.expanded ? (
                     <VscFolderOpened className="flex h-full flex-row" />

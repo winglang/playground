@@ -10,7 +10,7 @@ function App() {
       <Header />
       { isChrome() ? <ReactMonacoEditor /> : 
       <div className='h-full flex justify-center content-center items-center'>
-        <div className='h-24 text-xl flex flex-row justify-center content-center items-center'>
+        <div className='h-24 text-xl flex flex-row justify-center content-center items-center text-[#f1f0f1]'>
           <VscWarning className='text-amber-500'/> 
           <span>This playground uses <a href="https://webcontainers.io/" className='text-teal-500'> Web Containers </a> and only works on Google Chrome.</span>
         </div>

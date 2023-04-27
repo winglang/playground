@@ -43,9 +43,10 @@ import { Modal } from './Modal';
 import { CompilationResult, compileToAws, compileToAzure, compileToGcp } from './compilerService';
 
 const examplesImports = import.meta.glob('../examples/*.*', { as: 'raw' });
-const examples = await Promise.all(Object.keys(examplesImports).map(async e => ({ text: e.split('/').pop(), value: await examplesImports[e]() })));
+const examples = await Promise.all(Object.keys(examplesImports).map(async e => ({ text: e.split('/').pop()!, value: await examplesImports[e]() })));
 const exampleTreeNodes = examples.map(e => ({ name: e.text!, type: 'file' }) as TreeNode);
 const exampleTree = createTree({ files: exampleTreeNodes });
+const defaultExample = examples[0];
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
@@ -146,7 +147,7 @@ const startLsp = () => {
 enum LoadingStatus {
   Init = "Initializing WebContainer...",
   Install = "Installing dependencies...",
-  Eval = "Compiling/Running tests...",
+  Eval = "Initializing Console...",
   CompileError = "Compilation Error",
   TestFailure = "Tests Failed",
   Succeeded = "Ready"
@@ -184,7 +185,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [isCompiling, setIsCompiling] = useState(false);
     const [loadingStatus, setLoadingStatus] = useState(LoadingStatus.Init);
     const [modalVisibility, setModalVisibility] = useState(false);
-    const [languageContext, setLanguageContext] = useState<LanguageContext>({ language: 'wing', path: 'source.w' });
+    const [languageContext, setLanguageContext] = useState<LanguageContext>({ file: defaultExample.text, language: 'wing', path: 'source.w' });
 
     const compileEditorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
     const [compileTree, setCompileTree] = useState<FileTree<{}>>(createTree({ files: [] }));
@@ -221,7 +222,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       MonacoServices.install(monaco);
 
       await wireGrammers(monaco);
-      editorRef.current?.setValue(examples[0].value);
+      editorRef.current?.setValue(defaultExample.value);
       // monaco.editor.setModelLanguage(editor.getModel(), 'wing');
       monaco.editor.setTheme('akkd-dark-plus');
 
@@ -241,7 +242,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         return
       }
       
-      console.log('evaluating...')
+      console.log('evaluating...', languageContext)
 
       setIsCompiling(true)
       setLoadingStatus(LoadingStatus.Eval)
@@ -250,7 +251,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         let compileValue = value;
         do {
           compileValue = editorRef.current?.getValue()
-          await prepareForEvaluation(containerRef.current, compileValue)
+          await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
+          const example = examples.find(e => e.text === languageContext.file)!;
+          example.value = compileValue!;
         } while (compileValue !== editorRef.current?.getValue());
         setLoadingStatus(LoadingStatus.Succeeded)
       } catch (e) {
@@ -262,16 +265,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     const onChange = (value: string | undefined, isCompiling: boolean, ev: monaco.editor.IModelContentChangedEvent) => {
       evaluateCode(value, isCompiling)
-    }
-
-    const getTestStyle = (status: LoadingStatus) => {
-      if (status === LoadingStatus.CompileError || status === LoadingStatus.TestFailure) {
-        return { background: "#f44747", color: "white" }
-      } else if (status === LoadingStatus.Succeeded) {
-         // return { display: "none" }
-      } else {
-        return {  color: "black" }
-      }
     }
 
     useEffect(() => {
@@ -322,6 +315,21 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       compileEditorRef.current = editor
     }
 
+    const onDownload = () => {
+      if (!compileResult) {
+        return;
+      }
+      
+      const zipBlob = new Blob([new Uint8Array(compileResult!.zip.toBuffer())]);
+      const url = window.URL.createObjectURL(zipBlob);
+      const zipDownload = document.createElement("a");
+
+      zipDownload.href = url;
+      zipDownload.download = "wing.zip";
+      document.body.appendChild(zipDownload);
+      zipDownload.click();
+    }
+
     useEffect(() => {
       compileEditorRef.current?.setScrollTop(0);
     }, [compileText]);
@@ -333,14 +341,18 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       }
     }, [modalVisibility]);
 
+    const options: monaco.editor.IStandaloneEditorConstructionOptions = {
+      minimap: { enabled: false },
+    };
+
     return (
       <div className='flex flex-col h-full'>
-        <div className='flex flex-row pt-2 px-2 h-14 justify-between items-baseline'>
+        <div className='flex flex-row pt-2 px-2 h-14 justify-between items-baseline bg-[#56657A]'>
           <Actions onRun={onRun} isRunDisabled={isCompiling} onTfAws={onCompile(compileToAws)} onTfAzure={onCompile(compileToAzure)} onTfGcp={onCompile(compileToGcp)} />
-          <div className="status m-0.5 p-0.5" style={getTestStyle(loadingStatus)}>{loadingStatus}</div>
+          <div className="status m-0.5 p-0.5 text-[#f1f0f1]">{loadingStatus}</div>
         </div>
-        <div className='flex grow editors'>
-          <div className='flex h-full border-r border-slate-300'>
+        <div className='flex grow'>
+          <div className='flex h-full border-r border-slate-300 dark:border-slate-900'>
             <Tree tree={exampleTree} onFileOpen={onTreeChange}/>
           </div>
           <div className='flex w-1/3 h-full'>
@@ -349,6 +361,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
               // height="90vh"
               // width="30vw"
               // theme="vs-dark"
+              options={options}
               path={languageContext.path}
               language={languageContext.language}
               onMount={editorDidMount}
@@ -358,7 +371,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           </div>
           <iframe
             id='console'
-            className='flex-1 w-9/12 h-full'
+            className='flex-1 w-9/12 h-full basis-auto'
             src={iframSrc}
             // height="90vh"
             // width="500px"
@@ -366,7 +379,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             ref={refIframe}
           ></iframe>
         </div>
-        {modalVisibility && <Modal setModalVisibility={setModalVisibility} title='Compilation Output'>
+        {modalVisibility && <Modal setModalVisibility={setModalVisibility} title='Compilation Output' onDownload={onDownload}>
           {compileText && <div className='flex flex-grow flex-row h-full'>
               <div className='flex h-full border-r border-slate-300'>
                 <Tree tree={compileTree!} onFileOpen={onCompileTreeChange}/>
@@ -376,6 +389,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                   // height="90vh"
                   // width="30vw"
                   // theme="vs-dark"
+                  options={Object.assign({}, options, { readOnly: true })}
                   onMount={compileEditorDidMount}
                   value={compileText}
                   />
