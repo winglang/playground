@@ -149,13 +149,7 @@ enum LoadingStatus {
   Eval = "Initializing Console...",
   CompileError = "Compilation Error",
   TestFailure = "Tests Failed",
-  Succeeded = "Ready"
-}
-
-interface LanguageContext {
-  file?: string;
-  path: string;
-  language: string;
+  Completed = "Ready"
 }
 
 const supportedLanguages = (extension: string): string => {
@@ -186,7 +180,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [isCompiling, setIsCompiling] = useState(false);
     const [loadingStatus, setLoadingStatus] = useState(LoadingStatus.Init);
     const [modalVisibility, setModalVisibility] = useState(false);
-    // const [languageContext, setLanguageContext] = useState<LanguageContext>({ file: currentExample.text, language: 'wing', path: 'source.w' });
 
     const compileEditorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
     const [compileTree, setCompileTree] = useState<FileTree<{}>>(createTree({ files: [] }));
@@ -246,7 +239,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       console.log('evaluating...', languageContext)
 
       setIsCompiling(true)
-      setLoadingStatus(LoadingStatus.Eval)
 
       try {
         let compileValue = value;
@@ -256,10 +248,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           const example = examples.find(e => e.text === languageContext.file)!;
           example.value = compileValue!;
         } while (compileValue !== editorRef.current?.getValue());
-        setLoadingStatus(LoadingStatus.Succeeded)
-      } catch (e) {
-        setLoadingStatus(LoadingStatus.CompileError)
       } finally {
+        setLoadingStatus(LoadingStatus.Completed)
         setIsCompiling(false)
       }
     }, 700)
@@ -388,7 +378,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
               />
           </div>
           <div className='flex-1 w-9/12 h-full basis-auto'>
-          {loadingStatus != LoadingStatus.Succeeded ? 
+          {loadingStatus != LoadingStatus.Completed ? 
             <Loading status={loadingStatus} /> :
             <iframe
               id='console'
