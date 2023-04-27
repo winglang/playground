@@ -5,29 +5,25 @@ bring cloud;
 
 // This code defines a bucket as part of your app.
 // When compiling to a specific cloud provider
-// (in the above "compile to.." buttons ↑),
+// (in the top right "compile to.." buttons ➚),
 // it will be substituted by an implementation for
 // that cloud. I.e, for AWS it will be an S3 Bucket.
 let bucket = new cloud.Bucket();
 
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // You can interact with the app in the console -->
 // 
 // Click on the Function to invoke it, or the Bucket
 // to see its contents, etc.
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-// Here we interact with infra config of the bucket
-// Add a '.' after the bucket to see the available
-// properties and methods at its pre-flight phase.
-let isStateful = bucket.stateful;
-
-// `inflight` represents code that runs later, on
-// other machines, interacting with cloud resources.
+// `inflights` represent code that runs later, on
+// other machines, interacting with captured data and
+// resources from the pre-flight phase.
 let hello_world = inflight () => {
-  // Here we interact with the bucket after it is
-  // provisioned. Add a '.' after the bucket to see
-  // its in-flight interface (different from the pre-flight one above).
+  // Here we interact with the captured bucket after 
+  // it is provisioned. Try the code completion here,
+  // it is different than in the pre-flight scope above.
   bucket.put("hello.txt", "Hello, World!");
 };
 
@@ -39,9 +35,5 @@ new cloud.Function(hello_world);
 // to compile the app to a Javascript and Terraform 
 // of specific cloud providers.
 
-// <-- You can also switch files and see other 
-// examples to the left.
-
-// The console automatically updates when making 
-// changes in this editor (it is compiled to the 
-// simulator target).
+// ↑ You can also switch files and see other 
+// examples with more explenations above.
