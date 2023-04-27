@@ -1,10 +1,18 @@
-import { useExamples, Example } from './use-examples.js';
+import { useExamples, Example, supportedLanguages, LanguageContext } from './use-examples.js';
 
-export function FilePicker() {
-  const { examples, setCurrentExample } = useExamples();
+export interface FilePickerProps {
+  examples: Example[];
+  setCurrentExample: React.Dispatch<React.SetStateAction<Example>>; 
+  setLanguageContext: React.Dispatch<React.SetStateAction<LanguageContext>>;
+}
 
+export function FilePicker({ examples, setCurrentExample, setLanguageContext }: FilePickerProps) {
   const onDropdownClick = (example: Example) => {
     setCurrentExample(example);
+
+    const file =  example.text.split('/').pop()!;
+    const ext = file.split('.').pop()!;
+    setLanguageContext({ file: example.text, path: `source.${file.split('.').pop()}`, language: supportedLanguages(ext) })
   }
   return (
     <div className="group">

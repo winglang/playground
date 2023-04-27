@@ -175,7 +175,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     port = '3111',
     className
 }) => {
-    const { examples, setExamples, currentExample, setCurrentExample } = useExamples();
+    const { examples, setExamples, currentExample, setCurrentExample, languageContext, setLanguageContext } = useExamples();
     const defaultExample = examples[0];
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
     const monacoRef = useRef<monaco.editor.IStandaloneCodeEditor>();
@@ -186,7 +186,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [isCompiling, setIsCompiling] = useState(false);
     const [loadingStatus, setLoadingStatus] = useState(LoadingStatus.Init);
     const [modalVisibility, setModalVisibility] = useState(false);
-    const [languageContext, setLanguageContext] = useState<LanguageContext>({ file: currentExample.text, language: 'wing', path: 'source.w' });
+    // const [languageContext, setLanguageContext] = useState<LanguageContext>({ file: currentExample.text, language: 'wing', path: 'source.w' });
 
     const compileEditorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
     const [compileTree, setCompileTree] = useState<FileTree<{}>>(createTree({ files: [] }));
@@ -280,11 +280,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       editorRef.current?.setValue(examples.find(e => e.text === languageContext.file)!.value);
     }, [languageContext]);
 
-    useEffect(() => {
-      const file =  currentExample.text.split('/').pop()!;
-      const ext = file.split('.').pop()!;
-      setLanguageContext({ file: currentExample.text, path: `source.${file.split('.').pop()}`, language: supportedLanguages(ext) });
-    }, [currentExample]);
+    // useEffect(() => {
+    //   const file =  currentExample.text.split('/').pop()!;
+    //   const ext = file.split('.').pop()!;
+    //   setLanguageContext({ file: currentExample.text, path: `source.${file.split('.').pop()}`, language: supportedLanguages(ext) });
+    // }, [currentExample]);
       
     const onTreeChange = (name: string) => {
       const file =  name.split('/').pop()!;
@@ -364,7 +364,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     return (
       <div className='flex flex-col h-full'>
         <div className='flex flex-row pt-2 px-2 h-14 justify-between items-baseline bg-[#56657A]'>
-          <FilePicker />
+          <FilePicker examples={examples} setCurrentExample={setCurrentExample} setLanguageContext={setLanguageContext} />
           {/* <Dropdown selection placeholder='Select an example' options={examples} onChange={onFileChange} /> */}
           <Actions onRun={onRun} isRunDisabled={isCompiling} onTfAws={onCompile(compileToAws)} onTfAzure={onCompile(compileToAzure)} onTfGcp={onCompile(compileToGcp)} />
           {/* <div className="status m-0.5 p-0.5 text-[#f1f0f1]">{loadingStatus}</div> */}
