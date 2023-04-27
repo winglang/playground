@@ -42,3 +42,13 @@ test('has map view', async ({ page }) => {
     },
   );
 });
+
+test('can read code query param', async ({ page }) => {
+  await page.goto('http://localhost:5173/?code=Ly8gZG9uJ3QgYnJpbmcgY2xvdWQ7');
+
+  const editor = await page.getByRole("code");
+  await editor.waitFor({ timeout: 60000 });
+
+  const code = await page.getByText("// don't bring cloud;").first();
+  await code.waitFor({ timeout: 60000 });
+});

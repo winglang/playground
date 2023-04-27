@@ -1,4 +1,6 @@
 import { useEffect, useState, useContext, useRef, useMemo } from "react";
+import queryString from 'query-string';
+import { Buffer } from 'buffer'
 
 export interface Example {
   key: number;
@@ -24,12 +26,21 @@ export const supportedLanguages = (extension: string): string => {
 }
 
 const examplesImports = import.meta.glob('../examples/*.*', { as: 'raw' });
-const defaultExamples = await Promise.all(Object.keys(examplesImports).map(async (e, i) => ({ key: i, text: e.split('/').pop()!, value: await examplesImports[e]() })));
+const defaultExamples = await Promise.all(Object.keys(examplesImports).map(async (e, i) => ({ key: i + 1, text: e.split('/').pop()!, value: await examplesImports[e]() })));
+
+const parsed = queryString.parse(location.search);
+let defaultExample: Example;
+if (parsed.code) {
+  defaultExample = {
+    key: 0,
+    text: 'default.w',
+    value: Buffer.from(parsed.code as string, 'base64').toString('utf-8')
+  }
+}
 
 export function useExamples() {
   const [examples, setExamples] = useState<Example[]>(defaultExamples);
-  const [currentExample, setCurrentExample] = useState<Example>(examples[0]);
-
+  const [currentExample, setCurrentExample] = useState<Example>(defaultExample || examples[0]);
   const [languageContext, setLanguageContext] = useState<LanguageContext>({ file: currentExample.text, language: 'wing', path: 'source.w' });
 
   return {
