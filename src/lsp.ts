@@ -48,7 +48,7 @@ const wingc = await load({
   env: {
     RUST_BACKTRACE: "full",
   },
-  fs: fs,
+  fs: fs as any,
   wingcWASMData,
   wingsdkManifestRoot: "/wingsdk",
   imports: {
