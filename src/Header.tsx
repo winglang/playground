@@ -28,9 +28,6 @@ export function Header() {
             <a className="font-sans mx-[5px] py-[5px] px-[10px] leading-5 text-[14px] text-[#f1f0f1] font-normal hover:text-[#2ad5c1]" href="https://docs.winglang.io" >Docs</a>
           </li>
           <li className="flex-shrink cursor-pointer">
-            <a className="font-sans mx-[5px] py-[5px] px-[10px] leading-5 text-[14px] text-[#f1f0f1] font-normal hover:text-[#2ad5c1]" href="https://t.winglang.io/slack" target="_blank">Community</a>
-          </li>
-          <li className="flex-shrink cursor-pointer">
             <a className="font-sans mx-[5px] py-[5px] px-[10px] leading-5 text-[14px] text-[#f1f0f1] font-normal hover:text-[#2ad5c1]" href="https://docs.winglang.io/blog" >Blog</a>
           </li>
         </ul>
@@ -58,7 +55,6 @@ export function Header() {
           <div className="w-[1px] h-[1.5em] border-r-[1px] border-r-[#26413c]"></div>
           <div className="text-block-13">⭐️ {stars}<br /></div>
         </a>
-        <a href="https://docs.winglang.io/getting-started" target="_blank" className="flex font-sans font-medium leading-5 text-[#03120e] justify-center items-center px-[24px] pb-[1px] bg-[#2ad5c1] border-[#2ad5c1] border-[1px] rounded-[0.25em] h-[40px] text-[14px] hover:text-[#03120e] hover:bg-[#678d88] hover:border-[#678d88]">Get started</a>
       </div>
     </div>
   </div>
