@@ -19,23 +19,20 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
-      - name: Install console dependencies
-        run: npm install
-        working-directory: console-build
-      - name: Build console
-        run: npm run build
-        working-directory: console-build
+          node-version: 18     
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
       - name: Update wing version
-        run: npm update winglang @winglang/sdk
+        run: pnpm update winglang @winglang/sdk
+      - name: Build console
+        run: pnpm run build
+        working-directory: console-build
       - name: Update assets
         run: npx tsx scripts/updatePlayground.ts
         env:
           GITHUB_TOKEN: ${{ secrets.PROJEN_GITHUB_TOKEN }}
       - name: Build playground
-        run: npm run build
+        run: pnpm run build
       - name: Check Changed files
         uses: tj-actions/verify-changed-files@v14
         id: verify-changed-files

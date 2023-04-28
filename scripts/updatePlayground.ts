@@ -50,7 +50,7 @@ const updateWing = async () => {
 
   console.log("Compressing Wing CLI...")
   await tar.create({
-    file: path.join(currentDir, "../wing/winglang-webpack.tgz"),
+    file: path.join(currentDir, "../apps/playground/wing/winglang-webpack.tgz"),
     C: wingDistDir,
     gzip: true,
     P: true
@@ -75,16 +75,18 @@ const updateWing = async () => {
 
   console.log("Compressing Wing SDK...")
   await tar.create({
-    file: path.join(currentDir, "../wing/winglang-sdk-webpack.tgz"),
+    file: path.join(currentDir, "../apps/playground/wing/winglang-sdk-webpack.tgz"),
     C: sdkDistDir,
     gzip: true,
     P: true
   }, [".", "../package.json", "../.jsii"]);
 
-  return fs.cp(path.join(currentDir, "../node_modules/winglang/wingc.wasm"), path.join(currentDir, "../wing/wingc.wasm"))
+  return fs.cp(path.join(currentDir, "../node_modules/winglang/wingc.wasm"), path.join(currentDir, "../apps/playground/wing/wingc.wasm"))
 }
 
 const updateConsole = async () => {
+  const currentDir = dirname(fileURLToPath(import.meta.url))
+
   console.log("Downloading latest console release...");
   const release = await request("GET /repos/winglang/console/releases/latest", {
     headers: {
@@ -98,13 +100,13 @@ const updateConsole = async () => {
   const asset = release.data.assets.find((asset) => asset.name === "playground-console.tgz");
   console.log("Assets:", asset);
 
-  await updateAsset("console", asset, "./console-build/playground-console.tgz");
+  await updateAsset("console", asset, path.join(currentDir, "../apps/console-build/playground-console.tgz"));
 
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), Date.now().toString()));
   
   console.log("Extracting console...");
   await tar.extract({
-    file: "./console-build/playground-console.tgz",
+    file: path.join(currentDir, "../apps/console-build/playground-console.tgz"),
     C: dir
   });
 
@@ -112,7 +114,7 @@ const updateConsole = async () => {
   await fs.rm(path.join(dir, "console/app/dist/vite/electron"), { recursive: true, force: true });
 
   console.log("Injecting html code...");
-  const sourceHtmlPath = path.join(dirname(fileURLToPath(import.meta.url)), "../console-build/dist/index.html");
+  const sourceHtmlPath = path.join(currentDir, "../apps/console-build/dist/index.html");
   const targetHtmlPath = path.join(dir, "console/app/dist/vite/index.html");
   const appHtml = await fs.readFile(sourceHtmlPath, "utf-8");
   const cssFiles = await glob(path.join(dir, "console/app/dist/vite") + "/**/*.css");
@@ -127,17 +129,17 @@ ${css}
   await fs.rm(path.join(dir, "console/app/dist/vite/assets"), { recursive: true, force: true });
   await fs.mkdir(path.join(dir, "console/app/dist/vite/assets"), { recursive: true });
   await fs.cp(path.join(dir, "console/ui/dist/index.global.js"), path.join(dir, "console/app/dist/vite/assets/console.ui.js"));
-  await fs.cp(path.join(dirname(fileURLToPath(import.meta.url)), "../console-build/dist/assets/index.js"), path.join(dir, "console/app/dist/vite/assets/index.js"));
+  await fs.cp(path.join(currentDir, "../apps/console-build/dist/assets/index.js"), path.join(dir, "console/app/dist/vite/assets/index.js"));
 
   console.log("Creating the console ui archive...");
   await tar.create({
-    file: "./console-build/console.tgz",
+    file: path.join(currentDir, "../apps/console-build/console.tgz"),
     C: path.join(dir, "console/app/dist/vite"),
     gzip: true
   }, ["."]);
 
   console.log("Updating console server...");
-  await fs.cp(path.join(dir, "console/server/dist/index.js"), "./console-build/console.server.js");
+  await fs.cp(path.join(dir, "console/server/dist/index.js"), path.join(currentDir, "../apps/console-build/console.server.js"));
 }
 
 (async () => {

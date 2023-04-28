@@ -1,16 +1,12 @@
 {
-  "name": "a-wing-playground",
+  "name": "playground",
   "private": true,
   "version": "0.0.1-alpha",
   "type": "module",
   "scripts": {
-    "dev": "turbo run dev --scope='playground'",
-    "build": "turbo run build",
-    "preview": "vite preview",
-    "update": "npx tsx scripts/updatePlayground.ts",
-    "deploy": "turno run deploy",
-    "test": "turbo run test playwright --scope='playground' --scope='e2e' --scope='console-build'",
-    "test:update": "turbo run test playwright:update"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@cowasm/memfs": "^3.5.1",
@@ -19,7 +15,7 @@
     "@octokit/request": "^6.2.3",
     "@radix-ui/colors": "^0.1.8",
     "@webcontainer/api": "^1.1.0",
-    "@winglang/sdk": "^0.14.1",
+    "@winglang/sdk": "latest",
     "adm-zip": "^0.5.10",
     "buffer": "^6.0.3",
     "color": "^4.2.3",
@@ -41,7 +37,7 @@
     "vite-plugin-node-polyfills": "^0.7.0",
     "vscode-json-languageservice": "^5.3.2",
     "vscode-ws-jsonrpc": "^2.0.2",
-    "winglang": "^0.14.1"
+    "winglang": "latest"
   },
   "devDependencies": {
     "@playwright/test": "^1.32.3",

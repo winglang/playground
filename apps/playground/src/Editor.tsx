@@ -35,16 +35,16 @@ import { Dropdown } from 'semantic-ui-react'
 import wingJson from './grammers/wing.tmLanguage.json'
 import jsJson from './grammers/js.tmLanguage.json'
 import LspWorker from './lsp.js?worker'
-import files from './files';
-import { initContainer, installDependencies, prepareForEvaluation } from './containers';
+import files from './files.js';
+import { initContainer, installDependencies, prepareForEvaluation } from './containers.js';
 
-import { Tree, TreeNode, createTree } from './Tree';
+import { Tree, TreeNode, createTree } from './Tree.js';
 import { FileTree } from 'exploration';
-import { Actions } from './Actions';
-import { Modal } from './Modal';
-import { Loading } from './Loading';
+import { Actions } from './Actions.js';
+import { Modal } from './Modal.js';
+import { Loading } from './Loading.js';
 import { FilePicker } from './FilePicker.js';
-import { CompilationResult, compileToAws, compileToAzure, compileToGcp } from './compilerService';
+import { CompilationResult, compileToAws, compileToAzure, compileToGcp } from './compilerService.js';
 import { useExamples } from './use-examples.js';
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
@@ -237,8 +237,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         do {
           compileValue = editorRef.current?.getValue()
           await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
-          const example = examples.find(e => e.text === languageContext.file)!;
-          example.value = compileValue!;
+          // const example = examples.find(e => e.text === languageContext.file)!;
+          // example.value = compileValue!;
         } while (compileValue !== editorRef.current?.getValue());
       } finally {
         setLoadingStatus(LoadingStatus.Completed)

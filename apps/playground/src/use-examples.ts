@@ -25,7 +25,7 @@ export const supportedLanguages = (extension: string): string => {
   }
 }
 
-const examplesImports = import.meta.glob('../examples/*.*', { as: 'raw' });
+const examplesImports = import.meta.glob('../../../examples/*.*', { as: 'raw' });
 const defaultExamples = await Promise.all(Object.keys(examplesImports).map(async (e, i) => ({ key: i + 1, text: e.split('/').pop()!, value: await examplesImports[e]() })));
 
 const parsed = queryString.parse(location.search);

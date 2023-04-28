@@ -7,14 +7,14 @@ import codespanWasmUrl from '../wing/codespan-wasm.tgz?url'
 import vm2Url from '../wing/vm2.tgz?url'
 import expressUrl from './assets/express.tgz?url'
 import tarGzCode from "./assets/tar.gz.js?url";
-import consoleCode from "../console-build/console.server.js?url";
-import consoleUrl from "../console-build/console.tgz?url";
+import consoleCode from "../../console-build/console.server.js?url";
+import consoleUrl from "../../console-build/console.tgz?url";
 
 import constructsJSIIUrl from "constructs/.jsii?url";
 import constructsPackageJsonUrl from "constructs/package.json?url";
 
 export async function initContainer(): Promise<WebContainer> {
-  const jsExamples = import.meta.glob('../examples/*.js', { as: 'raw' });
+  const jsExamples = import.meta.glob('../../../examples/*.js', { as: 'raw' });
   const examples = await Promise.all(Object.keys(jsExamples).map(async e => { 
     const contents = await jsExamples[e]();
     return {

@@ -24,13 +24,16 @@ dist-ssr
 *.sw?
 .vercel
 
-console-build/console.server.js
-console-build/console.tgz
-console-build/playground-console.tgz
+apps/console-build/console.server.js
+apps/console-build/console.tgz
+apps/console-build/playground-console.tgz
 
-wing/wingc.wasm
-wing/winglang-webpack.tgz
-wing/winglang-sdk-webpack.tgz
-/test-results/
-/playwright-report/
-/playwright/.cache/
+apps/playground/wing/wingc.wasm
+apps/playground/wing/winglang-webpack.tgz
+apps/playground/wing/winglang-sdk-webpack.tgz
+
+test-results/
+playwright-report/
+apps/e2e/test-results/
+apps/e2e/playwright-report/
+apps/e2e/playwright/.cache/

@@ -19,24 +19,21 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-      - name: Install console dependencies
-        run: npm install
-        working-directory: console-build
-      - name: Build console
-        run: npm run build
-        working-directory: console-build
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
+      - name: Build console
+        run: pnpm run build
+        working-directory: console-build
       - name: Update assets
         run: npx tsx scripts/updatePlayground.ts
         env:
           GITHUB_TOKEN: ${{ secrets.PROJEN_GITHUB_TOKEN }}
       - name: Build playground
-        run: npm run build
+        run: pnpm run build
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - name: Run Playwright tests
-        run: npm run test
+      - name: Run tests
+        run: pnpm run test
       - uses: actions/upload-artifact@v3
         if: always()
         with:

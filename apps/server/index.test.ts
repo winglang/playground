@@ -2,7 +2,7 @@ import { Context, APIGatewayProxyResult, APIGatewayEvent } from 'aws-lambda';
 import { assert, test } from 'vitest'
 import { handler } from '.'
 import Zip from 'adm-zip';
-import { Base64Binary } from '../../src/utils';
+import { Base64Binary } from '../playground/src/utils';
 
 test('test server', async () => {
   const body = {

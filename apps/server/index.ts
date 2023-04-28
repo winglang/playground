@@ -17,20 +17,6 @@ const cors = {
   'Access-Control-Allow-Methods': '*',
 }
 
-const walk = async (dirPath) => {
-  const files: string[] = [];
-  const walkImpl = async (dirPath) => {
-    return Promise.all(
-      await readdir(dirPath, { withFileTypes: true }).then((entries) => entries.map((entry) => {
-        const childPath = join(dirPath, entry.name)
-        return entry.isDirectory() ? walkImpl(childPath) : files.push(childPath)
-      })),
-    )
-  }
-  await walkImpl(dirPath)
-  return files
-}
-
 const targetToExtension = (target: string): string => {
   return target.toLowerCase().replace(/-/g, "");
 }
@@ -60,17 +46,6 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
     let zip = new Zip();
     zip.addLocalFolder(outDir);
     let buffer: Buffer = zip.toBuffer();
-
-    // const fileList = await walk(outDir);
-    // const files = await Promise.all(fileList.filter(f => !f.endsWith(".zip")).map(async f => {
-    //   const contents = await readFile(f, 'utf-8')
-    //   return { name: f, contents };
-    // }));
-
-    // headers: Object.assign({}, cors, {
-    //   'Content-Type': 'application/zip, application/octet-stream',
-    //   'Content-disposition': `attachment; filename=wing.zip`
-    // }),
   
     return {
       statusCode: 200,
