@@ -15,7 +15,7 @@
     "@octokit/request": "^6.2.3",
     "@radix-ui/colors": "^0.1.8",
     "@webcontainer/api": "^1.1.0",
-    "@winglang/sdk": "latest",
+    "@winglang/sdk": "^0.14.2",
     "adm-zip": "^0.5.10",
     "buffer": "^6.0.3",
     "color": "^4.2.3",
@@ -37,7 +37,7 @@
     "vite-plugin-node-polyfills": "^0.7.0",
     "vscode-json-languageservice": "^5.3.2",
     "vscode-ws-jsonrpc": "^2.0.2",
-    "winglang": "latest"
+    "winglang": "^0.14.2"
   },
   "devDependencies": {
     "@playwright/test": "^1.32.3",

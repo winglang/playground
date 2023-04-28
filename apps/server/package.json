@@ -16,6 +16,6 @@
   },
   "dependencies": {
     "adm-zip": "^0.5.10",
-    "winglang": "latest"
+    "winglang": "^0.14.2"
   }
 }

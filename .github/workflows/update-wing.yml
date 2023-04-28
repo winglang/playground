@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Update wing version
-        run: pnpm update winglang @winglang/sdk
+        run: pnpm -r up winglang @winglang/sdk --latest
       - name: Build console
         run: pnpm run build
         working-directory: console-build
@@ -49,9 +49,9 @@ jobs:
             ------
             *Automatically created via the "update-wing" workflow*
           branch: github-actions/update-wing
-          title: "feat: update wing version"
+          title: "chore: update wing version"
           body: |-
-            feat: update wing version
+            chore: update wing version
             Updates the Wing version. See details in [workflow run].
             [Workflow Run]: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
             ------
