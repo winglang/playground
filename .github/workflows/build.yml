@@ -43,7 +43,7 @@ jobs:
           path: playwright-report/
           retention-days: 30
       - name: Enable auto-merge for Dependabot PRs
-        if: ${{ github.actor == 'dependabot[bot]' }} || github.actor == 'monadabot'
+        if: github.event.pull_request.user.login == 'monadabot'
         # if: ${{contains(steps.metadata.outputs.dependency-names, 'my-dependency') && steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
         run: gh pr merge --auto --merge "$PR_URL"
         env:
