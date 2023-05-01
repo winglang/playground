@@ -30,12 +30,9 @@ import darkPlusTMTheme from './monaco-themes/dark_plus.js';
 import convertTheme from './monaco-themes/convert-tmtheme.js';
 import { debounce } from 'lodash';
 
-import { Dropdown } from 'semantic-ui-react'
-
 import wingJson from './grammers/wing.tmLanguage.json'
 import jsJson from './grammers/js.tmLanguage.json'
 import LspWorker from './lsp.js?worker'
-import files from './files';
 import { initContainer, installDependencies, prepareForEvaluation } from './containers';
 
 import { Tree, TreeNode, createTree } from './Tree';
@@ -46,6 +43,7 @@ import { Loading } from './Loading';
 import { FilePicker } from './FilePicker.js';
 import { CompilationResult, compileToAws, compileToAzure, compileToGcp } from './compilerService';
 import { useExamples } from './use-examples.js';
+import {RightResizableWidget} from "./RightResizableWidget";
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
@@ -332,7 +330,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           {/* <div className='flex h-full border-r border-slate-300 dark:border-slate-900'>
             <Tree tree={exampleTree} onFileOpen={onTreeChange}/>
           </div> */}
-          <div className='flex w-1/3 h-full'>
+          <RightResizableWidget className='flex-shrink w-1/3 border-l z-10'>
+              <div className={"flex w-full h-full"}>
             <Editor
               data-testid="editor"
               // height="90vh"
@@ -345,7 +344,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
               beforeMount={editorWillMount}
               onChange={(value, event) => { onChange(value, isCompiling, event) }}
               />
-          </div>
+              </div>
+          </RightResizableWidget>
           <div className='flex-1 w-9/12 h-full basis-auto'>
           {loadingStatus != LoadingStatus.Completed ? 
             <Loading status={loadingStatus} /> :

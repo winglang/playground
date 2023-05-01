@@ -21,6 +21,7 @@
     "@winglang/sdk": "latest",
     "adm-zip": "^0.5.10",
     "buffer": "^6.0.3",
+    "classnames": "^2.3.2",
     "color": "^4.2.3",
     "exploration": "^1.6.0",
     "lodash": "^4.17.21",
