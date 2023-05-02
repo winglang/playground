@@ -21,17 +21,12 @@ jobs:
       - name: Install console dependencies
         run: npm install
         working-directory: console-build
-      - name: Build console
-        run: npm run build
-        working-directory: console-build
       - name: Install dependencies
         run: npm install
-      - name: Update assets
-        run: npx tsx scripts/updatePlayground.ts
-        env:
-          GITHUB_TOKEN: ${{ secrets.PROJEN_GITHUB_TOKEN }}
       - name: Build playground
         run: npm run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.PROJEN_GITHUB_TOKEN }}
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
