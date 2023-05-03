@@ -28,6 +28,7 @@ import React, { createRef, useEffect, useState, useRef } from 'react';
 import { WebContainer } from '@webcontainer/api';
 import darkPlusTMTheme from './monaco-themes/dark_plus.js';
 import convertTheme from './monaco-themes/convert-tmtheme.js';
+import wingLanguageConfiguration from './language-configurations/wing-configration.json';
 import { debounce } from 'lodash';
 
 import { Dropdown } from 'semantic-ui-react'
@@ -188,6 +189,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           extensions: ['.js'],
           aliases: ['JS', 'JavaScript', 'javascript']
         });
+
+        monaco.languages.setLanguageConfiguration('wing', wingLanguageConfiguration)
       } catch (error) {
           console.error(error);
       }
