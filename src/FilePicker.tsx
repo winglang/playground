@@ -5,7 +5,7 @@ export interface FilePickerProps {
   examples: Example[];
   currentExample: Example;
   setCurrentExample: React.Dispatch<React.SetStateAction<Example>>; 
-  setLanguageContext: React.Dispatch<React.SetStateAction<LanguageContext>>;
+  setLanguageContext?: React.Dispatch<React.SetStateAction<LanguageContext>>;
 }
 
 export function FilePicker({ examples, currentExample, setCurrentExample, setLanguageContext }: FilePickerProps) {
@@ -15,7 +15,9 @@ export function FilePicker({ examples, currentExample, setCurrentExample, setLan
 
     const file =  example.text.split('/').pop()!;
     const ext = file.split('.').pop()!;
-    setLanguageContext({ file: example.text, path: `source.${file.split('.').pop()}`, language: supportedLanguages(ext) })
+    if (setLanguageContext) {
+      setLanguageContext({ file: example.text, path: `source.${file.split('.').pop()}`, language: supportedLanguages(ext) })
+    }
     setTouched(true);
   }
   return (
