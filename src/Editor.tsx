@@ -24,7 +24,7 @@ import { wireTmGrammars } from 'monaco-editor-textmate';
 import Editor, { loader } from "@monaco-editor/react";
 import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
-import React, { createRef, useEffect, useState, useRef } from 'react';
+import React, { createRef, useEffect, useState, useRef, useCallback } from 'react';
 import { WebContainer } from '@webcontainer/api';
 import darkPlusTMTheme from './monaco-themes/dark_plus.js';
 import convertTheme from './monaco-themes/convert-tmtheme.js';
@@ -210,7 +210,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       MonacoServices.install(monaco);
 
       await wireGrammers(monaco);
-      editorRef.current?.setValue(currentExample.value);
+      editorRef.current?.setValue(tutorials[0].code);
 
       // do not wait for webcontainers
       initContainer().then(async instance => {
@@ -327,6 +327,21 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [currentStepId, setCurrentStepId] = useState("01");
     const currentStep = steps.find(s => s.id === currentStepId);
 
+    const goToPreviousTutorial = useCallback(() => {
+      const currentStepIndex = steps.findIndex(s => s.id === currentStepId);
+      const previousStep = steps[currentStepIndex - 1];
+      if (previousStep) {
+        setCurrentStepId(previousStep.id);
+      }
+    }, [steps, currentStepId]);
+    const goToNextTutorial = useCallback(() => {
+      const currentStepIndex = steps.findIndex(s => s.id === currentStepId);
+      const nextStep = steps[currentStepIndex + 1];
+      if (nextStep) {
+        setCurrentStepId(nextStep.id);
+      }
+    }, [steps, currentStepId]);
+
     useEffect(() => {
       if (!currentStep) {
         return;
@@ -373,8 +388,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
               </div>
               <div className='shrink-0 px-4 py-2 text-white border-t border-gray-400 flex gap-2'>
                 <div className="grow"></div>
-                <button>Previous</button>
-                <button>Next</button>
+                <button onClick={() => goToPreviousTutorial()}>Previous</button>
+                <button onClick={() => goToNextTutorial()}>Next</button>
               </div>
             </div>
           </div>
