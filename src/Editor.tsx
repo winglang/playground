@@ -341,6 +341,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         setCurrentStepId(nextStep.id);
       }
     }, [steps, currentStepId]);
+    const solveTutorial = useCallback(() => {
+      const currentStepIndex = steps.findIndex(s => s.id === currentStepId);
+      const step = steps[currentStepIndex];
+      if (step.solution) {
+        editorRef.current?.setValue(step.solution);
+      }
+    }, [steps, currentStepId]);
 
     useEffect(() => {
       if (!currentStep) {
@@ -387,9 +394,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                   />
               </div>
               <div className='shrink-0 px-4 py-2 text-white border-t border-gray-400 flex gap-2'>
+                <button className='px-2 py-0.5 hover:bg-gray-700 rounded' onClick={() => solveTutorial()}>Solve</button>
                 <div className="grow"></div>
-                <button onClick={() => goToPreviousTutorial()}>Previous</button>
-                <button onClick={() => goToNextTutorial()}>Next</button>
+                <button className='px-2 py-0.5 hover:bg-gray-700 rounded' onClick={() => goToPreviousTutorial()}>Previous</button>
+                <button className='px-2 py-0.5 hover:bg-gray-700 rounded' onClick={() => goToNextTutorial()}>Next</button>
               </div>
             </div>
           </div>
