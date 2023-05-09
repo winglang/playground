@@ -1,9 +1,19 @@
-import classnames from "classnames";
+import classNames from "classnames";
 import { useMemo } from "react";
+import { CheckIcon } from '@heroicons/react/24/solid'
+
+// const steps = [
+//   { id: '01', name: 'Job Details', description: 'Vitae sed mi luctus laoreet.', href: '#', status: 'complete' },
+//   { id: '02', name: 'Application form', description: 'Cursus semper viverra.', href: '#', status: 'current' },
+//   { id: '03', name: 'Preview', description: 'Penatibus eu quis ante.', href: '#', status: 'upcoming' },
+// ]
 
 export interface ProgressBarStep {
   id: string;
-  text: string;
+  name: string;
+  description?: string;
+  tutorial: string;
+  status: "complete"|"current"|"upcoming"
 }
 
 export interface ProgressBarProps {
@@ -12,6 +22,7 @@ export interface ProgressBarProps {
 }
 
 export const ProgressBar = (props: ProgressBarProps) => {
+  const {steps}=props;
   const currentStepIndex = useMemo(
     () => props.steps.findIndex((step) => step.id === props.current),
     [props.steps, props.current]
@@ -32,42 +43,112 @@ export const ProgressBar = (props: ProgressBarProps) => {
   }, [currentStepIndex, stepsLength]);
 
   return (
-    <div>
-      {/* <h4 className="sr-only">Status</h4>
-      <p className="text-sm font-medium text-white">{currentStep?.text}</p> */}
-      <div className="mt-3" aria-hidden="true">
-        <div className="relative">
-          <div className="overflow-hidden rounded-full bg-gray-200">
-            <div
-              className="h-2 rounded-full bg-teal-500"
-              style={{ width: `${percentComplete}%` }}
-            />
-          </div>
-
-          <div className="absolute left-4 inset-y-0 bg-red-500 w-6" style={{left: 0}}></div>
-        </div>
-
-        <div
-          className="mt-3 grid grid-cols-4 text-sm font-medium text-gray-400 relative"
-          style={{
-            gridTemplateColumns: `repeat(${stepsLength}, minmax(0, 1fr))`,
-          }}
+    <div className="text-gray-200 lg:border-b lg:border-t lg:border-gray-600">
+      <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Progress">
+        <ol
+          role="list"
+          className="overflow-hidden rounded-md lg:flex lg:rounded-none lg:border-l lg:border-r lg:border-gray-600"
         >
+          {steps.map((step, stepIdx) => (
+            <li key={step.id} className="relative overflow-hidden lg:flex-1">
+              <div
+                className={classNames(
+                  stepIdx === 0 ? 'rounded-t-md border-b-0' : '',
+                  stepIdx === steps.length - 1 ? 'rounded-b-md border-t-0' : '',
+                  'overflow-hidden border border-gray-600 lg:border-0'
+                )}
+              >
+                {step.status === 'complete' ? (
+                  <a href={step.href} className="group hover:text-teal-500">
+                    <span
+                      className="absolute left-0 top-0 h-full w-1 bg-transparent group-hover:bg-gray-200 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full"
+                      aria-hidden="true"
+                    />
+                    <span
+                      className={classNames(
+                        stepIdx !== 0 ? 'lg:pl-9' : '',
+                        'flex items-start px-6 py-5 text-sm font-medium'
+                      )}
+                    >
+                      <span className="flex-shrink-0">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-500">
+                          <CheckIcon className="h-6 w-6 text-white" aria-hidden="true" />
+                        </span>
+                      </span>
+                      <span className="ml-4 mt-0.5 flex min-w-0 flex-col">
+                        <span className="text-sm font-medium">{step.name}</span>
+                        {/* <span className="text-sm font-medium text-gray-300">{step.description}</span> */}
+                      </span>
+                    </span>
+                  </a>
+                ) : step.status === 'current' ? (
+                  <a href={step.href} aria-current="step">
+                    <span
+                      className="absolute left-0 top-0 h-full w-1 bg-teal-500 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full"
+                      aria-hidden="true"
+                    />
+                    <span
+                      className={classNames(
+                        stepIdx !== 0 ? 'lg:pl-9' : '',
+                        'flex items-start px-6 py-5 text-sm font-medium'
+                      )}
+                    >
+                      <span className="flex-shrink-0">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-teal-500">
+                          <span className="text-teal-500">{step.id}</span>
+                        </span>
+                      </span>
+                      <span className="ml-4 mt-0.5 flex min-w-0 flex-col">
+                        <span className="text-sm font-medium text-teal-500">{step.name}</span>
+                        {/* <span className="text-sm font-medium text-gray-300">{step.description}</span> */}
+                      </span>
+                    </span>
+                  </a>
+                ) : (
+                  <a href={step.href} className="group">
+                    <span
+                      className="absolute left-0 top-0 h-full w-1 bg-transparent group-hover:bg-gray-200 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full"
+                      aria-hidden="true"
+                    />
+                    <span
+                      className={classNames(
+                        stepIdx !== 0 ? 'lg:pl-9' : '',
+                        'flex items-start px-6 py-5 text-sm font-medium'
+                      )}
+                    >
+                      <span className="flex-shrink-0">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-gray-600">
+                          <span className="text-gray-300">{step.id}</span>
+                        </span>
+                      </span>
+                      <span className="ml-4 mt-0.5 flex min-w-0 flex-col">
+                        <span className="text-sm font-medium text-gray-300">{step.name}</span>
+                        {/* <span className="text-sm font-medium text-gray-300">{step.description}</span> */}
+                      </span>
+                    </span>
+                  </a>
+                )}
 
-          {props.steps.map((step, stepIndex) => (
-            <div
-              key={step.id}
-              className={classnames({
-                "text-teal-500": stepIndex <= currentStepIndex,
-                "text-center": stepIndex > 0 && stepIndex < stepsLength,
-                "text-right": stepIndex === stepsLength - 1,
-              })}
-            >
-              {step.text}
-            </div>
+                {stepIdx !== 0 ? (
+                  <>
+                    {/* Separator */}
+                    <div className="absolute inset-0 left-0 top-0 hidden w-3 lg:block" aria-hidden="true">
+                      <svg
+                        className="h-full w-full text-gray-600"
+                        viewBox="0 0 12 82"
+                        fill="none"
+                        preserveAspectRatio="none"
+                      >
+                        <path d="M0.5 0V31L10.5 41L0.5 51V82" stroke="currentcolor" vectorEffect="non-scaling-stroke" />
+                      </svg>
+                    </div>
+                  </>
+                ) : null}
+              </div>
+            </li>
           ))}
-        </div>
-      </div>
+        </ol>
+      </nav>
     </div>
   );
 };
