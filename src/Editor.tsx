@@ -28,6 +28,7 @@ import React, { createRef, useEffect, useState, useRef } from 'react';
 import { WebContainer } from '@webcontainer/api';
 import darkPlusTMTheme from './monaco-themes/dark_plus.js';
 import convertTheme from './monaco-themes/convert-tmtheme.js';
+import wingLanguageConfiguration from './language-configurations/wing-configration.json';
 import { debounce } from 'lodash';
 
 import wingJson from './grammers/wing.tmLanguage.json'
@@ -42,7 +43,7 @@ import { Modal } from './Modal';
 import { Loading } from './Loading';
 import { FilePicker } from './FilePicker.js';
 import { CompilationResult, compileToAws, compileToAzure, compileToGcp } from './compilerService';
-import { useExamples } from './use-examples.js';
+import { useExamples, Example } from './use-examples.js';
 import {RightResizableWidget} from "./RightResizableWidget";
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
@@ -151,10 +152,6 @@ enum LoadingStatus {
 }
 
 export const ReactMonacoEditor: React.FC<EditorProps> = ({
-    hostname = 'localhost',
-    path = '/',
-    port = '3111',
-    className
 }) => {
     const { examples, setExamples, 
       currentExample, setCurrentExample, 
@@ -172,10 +169,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [modalVisibility, setModalVisibility] = useState(false);
 
     const compileEditorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
-    const [compileTree, setCompileTree] = useState<FileTree<{}>>(createTree({ files: [] }));
-    const [compileText, setCompileText] = useState('');
     const [compileResult, setCompileResult] = useState<CompilationResult>();
     const [compileError, setCompileError] = useState('');
+    const [compileExamples, setCompileExamples] = useState<Example[]>(examples);
+    const [compileExample, setCompileExample] = useState<Example>(defaultExample);
 
     const editorWillMount = (monaco: any) => {
     
@@ -190,6 +187,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           extensions: ['.js'],
           aliases: ['JS', 'JavaScript', 'javascript']
         });
+
+        monaco.languages.setLanguageConfiguration('wing', wingLanguageConfiguration)
       } catch (error) {
           console.error(error);
       }
@@ -207,8 +206,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
       await wireGrammers(monaco);
       editorRef.current?.setValue(currentExample.value);
-      // monaco.editor.setModelLanguage(editor.getModel(), 'wing');
-      monaco.editor.setTheme('akkd-dark-plus');
 
       // do not wait for webcontainers
       initContainer().then(async instance => {
@@ -236,7 +233,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           compileValue = editorRef.current?.getValue()
           await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
           const example = examples.find(e => e.text === languageContext.file)!;
-          example.value = compileValue!;
+          if (example) {
+            example.value = compileValue!;
+          }
         } while (compileValue !== editorRef.current?.getValue());
       } finally {
         setLoadingStatus(LoadingStatus.Completed)
@@ -269,19 +268,15 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         setModalVisibility(true);
         try {
           const result = await compileFn(editorRef.current?.getValue()!);
-          const compileTreeNodes = result.files.map(e => ({ name: e.name, type: 'file' }) as TreeNode);
-          const tree = createTree({ files: compileTreeNodes });
-          setCompileText(result!.files[0].contents);
+          const examples = result.files.map((f, i) => ({ key: i + 1, text: f.name, value: f.contents }))
+          const example = examples[0];
+          setCompileExamples(examples);
+          setCompileExample(example);
           setCompileResult(result)
-          setCompileTree(tree);
         } catch (err) {
           setCompileError((err as any).toString());
         }
       }
-    }
-
-    const onCompileTreeChange = (name: string) => {
-      setCompileText(compileResult!.files.find(e => e.name === name)!.contents);
     }
 
     const compileEditorDidMount = async (editor: any, monaco: any) => {
@@ -305,11 +300,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     useEffect(() => {
       compileEditorRef.current?.setScrollTop(0);
-    }, [compileText]);
+    }, [compileExample]);
 
     useEffect(() => {
       if (!modalVisibility) {
-        setCompileText('')
+        setCompileResult(undefined);
         setCompileError('')
       }
     }, [modalVisibility]);
@@ -322,21 +317,14 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       <div className='flex flex-col h-full'>
         <div className='flex flex-row pt-2 px-2 h-14 justify-between items-baseline bg-[#56657A]'>
           <FilePicker examples={examples} currentExample={currentExample} setCurrentExample={setCurrentExample} setLanguageContext={setLanguageContext} />
-          {/* <Dropdown selection placeholder='Select an example' options={examples} onChange={onFileChange} /> */}
           <Actions onRun={onRun} isRunDisabled={isCompiling} onTfAws={onCompile(compileToAws)} onTfAzure={onCompile(compileToAzure)} onTfGcp={onCompile(compileToGcp)} />
-          {/* <div className="status m-0.5 p-0.5 text-[#f1f0f1]">{loadingStatus}</div> */}
         </div>
         <div className='flex grow'>
-          {/* <div className='flex h-full border-r border-slate-300 dark:border-slate-900'>
-            <Tree tree={exampleTree} onFileOpen={onTreeChange}/>
-          </div> */}
           <RightResizableWidget className='flex-shrink w-1/3 border-l z-10'>
               <div className={"flex w-full h-full"}>
             <Editor
               data-testid="editor"
-              // height="90vh"
-              // width="30vw"
-              // theme="vs-dark"
+              theme="akkd-dark-plus"
               options={options}
               path={languageContext.path}
               language={languageContext.language}
@@ -359,26 +347,27 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           </div>
         </div>
         {modalVisibility && <Modal setModalVisibility={setModalVisibility} title='Compilation Output' onDownload={onDownload}>
-          {compileText && <div className='flex flex-grow flex-row h-full'>
-              <div className='flex h-full border-r border-slate-300'>
-                <Tree tree={compileTree!} onFileOpen={onCompileTreeChange}/>
+          {compileResult && <div className='flex flex-col w-full h-full'>
+              <div className="bg-[#56657A]">
+                <div className="flex">
+                  <FilePicker examples={compileExamples} currentExample={compileExample} setCurrentExample={setCompileExample} />
+                </div>
               </div>
-              <div className='flex w-1/2 h-full'>
+              <div className='flex basis-[2/3] flex-grow h-full max-w-[2/3]'>
                 <Editor
-                  // height="90vh"
-                  // width="30vw"
-                  // theme="vs-dark"
+                  theme="akkd-dark-plus"
+                  path="source.js"
+                  language="js"
                   options={Object.assign({}, options, { readOnly: true })}
                   onMount={compileEditorDidMount}
-                  value={compileText}
+                  value={compileExample.value}
                   />
               </div>
           </div>}
-          {!compileText && !compileError && <svg aria-hidden="true" className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
-          </svg>}
-          <div>{compileError}</div>
+          {!compileResult && !compileError && <div className="flex w-full justify-center items-center">
+            <Loading status={"Compiling..."} />
+          </div>}
+          <div><pre><code>{compileError}</code></pre></div>
         </Modal>}
       </div>
     );

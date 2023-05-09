@@ -21,17 +21,12 @@ jobs:
       - name: Install console dependencies
         run: npm install
         working-directory: console-build
-      - name: Build console
-        run: npm run build
-        working-directory: console-build
       - name: Install dependencies
         run: npm install
-      - name: Update assets
-        run: npx tsx scripts/updatePlayground.ts
-        env:
-          GITHUB_TOKEN: ${{ secrets.PROJEN_GITHUB_TOKEN }}
       - name: Build playground
         run: npm run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.PROJEN_GITHUB_TOKEN }}
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
@@ -42,10 +37,3 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
-      - name: Enable auto-merge for Dependabot PRs
-        if: github.event.pull_request.user.login == 'monadabot'
-        # if: ${{contains(steps.metadata.outputs.dependency-names, 'my-dependency') && steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
-        run: gh pr merge --auto --merge "$PR_URL"
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{secrets.PROJEN_GITHUB_TOKEN}}
