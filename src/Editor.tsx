@@ -48,6 +48,7 @@ import { useExamples, Example } from './use-examples.js';
 import {RightResizableWidget} from "./RightResizableWidget";
 import { tutorials } from './tutorials/index.js';
 import { ProgressBar } from './ProgressBar.js';
+import classNames from 'classnames';
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
@@ -347,6 +348,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         editorRef.current?.setValue(step.solution);
       }
     }, [steps, currentStepId]);
+    const resetTutorial = useCallback(() => {
+      const currentStepIndex = steps.findIndex(s => s.id === currentStepId);
+      const step = steps[currentStepIndex];
+      if (step.code) {
+        editorRef.current?.setValue(step.code);
+      }
+    }, [steps, currentStepId]);
 
     useEffect(() => {
       if (!currentStep) {
@@ -382,13 +390,17 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                       </div>
                   </div>
                   <div className='px-4 py-2 text-white border-t border-b border-r border-gray-400 flex gap-2'>
+                               <button className='px-2 py-0.5 hover:bg-gray-700 rounded'
+                                        onClick={() => resetTutorial()}>Reset</button>
                       {currentStep?.solution && <button className='px-2 py-0.5 hover:bg-gray-700 rounded'
                                onClick={() => solveTutorial()}>Solve</button>}
                       <div className="grow"></div>
                       {currentStep?.id !== "01" && <button className='px-2 py-0.5 hover:bg-gray-700 rounded'
                                onClick={() => goToPreviousTutorial()}>Previous</button>}
-                      {currentStep?.id !== "06" && <button className='px-2 py-0.5 hover:bg-gray-700 rounded'
-                               onClick={() => goToNextTutorial()}>Next</button>}
+                      <button className={classNames('px-2 py-0.5 hover:bg-gray-700 rounded', {
+                        "opacity-30": currentStep?.id === "06"
+                      })}
+                               onClick={() => goToNextTutorial()} disabled={currentStep?.id === "06"}>Next</button>
                   </div>
               <div className='grow w-full relative'>
                 <div className="absolute inset-0 overflow-hidden">
