@@ -375,9 +375,17 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         </div> */}
         <div className='flex grow'>
           <RightResizableWidget className='flex-shrink flex flex-col border-l z-10'>
-              <div className='prose prose-invert prose-headings:text-lg prose-headings:font-bold text-white p-2 border-b border-gray-400 mb-4'>
-                <ReactMarkdown children={currentStep?.tutorial ?? ""} />
-              </div>
+                  <div className={"min-h-[25rem] p-2 border-b border-r border-gray-400"}>
+                      <div className='prose prose-invert prose-headings:text-lg prose-headings:font-bold text-white'>
+                        <ReactMarkdown children={currentStep?.tutorial ?? ""} />
+                      </div>
+                  </div>
+                  <div className='px-4 py-2 text-white border-t border-b border-r border-gray-400 flex gap-2'>
+                      <button className='px-2 py-0.5 hover:bg-gray-700 rounded' onClick={() => solveTutorial()}>Solve</button>
+                      <div className="grow"></div>
+                      <button className='px-2 py-0.5 hover:bg-gray-700 rounded' onClick={() => goToPreviousTutorial()}>Previous</button>
+                      <button className='px-2 py-0.5 hover:bg-gray-700 rounded' onClick={() => goToNextTutorial()}>Next</button>
+                  </div>
               <div className='grow w-full relative'>
                 <div className="absolute inset-0 overflow-hidden">
                   <Editor
@@ -391,12 +399,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                     onChange={(value, event) => { onChange(value, isCompiling, event) }}
                     />
                 </div>
-              </div>
-              <div className='shrink-0 px-4 py-2 text-white border-t border-gray-400 flex gap-2'>
-                <button className='px-2 py-0.5 hover:bg-gray-700 rounded' onClick={() => solveTutorial()}>Solve</button>
-                <div className="grow"></div>
-                <button className='px-2 py-0.5 hover:bg-gray-700 rounded' onClick={() => goToPreviousTutorial()}>Previous</button>
-                <button className='px-2 py-0.5 hover:bg-gray-700 rounded' onClick={() => goToNextTutorial()}>Next</button>
               </div>
           </RightResizableWidget>
           <div className='flex-1 h-full basis-auto'>
