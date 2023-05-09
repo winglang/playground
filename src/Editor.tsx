@@ -30,6 +30,7 @@ import darkPlusTMTheme from './monaco-themes/dark_plus.js';
 import convertTheme from './monaco-themes/convert-tmtheme.js';
 import wingLanguageConfiguration from './language-configurations/wing-configration.json';
 import { debounce } from 'lodash';
+import ReactMarkdown from 'react-markdown'
 
 import { Dropdown } from 'semantic-ui-react'
 
@@ -378,8 +379,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         <div className='flex grow'>
           <div className='flex w-1/3 h-full'>
             <div className="grow flex flex-col">
-              <div className='text-base text-white p-2 border-b border-gray-400 mb-4'>
-                {currentStep?.tutorial}
+              <div className='prose-sm text-white p-2 border-b border-gray-400 mb-4'>
+                <ReactMarkdown children={currentStep?.tutorial ?? ""} />
               </div>
               <div className='grow w-full'>
                 <Editor
