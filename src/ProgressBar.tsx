@@ -19,28 +19,29 @@ export interface ProgressBarStep {
 export interface ProgressBarProps {
   steps: ProgressBarStep[];
   current: string;
+  onStepClick?: (step: string) => void;
 }
 
 export const ProgressBar = (props: ProgressBarProps) => {
-  const {steps}=props;
+  const { steps, current } = props;
   const currentStepIndex = useMemo(
     () => props.steps.findIndex((step) => step.id === props.current),
     [props.steps, props.current]
   );
-  const currentStep = useMemo(
-    () => props.steps[currentStepIndex],
-    [props.steps, currentStepIndex]
-  );
-  const stepsLength = useMemo(() => props.steps.length, [props.steps]);
-  const percentComplete = useMemo(() => {
-    let percentComplete = (currentStepIndex / stepsLength) * 100;
-    if (currentStepIndex > 0 && currentStepIndex < stepsLength - 1) {
-      percentComplete += 50 / stepsLength;
-    } else if (currentStepIndex === stepsLength - 1) {
-      percentComplete = 100;
-    }
-    return percentComplete;
-  }, [currentStepIndex, stepsLength]);
+  // const currentStep = useMemo(
+  //   () => props.steps[currentStepIndex],
+  //   [props.steps, currentStepIndex]
+  // );
+  // const stepsLength = useMemo(() => props.steps.length, [props.steps]);
+  // const percentComplete = useMemo(() => {
+  //   let percentComplete = (currentStepIndex / stepsLength) * 100;
+  //   if (currentStepIndex > 0 && currentStepIndex < stepsLength - 1) {
+  //     percentComplete += 50 / stepsLength;
+  //   } else if (currentStepIndex === stepsLength - 1) {
+  //     percentComplete = 100;
+  //   }
+  //   return percentComplete;
+  // }, [currentStepIndex, stepsLength]);
 
   return (
     <div className="text-gray-200 lg:border-b lg:border-t lg:border-gray-600">
@@ -58,8 +59,8 @@ export const ProgressBar = (props: ProgressBarProps) => {
                   'overflow-hidden border border-gray-600 lg:border-0'
                 )}
               >
-                {step.status === 'complete' ? (
-                  <a href={step.href} className="group hover:text-teal-500">
+                {stepIdx < currentStepIndex ? (
+                  <button className="group hover:text-teal-500" onClick={() => props.onStepClick?.(step.id)}>
                     <span
                       className="absolute left-0 top-0 h-full w-1 bg-transparent group-hover:bg-gray-200 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full"
                       aria-hidden="true"
@@ -80,9 +81,9 @@ export const ProgressBar = (props: ProgressBarProps) => {
                         {/* <span className="text-sm font-medium text-gray-300">{step.description}</span> */}
                       </span>
                     </span>
-                  </a>
-                ) : step.status === 'current' ? (
-                  <a href={step.href} aria-current="step">
+                  </button>
+                ) : stepIdx === currentStepIndex ? (
+                  <button aria-current="step" onClick={() => props.onStepClick?.(step.id)}>
                     <span
                       className="absolute left-0 top-0 h-full w-1 bg-teal-500 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full"
                       aria-hidden="true"
@@ -103,9 +104,9 @@ export const ProgressBar = (props: ProgressBarProps) => {
                         {/* <span className="text-sm font-medium text-gray-300">{step.description}</span> */}
                       </span>
                     </span>
-                  </a>
+                  </button>
                 ) : (
-                  <a href={step.href} className="group">
+                  <button className="group" onClick={() => props.onStepClick?.(step.id)}>
                     <span
                       className="absolute left-0 top-0 h-full w-1 bg-transparent group-hover:bg-gray-200 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full"
                       aria-hidden="true"
@@ -126,7 +127,7 @@ export const ProgressBar = (props: ProgressBarProps) => {
                         {/* <span className="text-sm font-medium text-gray-300">{step.description}</span> */}
                       </span>
                     </span>
-                  </a>
+                  </button>
                 )}
 
                 {stepIdx !== 0 ? (

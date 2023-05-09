@@ -49,6 +49,8 @@ import { CompilationResult, compileToAws, compileToAzure, compileToGcp } from '.
 import { useExamples, Example } from './use-examples.js';
 import { ProgressBar, ProgressBarStep } from './ProgressBar.js';
 
+import { tutorials } from './tutorials/index.js';
+
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
 loader.config({ monaco });
@@ -258,9 +260,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         }
     }, []);
 
-    useEffect(() => {
-      editorRef.current?.setValue(examples.find(e => e.text === languageContext.file)!.value);
-    }, [languageContext]);
+    // useEffect(() => {
+    //   editorRef.current?.setValue(examples.find(e => e.text === languageContext.file)!.value);
+    // }, [languageContext]);
 
     const onRun = (event: React.MouseEvent<HTMLElement>) => {
       evaluateCode(editorRef.current?.getValue(), isCompiling);
@@ -316,67 +318,35 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       minimap: { enabled: false },
     };
 
-    const [steps] = useState<ProgressBarStep[]>(() => {
-      return [
-        { id: "01", name: "Create Queue", tutorial: `
-            # The Wing language integrates infrastructure and application logic
-
-            Initially we are going to create our first cloud resource.
-
-            Take a look below at the wing code editor,  Uncomment line number 3 to instantiate the Queue resource.
-          `, status: "complete" },
-          {id: "02", name: "Push Message", tutorial: `
-            # Interact with cloud resources using the Wing Console
-
-            Now, after we have created our first cloud resource, it is time to see it in action. 
-
-            In the wing console view on your right, , click on the Queue resource and search for the “Push Message” action button in the interaction panel.
-
-            Once a message is pushed you'll move to the next phase of this tour.
-          `, status: "current"},
-          {id: "03", name: "Logs", tutorial: `
-            # Invoke a cloud.Function and explore the console logs panel
-
-            Another widely used resource is the cloud.Function. In a few lines of code you will create and invoke a cloud.Function which will write to the log.
-
-            1. Copy and paste this snippet of code at line 4:
-            2. Invoke the function resource from the console (can you figure out how?) and checkout the logs panel.
-          `, status: "upcoming"},
-          {id: "04", name: "Push in code", tutorial: `
-            # Push a message to the Queue using wing code
-
-            Previously we used the console to directly push a message to our queue.
-Now let's have our new cloud.Function do it for us.
-
-Inside the Function code, look for the right api on the queue object to push a message to the queue and invoke the function as well.
-          `, status: "upcoming"}, 
-          {id: "05", name: "Use Bucket", tutorial: `
-            # Add a cloud.Bucket to store the latest message sent by our Queue
-
-            Till now, our Queue had no consumers.  Let's add a consumer that saves incoming messages in cloud.Bucket
-
-            1. Create a new cloud.Bucket below the queue at line number 4.
-            2. In the following code snippet we are adding a new consumer to the queue and stores the message in our Bucket. <>code</>
-            3. Invoke the Function and checkout your new application state. (Hint: click on the Bucket :))
-          `, status: "upcoming"}, 
-          {id: "06", name: "Compile to AWS", tutorial: `
-            # Compile for the cloud
-
-            We finished building and testing our application using Wing Console.
-
-            Let's compile the code to be read to be deployed on aws. The output of the compilation is terraform for provisions the resources, add the proper permissions and javascript that will be deployed to the the provisioned cloud.Functions.
-          `, status: "upcoming"}, 
-      ];
-    });
-    const [currentStepId, setCurrentStepId] = useState("02");
+    const [steps] = useState(() => {
+      return tutorials.map(tutorial => ({
+        ...tutorial,
+        status: "upcoming"
+      }));
+    } );
+    const [currentStepId, setCurrentStepId] = useState("01");
     const currentStep = steps.find(s => s.id === currentStepId);
+
+    useEffect(() => {
+      if (!currentStep) {
+        return;
+      }
+
+      editorRef.current?.setValue(currentStep.code);
+    }, [currentStep]);
 
     return (
       <div className='flex flex-col h-full'>
         <div className="px-4 py-3 bg-black">
           <ProgressBar
             current={currentStepId}
-            steps={steps}
+            steps={tutorials.map(step => ({
+              id: step.id,
+              name: step.name,
+              tutorial: step.tutorial ?? "",
+              status: "upcoming",
+            }))}
+            onStepClick={setCurrentStepId}
           />
         </div>
         {/* <div className='flex flex-row pt-2 px-2 h-14 justify-between items-baseline bg-[#56657A]'>
@@ -400,6 +370,11 @@ Inside the Function code, look for the right api on the queue object to push a m
                   beforeMount={editorWillMount}
                   onChange={(value, event) => { onChange(value, isCompiling, event) }}
                   />
+              </div>
+              <div className='shrink-0 px-4 py-2 text-white border-t border-gray-400 flex gap-2'>
+                <div className="grow"></div>
+                <button>Previous</button>
+                <button>Next</button>
               </div>
             </div>
           </div>
