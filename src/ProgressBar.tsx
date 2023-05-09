@@ -44,19 +44,19 @@ export const ProgressBar = (props: ProgressBarProps) => {
   // }, [currentStepIndex, stepsLength]);
 
   return (
-    <div className="text-gray-200 lg:border-b lg:border-t lg:border-gray-600">
-      <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Progress">
+    <div className="text-gray-200 border-b border-t border-gray-600">
+      <nav className="mx-auto max-w-7xl px-8" aria-label="Progress">
         <ol
           role="list"
-          className="overflow-hidden rounded-md lg:flex lg:rounded-none lg:border-l lg:border-r lg:border-gray-600"
+          className="overflow-hidden flex rounded-none border-l border-r border-gray-600"
         >
           {steps.map((step, stepIdx) => (
-            <li key={step.id} className="relative overflow-hidden lg:flex-1">
+            <li key={step.id} className="relative overflow-hidden flex-1">
               <div
                 className={classNames(
                   stepIdx === 0 ? 'rounded-t-md border-b-0' : '',
                   stepIdx === steps.length - 1 ? 'rounded-b-md border-t-0' : '',
-                  'overflow-hidden border border-gray-600 lg:border-0'
+                  'overflow-hidden border-gray-600 border-0'
                 )}
               >
                 {stepIdx < currentStepIndex ? (

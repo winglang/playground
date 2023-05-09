@@ -379,7 +379,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         <div className='flex grow'>
           <div className='flex w-1/3 h-full'>
             <div className="grow flex flex-col">
-              <div className='prose-sm text-white p-2 border-b border-gray-400 mb-4'>
+              <div className='prose prose-invert prose-headings:text-lg prose-headings:font-bold text-white p-2 border-b border-gray-400 mb-4'>
                 <ReactMarkdown children={currentStep?.tutorial ?? ""} />
               </div>
               <div className='grow w-full'>
