@@ -24,12 +24,13 @@ import { wireTmGrammars } from 'monaco-editor-textmate';
 import Editor, { loader } from "@monaco-editor/react";
 import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
-import React, { createRef, useEffect, useState, useRef } from 'react';
+import React, { createRef, useEffect, useState, useRef, useCallback } from 'react';
 import { WebContainer } from '@webcontainer/api';
 import darkPlusTMTheme from './monaco-themes/dark_plus.js';
 import convertTheme from './monaco-themes/convert-tmtheme.js';
 import wingLanguageConfiguration from './language-configurations/wing-configration.json';
 import { debounce } from 'lodash';
+import ReactMarkdown from 'react-markdown'
 
 import wingJson from './grammers/wing.tmLanguage.json'
 import jsJson from './grammers/js.tmLanguage.json'
@@ -45,6 +46,8 @@ import { FilePicker } from './FilePicker.js';
 import { CompilationResult, compileToAws, compileToAzure, compileToGcp } from './compilerService';
 import { useExamples, Example } from './use-examples.js';
 import {RightResizableWidget} from "./RightResizableWidget";
+import { tutorials } from './tutorials/index.js';
+import { ProgressBar } from './ProgressBar.js';
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
@@ -205,7 +208,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       MonacoServices.install(monaco);
 
       await wireGrammers(monaco);
-      editorRef.current?.setValue(currentExample.value);
+      editorRef.current?.setValue(tutorials[0].code);
 
       // do not wait for webcontainers
       initContainer().then(async instance => {
@@ -255,9 +258,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         }
     }, []);
 
-    useEffect(() => {
-      editorRef.current?.setValue(examples.find(e => e.text === languageContext.file)!.value);
-    }, [languageContext]);
+    // useEffect(() => {
+    //   editorRef.current?.setValue(examples.find(e => e.text === languageContext.file)!.value);
+    // }, [languageContext]);
 
     const onRun = (event: React.MouseEvent<HTMLElement>) => {
       evaluateCode(editorRef.current?.getValue(), isCompiling);
@@ -311,30 +314,95 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     const options: monaco.editor.IStandaloneEditorConstructionOptions = {
       minimap: { enabled: false },
+      fontSize: 18
     };
+
+    const [steps] = useState(() => {
+      return tutorials.map(tutorial => ({
+        ...tutorial,
+        status: "upcoming"
+      }));
+    } );
+    const [currentStepId, setCurrentStepId] = useState("01");
+    const currentStep = steps.find(s => s.id === currentStepId);
+
+    const goToPreviousTutorial = useCallback(() => {
+      const currentStepIndex = steps.findIndex(s => s.id === currentStepId);
+      const previousStep = steps[currentStepIndex - 1];
+      if (previousStep) {
+        setCurrentStepId(previousStep.id);
+      }
+    }, [steps, currentStepId]);
+    const goToNextTutorial = useCallback(() => {
+      const currentStepIndex = steps.findIndex(s => s.id === currentStepId);
+      const nextStep = steps[currentStepIndex + 1];
+      if (nextStep) {
+        setCurrentStepId(nextStep.id);
+      }
+    }, [steps, currentStepId]);
+    const solveTutorial = useCallback(() => {
+      const currentStepIndex = steps.findIndex(s => s.id === currentStepId);
+      const step = steps[currentStepIndex];
+      if (step.solution) {
+        editorRef.current?.setValue(step.solution);
+      }
+    }, [steps, currentStepId]);
+
+    useEffect(() => {
+      if (!currentStep) {
+        return;
+      }
+
+      editorRef.current?.setValue(currentStep.code);
+    }, [currentStep]);
 
     return (
       <div className='flex flex-col h-full'>
-        <div className='flex flex-row pt-2 px-2 h-14 justify-between items-baseline bg-[#56657A]'>
+        <div className="px-4 py-3 bg-black">
+          <ProgressBar
+            current={currentStepId}
+            steps={tutorials.map(step => ({
+              id: step.id,
+              name: step.name,
+              tutorial: step.tutorial ?? "",
+              status: "upcoming",
+            }))}
+            onStepClick={setCurrentStepId}
+          />
+        </div>
+        {/* <div className='flex flex-row pt-2 px-2 h-14 justify-between items-baseline bg-[#56657A]'>
           <FilePicker examples={examples} currentExample={currentExample} setCurrentExample={setCurrentExample} setLanguageContext={setLanguageContext} />
           <Actions onRun={onRun} isRunDisabled={isCompiling} onTfAws={onCompile(compileToAws)} onTfAzure={onCompile(compileToAzure)} onTfGcp={onCompile(compileToGcp)} />
-        </div>
+        </div> */}
         <div className='flex grow'>
-          <RightResizableWidget className='flex-shrink w-1/3 border-l z-10'>
-              <div className={"flex w-full h-full"}>
-            <Editor
-              data-testid="editor"
-              theme="akkd-dark-plus"
-              options={options}
-              path={languageContext.path}
-              language={languageContext.language}
-              onMount={editorDidMount}
-              beforeMount={editorWillMount}
-              onChange={(value, event) => { onChange(value, isCompiling, event) }}
-              />
+          <RightResizableWidget className='flex-shrink flex flex-col border-l z-10'>
+                  <div className={"min-h-[25rem] p-2 border-b border-r border-gray-400"}>
+                      <div className='prose prose-invert prose-headings:text-lg prose-headings:font-bold text-white'>
+                        <ReactMarkdown children={currentStep?.tutorial ?? ""} />
+                      </div>
+                  </div>
+                  <div className='px-4 py-2 text-white border-t border-b border-r border-gray-400 flex gap-2'>
+                      <button className='px-2 py-0.5 hover:bg-gray-700 rounded' onClick={() => solveTutorial()}>Solve</button>
+                      <div className="grow"></div>
+                      <button className='px-2 py-0.5 hover:bg-gray-700 rounded' onClick={() => goToPreviousTutorial()}>Previous</button>
+                      <button className='px-2 py-0.5 hover:bg-gray-700 rounded' onClick={() => goToNextTutorial()}>Next</button>
+                  </div>
+              <div className='grow w-full relative'>
+                <div className="absolute inset-0 overflow-hidden">
+                  <Editor
+                    data-testid="editor"
+                    theme="akkd-dark-plus"
+                    options={options}
+                    path={languageContext.path}
+                    language={languageContext.language}
+                    onMount={editorDidMount}
+                    beforeMount={editorWillMount}
+                    onChange={(value, event) => { onChange(value, isCompiling, event) }}
+                    />
+                </div>
               </div>
           </RightResizableWidget>
-          <div className='flex-1 w-9/12 h-full basis-auto'>
+          <div className='flex-1 h-full basis-auto'>
           {loadingStatus != LoadingStatus.Completed ? 
             <Loading status={loadingStatus} /> :
             <iframe

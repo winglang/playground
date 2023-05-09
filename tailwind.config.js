@@ -5,5 +5,7 @@ module.exports = {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
     "../design-system/src/**/*.{vue,js,ts,jsx,tsx}",
   ],
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 }
