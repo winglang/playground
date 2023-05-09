@@ -367,13 +367,15 @@ Inside the Function code, look for the right api on the queue object to push a m
             Let's compile the code to be read to be deployed on aws. The output of the compilation is terraform for provisions the resources, add the proper permissions and javascript that will be deployed to the the provisioned cloud.Functions.
           `}, 
       ];
-    })
+    });
+    const [currentStepId, setCurrentStepId] = useState("create_queue");
+    const currentStep = steps.find(s => s.id === currentStepId);
 
     return (
       <div className='flex flex-col h-full'>
-        <div className="px-4 py-3 border-b border-gray-300">
+        <div className="px-4 pb-3 bg-black">
           <ProgressBar
-            current="create_queue"
+            current={currentStepId}
             steps={steps}
           />
         </div>
@@ -383,16 +385,23 @@ Inside the Function code, look for the right api on the queue object to push a m
         </div> */}
         <div className='flex grow'>
           <div className='flex w-1/3 h-full'>
-            <Editor
-              data-testid="editor"
-              theme="akkd-dark-plus"
-              options={options}
-              path={languageContext.path}
-              language={languageContext.language}
-              onMount={editorDidMount}
-              beforeMount={editorWillMount}
-              onChange={(value, event) => { onChange(value, isCompiling, event) }}
-              />
+            <div className="grow flex flex-col">
+              <div className='text-xl text-white p-2'>
+                {currentStep?.description}
+              </div>
+              <div className='grow w-full'>
+                <Editor
+                  data-testid="editor"
+                  theme="akkd-dark-plus"
+                  options={options}
+                  path={languageContext.path}
+                  language={languageContext.language}
+                  onMount={editorDidMount}
+                  beforeMount={editorWillMount}
+                  onChange={(value, event) => { onChange(value, isCompiling, event) }}
+                  />
+              </div>
+            </div>
           </div>
           <div className='flex-1 w-9/12 h-full basis-auto'>
           {loadingStatus != LoadingStatus.Completed ? 
