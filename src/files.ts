@@ -155,6 +155,30 @@ new cloud.Function(inflight (_: str) => {
   'server.js': {
     file: {
       contents: `
+const EventEmitter = require("node:events");
+class AppConfig extends EventEmitter {
+  config;
+  constructor() {
+    super();
+    this.config = {
+      themeMode: "dark",
+    };
+  }
+  set(key, value) {
+    this.config[key] = value;
+    this.emit("config-change");
+  }
+  get(key) {
+    return this.config[key];
+  }
+  addEventListener(event, listener) {
+    this.addListener(event, listener);
+  }
+  removeEventListener(event, listener) {
+    this.removeListener(event, listener);
+  }
+}
+
 
 const express = require('express');
 const path = require('path');
@@ -183,6 +207,7 @@ let consoleServer
 cc.createConsoleServer({
   log: console,
   wingfile: "./test.w",
+  config: new AppConfig(),
   requestedPort : 34443
 }).then((server) => {
   consoleServer = server
@@ -194,7 +219,7 @@ cc.createConsoleServer({
         `,
     },
   },
-  
+
   'static': {
     directory: {
       'assets': {
@@ -208,5 +233,5 @@ cc.createConsoleServer({
       },
     }
   },
-  
+
 }
