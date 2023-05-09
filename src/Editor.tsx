@@ -382,17 +382,19 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
               <div className='prose prose-invert prose-headings:text-lg prose-headings:font-bold text-white p-2 border-b border-gray-400 mb-4'>
                 <ReactMarkdown children={currentStep?.tutorial ?? ""} />
               </div>
-              <div className='grow w-full'>
-                <Editor
-                  data-testid="editor"
-                  theme="akkd-dark-plus"
-                  options={options}
-                  path={languageContext.path}
-                  language={languageContext.language}
-                  onMount={editorDidMount}
-                  beforeMount={editorWillMount}
-                  onChange={(value, event) => { onChange(value, isCompiling, event) }}
-                  />
+              <div className='grow w-full relative'>
+                <div className="absolute inset-0 overflow-hidden">
+                  <Editor
+                    data-testid="editor"
+                    theme="akkd-dark-plus"
+                    options={options}
+                    path={languageContext.path}
+                    language={languageContext.language}
+                    onMount={editorDidMount}
+                    beforeMount={editorWillMount}
+                    onChange={(value, event) => { onChange(value, isCompiling, event) }}
+                    />
+                </div>
               </div>
               <div className='shrink-0 px-4 py-2 text-white border-t border-gray-400 flex gap-2'>
                 <button className='px-2 py-0.5 hover:bg-gray-700 rounded' onClick={() => solveTutorial()}>Solve</button>
