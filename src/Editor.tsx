@@ -316,19 +316,65 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       minimap: { enabled: false },
     };
 
+    const [steps] = useState(() => {
+      return [
+        { id: "create_queue", text: "Create Queue", description: `
+            # The Wing language integrates infrastructure and application logic
+
+            Initially we are going to create our first cloud resource.
+
+            Take a look below at the wing code editor,  Uncomment line number 3 to instantiate the Queue resource.
+          ` },
+          {id: "push_message", text: "Push Message", description: `
+            # Interact with cloud resources using the Wing Console
+
+            Now, after we have created our first cloud resource, it is time to see it in action. 
+
+            In the wing console view on your right, , click on the Queue resource and search for the “Push Message” action button in the interaction panel.
+
+            Once a message is pushed you'll move to the next phase of this tour.
+          `},
+          {id: "logs", text: "Logs", description: `
+            # Invoke a cloud.Function and explore the console logs panel
+
+            Another widely used resource is the cloud.Function. In a few lines of code you will create and invoke a cloud.Function which will write to the log.
+
+            1. Copy and paste this snippet of code at line 4:
+            2. Invoke the function resource from the console (can you figure out how?) and checkout the logs panel.
+          `},
+          {id: "push_in_code", text: "Push in code", description: `
+            # Push a message to the Queue using wing code
+
+            Previously we used the console to directly push a message to our queue.
+Now let's have our new cloud.Function do it for us.
+
+Inside the Function code, look for the right api on the queue object to push a message to the queue and invoke the function as well.
+          `}, 
+          {id: "use_bucket", text: "Use Bucket", description: `
+            # Add a cloud.Bucket to store the latest message sent by our Queue
+
+            Till now, our Queue had no consumers.  Let's add a consumer that saves incoming messages in cloud.Bucket
+
+            1. Create a new cloud.Bucket below the queue at line number 4.
+            2. In the following code snippet we are adding a new consumer to the queue and stores the message in our Bucket. <>code</>
+            3. Invoke the Function and checkout your new application state. (Hint: click on the Bucket :))
+          `}, 
+          {id: "compile_to_aws", text: "Compile to AWS", description: `
+            # Compile for the cloud
+
+            We finished building and testing our application using Wing Console.
+
+            Let's compile the code to be read to be deployed on aws. The output of the compilation is terraform for provisions the resources, add the proper permissions and javascript that will be deployed to the the provisioned cloud.Functions.
+          `}, 
+      ];
+    })
+
     return (
       <div className='flex flex-col h-full'>
         <div className="px-4 py-3 border-b border-gray-300">
           <ProgressBar
-            current="2"
-            steps={[
-              { id: "1", text: "Create Queue" },
-              { id: "2", text: "Push Message" },
-              { id: "3", text: "Logs" },
-              { id: "4", text: "Push in code" },
-              { id: "5", text: "Use Bucket" },
-              { id: "6", text: "Compile to AWS" },
-            ]}
+            current="create_queue"
+            steps={steps}
           />
         </div>
         {/* <div className='flex flex-row pt-2 px-2 h-14 justify-between items-baseline bg-[#56657A]'>

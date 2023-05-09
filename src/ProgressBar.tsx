@@ -60,11 +60,6 @@ export const ProgressBar = (props: ProgressBarProps) => {
               {step.text}
             </div>
           ))}
-
-          {/* <div className="text-teal-600">Copying files</div>
-          <div className="text-center text-teal-600">Migrating database</div>
-          <div className="text-center">Compiling assets</div>
-          <div className="text-right">Deployed</div> */}
         </div>
       </div>
     </div>
