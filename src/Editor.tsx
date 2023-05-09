@@ -314,6 +314,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     const options: monaco.editor.IStandaloneEditorConstructionOptions = {
       minimap: { enabled: false },
+      fontSize: 18
     };
 
     const [steps] = useState(() => {
