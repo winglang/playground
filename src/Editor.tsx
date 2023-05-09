@@ -32,12 +32,9 @@ import wingLanguageConfiguration from './language-configurations/wing-configrati
 import { debounce } from 'lodash';
 import ReactMarkdown from 'react-markdown'
 
-import { Dropdown } from 'semantic-ui-react'
-
 import wingJson from './grammers/wing.tmLanguage.json'
 import jsJson from './grammers/js.tmLanguage.json'
 import LspWorker from './lsp.js?worker'
-import files from './files';
 import { initContainer, installDependencies, prepareForEvaluation } from './containers';
 
 import { Tree, TreeNode, createTree } from './Tree';
@@ -48,9 +45,9 @@ import { Loading } from './Loading';
 import { FilePicker } from './FilePicker.js';
 import { CompilationResult, compileToAws, compileToAzure, compileToGcp } from './compilerService';
 import { useExamples, Example } from './use-examples.js';
-import { ProgressBar, ProgressBarStep } from './ProgressBar.js';
-
+import {RightResizableWidget} from "./RightResizableWidget";
 import { tutorials } from './tutorials/index.js';
+import { ProgressBar } from './ProgressBar.js';
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
@@ -377,8 +374,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           <Actions onRun={onRun} isRunDisabled={isCompiling} onTfAws={onCompile(compileToAws)} onTfAzure={onCompile(compileToAzure)} onTfGcp={onCompile(compileToGcp)} />
         </div> */}
         <div className='flex grow'>
-          <div className='flex w-1/3 h-full overflow-auto'>
-            <div className="grow flex flex-col">
+          <RightResizableWidget className='flex-shrink w-1/3 border-l z-10'>
+          <div className="grow flex flex-col">
               <div className='prose prose-invert prose-headings:text-lg prose-headings:font-bold text-white p-2 border-b border-gray-400 mb-4'>
                 <ReactMarkdown children={currentStep?.tutorial ?? ""} />
               </div>
@@ -403,7 +400,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                 <button className='px-2 py-0.5 hover:bg-gray-700 rounded' onClick={() => goToNextTutorial()}>Next</button>
               </div>
             </div>
-          </div>
+          </RightResizableWidget>
           <div className='flex-1 w-9/12 h-full basis-auto'>
           {loadingStatus != LoadingStatus.Completed ? 
             <Loading status={loadingStatus} /> :
