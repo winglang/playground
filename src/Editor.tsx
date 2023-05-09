@@ -47,6 +47,7 @@ import { Loading } from './Loading';
 import { FilePicker } from './FilePicker.js';
 import { CompilationResult, compileToAws, compileToAzure, compileToGcp } from './compilerService';
 import { useExamples, Example } from './use-examples.js';
+import { ProgressBar } from './ProgressBar.js';
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
@@ -317,10 +318,23 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     return (
       <div className='flex flex-col h-full'>
-        <div className='flex flex-row pt-2 px-2 h-14 justify-between items-baseline bg-[#56657A]'>
+        <div className="px-4 py-3 border-b border-gray-300">
+          <ProgressBar
+            current="2"
+            steps={[
+              { id: "1", text: "Create Queue" },
+              { id: "2", text: "Push Message" },
+              { id: "3", text: "Logs" },
+              { id: "4", text: "Push in code" },
+              { id: "5", text: "Use Bucket" },
+              { id: "6", text: "Compile to AWS" },
+            ]}
+          />
+        </div>
+        {/* <div className='flex flex-row pt-2 px-2 h-14 justify-between items-baseline bg-[#56657A]'>
           <FilePicker examples={examples} currentExample={currentExample} setCurrentExample={setCurrentExample} setLanguageContext={setLanguageContext} />
           <Actions onRun={onRun} isRunDisabled={isCompiling} onTfAws={onCompile(compileToAws)} onTfAzure={onCompile(compileToAzure)} onTfGcp={onCompile(compileToGcp)} />
-        </div>
+        </div> */}
         <div className='flex grow'>
           <div className='flex w-1/3 h-full'>
             <Editor
