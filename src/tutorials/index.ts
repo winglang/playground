@@ -7,15 +7,15 @@ import solution02 from "./02-solution.w?raw";
 import tutorial02 from "./02-tutorial.md?raw";
 
 import code03 from "./03-code.w?raw";
-// import solution03 from "./03-solution.w?raw";
+import solution03 from "./03-solution.w?raw";
 import tutorial03 from "./03-tutorial.md?raw";
 
 import code04 from "./04-code.w?raw";
-// import solution04 from "./04-solution.w?raw";
+import solution04 from "./04-solution.w?raw";
 import tutorial04 from "./04-tutorial.md?raw";
 
 import code05 from "./05-code.w?raw";
-// import solution05 from "./05-solution.w?raw";
+import solution05 from "./05-solution.w?raw";
 import tutorial05 from "./05-tutorial.md?raw";
 
 import code06 from "./06-code.w?raw";
@@ -49,21 +49,21 @@ export const tutorials = [
         id: "03",
         name:   "Logs",
         code:   code03,
-        // solution: solution03,
+        solution: solution03,
         tutorial: tutorial03
     },
     {
         id: "04",
         name:   "Push in code",
         code:   code04,
-        // solution: solution04,
+        solution: solution04,
         tutorial: tutorial04
     },
     {
         id: "05",
         name:   "Use Bucket",
         code:   code05,
-        // solution: solution05,
+        solution: solution05,
         tutorial: tutorial05
     },
     {

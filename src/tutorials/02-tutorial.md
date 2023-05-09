@@ -2,6 +2,7 @@
 
 Now, after we have created our first cloud resource, it is time to see it in action.
 
-In the wing console view on your right, , click on the Queue resource and search for the “Push Message” action button in the interaction panel.
+In the wing console view on your right, click on the Queue resource and search for the “Push Message” action button in the interaction panel.
+Enter the message you would like push and click "Send".
 
-Once a message is pushed you'll move to the next phase of this tour.
+You will see that the number of messages in the queue has increased.  

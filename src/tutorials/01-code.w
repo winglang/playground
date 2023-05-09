@@ -1,3 +1,3 @@
 bring cloud;
 
-// let q = new cloud.Queue();
+// let q = new cloud.Queue() as "incoming";
