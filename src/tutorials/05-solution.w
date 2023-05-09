@@ -1,6 +1,6 @@
 bring cloud;
 
-let q = new cloud.Queue() as "incoming";
+let q = new cloud.Queue();
 
 let b = new cloud.Bucket() as "last message storage";
 q.add_consumer(inflight (m: str) => {
