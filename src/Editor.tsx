@@ -168,8 +168,8 @@ const InfoModal: FC<PropsWithChildren<{visible: boolean}>> = ({visible, children
       </div> 
       <span className='hidden sm:inline-block sm:align-middle sm:h-screen'/>
       <div className={classNames(
-        'text-left text-slate-300',
-        'p-4 bg-gray-900 rounded-lg shadow-xl transform transition-all',
+        'text-center text-slate-300',
+        'p-12 bg-gray-900 rounded-3xl shadow-xl transform transition-all',
         'inline-block sm:my-8 sm:align-middle sm:max-w-lg sm:w-full',
       )}>
         {children}
@@ -433,29 +433,42 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             {/* <RightResizableWidget className='flex-1 flex flex-col gap-2 bg-gray-900 z-10'> */}
             <InfoModal visible={showWelcomeModal}>
               <div className='gap-y-4'>
-                <h1 className='text-2xl'>Welcome to the Winglang tutorial!</h1>
-                <div className='pt-4 space-y-4'>
+                <h1 className='text-[1.7rem]'>Welcome to the Winglang tutorial!</h1>
+                <div className='pt-8 space-y-8'>
                   <div>
                     We’re going to quickly build, test, and deploy a smart queue that prints messages and stores the latest one in a bucket.
                   </div>
                   <div>
                     Follow the steps in the instruction window to write code that you can interact with and visualize instantly using the Wing simulator.
                   </div>
-                  <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded' onClick={() => setShowWelcomeModal(false)}>
-                    Let’s get started!
-                  </button>
+                  <div>
+                    <button className='mt-2 px-4 py-4 w-full hover:bg-[#2AD5C1] hover:text-slate-800 bg-gray-600 rounded-lg' onClick={() => setShowWelcomeModal(false)}>
+                      Let’s get started!
+                    </button>
+                  </div>
                 </div>
               </div>
             </InfoModal>
 
             <InfoModal visible={showFinishModal}>
-              <div className='gap-y-4'>
-                <h1 className='text-2xl'>Bye bye</h1>
-                <div className='pt-4 space-y-4 flex flex-col'>
-                  <div className='flex grow'>
-                    <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded' onClick={() => setShowFinishModal(false)}>
-                      Learn more!
-                    </button>
+              <div className='py-4'>
+                <h1 className='text-2xl'>Congrats! You're one of us now.</h1>
+                <div className='pt-8 flex flex-col'>
+                  <div className='flex justify-around w-full'>
+                    <div className='flex gap-4'>
+                      <button className='w-[120px] h-[120px] p-2 hover:bg-[#2AD5C1] bg-gray-600 rounded-lg space-y-4' onClick={() => setShowFinishModal(false)}>
+                        <div className='flex items-center h-[50px]'>
+                          <img className="h-[42px] mx-auto text-slate-300" src="shark.svg" loading="lazy" alt="" />
+                        </div>
+                        <div>Learn more</div>
+                      </button>
+                      <button className='w-[120px] h-[120px] p-2 hover:bg-[#2AD5C1] bg-gray-600 rounded-lg space-y-4' onClick={() => setShowFinishModal(false)}>
+                        <div className='flex items-center h-[50px]'>
+                          <img className="h-[50px] mx-auto text-slate-300" src="playgroundicon.svg" loading="lazy" alt="" />
+                        </div>
+                        <div>Try our console</div>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
