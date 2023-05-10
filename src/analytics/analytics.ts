@@ -1,4 +1,5 @@
 import Analytics from 'analytics';
+// @ts-ignore
 import segmentPlugin from '@analytics/segment';
 
 export const analytics = Analytics({
