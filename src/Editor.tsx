@@ -49,7 +49,6 @@ import {RightResizableWidget} from "./RightResizableWidget";
 import { tutorials } from './tutorials/index.js';
 import { ProgressBar } from './ProgressBar.js';
 import classNames from 'classnames';
-import { IntroductionModal } from './IntroductionModal.js';
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
@@ -173,6 +172,24 @@ export const getCompileFunction = (target: WingTargets) => {
   }
 }
 
+const InfoModal: FC<PropsWithChildren<{visible: boolean}>> = ({visible, children}) => {
+  return <div className={classNames('fixed inset-0 z-50 overflow-y-auto', {'hidden': !visible})}>
+    <div className='flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0'>
+      <div className='fixed inset-0 transition-opacity'>
+        <div className='absolute inset-0 bg-gray-500 opacity-75'/>
+      </div> 
+      <span className='hidden sm:inline-block sm:align-middle sm:h-screen'/>
+      <div className={classNames(
+        'text-center text-slate-300',
+        'p-12 bg-gray-900 rounded-3xl shadow-xl transform transition-all',
+        'inline-block sm:my-8 sm:align-middle sm:max-w-lg sm:w-full',
+      )}>
+        {children}
+      </div>
+    </div>
+  </div>;
+};
+
 export const ReactMonacoEditor: React.FC<EditorProps> = ({
 }) => {
     const { examples, setExamples, 
@@ -195,6 +212,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [compileError, setCompileError] = useState('');
     const [compileExamples, setCompileExamples] = useState<Example[]>(examples);
     const [compileExample, setCompileExample] = useState<Example>(defaultExample);
+    const [editorCode, setEditorCode] = useState("");
 
     const [downloadInProgress, setDownloadInProgress] = useState(false);
 
@@ -268,6 +286,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     }, 700)
 
     const onChange = (value: string | undefined, isCompiling: boolean, ev: monaco.editor.IModelContentChangedEvent) => {
+      setEditorCode(value || "");
       evaluateCode(value, isCompiling)
     }
 
@@ -414,12 +433,14 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         setDownloadInProgress(false);
     };
 
+    const [showWelcomeModal, setShowWelcomeModal] = useState(true);
+    const [showFinishModal, setShowFinishModal] = useState(false);
+
     return (
       <>
-        <IntroductionModal />
         <div className='flex flex-col h-full'>
           <div className="px-0 py-2 bg-gray-900" data-cueid="progress">
-            <div className="px-4 flex gap-5 items-center">
+            <div className="px-6 flex gap-5 items-center">
               <div><img src="/turquoise.svg" className='w-10' /></div>
               <ProgressBar
                 current={currentStepId}
@@ -439,6 +460,53 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           </div> */}
           <div className='flex grow gap-2 bg-gray-900 pb-2 px-2'>
             {/* <RightResizableWidget className='flex-1 flex flex-col gap-2 bg-gray-900 z-10'> */}
+            <InfoModal visible={showWelcomeModal}>
+              <div className='gap-y-4'>
+                <h1 className='text-[1.7rem]'>Welcome to the Winglang tutorial!</h1>
+                <div className='pt-8 space-y-8'>
+                  <div>
+                  Let´s build a cloud application in Wing
+                  </div>
+                  <div>
+                    Follow the instructions to create and interact with your app using the Wing simulator.
+                  </div>
+                  <div>
+                    <button className='mt-2 px-4 py-4 w-full hover:bg-[#2AD5C1] hover:text-slate-800 bg-gray-600 rounded-lg' onClick={() => setShowWelcomeModal(false)}>
+                      Let’s get started!
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </InfoModal>
+
+            <InfoModal visible={showFinishModal}>
+              <div className='py-4'>
+                <h1 className='text-2xl'>Congrats! You're one of us now.</h1>
+                <div className='pt-8 flex flex-col'>
+                  <div className='flex justify-around w-full'>
+                    <div className='flex gap-6'>
+                      <a target='_blank' href='https://docs.winglang.io/getting-started' className='hover:text-slate-300'>
+                        <button className='w-[140px] h-[140px] p-2 hover:bg-[#2AD5C1] bg-gray-600 rounded-lg space-y-4'>
+                          <div className='flex items-center h-[50px]'>
+                            <img className="h-[50px] mx-auto text-slate-300" src="playgroundicon.svg" loading="lazy" alt="" />
+                          </div>
+                          <div>Learn more</div>
+                        </button>
+                      </a>
+                      <a target='_blank' href='https://play.winglang.io' className='hover:text-slate-300'>
+                        <button className='w-[140px] h-[140px] p-2 hover:bg-[#2AD5C1] bg-gray-600 rounded-lg space-y-4'>
+                          <div className='flex items-center h-[50px]'>
+                          <img className="h-[42px] mx-auto text-slate-300" src="shark.svg" loading="lazy" alt="" />
+                          </div>
+                          <div>Try the playground</div>
+                        </button>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </InfoModal>
+
             <div  className='w-[40%] flex flex-col gap-2 bg-gray-900 z-10'>
               <div className="flex-1 flex flex-col rounded-lg overflow-hidden">
                   <div data-cueid="instructions" className={"grow bg-gray-700 flex flex-col"}>
@@ -446,8 +514,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
                     <div className="grow relative">
                       <div className="absolute inset-0 overflow-auto">
-
-                      <div className='p-4 prose-lg prose-invert prose-p:leading-6 text-gray-100 prose-ol:list-decimal prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-0 prose-p:text-gray-100 prose-headings:text-lg prose-headings:text-white prose-headings:font-bold'>
+                      <div className='p-4 prose-lg prose-invert prose-p:leading-6 text-gray-100 prose-ol:list-decimal prose-pre:bg-slate-700 prose-p:text-gray-100 prose-headings:text-lg prose-headings:text-white prose-headings:font-bold'>
                         <ReactMarkdown children={currentStep?.tutorial ?? ""} />
                       </div>
                       </div>
@@ -456,19 +523,42 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                       {/* <div className="flex-1"></div> */}
 
                     <div className='px-4 py-3 text-white border-t border-black flex gap-2'>
-                                <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded'
-                                          onClick={() => resetTutorial()}>Reset</button>
-                        {currentStep?.solution && <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded'
-                                onClick={() => solveTutorial()}>Solve</button>}
-                        <div className="grow"></div>
-                        {isLastStep && <button className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded', {"opacity-30": downloadInProgress})}
-                                               disabled={downloadInProgress}
-                                               onClick={() => downloadCompiledCode('aws')}>{downloadInProgress ? "Compiling..." : "Compile"}</button>}
-                        {!isFirstStep && <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded'
-                                onClick={() => goToPreviousTutorial()}>Previous</button>}
-                        {<button
-                            className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded')}
-                            onClick={() => goToNextTutorial()} disabled={isLastStep}>Next</button>}
+                      {editorCode == currentStep?.solution && (
+                        <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded' onClick={() => resetTutorial()}>
+                          Reset
+                        </button>
+                      )}
+                        
+                      {currentStep?.solution && editorCode !== currentStep.solution &&
+                      <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded' onClick={() => solveTutorial()}>
+                      Solve
+                      </button>
+                      }
+                      
+                      <div className="grow"></div>
+                      {isLastStep &&
+                        <button className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded', {"opacity-30": downloadInProgress})} disabled={downloadInProgress} onClick={() => downloadCompiledCode('aws')}>
+                          {downloadInProgress ? "Compiling..." : "Compile"}
+                        </button>
+                      }
+                      
+                      {!isFirstStep &&
+                        <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded' onClick={() => goToPreviousTutorial()}>
+                          Previous
+                        </button>
+                      }
+                      {!isLastStep && (
+                        <button className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded')}
+                        onClick={() => goToNextTutorial()}>
+                          Next
+                        </button>
+                      )}
+                      {isLastStep && (
+                        <button className={classNames('px-2 py-0.5 hover:bg-[#2AD5C1] hover:text-slate-800 bg-slate-800 rounded')}
+                        onClick={() => setShowFinishModal(true)}>
+                          Finish
+                        </button>
+                      )}
                     </div>
                   </div>
               </div>
@@ -491,7 +581,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
               </div>
             {/* </RightResizableWidget> */}
             </div>
-            <div data-cueid="simulation" className='grow h-full basis-auto rounded-lg overflow-hidden'>
+            <div data-cueid="simulation" className='h-full basis-auto rounded-lg overflow-hidden grow'>
               <PanelHeading>Wing Simulator</PanelHeading>
             {loadingStatus != LoadingStatus.Completed ? 
               <Loading status={loadingStatus} /> :
