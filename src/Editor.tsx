@@ -24,7 +24,7 @@ import { wireTmGrammars } from 'monaco-editor-textmate';
 import Editor, { loader } from "@monaco-editor/react";
 import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
-import React, {createRef, useEffect, useState, useRef, useCallback, useMemo} from 'react';
+import React, {createRef, useEffect, useState, useRef, useCallback, useMemo, FC, PropsWithChildren} from 'react';
 import { WebContainer } from '@webcontainer/api';
 import darkPlusTMTheme from './monaco-themes/dark_plus.js';
 import convertTheme from './monaco-themes/convert-tmtheme.js';
@@ -154,6 +154,10 @@ enum LoadingStatus {
   TestFailure = "Tests Failed",
   Completed = "Ready"
 }
+
+const PanelHeading: FC<PropsWithChildren> = ({children}) => {
+  return <h3 className='text-white px-2 py-1 bg-gray-700 border-b border-black'>{children}</h3>;
+};
 
 export const ReactMonacoEditor: React.FC<EditorProps> = ({
 }) => {
@@ -396,25 +400,41 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           <FilePicker examples={examples} currentExample={currentExample} setCurrentExample={setCurrentExample} setLanguageContext={setLanguageContext} />
           <Actions onRun={onRun} isRunDisabled={isCompiling} onTfAws={onCompile(compileToAws)} onTfAzure={onCompile(compileToAzure)} onTfGcp={onCompile(compileToGcp)} />
         </div> */}
-        <div className='flex grow'>
-          <RightResizableWidget className='flex-shrink flex flex-col border-l z-10'>
-                  <div className={"min-h-[25rem] p-2 border-b border-r border-gray-400"}>
-                      <div className='prose prose-invert prose-headings:text-lg prose-headings:font-bold text-white'>
-                        <ReactMarkdown children={currentStep?.tutorial ?? ""} />
-                      </div>
+        <div className='flex grow gap-2 bg-black pb-2 px-2'>
+          {/* <RightResizableWidget className='flex-1 flex flex-col gap-2 bg-black z-10'> */}
+          <div className='w-[45%] flex flex-col gap-2 bg-black z-10'>
+            <div className="flex-1 flex flex-col rounded-lg overflow-hidden">
+                <div className={"grow bg-gray-800 flex flex-col"}>
+                  <PanelHeading>Instructions</PanelHeading>
+
+                  <div className="grow relative">
+                    <div className="absolute inset-0 overflow-auto">
+
+                    <div className='p-2 prose-lg prose-invert text-gray-100 prose-ol:list-decimal prose-pre:bg-slate-700 prose-p:text-gray-100 prose-headings:text-xl prose-headings:text-white prose-headings:font-bold'>
+                      <ReactMarkdown children={currentStep?.tutorial ?? ""} />
+                    </div>
+                    </div>
                   </div>
-                  <div className='px-4 py-2 text-white border-t border-b border-r border-gray-400 flex gap-2'>
-                               <button className='px-2 py-0.5 hover:bg-gray-700 rounded'
+
+                    {/* <div className="flex-1"></div> */}
+
+                  <div className='p-2 text-white border-t border-black flex gap-2'>
+                               <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded'
                                         onClick={() => resetTutorial()}>Reset</button>
-                      {currentStep?.solution && <button className='px-2 py-0.5 hover:bg-gray-700 rounded'
+                      {currentStep?.solution && <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded'
                                onClick={() => solveTutorial()}>Solve</button>}
                       <div className="grow"></div>
-                      {!isFirstStep && <button className='px-2 py-0.5 hover:bg-gray-700 rounded'
+                      {!isFirstStep && <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded'
                                onClick={() => goToPreviousTutorial()}>Previous</button>}
-                      <button className={classNames('px-2 py-0.5 hover:bg-gray-700 rounded', {"opacity-30": isLastStep})}
+                      <button className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded', {"opacity-30": isLastStep})}
                        onClick={() => goToNextTutorial()} disabled={isLastStep}>Next</button>
                   </div>
-              <div className='grow w-full relative'>
+                </div>
+            </div>
+            <div className='h-[60%] flex flex-col w-full rounded-lg overflow-hidden'>
+              <PanelHeading>Wing Code</PanelHeading>
+
+              <div className=' grow w-full relative'>
                 <div className="absolute inset-0 overflow-hidden">
                   <Editor
                     data-testid="editor"
@@ -428,8 +448,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                     />
                 </div>
               </div>
-          </RightResizableWidget>
-          <div className='flex-1 h-full basis-auto'>
+            </div>
+          {/* </RightResizableWidget> */}
+          </div>
+          <div className='w-[55%] h-full basis-auto rounded-lg overflow-hidden'>
+            <PanelHeading>Simulation</PanelHeading>
           {loadingStatus != LoadingStatus.Completed ? 
             <Loading status={loadingStatus} /> :
             <iframe
