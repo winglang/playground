@@ -383,13 +383,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           <Actions onRun={onRun} isRunDisabled={isCompiling} onTfAws={onCompile(compileToAws)} onTfAzure={onCompile(compileToAzure)} onTfGcp={onCompile(compileToGcp)} />
         </div> */}
         <div className='flex grow'>
-          <RightResizableWidget className='flex-shrink flex flex-col border-l z-10'>
-                  <div className={"min-h-[25rem] p-2 border-b border-r border-gray-400"}>
-                      <div className='prose prose-invert prose-headings:text-lg prose-headings:font-bold text-white'>
+          <RightResizableWidget className='flex-shrink flex flex-col border-l z-10 border-r border-gray-400'>
+                  <div className={"min-h-[25rem] p-2 border-b"}>
+                      <div className='prose prose-invert prose-headings:text-2xl prose-headings:font-bold text-white'>
                         <ReactMarkdown children={currentStep?.tutorial ?? ""} />
                       </div>
                   </div>
-                  <div className='px-4 py-2 text-white border-t border-b border-r border-gray-400 flex gap-2'>
+                  <div className='px-4 py-2 text-white border-b flex gap-2'>
                                <button className='px-2 py-0.5 hover:bg-gray-700 rounded'
                                         onClick={() => resetTutorial()}>Reset</button>
                       {currentStep?.solution && <button className='px-2 py-0.5 hover:bg-gray-700 rounded'
@@ -404,6 +404,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                   </div>
               <div className='grow w-full relative'>
                 <div className="absolute inset-0 overflow-hidden">
+              <div className='font-semibold text-slate-400 px-4 py-2'>Editor</div>
                   <Editor
                     data-testid="editor"
                     theme="akkd-dark-plus"
