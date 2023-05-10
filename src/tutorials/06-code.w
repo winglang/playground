@@ -8,6 +8,6 @@ q.addConsumer(inflight (m: str) => {
 });
 
 new cloud.Function(inflight (s: str) => {
-    log("cloud Function was called with ${s}");
+    log("Cloud Function was called with ${s}");
     q.push(s);
 });
