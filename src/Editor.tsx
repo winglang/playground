@@ -24,7 +24,7 @@ import { wireTmGrammars } from 'monaco-editor-textmate';
 import Editor, { loader } from "@monaco-editor/react";
 import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
-import React, { createRef, useEffect, useState, useRef, useCallback } from 'react';
+import React, {createRef, useEffect, useState, useRef, useCallback, useMemo} from 'react';
 import { WebContainer } from '@webcontainer/api';
 import darkPlusTMTheme from './monaco-themes/dark_plus.js';
 import convertTheme from './monaco-themes/convert-tmtheme.js';
@@ -356,6 +356,20 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       }
     }, [steps, currentStepId]);
 
+    const isFirstStep: boolean = useMemo(() => {
+        if(!currentStep) {
+            return false;
+        }
+        return currentStep.id === steps[0].id;
+    }, [currentStep, steps]);
+
+    const isLastStep: boolean = useMemo(() => {
+        if(!currentStep) {
+            return false;
+        }
+        return currentStep.id === steps[steps.length - 1].id;
+    }, [currentStep, steps]);
+
     useEffect(() => {
       if (!currentStep) {
         return;
@@ -395,12 +409,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                       {currentStep?.solution && <button className='px-2 py-0.5 hover:bg-gray-700 rounded'
                                onClick={() => solveTutorial()}>Solve</button>}
                       <div className="grow"></div>
-                      {currentStep?.id !== "01" && <button className='px-2 py-0.5 hover:bg-gray-700 rounded'
+                      {!isFirstStep && <button className='px-2 py-0.5 hover:bg-gray-700 rounded'
                                onClick={() => goToPreviousTutorial()}>Previous</button>}
-                      <button className={classNames('px-2 py-0.5 hover:bg-gray-700 rounded', {
-                        "opacity-30": currentStep?.id === "06"
-                      })}
-                               onClick={() => goToNextTutorial()} disabled={currentStep?.id === "06"}>Next</button>
+                      <button className={classNames('px-2 py-0.5 hover:bg-gray-700 rounded', {"opacity-30": isLastStep})}
+                       onClick={() => goToNextTutorial()} disabled={isLastStep}>Next</button>
                   </div>
               <div className='grow w-full relative'>
                 <div className="absolute inset-0 overflow-hidden">
