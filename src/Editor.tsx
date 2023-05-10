@@ -51,6 +51,8 @@ import { ProgressBar } from './ProgressBar.js';
 import classNames from 'classnames';
 import { IntroductionModal } from './IntroductionModal.js';
 
+import { analytics } from "./analytics/analytics";
+
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
 loader.config({ monaco });
@@ -381,6 +383,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       }
 
       editorRef.current?.setValue(currentStep.code);
+
+      analytics.track(`tutorial: step: ${currentStepId}: changed`, {
+        step: currentStep
+      })
     }, [currentStep]);
 
     return (
