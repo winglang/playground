@@ -1,7 +1,6 @@
-# Push a message to the Queue using wing code
+# Push a message to the Queue programmatically
 
-Previously we used the console to directly push a message to our queue.
-Now let’s have our new cloud.Function do it for us.
+1. In the `cloud.Function` code, push a message to the queue.
+2. Invoke the Function in the simulator, and explore what happens in the queue.
 
-Inside the Function code, look for the right api on the queue object to push a message to the queue and invoke 
-the function as well. You can check the number of messages in the queue by clicking on the queue resource.
+💡 *Type "q." outside the Function. See how the completion options are different there?*

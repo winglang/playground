@@ -1,4 +1,4 @@
-# Interact with the Queue in the Console
-1. Find the interaction panel in the upper-right corner of the consol.
-2. Find the **Push Message** text box (at it's bottom).
-3. Enter a message and click "Send".
+# Push a message to the Queue
+
+1. Click on the `cloud.Queue` resource in the simulator.
+2. **Push Message** to the queue
