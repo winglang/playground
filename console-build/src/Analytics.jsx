@@ -5,7 +5,8 @@ export const Analytics = () => {
       async onData(trace) {
         
         console.debug("app.traces", { trace });
-        
+        window.parent.postMessage({ trace }, "*");
+
       },
     });
 

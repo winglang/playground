@@ -50,6 +50,8 @@ import { tutorials } from './tutorials/index.js';
 import { ProgressBar } from './ProgressBar.js';
 import classNames from 'classnames';
 
+import { analytics } from "./analytics/analytics";
+
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
 loader.config({ monaco });
@@ -415,6 +417,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       }
 
       editorRef.current?.setValue(currentStep.code);
+
+      analytics.track(`tutorial: step: ${currentStepId}: changed`, {
+        step: currentStep
+      })
     }, [currentStep]);
 
     const downloadCompiledCode = async (target: WingTargets) => {
@@ -435,6 +441,14 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     const [showWelcomeModal, setShowWelcomeModal] = useState(true);
     const [showFinishModal, setShowFinishModal] = useState(false);
+
+    const onFinish = (name: string) => {
+      return () => {
+        analytics.track(`tutorial: finish: ${name}`, {
+          choice: name
+        })
+      };
+    };
 
     return (
       <>
@@ -486,7 +500,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                   <div className='flex justify-around w-full'>
                     <div className='flex gap-6'>
                       <a target='_blank' href='https://docs.winglang.io/getting-started' className='hover:text-slate-300'>
-                        <button className='w-[140px] h-[140px] p-2 hover:bg-[#2AD5C1] bg-gray-600 rounded-lg space-y-4'>
+                        <button onClick={onFinish('Learn more')} className='w-[140px] h-[140px] p-2 hover:bg-[#2AD5C1] bg-gray-600 rounded-lg space-y-4'>
                           <div className='flex items-center h-[50px]'>
                             <img className="h-[50px] mx-auto text-slate-300" src="playgroundicon.svg" loading="lazy" alt="" />
                           </div>
@@ -494,7 +508,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                         </button>
                       </a>
                       <a target='_blank' href='https://play.winglang.io' className='hover:text-slate-300'>
-                        <button className='w-[140px] h-[140px] p-2 hover:bg-[#2AD5C1] bg-gray-600 rounded-lg space-y-4'>
+                        <button onClick={onFinish('Try the playground')} className='w-[140px] h-[140px] p-2 hover:bg-[#2AD5C1] bg-gray-600 rounded-lg space-y-4'>
                           <div className='flex items-center h-[50px]'>
                           <img className="h-[42px] mx-auto text-slate-300" src="shark.svg" loading="lazy" alt="" />
                           </div>
