@@ -499,16 +499,17 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                 <div className='pt-8 flex flex-col'>
                   <div className='flex justify-around w-full'>
                     <div className='flex gap-6'>
-                      <a target='_blank' href='https://docs.winglang.io/getting-started' className='hover:text-slate-300'>
-                        <button onClick={onFinish('Learn more')} className='w-[140px] h-[140px] p-2 hover:bg-[#2AD5C1] bg-gray-600 rounded-lg space-y-4'>
+                      <a target='_blank' href='https://docs.winglang.io/getting-started' className='hover:text-slate-900'>
+                        <button className='w-[140px] h-[140px] p-2 hover:bg-[#2AD5C1] text-slate-300 hover:text-slate-800 bg-gray-600 rounded-lg space-y-4'>
                           <div className='flex items-center h-[50px]'>
-                            <img className="h-[50px] mx-auto text-slate-300" src="playgroundicon.svg" loading="lazy" alt="" />
+                            <img className="h-[50px] mx-auto" src="playgroundicon.svg" loading="lazy" alt="" />
                           </div>
                           <div>Learn more</div>
                         </button>
                       </a>
-                      <a target='_blank' href='https://play.winglang.io' className='hover:text-slate-300'>
-                        <button onClick={onFinish('Try the playground')} className='w-[140px] h-[140px] p-2 hover:bg-[#2AD5C1] bg-gray-600 rounded-lg space-y-4'>
+                      
+                      <a target='_blank' href='https://play.winglang.io' className='hover:text-slate-900'>
+                        <button className='w-[140px] h-[140px] p-2 hover:bg-[#2AD5C1] text-slate-300 hover:text-slate-800 bg-gray-600 rounded-lg space-y-4'>
                           <div className='flex items-center h-[50px]'>
                           <img className="h-[42px] mx-auto text-slate-300" src="shark.svg" loading="lazy" alt="" />
                           </div>
@@ -528,7 +529,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
                     <div className="grow relative">
                       <div className="absolute inset-0 overflow-auto">
-                      <div className='p-4 prose-lg prose-invert prose-p:leading-6 text-gray-100 prose-ol:list-decimal prose-pre:bg-slate-700 prose-p:text-gray-100 prose-headings:text-lg prose-headings:text-white prose-headings:font-bold'>
+                      <div className='p-4 prose-lg prose-invert prose-p:leading-6 text-gray-100 prose-ol:list-decimal prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-0 prose-p:text-gray-100 prose-headings:text-lg prose-headings:text-white prose-headings:font-bold'>
                         <ReactMarkdown children={currentStep?.tutorial ?? ""} />
                       </div>
                       </div>
