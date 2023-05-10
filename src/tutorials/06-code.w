@@ -3,7 +3,7 @@ bring cloud;
 let b = new cloud.Bucket();
 let q = new cloud.Queue();
 
-q.add_consumer(inflight (m: str) => {
+q.addConsumer(inflight (m: str) => {
     b.put("last_message.txt", m);
 });
 
