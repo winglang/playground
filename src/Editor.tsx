@@ -126,11 +126,11 @@ const startLsp = () => {
           // disable the default error handler
           errorHandler: {
             error: () => {
-              console.log('lsp connection error')
+              console.debug('lsp connection error')
               return ({ action: ErrorAction.Shutdown })
             },
             closed: () => {
-              console.log('lsp connection closed')
+              console.debug('lsp connection closed')
               return ({ action: CloseAction.Restart })
             }
           }
@@ -227,7 +227,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         return
       }
       
-      console.log('evaluating...', languageContext)
+      console.debug('evaluating...', languageContext)
 
       setIsCompiling(true)
 

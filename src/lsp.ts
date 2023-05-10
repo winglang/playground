@@ -82,7 +82,7 @@ connection.onDidOpenTextDocument(async (params) => {
     wingCompiler.invoke(wingc, "wingc_on_did_open_text_document", string);
 
   } catch (e) {
-    console.log(11, e)
+    console.debug(11, e)
     s.reportError(e);
     // connection.dispose();
   }
@@ -93,7 +93,7 @@ connection.onDidChangeTextDocument(async (params) => {
   try {
     wingCompiler.invoke(wingc, "wingc_on_did_change_text_document", string);
   } catch (e) {
-    console.log(22, e)
+    console.debug(22, e)
     // messageReader.dispose();
     // connection.dispose();
     // s.close();
@@ -111,7 +111,7 @@ connection.onCompletion(async (params) => {
     return JSON.parse(result) as CompletionItem[];
 
   } catch (e) {
-    console.log(33, e)
+    console.debug(33, e)
     s.reportError(e);
     // connection.dispose();
   }
@@ -130,7 +130,7 @@ connection.onDocumentSymbol(async (params) => {
       return JSON.parse(result as string) as DocumentSymbol[];
     }
   } catch (e) {
-    console.log(44, e)
+    console.debug(44, e)
     s.reportError(e);
     // connection.dispose();
   }
@@ -149,7 +149,7 @@ connection.onHover(async (params) => {
       return JSON.parse(result as string) as Hover;
     }
   } catch (e) {
-    console.log(55, e)
+    console.debug(55, e)
     s.reportError(e);
     // connection.dispose();
   }

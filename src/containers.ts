@@ -41,9 +41,9 @@ export async function initContainer(): Promise<WebContainer> {
     fetch(constructsJSIIUrl).then((d) => d.text()),
     fetch(constructsPackageJsonUrl).then((d) => d.text()),
   ])
-  console.log('booting container', new Date())
+  console.debug('booting container', new Date())
   const webcontainerInstance = await WebContainer.boot();
-  console.log('mounting files', new Date())
+  console.debug('mounting files', new Date())
   Object.assign(files.node_modules.directory.constructs.directory, {
     '.jsii': { file: { contents: constructsJSIIString } },
     'package.json': { file: { contents: constructsPackageJsonString } }
@@ -67,7 +67,7 @@ export async function installDependencies(webcontainerInstance: WebContainer): P
     chmod.output.pipeTo(
         new WritableStream({
             write(data) {
-                console.log(data, new Date());
+                console.debug(data, new Date());
             }
         })
     );
@@ -78,7 +78,7 @@ export async function installDependencies(webcontainerInstance: WebContainer): P
     unzip.output.pipeTo(
         new WritableStream({
             write(data) {
-                console.log(data, new Date());
+                console.debug(data, new Date());
             }
         })
     );
@@ -89,7 +89,7 @@ export async function installDependencies(webcontainerInstance: WebContainer): P
     cnsle.output.pipeTo(
         new WritableStream({
             write(data) {
-                console.log(data);
+                console.debug(data);
             }
         })
     );
@@ -99,7 +99,7 @@ export async function installDependencies(webcontainerInstance: WebContainer): P
         if (port !== 8181) {
           return
         }
-        console.log('webcontainer server opened', url, new Date())
+        console.debug('webcontainer server opened', url, new Date())
         resolve(`${url}?port=34443`)
       });
     })
@@ -110,7 +110,7 @@ export async function test(webcontainerInstance: WebContainer, ): Promise<number
   compileProcess.output.pipeTo(
       new WritableStream({
           write(data) {
-            console.log(data);
+            console.debug(data);
           }
       })
   );

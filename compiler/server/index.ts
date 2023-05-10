@@ -36,8 +36,8 @@ const targetToExtension = (target: string): string => {
 }
 
 export const handler = async (event: APIGatewayEvent, context: Context): Promise<APIGatewayProxyResult> => {
-  console.log(`Event: ${JSON.stringify(event, null, 2)}`);
-  console.log(`Context: ${JSON.stringify(context, null, 2)}`);
+  console.debug(`Event: ${JSON.stringify(event, null, 2)}`);
+  console.debug(`Context: ${JSON.stringify(context, null, 2)}`);
 
   if (!event.body) {
     return {
@@ -78,7 +78,7 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
       body: buffer.toString('base64'),
     };
   } catch (err) {
-    console.log(`Error: ${JSON.stringify(err, null, 2)}`);
+    console.debug(`Error: ${JSON.stringify(err, null, 2)}`);
     return {
       statusCode: 500,
       headers: cors,

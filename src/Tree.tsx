@@ -123,7 +123,7 @@ export function Tree({ onFileOpen, tree }: TreeProps) {
 
       if (node && isFile(node)) {
         onFileOpen(node.data.name);
-        console.log("Opening file:", node.data.name);
+        console.debug("Opening file:", node.data.name);
       }
     }
   });

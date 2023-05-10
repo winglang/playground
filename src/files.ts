@@ -96,7 +96,7 @@ export default {
   'unzip.js': {
     file: {
       contents: `
-console.log('unzipping')
+console.debug('unzipping')
 
 const targz = require('./tar.gz.js')
 
@@ -111,10 +111,10 @@ const unzip = () => {
   ])
 }
 unzip().then(() => {
-  console.log('unzip done!');
+  console.debug('unzip done!');
 })
 .catch(function(err){
-  console.log('unzip failed ', err);
+  console.debug('unzip failed ', err);
 });
       `
     }
@@ -197,12 +197,10 @@ app.get('/', function(req, res) {
 });
 
 app.listen(port, () => {
-  console.log("app listening at http://localhost:" + port);
+  console.debug("app listening at http://localhost:" + port);
 });
 
 const cc = require("./console.server.js");
-console.log(cc)
-console.verbose = console.log
 let consoleServer
 cc.createConsoleServer({
   log: console,
@@ -211,7 +209,7 @@ cc.createConsoleServer({
   requestedPort : 34443
 }).then((server) => {
   consoleServer = server
-  console.log(consoleServer.port);
+  console.debug(consoleServer.port);
 }).catch((err) => {
   console.error(err)
 });
