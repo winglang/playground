@@ -5,6 +5,8 @@ export default {
 			"activityBarBadge.background": "#007acc",
 			"editor.background": "#334155",
 			"editor.foreground": "#d4d4d4",
+			"editor.lineHighlightBorder": "#334155",
+			"editor.lineHighlightBackground": "#3C4A5E",
 			"editor.inactiveSelectionBackground": "#3a3d41",
 			"editor.selectionHighlightBackground": "#add6ff26",
 			"editorIndentGuide.activeBackground": "#707070",
