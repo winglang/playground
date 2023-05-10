@@ -1,8 +1,7 @@
-# Interact with cloud resources using the Wing Console
+# Interact with the Queue in the Console
+1. Right click on the Queue resource in the Console → 
+2. Find the **Push Message** text box (↓ of opened menu).
+3. Enter a message and click "Send".
 
-Now, after we have created our first cloud resource, it is time to see it in action.
-
-In the wing console view on your right, click on the Queue resource and search for the “Push Message” action button in the interaction panel.
-Enter the message you would like to push and click "Send".
-
-You will see that the number of messages in the queue has increased.  
+> You can also interact with the Queue by left-clicking it and looking at the interaction panel in the upper right corner of the consol. 
+> Notice that the "Approx size" property of the queue now shows "1".
