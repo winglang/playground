@@ -49,7 +49,7 @@ import {RightResizableWidget} from "./RightResizableWidget";
 import { tutorials } from './tutorials/index.js';
 import { ProgressBar } from './ProgressBar.js';
 import classNames from 'classnames';
-// import { Introduction } from './Introduction.js';
+import { IntroductionModal } from './IntroductionModal.js';
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
@@ -385,7 +385,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     return (
       <>
-        {/* <Introduction /> */}
+        <IntroductionModal />
         <div className='flex flex-col h-full'>
           <div className="px-0 py-2 bg-gray-900" data-cueid="progress">
             <div className="px-4 flex gap-5 items-center">
