@@ -461,14 +461,14 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                         {currentStep?.solution && <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded'
                                 onClick={() => solveTutorial()}>Solve</button>}
                         <div className="grow"></div>
+                        {isLastStep && <button className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded', {"opacity-30": downloadInProgress})}
+                                               disabled={downloadInProgress}
+                                               onClick={() => downloadCompiledCode('aws')}>{downloadInProgress ? "Compiling..." : "Download"}</button>}
                         {!isFirstStep && <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded'
                                 onClick={() => goToPreviousTutorial()}>Previous</button>}
-                        {!isLastStep && <button
-                            className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded', {"opacity-30": isLastStep})}
+                        {<button
+                            className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded')}
                             onClick={() => goToNextTutorial()} disabled={isLastStep}>Next</button>}
-                        {isLastStep && <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded'
-                                               disabled={downloadInProgress}
-                                               onClick={() => downloadCompiledCode('aws')}>{downloadInProgress ? "Loading..." : "Download"}</button>}
                     </div>
                   </div>
               </div>
