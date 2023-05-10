@@ -23,6 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 .vercel
+.history
 
 console-build/console.server.js
 console-build/console.tgz

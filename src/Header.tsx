@@ -34,7 +34,7 @@ export function Header() {
       </nav> */}
     </div>
     <div className="flex justify-between text-[#f1f0f1] items-baseline self-center">
-      <span className="text-[17px] text-[#2ad5c1]">Wing Playground </span><span className="text-[12px]">&nbsp; (alpha)</span>
+      <span className="text-[17px] text-[#2ad5c1]">Learn Wing </span><span className="text-[12px]">&nbsp; (alpha)</span>
     </div>
     {/* <div className="flex items-center justify-end">
       <div className="flex items-center justify-end flex-none gap-4">

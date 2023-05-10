@@ -3,7 +3,7 @@ export default {
 	"type": "dark",
 	"colors": {
 			"activityBarBadge.background": "#007acc",
-			"editor.background": "#1E293B",
+			"editor.background": "#334155",
 			"editor.foreground": "#d4d4d4",
 			"editor.inactiveSelectionBackground": "#3a3d41",
 			"editor.selectionHighlightBackground": "#add6ff26",
