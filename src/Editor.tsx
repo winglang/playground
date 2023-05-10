@@ -174,19 +174,26 @@ export const getCompileFunction = (target: WingTargets) => {
   }
 }
 
-const InfoModal: FC<PropsWithChildren<{visible: boolean}>> = ({visible, children}) => {
+const InfoModal: FC<PropsWithChildren<{visible: boolean, onClose: () => void}>> = ({visible,onClose, children}) => {
   return <div className={classNames('fixed inset-0 z-50 overflow-y-auto', {'hidden': !visible})}>
     <div className='flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0'>
       <div className='fixed inset-0 transition-opacity'>
-        <div className='absolute inset-0 bg-gray-500 opacity-75'/>
+        <div className='absolute inset-0 bg-gray-500 opacity-75' onClick={onClose}/>
       </div> 
       <span className='hidden sm:inline-block sm:align-middle sm:h-screen'/>
       <div className={classNames(
         'text-center text-slate-300',
-        'p-12 bg-gray-900 rounded-3xl shadow-xl transform transition-all',
+        'px-6 pt-4 pb-6 bg-gray-900 rounded-3xl shadow-xl transform transition-all',
         'inline-block sm:my-8 sm:align-middle sm:max-w-lg sm:w-full',
       )}>
-        {children}
+         <div className='flex justify-end'>
+         <button className='text-slate-500 hover:text-slate-300 text-4xl' onClick={onClose}>
+         ×
+         </button>
+         </div>
+         <div className='p-6'>
+          {children}
+        </div>
       </div>
     </div>
   </div>;
@@ -474,7 +481,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           </div> */}
           <div className='flex grow gap-2 bg-gray-900 pb-2 px-2'>
             {/* <RightResizableWidget className='flex-1 flex flex-col gap-2 bg-gray-900 z-10'> */}
-            <InfoModal visible={showWelcomeModal}>
+            <InfoModal visible={showWelcomeModal} onClose={() => setShowWelcomeModal(false)}>
               <div className='gap-y-4'>
                 <h1 className='text-[1.7rem]'>Welcome to the Winglang tutorial!</h1>
                 <div className='pt-8 space-y-8'>
@@ -493,7 +500,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
               </div>
             </InfoModal>
 
-            <InfoModal visible={showFinishModal}>
+            <InfoModal visible={showFinishModal} onClose={() => setShowFinishModal(false)}>
               <div className='py-4'>
                 <h1 className='text-2xl'>Congrats! You're one of us now.</h1>
                 <div className='pt-8 flex flex-col'>
