@@ -4,5 +4,5 @@
 2. Search for the right one to push a message to the queue.
 3. Invoke the Function in the console, and explore what happens in the queue.
 
-> **TIL** Notice how Wing combines infrastructure definitions and application code into a unified model.
+> 🧑‍🎓 *Notice how Wing combines infrastructure definitions and application code into a unified model.*
 
