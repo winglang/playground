@@ -507,7 +507,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
               </div>
             </InfoModal>
 
-            <div  className='w-[35%] flex flex-col gap-2 bg-gray-900 z-10'>
+            <div  className='w-[40%] flex flex-col gap-2 bg-gray-900 z-10'>
               <div className="flex-1 flex flex-col rounded-lg overflow-hidden">
                   <div data-cueid="instructions" className={"grow bg-gray-700 flex flex-col"}>
                     <PanelHeading>Instructions</PanelHeading>
