@@ -411,7 +411,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         {/* <Introduction /> */}
         <div className='flex flex-col h-full'>
           <div className="px-0 py-2 bg-gray-900" data-cueid="progress">
-            <div className="px-4 flex gap-5 items-center">
+            <div className="px-6 flex gap-5 items-center">
               <div><img src="/turquoise.svg" className='w-10' /></div>
               <ProgressBar
                 current={currentStepId}
