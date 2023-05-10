@@ -6,5 +6,5 @@ new cloud.Function(inflight (s: str) => {
     log("Cloud Function was called with ${s}");
 });                                          
 ```
-2. **Simulator:** Invoke the function
+2. **Simulator:** Invoke the function.
 3. **Simulator (bottom):** See the resulting log.
