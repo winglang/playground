@@ -187,7 +187,7 @@ const InfoModal: FC<PropsWithChildren<{visible: boolean, onClose: () => void}>> 
         'inline-block sm:my-8 sm:align-middle sm:max-w-lg sm:w-full',
       )}>
          <div className='flex justify-end'>
-         <button className='text-slate-500 hover:text-slate-300 text-4xl' onClick={onClose}>
+         <button className='text-slate-500 hover:text-slate-300 text-3xl' onClick={onClose}>
          ×
          </button>
          </div>
