@@ -196,6 +196,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [compileExamples, setCompileExamples] = useState<Example[]>(examples);
     const [compileExample, setCompileExample] = useState<Example>(defaultExample);
 
+    const [downloadInProgress, setDownloadInProgress] = useState(false);
+
     const editorWillMount = (monaco: any) => {
     
       try {
@@ -397,6 +399,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     }, [currentStep]);
 
     const downloadCompiledCode = async (target: WingTargets) => {
+        setDownloadInProgress(true);
         const compileFunction = getCompileFunction(target);
         console.log("download compile code", compileFunction);
         const result = await compileFunction(editorRef.current?.getValue()!);
@@ -408,6 +411,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         zipDownload.download = "hello.tfaws.zip";
         document.body.appendChild(zipDownload);
         zipDownload.click();
+        setDownloadInProgress(false);
     };
 
     return (
@@ -463,7 +467,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                             className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded', {"opacity-30": isLastStep})}
                             onClick={() => goToNextTutorial()} disabled={isLastStep}>Next</button>}
                         {isLastStep && <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded'
-                                               onClick={() => downloadCompiledCode('aws')}>Download</button>}
+                                               disabled={downloadInProgress}
+                                               onClick={() => downloadCompiledCode('aws')}>{downloadInProgress ? "Loading..." : "Download"}</button>}
                     </div>
                   </div>
               </div>
