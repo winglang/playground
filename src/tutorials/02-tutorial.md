@@ -2,3 +2,5 @@
 1. Find the interaction panel in the upper-right corner of the console.
 2. Find the **Push Message** text box (at its bottom).
 3. Enter a message and click "Send".
+
+> Notice that the "Approx size" property of the queue now shows "1".
