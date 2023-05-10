@@ -421,6 +421,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
               </div>
           </RightResizableWidget>
           <div className='flex-1 h-full basis-auto'>
+              <div className='font-semibold text-slate-400 px-4 py-2'>Simulator</div>
           {loadingStatus != LoadingStatus.Completed ? 
             <Loading status={loadingStatus} /> :
             <iframe
