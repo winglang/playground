@@ -5,7 +5,7 @@
 ```ts
 let b = new cloud.Bucket() as "last message storage";
 
-q.add_consumer(inflight (m: str) => {
+q.addConsumer(inflight (m: str) => {
     b.put("latest.txt", m);
 });
 ```
