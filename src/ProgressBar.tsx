@@ -60,7 +60,7 @@ export const ProgressBar = (props: ProgressBarProps) => {
                 )}
               >
                 {stepIdx < currentStepIndex ? (
-                  <button className="group hover:text-teal-500" onClick={() => props.onStepClick?.(step.id)}>
+                  <button className="group w-full hover:text-teal-500" onClick={() => props.onStepClick?.(step.id)}>
                     <span
                       className="absolute left-0 top-0 h-full w-1 bg-transparent group-hover:bg-gray-200 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full"
                       aria-hidden="true"
@@ -106,7 +106,7 @@ export const ProgressBar = (props: ProgressBarProps) => {
                     </span>
                   </button>
                 ) : (
-                  <button className="group" onClick={() => props.onStepClick?.(step.id)}>
+                  <button className="group w-full" onClick={() => props.onStepClick?.(step.id)}>
                     <span
                       className="absolute left-0 top-0 h-full w-1 bg-transparent group-hover:bg-gray-200 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full"
                       aria-hidden="true"
