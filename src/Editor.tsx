@@ -69,7 +69,6 @@ export type EditorProps = {
 }
 
 
-
 async function wireGrammers(monaco: any) {
   const registry = new Registry({
     getGrammarDefinition: async (scopeName: string, dependantScope: string): Promise<IGrammarDefinition> => {
@@ -160,6 +159,20 @@ const PanelHeading: FC<PropsWithChildren> = ({children}) => {
   return <h3 className='text-white px-4 py-1 bg-gray-800 border-b border-black uppercase text-xs font-semibold leading-7 tracking-widest'>{children}</h3>;
 };
 
+export type WingTargets = 'aws' | 'azure' | 'gcp';
+export const getCompileFunction = (target: WingTargets) => {
+    switch (target) {
+    case 'aws':
+      return compileToAws;
+    case 'azure':
+      return compileToAzure;
+    case 'gcp':
+      return compileToGcp;
+    default:
+        throw new Error(`Unknown target: ${target}`);
+  }
+}
+
 export const ReactMonacoEditor: React.FC<EditorProps> = ({
 }) => {
     const { examples, setExamples, 
@@ -182,6 +195,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [compileError, setCompileError] = useState('');
     const [compileExamples, setCompileExamples] = useState<Example[]>(examples);
     const [compileExample, setCompileExample] = useState<Example>(defaultExample);
+
+    const [downloadInProgress, setDownloadInProgress] = useState(false);
 
     const editorWillMount = (monaco: any) => {
     
@@ -383,6 +398,22 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       editorRef.current?.setValue(currentStep.code);
     }, [currentStep]);
 
+    const downloadCompiledCode = async (target: WingTargets) => {
+        setDownloadInProgress(true);
+        const compileFunction = getCompileFunction(target);
+        console.log("download compile code", compileFunction);
+        const result = await compileFunction(editorRef.current?.getValue()!);
+        console.log("download compile code", result);
+        const zipBlob = new Blob([new Uint8Array(result.zip.toBuffer())]);
+        const url = window.URL.createObjectURL(zipBlob);
+        const zipDownload = document.createElement("a");
+        zipDownload.href = url;
+        zipDownload.download = "hello.tfaws.zip";
+        document.body.appendChild(zipDownload);
+        zipDownload.click();
+        setDownloadInProgress(false);
+    };
+
     return (
       <>
         {/* <Introduction /> */}
@@ -430,10 +461,14 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                         {currentStep?.solution && <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded'
                                 onClick={() => solveTutorial()}>Solve</button>}
                         <div className="grow"></div>
+                        {isLastStep && <button className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded', {"opacity-30": downloadInProgress})}
+                                               disabled={downloadInProgress}
+                                               onClick={() => downloadCompiledCode('aws')}>{downloadInProgress ? "Compiling..." : "Compile"}</button>}
                         {!isFirstStep && <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded'
                                 onClick={() => goToPreviousTutorial()}>Previous</button>}
-                        <button className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded', {"opacity-30": isLastStep})}
-                        onClick={() => goToNextTutorial()} disabled={isLastStep}>Next</button>
+                        {<button
+                            className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded')}
+                            onClick={() => goToNextTutorial()} disabled={isLastStep}>Next</button>}
                     </div>
                   </div>
               </div>
