@@ -54,7 +54,7 @@ export const tutorials = [
     },
     {
         id: "4",
-        name:   "Push in code",
+        name:   "Push Programmatically",
         code:   code04,
         solution: solution04,
         tutorial: tutorial04
@@ -68,7 +68,7 @@ export const tutorials = [
     },
     {
         id: "6",
-        name:   "Compile to AWS",
+        name:   "Compile for AWS",
         code:   code06,
         // solution: solution06,
         tutorial: tutorial06

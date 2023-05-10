@@ -1,5 +1,8 @@
-# Compile for the cloud
+# Compile for AWS
 
-We finished building and testing our application using Wing Console.
+We finished building and testing our application locally 🥳 
 
-Let's compile the code to be read to be deployed on aws. The output of the compilation is terraform for provisions the resources, add the proper permissions and javascript that will be deployed to the the provisioned cloud.Functions.
+1. Click the "Compile" button ↓ 
+2. Download the resulting zip file with Javascript and Terraform artifacts.
+
+*🧑‍🎓 The compiler generates least privilege permissions, Networking topology and other cloud mechanics.*
