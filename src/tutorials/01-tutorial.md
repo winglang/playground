@@ -1,4 +1,4 @@
-# The Wing language integrates infrastructure and application logic
+# The Wing language integrates infrastructure and application logic.
 
 Initially we are going to create our first cloud resource.
 

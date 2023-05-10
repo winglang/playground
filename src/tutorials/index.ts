@@ -32,42 +32,42 @@ export interface Tutorial {
 
 export const tutorials = [
     {
-        id: "01",
+        id: "1",
         name:   "Create Queue",
         code:   code01,
         solution: solution01,
         tutorial: tutorial01
     },
     {
-        id: "02",
+        id: "2",
         name:   "Push Message",
         code:   code02,
         // solution: solution02,
         tutorial: tutorial02
     },
     {
-        id: "03",
+        id: "3",
         name:   "Logs",
         code:   code03,
         solution: solution03,
         tutorial: tutorial03
     },
     {
-        id: "04",
+        id: "4",
         name:   "Push in code",
         code:   code04,
         solution: solution04,
         tutorial: tutorial04
     },
     {
-        id: "05",
+        id: "5",
         name:   "Use Bucket",
         code:   code05,
         solution: solution05,
         tutorial: tutorial05
     },
     {
-        id: "06",
+        id: "6",
         name:   "Compile to AWS",
         code:   code06,
         // solution: solution06,

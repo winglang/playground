@@ -7,7 +7,7 @@ import { VscWarning } from "react-icons/vsc";
 function App() {
   return (
     <div className="max-h-full h-full flex flex-col text-slate-700">
-      <Header />
+      {/* <Header /> */}
       { isChrome() ? <ReactMonacoEditor /> : 
       <div className='h-full flex justify-center content-center items-center'>
         <div className='h-24 text-xl flex flex-row justify-center content-center items-center text-[#f1f0f1]'>

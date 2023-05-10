@@ -44,8 +44,8 @@ export const ProgressBar = (props: ProgressBarProps) => {
   // }, [currentStepIndex, stepsLength]);
 
   return (
-    <div className="text-gray-200 border-b border-t border-gray-600">
-      <nav className="mx-auto max-w-7xl px-8" aria-label="Progress">
+    <div className="w-full text-gray-200 border-gray-600">
+      <nav className="mx-auto" aria-label="Progress">
         <ol
           role="list"
           className="overflow-hidden flex rounded-none border-l border-r border-gray-600"
@@ -68,7 +68,7 @@ export const ProgressBar = (props: ProgressBarProps) => {
                     <span
                       className={classNames(
                         stepIdx !== 0 ? 'lg:pl-7' : '',
-                        'flex items-start px-4 py-3 text-sm font-medium'
+                        'flex items-center px-4 py-3 text-xs font-semibold uppercase tracking-widest'
                       )}
                     >
                       <span className="flex-shrink-0">
@@ -77,8 +77,8 @@ export const ProgressBar = (props: ProgressBarProps) => {
                         </span>
                       </span>
                       <span className="ml-4 mt-0.5 flex min-w-0 flex-col">
-                        <span className="text-sm font-medium">{step.name}</span>
-                        {/* <span className="text-sm font-medium text-gray-300">{step.description}</span> */}
+                        <span className="text-xs font-semibold uppercase tracking-widest">{step.name}</span>
+                        {/* <span className="text-xs font-semibold uppercase tracking-widest text-gray-300">{step.description}</span> */}
                       </span>
                     </span>
                   </button>
@@ -91,7 +91,7 @@ export const ProgressBar = (props: ProgressBarProps) => {
                     <span
                       className={classNames(
                         stepIdx !== 0 ? 'lg:pl-7' : '',
-                        'flex items-start px-4 py-3 text-sm font-medium'
+                        'flex items-center px-4 py-3 text-xs font-semibold uppercase tracking-widest'
                       )}
                     >
                       <span className="flex-shrink-0">
@@ -100,8 +100,8 @@ export const ProgressBar = (props: ProgressBarProps) => {
                         </span>
                       </span>
                       <span className="ml-4 mt-0.5 flex min-w-0 flex-col">
-                        <span className="text-sm font-medium text-teal-500">{step.name}</span>
-                        {/* <span className="text-sm font-medium text-gray-300">{step.description}</span> */}
+                        <span className="text-xs font-semibold uppercase tracking-widest text-teal-500">{step.name}</span>
+                        {/* <span className="text-xs font-semibold uppercase tracking-widest text-gray-300">{step.description}</span> */}
                       </span>
                     </span>
                   </button>
@@ -114,7 +114,7 @@ export const ProgressBar = (props: ProgressBarProps) => {
                     <span
                       className={classNames(
                         stepIdx !== 0 ? 'lg:pl-7' : '',
-                        'flex items-start px-4 py-3 text-sm font-medium'
+                        'flex items-center px-4 py-3 text-xs font-semibold uppercase tracking-widest'
                       )}
                     >
                       <span className="flex-shrink-0">
@@ -123,8 +123,8 @@ export const ProgressBar = (props: ProgressBarProps) => {
                         </span>
                       </span>
                       <span className="ml-4 mt-0.5 flex min-w-0 flex-col">
-                        <span className="text-sm font-medium text-gray-300">{step.name}</span>
-                        {/* <span className="text-sm font-medium text-gray-300">{step.description}</span> */}
+                        <span className="text-xs font-semibold uppercase tracking-widest text-gray-300">{step.name}</span>
+                        {/* <span className="text-xs font-semibold uppercase tracking-widest text-gray-300">{step.description}</span> */}
                       </span>
                     </span>
                   </button>
