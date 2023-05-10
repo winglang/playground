@@ -6,4 +6,4 @@ new cloud.Function(inflight (s: str) => {
    log("Cloud Function was called with ${s}");
 });                                          
 ```
-2. Invoke the function (similar to how you pushed a message to the Queue) and see the resulting logs at the bottom of the console.
+2. Invoke the function (similar to how you pushed a message to the Queue) and see the resulting logs at the bottom of the simulator.
