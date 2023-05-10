@@ -1,5 +1,5 @@
 import Analytics from 'analytics';
-const segmentPlugin: any = require('@analytics/segment');
+import segmentPlugin from '@analytics/segment';
 
 export const analytics = Analytics({
   app: 'wing-playground',
