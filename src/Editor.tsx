@@ -436,10 +436,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                 <h1 className='text-[1.7rem]'>Welcome to the Winglang tutorial!</h1>
                 <div className='pt-8 space-y-8'>
                   <div>
-                    We’re going to quickly build, test, and deploy a smart queue that prints messages and stores the latest one in a bucket.
+                  Let´s build a cloud application in Wing
                   </div>
                   <div>
-                    Follow the steps in the instruction window to write code that you can interact with and visualize instantly using the Wing simulator.
+                    Follow the instructions to create and interact with your app using the Wing simulator.
                   </div>
                   <div>
                     <button className='mt-2 px-4 py-4 w-full hover:bg-[#2AD5C1] hover:text-slate-800 bg-gray-600 rounded-lg' onClick={() => setShowWelcomeModal(false)}>
@@ -455,19 +455,23 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                 <h1 className='text-2xl'>Congrats! You're one of us now.</h1>
                 <div className='pt-8 flex flex-col'>
                   <div className='flex justify-around w-full'>
-                    <div className='flex gap-4'>
-                      <button className='w-[120px] h-[120px] p-2 hover:bg-[#2AD5C1] bg-gray-600 rounded-lg space-y-4' onClick={() => setShowFinishModal(false)}>
-                        <div className='flex items-center h-[50px]'>
+                    <div className='flex gap-6'>
+                      <a target='_blank' href='https://docs.winglang.io/getting-started' className='hover:text-slate-300'>
+                        <button className='w-[140px] h-[140px] p-2 hover:bg-[#2AD5C1] bg-gray-600 rounded-lg space-y-4'>
+                          <div className='flex items-center h-[50px]'>
+                            <img className="h-[50px] mx-auto text-slate-300" src="playgroundicon.svg" loading="lazy" alt="" />
+                          </div>
+                          <div>Learn more</div>
+                        </button>
+                      </a>
+                      <a target='_blank' href='https://play.winglang.io' className='hover:text-slate-300'>
+                        <button className='w-[140px] h-[140px] p-2 hover:bg-[#2AD5C1] bg-gray-600 rounded-lg space-y-4'>
+                          <div className='flex items-center h-[50px]'>
                           <img className="h-[42px] mx-auto text-slate-300" src="shark.svg" loading="lazy" alt="" />
-                        </div>
-                        <div>Learn more</div>
-                      </button>
-                      <button className='w-[120px] h-[120px] p-2 hover:bg-[#2AD5C1] bg-gray-600 rounded-lg space-y-4' onClick={() => setShowFinishModal(false)}>
-                        <div className='flex items-center h-[50px]'>
-                          <img className="h-[50px] mx-auto text-slate-300" src="playgroundicon.svg" loading="lazy" alt="" />
-                        </div>
-                        <div>Try our console</div>
-                      </button>
+                          </div>
+                          <div>Try the playground</div>
+                        </button>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -513,7 +517,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                         </button>
                       )}
                       {isLastStep && (
-                        <button className={classNames('px-2 py-0.5 hover:bg-sky-500 bg-sky-600 rounded')}
+                        <button className={classNames('px-2 py-0.5 hover:bg-[#2AD5C1] hover:text-slate-800 bg-slate-800 rounded')}
                         onClick={() => setShowFinishModal(true)}>
                           Finish
                         </button>
