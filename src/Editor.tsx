@@ -50,6 +50,20 @@ import { tutorials } from './tutorials/index.js';
 import { ProgressBar } from './ProgressBar.js';
 import classNames from 'classnames';
 
+export type WingTargets = 'aws' | 'azure' | 'gcp';
+export const getCompileTargetFunction = (target: WingTargets) => {
+    switch (target) {
+        case 'aws':
+            return compileToAws;
+        case 'azure':
+            return compileToAzure;
+        case 'gcp':
+            return compileToGcp;
+        default:
+        throw new Error(`Unknown target ${target}`);
+    }
+}
+
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
 loader.config({ monaco });
@@ -269,7 +283,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     const onCompile = (compileFn: (code: string) => Promise<CompilationResult>) => {
       return async (event: React.MouseEvent<HTMLElement>) => {
-        setModalVisibility(true);
+        // setModalVisibility(true);
         try {
           const result = await compileFn(editorRef.current?.getValue()!);
           const examples = result.files.map((f, i) => ({ key: i + 1, text: f.name, value: f.contents }))
@@ -287,6 +301,12 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       compileEditorRef.current = editor
     }
 
+    const downloadCompiledAssets = async (target: WingTargets) => {
+        const compileFn = getCompileTargetFunction(target);
+        await onCompile(compileFn);
+        onDownload();
+    }
+
     const onDownload = () => {
       if (!compileResult) {
         return;
@@ -297,7 +317,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       const zipDownload = document.createElement("a");
 
       zipDownload.href = url;
-      zipDownload.download = "wing.zip";
+      zipDownload.download = "hello.tfaws.zip";
       document.body.appendChild(zipDownload);
       zipDownload.click();
     }
@@ -411,8 +431,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                       <div className="grow"></div>
                       {!isFirstStep && <button className='px-2 py-0.5 hover:bg-gray-700 rounded'
                                onClick={() => goToPreviousTutorial()}>Previous</button>}
-                      <button className={classNames('px-2 py-0.5 hover:bg-gray-700 rounded', {"opacity-30": isLastStep})}
-                       onClick={() => goToNextTutorial()} disabled={isLastStep}>Next</button>
+                      {!isLastStep && <button
+                          className={classNames('px-2 py-0.5 hover:bg-gray-700 rounded', {"opacity-30": isLastStep})}
+                          onClick={() => goToNextTutorial()} disabled={isLastStep}>Next</button>}
+                      {isLastStep && <button className='px-2 py-0.5 hover:bg-gray-700 rounded'
+                                             onClick={() => downloadCompiledAssets("aws")}>Download</button>}
                   </div>
               <div className='grow w-full relative'>
                 <div className="absolute inset-0 overflow-hidden">
