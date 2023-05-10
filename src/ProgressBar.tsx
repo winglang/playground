@@ -67,8 +67,8 @@ export const ProgressBar = (props: ProgressBarProps) => {
                     />
                     <span
                       className={classNames(
-                        stepIdx !== 0 ? 'lg:pl-9' : '',
-                        'flex items-start px-6 py-5 text-sm font-medium'
+                        stepIdx !== 0 ? 'lg:pl-7' : '',
+                        'flex items-start px-4 py-3 text-sm font-medium'
                       )}
                     >
                       <span className="flex-shrink-0">
@@ -90,8 +90,8 @@ export const ProgressBar = (props: ProgressBarProps) => {
                     />
                     <span
                       className={classNames(
-                        stepIdx !== 0 ? 'lg:pl-9' : '',
-                        'flex items-start px-6 py-5 text-sm font-medium'
+                        stepIdx !== 0 ? 'lg:pl-7' : '',
+                        'flex items-start px-4 py-3 text-sm font-medium'
                       )}
                     >
                       <span className="flex-shrink-0">
@@ -113,8 +113,8 @@ export const ProgressBar = (props: ProgressBarProps) => {
                     />
                     <span
                       className={classNames(
-                        stepIdx !== 0 ? 'lg:pl-9' : '',
-                        'flex items-start px-6 py-5 text-sm font-medium'
+                        stepIdx !== 0 ? 'lg:pl-7' : '',
+                        'flex items-start px-4 py-3 text-sm font-medium'
                       )}
                     >
                       <span className="flex-shrink-0">
