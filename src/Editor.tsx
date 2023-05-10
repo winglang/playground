@@ -200,6 +200,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [compileError, setCompileError] = useState('');
     const [compileExamples, setCompileExamples] = useState<Example[]>(examples);
     const [compileExample, setCompileExample] = useState<Example>(defaultExample);
+    const [editorCode, setEditorCode] = useState("");
 
     const editorWillMount = (monaco: any) => {
     
@@ -271,6 +272,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     }, 700)
 
     const onChange = (value: string | undefined, isCompiling: boolean, ev: monaco.editor.IModelContentChangedEvent) => {
+      setEditorCode(value || "");
       evaluateCode(value, isCompiling)
     }
 
@@ -475,10 +477,12 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                       {/* <div className="flex-1"></div> */}
 
                     <div className='px-4 py-3 text-white border-t border-black flex gap-2'>
-                      <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded' onClick={() => resetTutorial()}>
-                        Reset
-                      </button>
-                      {currentStep?.solution &&
+                      {editorCode == currentStep?.solution && (
+                        <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded' onClick={() => resetTutorial()}>
+                          Reset
+                        </button>
+                      )}
+                      {currentStep?.solution && editorCode !== currentStep.solution &&
                         <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded' onClick={() => solveTutorial()}>
                         Solve
                         </button>
