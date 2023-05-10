@@ -160,6 +160,24 @@ const PanelHeading: FC<PropsWithChildren> = ({children}) => {
   return <h3 className='text-white px-4 py-1 bg-gray-800 border-b border-black uppercase text-xs font-semibold leading-7 tracking-widest'>{children}</h3>;
 };
 
+const InfoModal: FC<PropsWithChildren<{visible: boolean}>> = ({visible, children}) => {
+  return <div className={classNames('fixed inset-0 z-50 overflow-y-auto', {'hidden': !visible})}>
+    <div className='flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0'>
+      <div className='fixed inset-0 transition-opacity'>
+        <div className='absolute inset-0 bg-gray-500 opacity-75'/>
+      </div> 
+      <span className='hidden sm:inline-block sm:align-middle sm:h-screen'/>
+      <div className={classNames(
+        'text-left text-slate-300',
+        'p-4 bg-gray-900 rounded-lg shadow-xl transform transition-all',
+        'inline-block sm:my-8 sm:align-middle sm:max-w-lg sm:w-full',
+      )}>
+        {children}
+      </div>
+    </div>
+  </div>;
+};
+
 export const ReactMonacoEditor: React.FC<EditorProps> = ({
 }) => {
     const { examples, setExamples, 
@@ -383,6 +401,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       editorRef.current?.setValue(currentStep.code);
     }, [currentStep]);
 
+    const [showWelcomeModal, setShowWelcomeModal] = useState(true);
+    const [showFinishModal, setShowFinishModal] = useState(false);
+
     return (
       <>
         {/* <Introduction /> */}
@@ -408,6 +429,36 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           </div> */}
           <div className='flex grow gap-2 bg-gray-900 pb-2 px-2'>
             {/* <RightResizableWidget className='flex-1 flex flex-col gap-2 bg-gray-900 z-10'> */}
+            <InfoModal visible={showWelcomeModal}>
+              <div className='gap-y-4'>
+                <h1 className='text-2xl'>Welcome to the Winglang tutorial!</h1>
+                <div className='pt-4 space-y-4'>
+                  <div>
+                    We’re going to quickly build, test, and deploy a smart queue that prints messages and stores the latest one in a bucket.
+                  </div>
+                  <div>
+                    Follow the steps in the instruction window to write code that you can interact with and visualize instantly using the Wing simulator.
+                  </div>
+                  <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded' onClick={() => setShowWelcomeModal(false)}>
+                    Let’s get started!
+                  </button>
+                </div>
+              </div>
+            </InfoModal>
+
+            <InfoModal visible={showFinishModal}>
+              <div className='gap-y-4'>
+                <h1 className='text-2xl'>Bye bye</h1>
+                <div className='pt-4 space-y-4 flex flex-col'>
+                  <div className='flex grow'>
+                    <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded' onClick={() => setShowFinishModal(false)}>
+                      Learn more!
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </InfoModal>
+
             <div  className='w-[45%] flex flex-col gap-2 bg-gray-900 z-10'>
               <div className="flex-1 flex flex-col rounded-lg overflow-hidden">
                   <div data-cueid="instructions" className={"grow bg-gray-700 flex flex-col"}>
@@ -415,7 +466,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
                     <div className="grow relative">
                       <div className="absolute inset-0 overflow-auto">
-
                       <div className='p-4 prose-lg prose-invert prose-p:leading-6 text-gray-100 prose-ol:list-decimal prose-pre:bg-slate-700 prose-p:text-gray-100 prose-headings:text-lg prose-headings:text-white prose-headings:font-bold'>
                         <ReactMarkdown children={currentStep?.tutorial ?? ""} />
                       </div>
@@ -425,15 +475,32 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                       {/* <div className="flex-1"></div> */}
 
                     <div className='px-4 py-3 text-white border-t border-black flex gap-2'>
-                                <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded'
-                                          onClick={() => resetTutorial()}>Reset</button>
-                        {currentStep?.solution && <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded'
-                                onClick={() => solveTutorial()}>Solve</button>}
-                        <div className="grow"></div>
-                        {!isFirstStep && <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded'
-                                onClick={() => goToPreviousTutorial()}>Previous</button>}
-                        <button className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded', {"opacity-30": isLastStep})}
-                        onClick={() => goToNextTutorial()} disabled={isLastStep}>Next</button>
+                      <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded' onClick={() => resetTutorial()}>
+                        Reset
+                      </button>
+                      {currentStep?.solution &&
+                        <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded' onClick={() => solveTutorial()}>
+                        Solve
+                        </button>
+                      }
+                      <div className="grow"></div> 
+                      {!isFirstStep &&
+                        <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded' onClick={() => goToPreviousTutorial()}>
+                          Previous
+                        </button>
+                      }
+                      {!isLastStep && (
+                        <button className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded')}
+                        onClick={() => goToNextTutorial()}>
+                          Next
+                        </button>
+                      )}
+                      {isLastStep && (
+                        <button className={classNames('px-2 py-0.5 hover:bg-sky-500 bg-sky-600 rounded')}
+                        onClick={() => setShowFinishModal(true)}>
+                          Finish
+                        </button>
+                      )}
                     </div>
                   </div>
               </div>
