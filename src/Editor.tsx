@@ -49,7 +49,7 @@ import {RightResizableWidget} from "./RightResizableWidget";
 import { tutorials } from './tutorials/index.js';
 import { ProgressBar } from './ProgressBar.js';
 import classNames from 'classnames';
-// import { Introduction } from './Introduction.js';
+import { IntroductionModal } from './IntroductionModal.js';
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
@@ -416,7 +416,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     return (
       <>
-        {/* <Introduction /> */}
+        <IntroductionModal />
         <div className='flex flex-col h-full'>
           <div className="px-0 py-2 bg-gray-900" data-cueid="progress">
             <div className="px-4 flex gap-5 items-center">
@@ -439,7 +439,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           </div> */}
           <div className='flex grow gap-2 bg-gray-900 pb-2 px-2'>
             {/* <RightResizableWidget className='flex-1 flex flex-col gap-2 bg-gray-900 z-10'> */}
-            <div  className='w-[45%] flex flex-col gap-2 bg-gray-900 z-10'>
+            <div  className='w-[35%] flex flex-col gap-2 bg-gray-900 z-10'>
               <div className="flex-1 flex flex-col rounded-lg overflow-hidden">
                   <div data-cueid="instructions" className={"grow bg-gray-700 flex flex-col"}>
                     <PanelHeading>Instructions</PanelHeading>
@@ -447,7 +447,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                     <div className="grow relative">
                       <div className="absolute inset-0 overflow-auto">
 
-                      <div className='p-4 prose-lg prose-invert prose-p:leading-6 text-gray-100 prose-ol:list-decimal prose-pre:bg-slate-700 prose-p:text-gray-100 prose-headings:text-lg prose-headings:text-white prose-headings:font-bold'>
+                      <div className='p-4 prose-lg prose-invert prose-p:leading-6 text-gray-100 prose-ol:list-decimal prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-0 prose-p:text-gray-100 prose-headings:text-lg prose-headings:text-white prose-headings:font-bold'>
                         <ReactMarkdown children={currentStep?.tutorial ?? ""} />
                       </div>
                       </div>
@@ -472,7 +472,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                     </div>
                   </div>
               </div>
-              <div data-cueid="code" className='h-[60%] flex flex-col w-full rounded-lg overflow-hidden'>
+              <div data-cueid="code" className='h-[50%] flex flex-col w-full rounded-lg overflow-hidden'>
                 <PanelHeading>Wing Editor</PanelHeading>
                 <div className=' grow w-full relative'>
                   <div className="absolute inset-0 overflow-hidden">
@@ -491,7 +491,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
               </div>
             {/* </RightResizableWidget> */}
             </div>
-            <div data-cueid="simulation" className='w-[55%] h-full basis-auto rounded-lg overflow-hidden'>
+            <div data-cueid="simulation" className='grow h-full basis-auto rounded-lg overflow-hidden'>
               <PanelHeading>Wing Simulator</PanelHeading>
             {loadingStatus != LoadingStatus.Completed ? 
               <Loading status={loadingStatus} /> :
