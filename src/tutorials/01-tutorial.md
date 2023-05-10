@@ -1,3 +1,5 @@
 # Let's create our first cloud resource
-1. Uncomment line #3 in the Wing Editor to instantiate a Queue.
-2. Notice how the Wing Simulator updates automatically.
+1. **Simulator:** Notice it's empty.
+2. **Editor:** Uncomment line #3 to instantiate a Queue.
+3. **Simulator:** Notice how it updates automatically.
+4. **Instructions:** Click 'Next' to continue.
