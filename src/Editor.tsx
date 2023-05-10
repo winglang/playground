@@ -281,20 +281,21 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       evaluateCode(editorRef.current?.getValue(), isCompiling);
     }
 
-    const onCompile = (compileFn: (code: string) => Promise<CompilationResult>) => {
-      return async (event: React.MouseEvent<HTMLElement>) => {
-        // setModalVisibility(true);
+    const onCompile =  async (compileFn: (code: string) => Promise<CompilationResult>) => {
         try {
-          const result = await compileFn(editorRef.current?.getValue()!);
-          const examples = result.files.map((f, i) => ({ key: i + 1, text: f.name, value: f.contents }))
-          const example = examples[0];
-          setCompileExamples(examples);
-          setCompileExample(example);
-          setCompileResult(result)
+            console.log('*** onCompile code', editorRef.current?.getValue()!);
+            const result = await compileFn(editorRef.current?.getValue()!);
+            console.log('*** onCompile result', result);
+            const examples = result.files.map((f, i) => ({ key: i + 1, text: f.name, value: f.contents }))
+            const example = examples[0];
+            setCompileExamples(examples);
+            setCompileExample(example);
+            setCompileResult(result);
+            return result;
         } catch (err) {
           setCompileError((err as any).toString());
+          return null;
         }
-      }
     }
 
     const compileEditorDidMount = async (editor: any, monaco: any) => {
@@ -302,8 +303,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     }
 
     const downloadCompiledAssets = async (target: WingTargets) => {
+        console.log('*** downlaodCompiledAssets...', target);
         const compileFn = getCompileTargetFunction(target);
-        await onCompile(compileFn);
+        console.log('*** compile function...', compileFn);
+        const result = await onCompile(compileFn);
+        console.log('*** compile result...', result);
         onDownload();
     }
 
