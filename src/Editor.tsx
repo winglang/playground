@@ -483,7 +483,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             {/* <RightResizableWidget className='flex-1 flex flex-col gap-2 bg-gray-900 z-10'> */}
             <InfoModal visible={showWelcomeModal} onClose={() => setShowWelcomeModal(false)}>
               <div className='gap-y-4'>
-                <h1 className='text-[1.7rem]'>Welcome to the Winglang tutorial!</h1>
+                <h1 className='text-[1.7rem]'>Welcome to the Winglang Tutorial!</h1>
                 <div className='pt-8 space-y-8'>
                   <div>
                   Let's build a Smart Queue that prints its messages and stores the latest one in a Bucket, using only 13 lines of code.
