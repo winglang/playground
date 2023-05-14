@@ -486,10 +486,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                 <h1 className='text-[1.7rem]'>Welcome to the Winglang Tutorial!</h1>
                 <div className='pt-8 space-y-8'>
                   <div>
-                  Let's build a Smart Queue that prints its messages and stores the latest one in a Bucket, using only 13 lines of code.
+                  Let's build a smart queue that prints its messages and stores the latest one in a bucket.
                   </div>
                   <div>
-                  You'll instantly interact with it in the embedded Wing Simulator - then compile to AWS.
+                  You'll interact with it in the embedded Wing Simulator, and then compile to AWS.
+                  </div>
+                  <div>
+                  ⏱️ 4-8 min.
                   </div>
                   <div>
                     <button className='mt-2 px-4 py-4 w-full hover:bg-[#2AD5C1] hover:text-slate-800 bg-gray-600 rounded-lg' onClick={() => setShowWelcomeModal(false)}>
