@@ -27,11 +27,11 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playground tests
-        run: npm run test
+        run: npx playwright test
         working-directory: apps/playground
       - name: Run Tour tests
         if: always()
-        run: npm run test
+        run: npx playwright test
         working-directory: apps/tour
       - uses: actions/upload-artifact@v3
         if: always()
