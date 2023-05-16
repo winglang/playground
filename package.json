@@ -1,7 +1,9 @@
 {
   "name": "@wing-playground/monorepo",
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "apps/playground/console-build",
+    "apps/tour/console-build"
   ],
   "scripts": {
     "build": "turbo run build"
