@@ -7,7 +7,6 @@ import { dirname, basename } from "path";
 import { fileURLToPath } from "url";
 import ncc from "@vercel/ncc";
 import { createRequire } from 'module';
-import sdkPackageJson from "../node_modules/@winglang/sdk/package.json";
 import glob from "glob";
 
 const require = createRequire(import.meta.url);
@@ -41,10 +40,11 @@ const updateWing = async () => {
   const currentDir = dirname(fileURLToPath(import.meta.url))
 
   console.log("Packing Wing CLI...")
-  const wingDistDir = path.join(currentDir, "../node_modules/winglang/dist_webpack");
+  const winglangDir = require.resolve("winglang").replace(/\/dist\/index\.js$/, "");
+  const wingDistDir = path.join(`${winglangDir}/dist_webpack`);
   await fs.rm(wingDistDir, { recursive: true, force: true });
   await fs.mkdir(wingDistDir, { recursive: true });
-  await webpack(wingDistDir, require.resolve("../node_modules/winglang/dist/cli.js"), {
+  await webpack(wingDistDir, `${winglangDir}/dist/cli.js`, {
     externals: ["codespan-wasm", "@winglang/sdk"]
   });
 
@@ -57,20 +57,22 @@ const updateWing = async () => {
   }, [".", "../package.json", "../wingc.wasm"]);
 
   console.log("Packing Wing SDK...")
-  const sdkDistDir = path.join(currentDir, "../node_modules/@winglang/sdk/dist_webpack");
+  const sdkDir = require.resolve("@winglang/sdk").replace(/\/lib\/index\.js$/, "");
+  const sdkDistDir = `${sdkDir}/dist_webpack`;
   await fs.rm(sdkDistDir, { recursive: true, force: true });
   await fs.mkdir(sdkDistDir, { recursive: true });
 
+  const sdkPackageJson = await import(`${sdkDir}/package.json`);
   const externals = Object.keys(sdkPackageJson.dependencies).filter(m => {
     const exclude = ["vm2", "@aws-sdk", "aws", "@azure", "@cdktf"]
     return exclude.filter(e => m.startsWith(e)).length > 0;
   });
-  await webpack(sdkDistDir, require.resolve("../node_modules/@winglang/sdk/lib/index.js"), {
+  await webpack(sdkDistDir, `${sdkDir}/lib/index.js`, {
     externals
   });
 
   console.log("Compressing Wing inflight files...")
-  const inflighFlights = await glob(path.join(currentDir, "../node_modules/@winglang/sdk/lib/target-sim") + "/**/*inflight*");
+  const inflighFlights = await glob(`${sdkDir}/lib/target-sim/**/*inflight*`);
   await Promise.all(inflighFlights.map(f => fs.cp(f, path.join(sdkDistDir, basename(f)))));
 
   console.log("Compressing Wing SDK...")
@@ -81,7 +83,7 @@ const updateWing = async () => {
     P: true
   }, [".", "../package.json", "../.jsii"]);
 
-  return fs.cp(path.join(currentDir, "../node_modules/winglang/wingc.wasm"), path.join(currentDir, "../wing/wingc.wasm"))
+  return fs.cp(`${winglangDir}/wingc.wasm`, path.join(currentDir, "../wing/wingc.wasm"))
 }
 
 const updateConsole = async () => {
@@ -101,7 +103,7 @@ const updateConsole = async () => {
   await updateAsset("console", asset, "./console-build/playground-console.tgz");
 
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), Date.now().toString()));
-  
+
   console.log("Extracting console...");
   await tar.extract({
     file: "./console-build/playground-console.tgz",
