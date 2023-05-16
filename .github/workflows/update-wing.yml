@@ -21,16 +21,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
       - name: Update wing version
-        run: pnpm update winglang @winglang/sdk
+        run: npm update winglang @winglang/sdk
         working-directory: apps/playground
       - name: Build playground
-        run: pnpm build
+        run: npm build
         env:
           GITHUB_TOKEN: ${{ secrets.PROJEN_GITHUB_TOKEN }}
       - name: Check Changed files

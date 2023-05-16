@@ -18,22 +18,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
       - name: Build playground
-        run: pnpm build
+        run: npm run build
         env:
           GITHUB_TOKEN: ${{ secrets.PROJEN_GITHUB_TOKEN }}
       # - name: Install Playwright Browsers
       #   run: npx playwright install --with-deps
       # - name: Run Playwright tests
       #   run: npm run test
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: playwright-report
-          path: apps/playground/playwright-report/
-          retention-days: 30
+      # - uses: actions/upload-artifact@v3
+      #   if: always()
+      #   with:
+      #     name: playwright-report
+      #     path: apps/playground/playwright-report/
+      #     retention-days: 30
