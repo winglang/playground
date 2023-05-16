@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:console && npm run update && tsc && vite build",
-    "build:console": "cd ./console-build && npm run build",
+    "build": "vite build",
     "preview": "vite preview",
-    "update": "tsx scripts/updatePlayground.ts",
+    "tsc": "tsc",
+    "update-playground": "tsx scripts/updatePlayground.ts",
     "test": "playwright test",
     "test:update": "playwright test -u"
   },
@@ -62,6 +62,7 @@
     "@types/react-dom": "^18.0.10",
     "@vercel/ncc": "^0.36.1",
     "@vitejs/plugin-react": "^3.1.0",
+    "@wing-playground/tour-console-build": "file:console-build",
     "autoprefixer": "^10.4.14",
     "classnames": "^2.3.2",
     "glob": "^9.3.2",
