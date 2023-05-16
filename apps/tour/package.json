@@ -9,7 +9,7 @@
     "build:console": "cd ./console-build && npm run build",
     "preview": "vite preview",
     "update": "npx tsx scripts/updatePlayground.ts",
-    "test": "npx playwright test",
+    "test": "npx playwright test --pass-with-no-tests",
     "test:update": "npx playwright test -u"
   },
   "dependencies": {
