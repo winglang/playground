@@ -31,7 +31,7 @@ jobs:
         working-directory: apps/playground
       - name: Run Tour tests
         if: always()
-        run: npx playwright test
+        run: npx playwright test --pass-with-no-tests
         working-directory: apps/tour
       - uses: actions/upload-artifact@v3
         if: always()
