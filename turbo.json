@@ -4,15 +4,6 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
-    },
-    "dev": {
-      "cache": false
-    },
-    "eslint": {
-      "outputs": []
-    },
-    "test": {
-      "outputs": []
     }
   }
 }

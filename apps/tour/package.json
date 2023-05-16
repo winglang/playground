@@ -8,7 +8,9 @@
     "build": "npm run build:console && npm run update && tsc && vite build",
     "build:console": "cd ./console-build && npm run build",
     "preview": "vite preview",
-    "update": "npx tsx scripts/updatePlayground.ts"
+    "update": "npx tsx scripts/updatePlayground.ts",
+    "test": "npx playwright test",
+    "test:update": "npx playwright test -u"
   },
   "dependencies": {
     "@analytics/segment": "^1.1.4",
