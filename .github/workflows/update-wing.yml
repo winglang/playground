@@ -23,11 +23,14 @@ jobs:
           node-version: 18
       - name: Install dependencies
         run: npm install
-      - name: Update wing version
+      - name: Update playground wing version
         run: npm update winglang @winglang/sdk
         working-directory: apps/playground
+      - name: Update tour wing version
+        run: npm update winglang @winglang/sdk
+        working-directory: apps/tour
       - name: Build playground
-        run: npm build
+        run: npm run build
         env:
           GITHUB_TOKEN: ${{ secrets.PROJEN_GITHUB_TOKEN }}
       - name: Check Changed files
