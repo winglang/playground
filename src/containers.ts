@@ -1,9 +1,10 @@
-import { WebContainer } from '@webcontainer/api';
+import { DirEnt, WebContainer } from '@webcontainer/api';
 import files from './files';
 
 import winglangSdkUrl from '../wing/winglang-sdk-webpack.tgz?url'
 import winglangUrl from '../wing/winglang-webpack.tgz?url'
 import codespanWasmUrl from '../wing/codespan-wasm.tgz?url'
+import constructsUrl from '../wing/constructs.tgz?url'
 import vm2Url from '../wing/vm2.tgz?url'
 import expressUrl from './assets/express.tgz?url'
 import tarGzCode from "./assets/tar.gz.js?url";
@@ -27,13 +28,14 @@ export async function initContainer(): Promise<WebContainer> {
   }));
 
 
-  const [winglangSdkData, winglangData, expressData, codespanWasmData, vm2Data,
+  const [winglangSdkData, winglangData, expressData, codespanWasmData, constructsData, vm2Data,
     tarGzCodeString, consoleCodeString, allConsoleCode,
     constructsJSIIString, constructsPackageJsonString] = await Promise.all([
     fetch(winglangSdkUrl).then((d) => d.arrayBuffer()), 
     fetch(winglangUrl).then((d) => d.arrayBuffer()),
     fetch(expressUrl).then((d) => d.arrayBuffer()),
     fetch(codespanWasmUrl).then((d) => d.arrayBuffer()),
+    fetch(constructsUrl).then((d) => d.arrayBuffer()),
     fetch(vm2Url).then((d) => d.arrayBuffer()),
     fetch(tarGzCode).then((d) => d.text()),
     fetch(consoleCode).then((d) => d.text()),
@@ -53,6 +55,7 @@ export async function initContainer(): Promise<WebContainer> {
     { 'wing.tgz': { file: { contents: new Uint8Array(winglangData) } } },
     { 'express.tgz': { file: { contents: new Uint8Array(expressData)} } },
     { 'codespan-wasm.tgz': { file: { contents: new Uint8Array(codespanWasmData) } } },
+    { 'constructs.tgz': { file: { contents: new Uint8Array(constructsData) } } },
     { 'vm2.tgz': { file: { contents: new Uint8Array(vm2Data) } } },
     { 'tar.gz.js': { file: { contents: tarGzCodeString } } },
     { 'console.server.js': { file: { contents: consoleCodeString } } },
@@ -105,8 +108,11 @@ export async function installDependencies(webcontainerInstance: WebContainer): P
     })
 }
 
-export async function test(webcontainerInstance: WebContainer, ): Promise<number> {
-  const compileProcess = await webcontainerInstance.spawn('npm', ['run', 'test']);
+export async function compile(webcontainerInstance: WebContainer, ): Promise<{
+  name: string;
+  contents: string;
+}[]> {
+  const compileProcess = await webcontainerInstance.spawn('npm', ['run', 'compile']);
   compileProcess.output.pipeTo(
       new WritableStream({
           write(data) {
@@ -114,7 +120,41 @@ export async function test(webcontainerInstance: WebContainer, ): Promise<number
           }
       })
   );
-  return compileProcess.exit;
+  await compileProcess.exit;
+
+  const xx = await webcontainerInstance.spawn('ls', ['-al', 'target/test.tfaws']);
+  xx.output.pipeTo(
+      new WritableStream({
+          write(data) {
+            console.log(data);
+          }
+      })
+  );
+  await xx.exit;
+
+  const readdir = async (path: string): Promise<{
+    name: string;
+    contents: string;
+  }[]> => {
+    let files: {
+      name: string;
+      contents: string;
+    }[] = []
+    const entries: DirEnt<string>[] = await webcontainerInstance.fs.readdir(path, { withFileTypes: true });
+    for (let i = 0; i < entries.length; i++) {
+      const entryPath = path + '/' + entries[i].name
+      if (entries[i].isFile()) {
+        const file = await webcontainerInstance.fs.readFile(entryPath)
+        files.push({ name: entryPath, contents: new TextDecoder().decode(file) });
+      } else {
+        const dirFiles = await readdir(entryPath)
+        files = files.concat(dirFiles)
+      }
+    }
+    return files;
+  }
+  const res = await readdir('target/test.tfaws')
+  return res;
 }
 
 export async function prepareForEvaluation(webcontainerInstance: WebContainer, content?: string, fileName?: string): Promise<void | undefined> {

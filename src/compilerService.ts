@@ -1,5 +1,8 @@
 import Zip from 'adm-zip';
 import { Base64Binary } from './utils';
+import { Buffer } from 'buffer'
+import * as containers from './containers';
+import { WebContainer } from '@webcontainer/api';
 
 export interface CompilationItem {
   name: string;
@@ -30,12 +33,14 @@ export const compileToGcp = async (code: string): Promise<CompilationResult> => 
 const compile = async (code: string, target: string): Promise<CompilationResult> => {
   const options = {
     method: 'POST',
-    headers: {'Content-Type': ''},
+    headers: {'Content-Type': 'application/json'},
+    // headers: {'Content-Type': ''},
     body: JSON.stringify({ code, target })
   };
   
   try {
-    const result = await fetch('https://t3qjyxtsq1.execute-api.us-east-1.amazonaws.com/prod', options)
+    const result = await fetch('https://slmgoj8ai8.execute-api.us-east-1.amazonaws.com/', options)
+    // const result = await fetch('http://cdkst-compi-mkxv79clnjy-629413418.us-east-1.elb.amazonaws.com/', options)
     if (!result.ok) {
       if (result.status === 500) {
         const body = await result.json();
@@ -49,11 +54,18 @@ const compile = async (code: string, target: string): Promise<CompilationResult>
       }
     }
     
-    const zipText = await result.text();
-    // const zipText = str;
+    // const zipText = await result.text();
+    
+    const rea = toBuffer(new Uint8Array(await result.arrayBuffer()));
+    
+    // const buffers = [];
+    // for await (const data of result.body!) {
+    //   buffers.push(data);
+    // }
+    // const finalBuffer = Buffer.concat(buffers);
 
-    const buffer = Base64Binary.decode(zipText, null)
-    const zip = new Zip(buffer, { readEntries: true });
+    // const buffer = Base64Binary.decode(zipText, null)
+    const zip = new Zip(rea, { readEntries: true });
   
     const files: CompilationItem[] = []
     zip.forEach((entry) => {
@@ -81,4 +93,29 @@ const compile = async (code: string, target: string): Promise<CompilationResult>
   } catch (err) {
     throw err;
   }
+}
+
+export const localCompile = async (code: string, target: string, webcontainerInstance: WebContainer): Promise<CompilationResult> => {
+  try {
+    const files = await containers.compile(webcontainerInstance)
+  
+    const body: CompilationResult = { files, zip: new Zip }
+    if (body.error) {
+      throw new Error(`${body.error.stdout}\n${body.error.stderr}`)
+    }
+    body.files = body.files.map(f => ({ ...f, name: f.name.replace(/.*tfaws\//, "")}) )
+    return body;
+    
+  } catch (err) {
+    throw err;
+  }
+}
+
+function toBuffer(view: Uint8Array) {
+  const buffer = Buffer.alloc(view.byteLength);
+  for (let i = 0; i < buffer.length; ++i) {
+    buffer[i] = view[i];
+  }
+
+  return buffer;
 }

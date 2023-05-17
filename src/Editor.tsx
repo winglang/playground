@@ -45,7 +45,7 @@ import { Actions } from './Actions';
 import { Modal } from './Modal';
 import { Loading } from './Loading';
 import { FilePicker } from './FilePicker.js';
-import { CompilationResult, compileToAws, compileToAzure, compileToGcp } from './compilerService';
+import { CompilationResult, compileToAws, compileToAzure, compileToGcp, localCompile } from './compilerService';
 import { useExamples, Example } from './use-examples.js';
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
@@ -269,7 +269,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       return async (event: React.MouseEvent<HTMLElement>) => {
         setModalVisibility(true);
         try {
-          const result = await compileFn(editorRef.current?.getValue()!);
+          // console.log(new Date())
+          const result = await localCompile(editorRef.current?.getValue()!, 'tfaws', containerRef.current!);
+          // console.log(new Date())
+
+          // const result = await compileFn(editorRef.current?.getValue()!);
           const examples = result.files.map((f, i) => ({ key: i + 1, text: f.name, value: f.contents }))
           const example = examples[0];
           setCompileExamples(examples);

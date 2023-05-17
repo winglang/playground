@@ -57,21 +57,21 @@ const updateWing = async () => {
   }, [".", "../package.json", "../wingc.wasm"]);
 
   console.log("Packing Wing SDK...")
-  const sdkDistDir = path.join(currentDir, "../node_modules/@winglang/sdk/dist_webpack");
-  await fs.rm(sdkDistDir, { recursive: true, force: true });
-  await fs.mkdir(sdkDistDir, { recursive: true });
+  const sdkDistDir = path.join(currentDir, "../node_modules/@winglang/sdk");
+  // await fs.rm(sdkDistDir, { recursive: true, force: true });
+  // await fs.mkdir(sdkDistDir, { recursive: true });
 
-  const externals = Object.keys(sdkPackageJson.dependencies).filter(m => {
-    const exclude = ["vm2", "@aws-sdk", "aws", "@azure", "@cdktf"]
-    return exclude.filter(e => m.startsWith(e)).length > 0;
-  });
-  await webpack(sdkDistDir, require.resolve("../node_modules/@winglang/sdk/lib/index.js"), {
-    externals
-  });
+  // const externals = Object.keys(sdkPackageJson.dependencies).filter(m => {
+  //   const exclude = ["vm2"]
+  //   return exclude.filter(e => m.startsWith(e)).length > 0;
+  // });
+  // await webpack(sdkDistDir, require.resolve("../node_modules/@winglang/sdk/lib/index.js"), {
+  //   externals
+  // });
 
-  console.log("Compressing Wing inflight files...")
-  const inflighFlights = await glob(path.join(currentDir, "../node_modules/@winglang/sdk/lib/target-sim") + "/**/*inflight*");
-  await Promise.all(inflighFlights.map(f => fs.cp(f, path.join(sdkDistDir, basename(f)))));
+  // console.log("Compressing Wing inflight files...")
+  // const inflighFlights = await glob(path.join(currentDir, "../node_modules/@winglang/sdk/lib/target-sim") + "/**/*inflight*");
+  // await Promise.all(inflighFlights.map(f => fs.cp(f, path.join(sdkDistDir, basename(f)))));
 
   console.log("Compressing Wing SDK...")
   await tar.create({
@@ -79,7 +79,7 @@ const updateWing = async () => {
     C: sdkDistDir,
     gzip: true,
     P: true
-  }, [".", "../package.json", "../.jsii"]);
+  }, ["."]);
 
   return fs.cp(path.join(currentDir, "../node_modules/winglang/wingc.wasm"), path.join(currentDir, "../wing/wingc.wasm"))
 }
