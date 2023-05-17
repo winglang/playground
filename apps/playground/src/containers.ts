@@ -1,21 +1,21 @@
 import { WebContainer } from '@webcontainer/api';
 import files from './files';
 
-import winglangSdkUrl from '../wing/winglang-sdk-webpack.tgz?url'
-import winglangUrl from '../wing/winglang-webpack.tgz?url'
-import codespanWasmUrl from '../wing/codespan-wasm.tgz?url'
-import vm2Url from '../wing/vm2.tgz?url'
 import expressUrl from './assets/express.tgz?url'
 import tarGzCode from "./assets/tar.gz.js?url";
-import consoleCode from "../console-build/console.server.js?url";
-import consoleUrl from "../console-build/console.tgz?url";
+import winglangSdkUrl from '@wing-playground/console-build/wing/winglang-sdk-webpack.tgz?url'
+import winglangUrl from '@wing-playground/console-build/wing/winglang-webpack.tgz?url'
+import codespanWasmUrl from '@wing-playground/console-build/wing/codespan-wasm.tgz?url'
+import vm2Url from '@wing-playground/console-build/wing/vm2.tgz?url'
+import consoleCode from "@wing-playground/console-build/console.server.js?url";
+import consoleUrl from "@wing-playground/console-build/console.tgz?url";
 
 import constructsJSIIUrl from "constructs/.jsii?url";
 import constructsPackageJsonUrl from "constructs/package.json?url";
 
 export async function initContainer(): Promise<WebContainer> {
   const jsExamples = import.meta.glob('../examples/*.js', { as: 'raw' });
-  const examples = await Promise.all(Object.keys(jsExamples).map(async e => { 
+  const examples = await Promise.all(Object.keys(jsExamples).map(async e => {
     const contents = await jsExamples[e]();
     return {
       [e.split("/").pop()!]: {
@@ -30,7 +30,7 @@ export async function initContainer(): Promise<WebContainer> {
   const [winglangSdkData, winglangData, expressData, codespanWasmData, vm2Data,
     tarGzCodeString, consoleCodeString, allConsoleCode,
     constructsJSIIString, constructsPackageJsonString] = await Promise.all([
-    fetch(winglangSdkUrl).then((d) => d.arrayBuffer()), 
+    fetch(winglangSdkUrl).then((d) => d.arrayBuffer()),
     fetch(winglangUrl).then((d) => d.arrayBuffer()),
     fetch(expressUrl).then((d) => d.arrayBuffer()),
     fetch(codespanWasmUrl).then((d) => d.arrayBuffer()),
@@ -48,7 +48,7 @@ export async function initContainer(): Promise<WebContainer> {
     '.jsii': { file: { contents: constructsJSIIString } },
     'package.json': { file: { contents: constructsPackageJsonString } }
   })
-  await webcontainerInstance.mount(Object.assign({}, files as any, 
+  await webcontainerInstance.mount(Object.assign({}, files as any,
     { 'sdk.tgz': { file: { contents: new Uint8Array(winglangSdkData) } } },
     { 'wing.tgz': { file: { contents: new Uint8Array(winglangData) } } },
     { 'express.tgz': { file: { contents: new Uint8Array(expressData)} } },

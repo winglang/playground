@@ -1,12 +1,12 @@
 import { load, invoke } from "winglang";
 import { createFsFromVolume } from "@cowasm/memfs";
-import wingcURL from "../wing/wingc.wasm?url";
+import wingcURL from "@wing-playground/console-build/wing/wingc.wasm?url";
 import { Volume } from "@cowasm/memfs";
 import { Buffer } from "buffer";
 
 import {
-  createConnection, 
-  BrowserMessageReader, 
+  createConnection,
+  BrowserMessageReader,
   BrowserMessageWriter,
   InitializeParams,
   TextDocumentSyncKind,
@@ -43,7 +43,7 @@ const fs = createFsFromVolume(
 );
 let wasmFetchData = await fetch(wingcURL).then((d) => d.arrayBuffer());
 const wingcWASMData = new Uint8Array(wasmFetchData);
-  
+
 const wingc = await load({
   env: {
     RUST_BACKTRACE: "full",
