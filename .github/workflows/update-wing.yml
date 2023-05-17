@@ -21,13 +21,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-      - name: Install console dependencies
-        run: npm install
-        working-directory: console-build
       - name: Install dependencies
         run: npm install
-      - name: Update wing version
+      - name: Update playground wing version
         run: npm update winglang @winglang/sdk
+        working-directory: apps/playground
+      - name: Update tour wing version
+        run: npm update winglang @winglang/sdk
+        working-directory: apps/tour
       - name: Build playground
         run: npm run build
         env:

@@ -13,27 +13,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: main
+          fetch-depth: 1
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
-      - name: Install console dependencies
-        run: npm install
-        working-directory: console-build
       - name: Install dependencies
         run: npm install
       - name: Build playground
-        run: npm run build
+        run: npx turbo run tsc update-playground build
         env:
           GITHUB_TOKEN: ${{ secrets.PROJEN_GITHUB_TOKEN }}
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - name: Run Playwright tests
-        run: npm run test
+      - name: Run Playground tests
+        run: npx playwright test
+        working-directory: apps/playground
+      - name: Run Tour tests
+        if: always()
+        run: npx playwright test --pass-with-no-tests
+        working-directory: apps/tour
       - uses: actions/upload-artifact@v3
         if: always()
         with:
           name: playwright-report
-          path: playwright-report/
+          path: apps/*/playwright-report/
           retention-days: 30
