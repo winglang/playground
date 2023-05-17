@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+console.server.js
+console.tgz
+playground-console.tgz
+
+wing/wingc.wasm
+wing/winglang-webpack.tgz
+wing/winglang-sdk-webpack.tgz

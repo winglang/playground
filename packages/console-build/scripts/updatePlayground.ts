@@ -100,13 +100,13 @@ const updateConsole = async () => {
   const asset = release.data.assets.find((asset) => asset.name === "playground-console.tgz");
   console.log("Assets:", asset);
 
-  await updateAsset("console", asset, "./console-build/playground-console.tgz");
+  await updateAsset("console", asset, "./playground-console.tgz");
 
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), Date.now().toString()));
 
   console.log("Extracting console...");
   await tar.extract({
-    file: "./console-build/playground-console.tgz",
+    file: "./playground-console.tgz",
     C: dir
   });
 
@@ -114,7 +114,7 @@ const updateConsole = async () => {
   await fs.rm(path.join(dir, "console/app/dist/vite/electron"), { recursive: true, force: true });
 
   console.log("Injecting html code...");
-  const sourceHtmlPath = path.join(dirname(fileURLToPath(import.meta.url)), "../console-build/dist/index.html");
+  const sourceHtmlPath = path.join(dirname(fileURLToPath(import.meta.url)), "../dist/index.html");
   const targetHtmlPath = path.join(dir, "console/app/dist/vite/index.html");
   const appHtml = await fs.readFile(sourceHtmlPath, "utf-8");
   const cssFiles = await glob(path.join(dir, "console/app/dist/vite") + "/**/*.css");
@@ -129,17 +129,17 @@ ${css}
   await fs.rm(path.join(dir, "console/app/dist/vite/assets"), { recursive: true, force: true });
   await fs.mkdir(path.join(dir, "console/app/dist/vite/assets"), { recursive: true });
   await fs.cp(path.join(dir, "console/ui/dist/index.global.js"), path.join(dir, "console/app/dist/vite/assets/console.ui.js"));
-  await fs.cp(path.join(dirname(fileURLToPath(import.meta.url)), "../console-build/dist/assets/index.js"), path.join(dir, "console/app/dist/vite/assets/index.js"));
+  await fs.cp(path.join(dirname(fileURLToPath(import.meta.url)), "../dist/assets/index.js"), path.join(dir, "console/app/dist/vite/assets/index.js"));
 
   console.log("Creating the console ui archive...");
   await tar.create({
-    file: "./console-build/console.tgz",
+    file: "./console.tgz",
     C: path.join(dir, "console/app/dist/vite"),
     gzip: true
   }, ["."]);
 
   console.log("Updating console server...");
-  await fs.cp(path.join(dir, "console/server/dist/index.js"), "./console-build/console.server.js");
+  await fs.cp(path.join(dir, "console/server/dist/index.js"), "./console.server.js");
 }
 
 (async () => {

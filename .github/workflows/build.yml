@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build playground
-        run: npx turbo run tsc update-playground build
+        run: npx turbo run tsc build
         env:
           GITHUB_TOKEN: ${{ secrets.PROJEN_GITHUB_TOKEN }}
       - name: Install Playwright Browsers
