@@ -122,16 +122,6 @@ export async function compile(webcontainerInstance: WebContainer, ): Promise<{
   );
   await compileProcess.exit;
 
-  const xx = await webcontainerInstance.spawn('ls', ['-al', 'target/test.tfaws']);
-  xx.output.pipeTo(
-      new WritableStream({
-          write(data) {
-            console.log(data);
-          }
-      })
-  );
-  await xx.exit;
-
   const readdir = async (path: string): Promise<{
     name: string;
     contents: string;
