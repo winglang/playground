@@ -2,7 +2,7 @@ import { Context, APIGatewayProxyResult, APIGatewayEvent } from 'aws-lambda';
 import { assert, test } from 'vitest'
 import { compileRoute } from '.'
 import Zip from 'adm-zip';
-import { Base64Binary } from '@wing-playground/shared';
+import { Base64Binary } from '@wing-playground/shared/src/utils';
 import { getMockReq, getMockRes } from 'vitest-mock-express'
 
 const { res, clearMockRes } = getMockRes();

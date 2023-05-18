@@ -2,6 +2,7 @@ import { request } from "@octokit/request";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import childProcess from "node:child_process";
 import tar from "tar";
 import { dirname, basename } from "path";
 import { fileURLToPath } from "url";
@@ -146,5 +147,7 @@ ${css}
   await updateWing();
   await updateConsole();
 
+  childProcess.execSync("ls -al", {stdio: "inherit"});
+  childProcess.execSync("ls -al wing", {stdio: "inherit"});
   console.log("Done...")
 })();

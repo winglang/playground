@@ -1,2 +1,2 @@
-export * from './compiler-service';
-export * from './analytics';
+export * from './src/compiler-service';
+export * from './src/analytics';

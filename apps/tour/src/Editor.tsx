@@ -26,31 +26,27 @@ import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
 import React, {createRef, useEffect, useState, useRef, useCallback, useMemo, FC, PropsWithChildren} from 'react';
 import { WebContainer } from '@webcontainer/api';
-import darkPlusTMTheme from './monaco-themes/dark_plus.js';
-import convertTheme from './monaco-themes/convert-tmtheme.js';
-import wingLanguageConfiguration from './language-configurations/wing-configration.json';
+import darkPlusTMTheme from '@wing-playground/shared/src/monaco-themes/dark_plus.js';
+import convertTheme from '@wing-playground/shared/src/monaco-themes/convert-tmtheme.js';
+import wingLanguageConfiguration from '@wing-playground/shared/src/language-configurations/wing-configration.json';
 import { debounce } from 'lodash';
 import ReactMarkdown from 'react-markdown'
 
-import wingJson from './grammers/wing.tmLanguage.json'
-import jsJson from './grammers/js.tmLanguage.json'
-import LspWorker from './lsp.js?worker'
-import { initContainer, installDependencies, prepareForEvaluation } from './containers';
+import wingJson from '@wing-playground/shared/src/grammers/wing.tmLanguage.json'
+import jsJson from '@wing-playground/shared/src/grammers/js.tmLanguage.json'
+import LspWorker from '@wing-playground/shared/src/lsp.js?worker'
+import { initContainer, installDependencies, prepareForEvaluation } from '@wing-playground/shared/src/containers';
 
-import { Tree, TreeNode, createTree } from './Tree';
-import { FileTree } from 'exploration';
-import { Actions } from './Actions';
-import { Modal } from './Modal';
-import { Loading } from './Loading';
-import { FilePicker } from './FilePicker.js';
+import { Modal } from '@wing-playground/shared/src/Modal';
+import { Loading } from '@wing-playground/shared/src/Loading';
+import { FilePicker } from '@wing-playground/shared/src/FilePicker.js';
 import { CompilationResult, CompilationRequest, Compiler, Target } from '@wing-playground/shared';
-import { useExamples, Example } from './use-examples.js';
-import {RightResizableWidget} from "./RightResizableWidget";
+import { useExamples, Example } from '@wing-playground/shared/src/use-examples.js';
 import { tutorials } from './tutorials/index.js';
 import { ProgressBar } from './ProgressBar.js';
 import classNames from 'classnames';
 
-import { analytics } from "@wing-playground/shared";
+import { analytics } from "@wing-playground/shared/src/analytics/analytics.js";
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
   (i) => JSON.parse(i.default)
@@ -124,7 +120,7 @@ const InfoModal: FC<PropsWithChildren<{visible: boolean, onClose: () => void}>> 
     <div className='flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0'>
       <div className='fixed inset-0 transition-opacity'>
         <div className='absolute inset-0 bg-gray-500 opacity-75' onClick={onClose}/>
-      </div> 
+      </div>
       <span className='hidden sm:inline-block sm:align-middle sm:h-screen'/>
       <div className={classNames(
         'text-center text-slate-300',
@@ -146,8 +142,8 @@ const InfoModal: FC<PropsWithChildren<{visible: boolean, onClose: () => void}>> 
 
 export const ReactMonacoEditor: React.FC<EditorProps> = ({
 }) => {
-    const { examples, setExamples, 
-      currentExample, setCurrentExample, 
+    const { examples, setExamples,
+      currentExample, setCurrentExample,
       languageContext, setLanguageContext,
     } = useExamples();
     const defaultExample = examples[0];
@@ -222,15 +218,15 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     }
 
     const editorWillMount = (monaco: any) => {
-    
+
       try {
-        monaco.languages.register({ 
-          id: 'wing', 
+        monaco.languages.register({
+          id: 'wing',
           extensions: ['.w', '.wing'],
           aliases: ['Wing', 'wing']
         });
-        monaco.languages.register({ 
-          id: 'js', 
+        monaco.languages.register({
+          id: 'js',
           extensions: ['.js'],
           aliases: ['JS', 'JavaScript', 'javascript']
         });
@@ -239,7 +235,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       } catch (error) {
           console.error(error);
       }
-  
+
       monaco.editor.defineTheme('akkd-dark-plus', darkPlusTheme);
     };
 
@@ -269,7 +265,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       if (!containerRef.current || isCompiling) {
         return
       }
-      
+
       console.log('evaluating...', languageContext)
 
       setIsCompiling(true)
@@ -513,7 +509,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                           <div>Learn more</div>
                         </button>
                       </a>
-                      
+
                       <a target='_blank' href='https://play.winglang.io' className='hover:text-slate-900'>
                         <button className='w-[140px] h-[140px] p-2 hover:bg-[#2AD5C1] text-slate-300 hover:text-slate-800 bg-gray-600 rounded-lg space-y-4'>
                           <div className='flex items-center h-[50px]'>
@@ -549,20 +545,20 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                           Reset
                         </button>
                       )}
-                        
+
                       {currentStep?.solution && editorCode !== currentStep.solution &&
                       <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded' onClick={() => solveTutorial()}>
                       Solve
                       </button>
                       }
-                      
+
                       <div className="grow"></div>
                       {isLastStep &&
                         <button className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded', {"opacity-30": downloadInProgress})} disabled={downloadInProgress} onClick={() => downloadCompiledCode(Target.TFAWS)}>
                           {downloadInProgress ? "Compiling..." : "Compile"}
                         </button>
                       }
-                      
+
                       {!isFirstStep &&
                         <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded' onClick={() => goToPreviousTutorial()}>
                           Previous
@@ -604,7 +600,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             </div>
             <div data-cueid="simulation" className='h-full basis-auto rounded-lg overflow-hidden grow'>
               <PanelHeading>Wing Simulator</PanelHeading>
-            {loadingStatus != LoadingStatus.Completed ? 
+            {loadingStatus != LoadingStatus.Completed ?
               <Loading status={loadingStatus} /> :
               <iframe
                 id='console'
