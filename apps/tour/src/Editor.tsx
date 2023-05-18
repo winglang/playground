@@ -246,7 +246,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const editorDidMount = async (editor: any, monaco: any) => {
       editorRef.current = editor
       monacoRef.current = monaco
-      startLsp();
       
       // install Monaco language client services
       MonacoServices.install(monaco);
@@ -259,6 +258,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         containerRef.current = instance
         setLoadingStatus(LoadingStatus.Install)
         const consoleUrl = await installDependencies(containerRef.current);
+        startLsp();
         setIframeSrc(consoleUrl)
         setLoadingStatus(LoadingStatus.Eval)
         evaluateCode(undefined, isCompiling);
