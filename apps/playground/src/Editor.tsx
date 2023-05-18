@@ -45,7 +45,7 @@ import { Actions } from './Actions';
 import { Modal } from './Modal';
 import { Loading } from './Loading';
 import { FilePicker } from './FilePicker.js';
-import { CompilationResult, compileToAws, compileToAzure, compileToGcp } from './compilerService';
+import { CompilationResult, CompilationRequest, Compiler, Target } from '@wing-playground/shared';
 import { useExamples, Example } from './use-examples.js';
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
@@ -56,6 +56,8 @@ StandaloneServices.initialize({
     ...getMessageServiceOverride(document.body)
 });
 buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
+
+const compiler = new Compiler();
 
 export type EditorProps = {
     defaultCode?: string;
@@ -238,6 +240,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           if (example) {
             example.value = compileValue!;
           }
+          await compiler.submit(new CompilationRequest(compileValue!, Target.TFAWS));
         } while (compileValue !== editorRef.current?.getValue());
       } finally {
         setLoadingStatus(LoadingStatus.Completed)
@@ -265,11 +268,15 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       evaluateCode(editorRef.current?.getValue(), isCompiling);
     }
 
-    const onCompile = (compileFn: (code: string) => Promise<CompilationResult>) => {
+    const onCompile = (target: Target) => {
       return async (event: React.MouseEvent<HTMLElement>) => {
         setModalVisibility(true);
         try {
-          const result = await compileFn(editorRef.current?.getValue()!);
+          const result = await compiler.compile(new CompilationRequest(editorRef.current?.getValue()!, target));
+          if (result.error) {
+            setCompileError(`${result.error.stderr}\n${result.error.stdout}`);
+            return;
+          }
           const examples = result.files.map((f, i) => ({ key: i + 1, text: f.name, value: f.contents }))
           const example = examples[0];
           setCompileExamples(examples);
@@ -319,7 +326,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       <div className='flex flex-col h-full'>
         <div className='flex flex-row pt-2 px-2 h-14 justify-between items-baseline bg-[#56657A]'>
           <FilePicker examples={examples} currentExample={currentExample} setCurrentExample={setCurrentExample} setLanguageContext={setLanguageContext} />
-          <Actions onRun={onRun} isRunDisabled={isCompiling} onTfAws={onCompile(compileToAws)} onTfAzure={onCompile(compileToAzure)} onTfGcp={onCompile(compileToGcp)} />
+          <Actions onRun={onRun} isRunDisabled={isCompiling} onTfAws={onCompile(Target.TFAWS)} onTfAzure={onCompile(Target.TFAzure)} onTfGcp={onCompile(Target.TFGCP)} />
         </div>
         <div className='flex grow'>
           <div className='flex w-1/3 h-full'>

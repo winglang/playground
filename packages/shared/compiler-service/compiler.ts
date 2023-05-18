@@ -1,5 +1,12 @@
 import Zip from 'adm-zip';
-import { Base64Binary } from './utils';
+import { Base64Binary } from './base64';
+import { CompilationRequest } from './request';
+
+export enum Target {
+  TFAWS = 'tf-aws',
+  TFGCP = 'tf-gcp',
+  TFAzure = 'tf-azure'
+}
 
 export interface CompilationItem {
   name: string;
@@ -13,18 +20,6 @@ export interface CompilationResult {
     stderr: string;
     stdout: string;
   };
-}
-
-export const compileToAws = async (code: string): Promise<CompilationResult> => {
-  return compile(code, 'tf-aws');
-}
-
-export const compileToAzure = async (code: string): Promise<CompilationResult> => {
-  return compile(code, 'tf-azure');
-}
-
-export const compileToGcp = async (code: string): Promise<CompilationResult> => {
-  return compile(code, 'tf-gcp');
 }
 
 const compile = async (code: string, target: string): Promise<CompilationResult> => {
@@ -43,9 +38,24 @@ const compile = async (code: string, target: string): Promise<CompilationResult>
         if (upgradeMessageIndex !== -1) {
           body.error.stderr = body.error.stderr.substring(0, upgradeMessageIndex);
         }
-        throw new Error(`${body.error.stdout}\n${body.error.stderr}`);
+
+        return {
+          files: [],
+          zip: new Zip(),
+          error: {
+            stderr: body.error.stderr,
+            stdout: body.error.stdout,
+          }
+        }
       } else {
-        throw new Error('unknown error occured');
+        return {
+          files: [],
+          zip: new Zip(),
+          error: {
+            stderr: 'unknown error occured',
+            stdout: '',
+          }
+        }
       }
     }
     
@@ -72,13 +82,38 @@ const compile = async (code: string, target: string): Promise<CompilationResult>
     });
   
     const body: CompilationResult = { files, zip }
-    if (body.error) {
-      throw new Error(`${body.error.stdout}\n${body.error.stderr}`)
+    if (!body.error) {
+      body.files = body.files.map(f => ({ ...f, name: f.name.replace(/.*tfaws\//, "")}) );
     }
-    body.files = body.files.map(f => ({ ...f, name: f.name.replace(/.*tfaws\//, "")}) )
     return body;
     
   } catch (err) {
     throw err;
   }
 }
+
+export class Compiler {
+  compilations: Map<string, Promise<CompilationResult>>;
+  constructor() {
+    this.compilations = new Map();
+  }
+
+  async compile(request: CompilationRequest): Promise<CompilationResult> {
+    const sha = await request.sha();
+    if (this.compilations.has(sha)) {
+      return this.compilations.get(sha)!;
+    }
+
+    return compile(request.code, request.target);
+  }
+
+  async submit(request: CompilationRequest) {
+    const sha = await request.sha();
+    if (this.compilations.has(sha)) {
+      return;
+    }
+
+    this.compilations.set(sha, compile(request.code, request.target));
+  }
+}
+

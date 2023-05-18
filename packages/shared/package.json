@@ -1,0 +1,21 @@
+{
+  "name": "@wing-playground/shared",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@analytics/segment": "^1.1.4",
+    "@cowasm/memfs": "^3.5.1",
+    "@winglang/sdk": "^0.17.13",
+    "analytics": "^0.8.1",
+    "buffer": "^6.0.3",
+    "winglang": "^0.17.13"
+  },
+  "devDependencies": {
+    "@wing-playground/console-build": "file:../../packages/console-build",
+    "vite": "^4.2.0"
+  }
+}
