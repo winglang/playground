@@ -3,7 +3,7 @@ module.exports = {
   content: [
     "./.storybook/**/*",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
-    "../design-system/src/**/*.{vue,js,ts,jsx,tsx}",
+    "../../packages/shared/src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   plugins: [require("@tailwindcss/typography")],
   theme: {
