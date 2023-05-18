@@ -1,0 +1,9 @@
+{
+  "name": "@wing-playground/shared",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "devDependencies": {
+    "typescript": "^5.0.2"
+  }
+}
