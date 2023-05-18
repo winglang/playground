@@ -5,13 +5,13 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
-    preserveSymlinks: true,
+    // preserveSymlinks: true,
     alias: {
       "wasi-js/dist/bindings/node": "wasi-js/dist/bindings/browser",
     },
   },
   plugins: [
-    react(), 
+    react(),
     nodePolyfills(),
     {
       name: 'configure-response-headers',
@@ -40,10 +40,13 @@ export default defineConfig({
   },
   build: {
     target: "es2022",
-    
+
     commonjsOptions: {
       // This is needed because winglang is symlinked
-      include: [/winglang/, /node_modules/],
+      include: [
+        // /winglang/,
+        /node_modules/,
+      ],
     },
   },
   server: {

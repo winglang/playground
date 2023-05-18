@@ -1,0 +1,10 @@
+{
+  "name": "@wing-playground/shared",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "devDependencies": {
+    "@wing-playground/console-build": "file:../console-build",
+    "typescript": "^5.0.2"
+  }
+}

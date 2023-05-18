@@ -26,27 +26,27 @@ import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
 import React, { createRef, useEffect, useState, useRef } from 'react';
 import { WebContainer } from '@webcontainer/api';
-import darkPlusTMTheme from './monaco-themes/dark_plus.js';
-import convertTheme from './monaco-themes/convert-tmtheme.js';
-import wingLanguageConfiguration from './language-configurations/wing-configration.json';
+import darkPlusTMTheme from '@wing-playground/shared/src/monaco-themes/dark_plus.js';
+import convertTheme from '@wing-playground/shared/src/monaco-themes/convert-tmtheme.js';
+import wingLanguageConfiguration from '@wing-playground/shared/src/language-configurations/wing-configration.json';
 import { debounce } from 'lodash';
 
 import { Dropdown } from 'semantic-ui-react'
 
-import wingJson from './grammers/wing.tmLanguage.json'
-import jsJson from './grammers/js.tmLanguage.json'
-import LspWorker from './lsp.js?worker'
-import files from './files';
-import { initContainer, installDependencies, prepareForEvaluation } from './containers';
+import wingJson from '@wing-playground/shared/src/grammers/wing.tmLanguage.json'
+import jsJson from '@wing-playground/shared/src/grammers/js.tmLanguage.json'
+import LspWorker from '@wing-playground/shared/src/lsp.js?worker'
+import files from '@wing-playground/shared/src/files';
+import { initContainer, installDependencies, prepareForEvaluation } from '@wing-playground/shared/src/containers';
 
-import { Tree, TreeNode, createTree } from './Tree';
+import { Tree, TreeNode, createTree } from '@wing-playground/shared/src/Tree';
 import { FileTree } from 'exploration';
-import { Actions } from './Actions';
-import { Modal } from './Modal';
-import { Loading } from './Loading';
-import { FilePicker } from './FilePicker.js';
-import { CompilationResult, compileToAws, compileToAzure, compileToGcp } from './compilerService';
-import { useExamples, Example } from './use-examples.js';
+import { Actions } from '@wing-playground/shared/src/Actions';
+import { Modal } from '@wing-playground/shared/src/Modal';
+import { Loading } from '@wing-playground/shared/src/Loading';
+import { FilePicker } from '@wing-playground/shared/src/FilePicker.js';
+import { CompilationResult, compileToAws, compileToAzure, compileToGcp } from '@wing-playground/shared/src/compilerService';
+import { useExamples, Example } from '@wing-playground/shared/src/use-examples.js';
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
@@ -104,7 +104,7 @@ const startLsp = () => {
     const writer = new BrowserMessageWriter(lspWorker);
     const languageClient = createLanguageClient({ reader, writer });
     languageClient.start();
-    
+
     lspWorker.onerror = debounce((ev) => {
       lspWorker.terminate();
       setTimeout(() => {
@@ -114,7 +114,7 @@ const startLsp = () => {
     reader.onClose(() => {
       languageClient.stop()
     });
-    
+
     function createLanguageClient(transports: any) {
       return new MonacoLanguageClient({
         name: 'Wing Language Client',
@@ -155,8 +155,8 @@ enum LoadingStatus {
 
 export const ReactMonacoEditor: React.FC<EditorProps> = ({
 }) => {
-    const { examples, setExamples, 
-      currentExample, setCurrentExample, 
+    const { examples, setExamples,
+      currentExample, setCurrentExample,
       languageContext, setLanguageContext,
     } = useExamples();
     const defaultExample = examples[0];
@@ -177,15 +177,15 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [compileExample, setCompileExample] = useState<Example>(defaultExample);
 
     const editorWillMount = (monaco: any) => {
-    
+
       try {
-        monaco.languages.register({ 
-          id: 'wing', 
+        monaco.languages.register({
+          id: 'wing',
           extensions: ['.w', '.wing'],
           aliases: ['Wing', 'wing']
         });
-        monaco.languages.register({ 
-          id: 'js', 
+        monaco.languages.register({
+          id: 'js',
           extensions: ['.js'],
           aliases: ['JS', 'JavaScript', 'javascript']
         });
@@ -194,7 +194,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       } catch (error) {
           console.error(error);
       }
-  
+
       monaco.editor.defineTheme('akkd-dark-plus', darkPlusTheme);
     };
 
@@ -202,7 +202,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       editorRef.current = editor
       monacoRef.current = monaco
       startLsp();
-      
+
       // install Monaco language client services
       MonacoServices.install(monaco);
 
@@ -224,7 +224,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       if (!containerRef.current || isCompiling) {
         return
       }
-      
+
       console.log('evaluating...', languageContext)
 
       setIsCompiling(true)
@@ -335,7 +335,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
               />
           </div>
           <div className='flex-1 w-9/12 h-full basis-auto'>
-          {loadingStatus != LoadingStatus.Completed ? 
+          {loadingStatus != LoadingStatus.Completed ?
             <Loading status={loadingStatus} /> :
             <iframe
               id='console'
