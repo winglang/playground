@@ -45,8 +45,15 @@ import { Actions } from '@wing-playground/shared/src/Actions';
 import { Modal } from '@wing-playground/shared/src/Modal';
 import { Loading } from '@wing-playground/shared/src/Loading';
 import { FilePicker } from '@wing-playground/shared/src/FilePicker.js';
-import { CompilationResult, compileToAws, compileToAzure, compileToGcp } from '@wing-playground/shared/src/compilerService';
+import { CompilationResult, Compiler, Target } from '@wing-playground/shared/src/compiler/compiler';
+import { CompilationRequest} from '@wing-playground/shared/src/compiler/request';
 import { useExamples, Example } from '@wing-playground/shared/src/use-examples.js';
+import { createAnalytics } from '@wing-playground/shared/src/analytics/analytics';
+import { startLsp } from '@wing-playground/shared/src/lsp/lspClient';
+
+const wingPackageJson = await import("winglang/package.json?raw").then(
+  (i) => JSON.parse(i.default)
+);
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
@@ -56,6 +63,9 @@ StandaloneServices.initialize({
     ...getMessageServiceOverride(document.body)
 });
 buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
+
+const compiler = new Compiler();
+const analytics = createAnalytics('playground');
 
 export type EditorProps = {
     defaultCode?: string;
@@ -95,53 +105,6 @@ async function wireGrammers(monaco: any) {
   grammers.set('js', 'source.js');
 
   return wireTmGrammars(monaco, registry, grammers);
-}
-
-const startLsp = () => {
-  const lspWorker = new LspWorker()
-  setTimeout(() => {
-    const reader = new BrowserMessageReader(lspWorker);
-    const writer = new BrowserMessageWriter(lspWorker);
-    const languageClient = createLanguageClient({ reader, writer });
-    languageClient.start();
-
-    lspWorker.onerror = debounce((ev) => {
-      lspWorker.terminate();
-      setTimeout(() => {
-        startLsp();
-      }, 5000);
-    }, 500);
-    reader.onClose(() => {
-      languageClient.stop()
-    });
-
-    function createLanguageClient(transports: any) {
-      return new MonacoLanguageClient({
-        name: 'Wing Language Client',
-        clientOptions: {
-          // use a language id as a document selector
-          documentSelector: [{ language: 'wing' }],
-          // disable the default error handler
-          errorHandler: {
-            error: () => {
-              console.log('lsp connection error')
-              return ({ action: ErrorAction.Shutdown })
-            },
-            closed: () => {
-              console.log('lsp connection closed')
-              return ({ action: CloseAction.Restart })
-            }
-          }
-        },
-        // create a language client connection to the server running in the web worker
-        connectionProvider: {
-          get: () => {
-            return Promise.resolve(transports);
-          }
-        }
-      });
-    }
-  }, 4500)
 }
 
 enum LoadingStatus {
@@ -201,7 +164,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const editorDidMount = async (editor: any, monaco: any) => {
       editorRef.current = editor
       monacoRef.current = monaco
-      startLsp();
 
       // install Monaco language client services
       MonacoServices.install(monaco);
@@ -214,6 +176,12 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         containerRef.current = instance
         setLoadingStatus(LoadingStatus.Install)
         const consoleUrl = await installDependencies(containerRef.current);
+        startLsp({ onError: () => {
+          analytics.track('lsp crash', {
+            code: editorRef.current?.getValue(),
+            version: wingPackageJson.version
+          })
+        }});
         setIframeSrc(consoleUrl)
         setLoadingStatus(LoadingStatus.Eval)
         evaluateCode(undefined, isCompiling);
@@ -238,6 +206,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           if (example) {
             example.value = compileValue!;
           }
+          await compiler.submit(new CompilationRequest(compileValue!, Target.TFAWS));
         } while (compileValue !== editorRef.current?.getValue());
       } finally {
         setLoadingStatus(LoadingStatus.Completed)
@@ -265,11 +234,15 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       evaluateCode(editorRef.current?.getValue(), isCompiling);
     }
 
-    const onCompile = (compileFn: (code: string) => Promise<CompilationResult>) => {
+    const onCompile = (target: Target) => {
       return async (event: React.MouseEvent<HTMLElement>) => {
         setModalVisibility(true);
         try {
-          const result = await compileFn(editorRef.current?.getValue()!);
+          const result = await compiler.compile(new CompilationRequest(editorRef.current?.getValue()!, target));
+          if (result.error) {
+            setCompileError(`${result.error.stderr}\n${result.error.stdout}`);
+            return;
+          }
           const examples = result.files.map((f, i) => ({ key: i + 1, text: f.name, value: f.contents }))
           const example = examples[0];
           setCompileExamples(examples);
@@ -319,7 +292,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       <div className='flex flex-col h-full'>
         <div className='flex flex-row pt-2 px-2 h-14 justify-between items-baseline bg-[#56657A]'>
           <FilePicker examples={examples} currentExample={currentExample} setCurrentExample={setCurrentExample} setLanguageContext={setLanguageContext} />
-          <Actions onRun={onRun} isRunDisabled={isCompiling} onTfAws={onCompile(compileToAws)} onTfAzure={onCompile(compileToAzure)} onTfGcp={onCompile(compileToGcp)} />
+          <Actions onRun={onRun} isRunDisabled={isCompiling} onTfAws={onCompile(Target.TFAWS)} onTfAzure={onCompile(Target.TFAzure)} onTfGcp={onCompile(Target.TFGCP)} />
         </div>
         <div className='flex grow'>
           <div className='flex w-1/3 h-full'>
