@@ -37,6 +37,8 @@ import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
 import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
 import {installDependencies} from "@wing-playground/shared/src/containers";
 import {InfoModal} from "@wing-playground/shared/src/InfoModal";
+import {WelcomeModal} from "./WelcomeModal";
+import {CongratsModal} from "./CongratsModal";
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -216,54 +218,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                     </div>
                 </div>
                 <div className='flex grow gap-2 bg-gray-900 pb-2 px-2'>
-                    <InfoModal visible={showWelcomeModal} onClose={() => setShowWelcomeModal(false)}>
-                        <div className='gap-y-4'>
-                            <h1 className='text-[1.7rem]'>Welcome to the Winglang Tutorial!</h1>
-                            <div className='pt-8 space-y-8'>
-                                <div>
-                                    Let's quickly build a smart queue that prints its messages and stores the latest one in a bucket.
-                                </div>
-                                <div>
-                                    You'll interact with it in the embedded Wing Simulator, and then compile to AWS.
-                                </div>
-                                <div>
-                                    <button className='mt-2 px-4 py-4 w-full hover:bg-[#2AD5C1] hover:text-slate-800 bg-gray-600 rounded-lg' onClick={() => setShowWelcomeModal(false)}>
-                                        Let’s get started!
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </InfoModal>
-
-                    <InfoModal visible={showFinishModal} onClose={() => setShowFinishModal(false)}>
-                        <div className='py-4'>
-                            <h1 className='text-2xl'>Congrats! You're one of us now.</h1>
-                            <div className='pt-8 flex flex-col'>
-                                <div className='flex justify-around w-full'>
-                                    <div className='flex gap-6'>
-                                        <a target='_blank' href='https://docs.winglang.io/getting-started' className='hover:text-slate-900'>
-                                            <button className='w-[140px] h-[140px] p-2 hover:bg-[#2AD5C1] text-slate-300 hover:text-slate-800 bg-gray-600 rounded-lg space-y-4'>
-                                                <div className='flex items-center h-[50px]'>
-                                                    <img className="h-[50px] mx-auto" src="playgroundicon.svg" loading="lazy" alt="" />
-                                                </div>
-                                                <div>Learn more</div>
-                                            </button>
-                                        </a>
-
-                                        <a target='_blank' href='https://play.winglang.io' className='hover:text-slate-900'>
-                                            <button className='w-[140px] h-[140px] p-2 hover:bg-[#2AD5C1] text-slate-300 hover:text-slate-800 bg-gray-600 rounded-lg space-y-4'>
-                                                <div className='flex items-center h-[50px]'>
-                                                    <img className="h-[42px] mx-auto text-slate-300" src="shark.svg" loading="lazy" alt="" />
-                                                </div>
-                                                <div>Try the playground</div>
-                                            </button>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </InfoModal>
-
+                    <WelcomeModal visible={showWelcomeModal} onClose={() => setShowWelcomeModal(false)}/>
+                    <CongratsModal visible={showFinishModal} onClose={() => setShowFinishModal(false)}/>
                     <div  className='w-[40%] flex flex-col gap-2 bg-gray-900 z-10'>
                         <div className="flex-1 flex flex-col rounded-lg overflow-hidden">
                             <div data-cueid="instructions" className={"grow bg-gray-700 flex flex-col"}>
