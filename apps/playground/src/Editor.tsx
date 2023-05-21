@@ -31,7 +31,8 @@ import { CompilationRequest} from '@wing-playground/shared/src/compiler/request'
 import { useExamples, Example } from '@wing-playground/shared/src/use-examples.js';
 import { createAnalytics } from '@wing-playground/shared/src/analytics/analytics';
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
-import {useEditorLifecycle} from "@wing-playground/shared/src/editor/use-editor-lifecycle";
+import {installDependencies} from "@wing-playground/shared/src/containers";
+import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
   (i) => JSON.parse(i.default)
@@ -63,12 +64,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     } = useExamples();
     const defaultExample = examples[0];
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
-    const monacoRef = useRef<monaco.editor.IStandaloneCodeEditor>();
-    const containerRef = useRef<WebContainer>();
     const ref = createRef<HTMLDivElement>();
     const refIframe = useRef(null);
     const [iframSrc, setIframeSrc] = useState("");
-    const [isCompiling, setIsCompiling] = useState(false);
     const [loadingStatus, setLoadingStatus] = useState(LoadingStatus.Init);
     const [modalVisibility, setModalVisibility] = useState(false);
 
@@ -78,25 +76,31 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [compileExamples, setCompileExamples] = useState<Example[]>(examples);
     const [compileExample, setCompileExample] = useState<Example>(defaultExample);
 
-    const {editorWillMount, editorDidMount, evaluateCode} = useEditorLifecycle({
-        editorRef,
-        monacoRef,
-        containerRef,
-        onLoadingStatusChange: setLoadingStatus,
-        isCompiling,
-        analyticsService: analytics,
-        wingVersion: wingPackageJson.version,
-        setConsoleUrl: setIframeSrc,
-        code: currentExample.value,
-        languageContext,
-        examples,
-        onCompileStatusChange: setIsCompiling,
-        compiler
-    });
-
-    const onChange = (value: string | undefined, isCompiling: boolean, ev: monaco.editor.IModelContentChangedEvent) => {
-      evaluateCode(value, isCompiling)
+    const installConsole = async (containerRef: React.MutableRefObject<WebContainer>) => {
+        const consoleUrl = await installDependencies(containerRef.current);
+        setIframeSrc(consoleUrl)
     }
+    const editorOptions = {
+        minimap: { enabled: false },
+        fontSize: 16
+    }
+    const onLspError = () => {
+        analytics.track('lsp crash', {
+            code: editorRef.current?.getValue(),
+            version: wingPackageJson.version
+        });
+    }
+    const {isCompiling, evaluateCode, editorWillMount, editorDidMount} = useEditor({
+        editorRef,
+        onLoadingStatusChange: setLoadingStatus,
+        onLspError,
+        installConsole,
+        languageContext,
+        code: currentExample.value,
+        compiler,
+        editorOptions,
+        shouldInitContainer: true,
+    });
 
     useEffect(() => {
         if (ref.current != null) {
@@ -110,8 +114,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       editorRef.current?.setValue(examples.find(e => e.text === languageContext.file)!.value);
     }, [languageContext]);
 
-    const onRun = (event: React.MouseEvent<HTMLElement>) => {
-      evaluateCode(editorRef.current?.getValue(), isCompiling);
+    const onRun = () => {
+      evaluateCode(editorRef.current?.getValue());
     }
 
     const onCompile = (target: Target) => {
@@ -176,16 +180,18 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         </div>
         <div className='flex grow'>
           <div className='flex w-1/3 h-full'>
-            <Editor
-              data-testid="editor"
-              theme="akkd-dark-plus"
-              options={options}
-              path={languageContext.path}
-              language={languageContext.language}
-              onMount={editorDidMount}
-              beforeMount={editorWillMount}
-              onChange={(value, event) => { onChange(value, isCompiling, event) }}
-              />
+              <Editor
+                  data-testid={"editor"}
+                  theme={"akkd-dark-plus"}
+                  options={editorOptions}
+                  path={languageContext.path}
+                  language={languageContext.language}
+                  onMount={editorDidMount}
+                  beforeMount={editorWillMount}
+                  onChange={(value) => {
+                      void evaluateCode(value);
+                  }}/>
+
           </div>
           <div className='flex-1 w-9/12 h-full basis-auto'>
           {loadingStatus != LoadingStatus.Completed ?
