@@ -18,7 +18,7 @@
     "@octokit/request": "^6.2.3",
     "@radix-ui/colors": "^0.1.8",
     "@webcontainer/api": "^1.1.0",
-    "@winglang/sdk": "latest",
+    "@winglang/sdk": "^0.17.17",
     "adm-zip": "^0.5.10",
     "buffer": "^6.0.3",
     "color": "^4.2.3",
