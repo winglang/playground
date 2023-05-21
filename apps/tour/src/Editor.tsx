@@ -40,13 +40,19 @@ import { initContainer, installDependencies, prepareForEvaluation } from '@wing-
 import { Modal } from '@wing-playground/shared/src/Modal';
 import { Loading } from '@wing-playground/shared/src/Loading';
 import { FilePicker } from '@wing-playground/shared/src/FilePicker.js';
-import { CompilationResult, compileToAws, compileToAzure, compileToGcp } from '@wing-playground/shared/src/compilerService';
+import { CompilationResult, Compiler, Target } from '@wing-playground/shared/src/compiler/compiler';
+import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
 import { useExamples, Example } from '@wing-playground/shared/src/use-examples.js';
 import { tutorials } from './tutorials/index.js';
 import { ProgressBar } from './ProgressBar.js';
 import classNames from 'classnames';
 
-import { analytics } from "./analytics/analytics";
+import { createAnalytics } from '@wing-playground/shared/src/analytics/analytics';
+import { startLsp } from '@wing-playground/shared/src/lsp/lspClient';
+
+const wingPackageJson = await import("winglang/package.json?raw").then(
+  (i) => JSON.parse(i.default)
+);
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
@@ -56,6 +62,9 @@ StandaloneServices.initialize({
     ...getMessageServiceOverride(document.body)
 });
 buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
+
+const compiler = new Compiler();
+const analytics = createAnalytics('tour');
 
 export type EditorProps = {
     defaultCode?: string;
@@ -96,53 +105,6 @@ async function wireGrammers(monaco: any) {
   return wireTmGrammars(monaco, registry, grammers);
 }
 
-const startLsp = () => {
-  const lspWorker = new LspWorker()
-  setTimeout(() => {
-    const reader = new BrowserMessageReader(lspWorker);
-    const writer = new BrowserMessageWriter(lspWorker);
-    const languageClient = createLanguageClient({ reader, writer });
-    languageClient.start();
-
-    lspWorker.onerror = debounce((ev) => {
-      lspWorker.terminate();
-      setTimeout(() => {
-        startLsp();
-      }, 5000);
-    }, 500);
-    reader.onClose(() => {
-      languageClient.stop()
-    });
-
-    function createLanguageClient(transports: any) {
-      return new MonacoLanguageClient({
-        name: 'Wing Language Client',
-        clientOptions: {
-          // use a language id as a document selector
-          documentSelector: [{ language: 'wing' }],
-          // disable the default error handler
-          errorHandler: {
-            error: () => {
-              console.log('lsp connection error')
-              return ({ action: ErrorAction.Shutdown })
-            },
-            closed: () => {
-              console.log('lsp connection closed')
-              return ({ action: CloseAction.Restart })
-            }
-          }
-        },
-        // create a language client connection to the server running in the web worker
-        connectionProvider: {
-          get: () => {
-            return Promise.resolve(transports);
-          }
-        }
-      });
-    }
-  }, 4500)
-}
-
 enum LoadingStatus {
   Init = "Initializing WebContainer...",
   Install = "Installing dependencies...",
@@ -155,20 +117,6 @@ enum LoadingStatus {
 const PanelHeading: FC<PropsWithChildren> = ({children}) => {
   return <h3 className='text-white px-4 py-1 bg-gray-800 border-b border-black uppercase text-xs font-semibold leading-7 tracking-widest'>{children}</h3>;
 };
-
-export type WingTargets = 'aws' | 'azure' | 'gcp';
-export const getCompileFunction = (target: WingTargets) => {
-    switch (target) {
-    case 'aws':
-      return compileToAws;
-    case 'azure':
-      return compileToAzure;
-    case 'gcp':
-      return compileToGcp;
-    default:
-        throw new Error(`Unknown target: ${target}`);
-  }
-}
 
 const InfoModal: FC<PropsWithChildren<{visible: boolean, onClose: () => void}>> = ({visible,onClose, children}) => {
   return <div className={classNames('fixed inset-0 z-50 overflow-y-auto', {'hidden': !visible})}>
@@ -246,7 +194,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const editorDidMount = async (editor: any, monaco: any) => {
       editorRef.current = editor
       monacoRef.current = monaco
-      startLsp();
 
       // install Monaco language client services
       MonacoServices.install(monaco);
@@ -259,6 +206,12 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         containerRef.current = instance
         setLoadingStatus(LoadingStatus.Install)
         const consoleUrl = await installDependencies(containerRef.current);
+        startLsp({ onError: () => {
+          analytics.track('lsp crash', {
+            code: editorRef.current?.getValue(),
+            version: wingPackageJson.version
+          })
+        }});
         setIframeSrc(consoleUrl)
         setLoadingStatus(LoadingStatus.Eval)
         evaluateCode(undefined, isCompiling);
@@ -283,6 +236,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           if (example) {
             example.value = compileValue!;
           }
+          await compiler.submit(new CompilationRequest(compileValue!, Target.TFAWS));
         } while (compileValue !== editorRef.current?.getValue());
       } finally {
         setLoadingStatus(LoadingStatus.Completed)
@@ -426,11 +380,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       })
     }, [currentStep]);
 
-    const downloadCompiledCode = async (target: WingTargets) => {
+    const downloadCompiledCode = async (target: Target) => {
         setDownloadInProgress(true);
-        const compileFunction = getCompileFunction(target);
-        console.log("download compile code", compileFunction);
-        const result = await compileFunction(editorRef.current?.getValue()!);
+        const result = await compiler.compile(new CompilationRequest(editorRef.current?.getValue()!, target));
+        if (result.error) {
+          console.error('compilation failed', result.error.stderr);
+          return;
+        }
         console.log("download compile code", result);
         const zipBlob = new Blob([new Uint8Array(result.zip.toBuffer())]);
         const url = window.URL.createObjectURL(zipBlob);
@@ -555,7 +511,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
                       <div className="grow"></div>
                       {isLastStep &&
-                        <button className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded', {"opacity-30": downloadInProgress})} disabled={downloadInProgress} onClick={() => downloadCompiledCode('aws')}>
+                        <button className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded', {"opacity-30": downloadInProgress})} disabled={downloadInProgress} onClick={() => downloadCompiledCode(Target.TFAWS)}>
                           {downloadInProgress ? "Compiling..." : "Compile"}
                         </button>
                       }
