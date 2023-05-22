@@ -41,6 +41,7 @@ import {CongratsModal} from "./CongratsModal";
 import {SimulatorTarget} from "@wing-playground/shared/src/SimulatorTarget";
 import {TargetsView, TargetView} from "./TargetsView";
 import {PanelHeader} from "@wing-playground/shared/src/PanelHeader";
+import {Tabs} from "@wing-playground/shared/src/Tabs";
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -204,6 +205,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         }
     }, [iframSrc, refIframe]);
 
+
+  const [currentTab, setCurrentTab] = useState("simulator");
     return (
         <>
             <div className='flex flex-col h-full'>
@@ -298,14 +301,39 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                             </div>
                         </div>
                     </div>
-                    <div data-cueid="simulation" className='h-full basis-auto rounded-lg overflow-hidden grow'>
-                        {loadingStatus != LoadingStatus.Completed ?
-                            <Loading status={loadingStatus} /> :
-                            <TargetsView targets={[
-                                simulatorTarget,
-                            ]} />
-                        }
-                    </div>
+                    <Tabs
+                    className={classNames(
+                      "text-white bg-gray-800 border-b border-black",
+                      "uppercase text-xs font-semibold leading-7 tracking-widest",
+                      "rounded-t-lg overflow-hidden"
+                    )}
+                    tabs={[
+                      {
+                        id: "simulator",
+                        name: "Simulator",
+                        panel: (
+                          <div data-cueid="simulation" className='h-full basis-auto rounded-lg overflow-hidden grow'>
+                            {loadingStatus != LoadingStatus.Completed ?
+                              <Loading status={loadingStatus} /> :
+                              <TargetsView targets={[
+                                  simulatorTarget,
+                              ]} />
+                            }
+                          </div>
+                        ),
+                      },
+                      {
+                        id: "the other",
+                        name: "SDK",
+                        panel: (
+                          <div>:)</div>
+                        ),
+                      },
+
+                    ]}
+                    currentTabId={currentTab}
+                    onTabChange={setCurrentTab}
+                  />
                 </div>
             </div>
         </>
