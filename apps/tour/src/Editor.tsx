@@ -36,9 +36,9 @@ import { createAnalytics } from '@wing-playground/shared/src/analytics/analytics
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
 import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
 import {installDependencies} from "@wing-playground/shared/src/containers";
-import {InfoModal} from "@wing-playground/shared/src/InfoModal";
 import {WelcomeModal} from "./WelcomeModal";
 import {CongratsModal} from "./CongratsModal";
+import {SimulatorTarget} from "@wing-playground/shared/src/SimulatorTarget";
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -297,13 +297,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                         <PanelHeading>Wing Simulator</PanelHeading>
                         {loadingStatus != LoadingStatus.Completed ?
                             <Loading status={loadingStatus} /> :
-                            <iframe
-                                id='console'
-                                className='w-full h-full basis-auto'
-                                src={iframSrc}
-                                allowFullScreen={true}
-                                ref={refIframe}
-                            ></iframe>}
+                            <SimulatorTarget frameSrc={iframSrc} iframeRef={refIframe}/>
+                        }
                     </div>
                 </div>
             </div>
