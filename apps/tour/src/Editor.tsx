@@ -25,7 +25,7 @@ import { WebContainer } from '@webcontainer/api';
 import ReactMarkdown from 'react-markdown'
 
 import { Loading } from '@wing-playground/shared/src/Loading';
-import { Compiler, Target } from '@wing-playground/shared/src/compiler/compiler';
+import { CompilationItem, CompilationResult, Compiler, Target } from '@wing-playground/shared/src/compiler/compiler';
 import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
 import { useExamples, Example } from '@wing-playground/shared/src/use-examples.js';
 import { tutorials } from './tutorials/index.js';
@@ -42,6 +42,7 @@ import {SimulatorTarget} from "@wing-playground/shared/src/SimulatorTarget";
 import {AwsTerraformTarget} from "@wing-playground/shared/src/AwsTerraformTarget";
 import {TargetsView, TargetView} from "./TargetsView";
 import {PanelHeader} from "@wing-playground/shared/src/PanelHeader";
+import { CompletionItem } from 'monaco-languageclient/.';
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -205,12 +206,55 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         }
     }, [iframSrc, refIframe]);
 
+    const [items, setItems] = useState<CompilationItem[]>([
+      {
+        name: "main.tf",
+
+        contents: `resource "aws_instance" "example" {
+ami           = "ami-0c55b159cbfafe1f0"
+instance_type = "t2.micro"
+}`,
+      },
+      {
+        name: "variables.tf",
+        contents: `variable "aws_region" {
+default = "us-east-1"
+}`,
+      },
+      {
+        name: "outputs.tf",
+        contents: `output "instance_ip_addr" {
+value = aws_instance.example.public_ip
+}`,
+      },
+      {
+        name: "Javascript",
+        contents: `exports.handler = async (event) => {
+  const response = {
+    statusCode: 200,
+    body: JSON.stringify('Hello from Lambda!'),
+  };
+  return response;
+};`,
+      },
+      {
+        name: "Javascript 2",
+
+        contents: `exports.handler = async (event) => {
+  const response = {
+    statusCode: 200,
+    body: JSON.stringify('Hello from Lambda!'),
+  };
+  return response;
+};`}
+    ]);
+
     const awsTerraformTarget: TargetView = useMemo(() => {
         return {
             title: "AWS/Terraform",
             Target: () =>
             <AwsTerraformTarget
-              compilations={compiler.compilations}
+            items={items}
             />
         }
     }, []);

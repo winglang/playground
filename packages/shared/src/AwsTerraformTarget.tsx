@@ -2,25 +2,14 @@ import {useEffect, useRef, useState} from "react";
 import Editor from "@monaco-editor/react";
 import * as monaco from 'monaco-editor';
 import classNames from "classnames";
+import { CompilationItem } from "./compiler/compiler";
 
 export interface AwsTerraformTargetProps {
-  compilations: any[];
-}
-
-export interface TerraformFile {
-  name: string;
-  description: string;
-  content: string;
-}
-
-export interface Asset {
-  name: string;
-  description: string;
-  content: string;
+  items?: CompilationItem[];
 }
 
 const FileButton = ({file, icon, selected, onClick}: {
-  file: TerraformFile,
+  file: CompilationItem,
   icon?: React.ReactNode,
   selected: boolean,
   onClick: () => void
@@ -48,60 +37,12 @@ const FileButton = ({file, icon, selected, onClick}: {
 }
 
 
-export const AwsTerraformTarget = ({compilations}: AwsTerraformTargetProps) => {
+export const AwsTerraformTarget = ({ items }: AwsTerraformTargetProps) => {
 
   const compileEditorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
-
-  const tfFiles: TerraformFile[] = [
-    {
-      name: "main.tf",
-      description: "The main file",
-      content: `resource "aws_instance" "example" {
-  ami           = "ami-0c55b159cbfafe1f0"
-  instance_type = "t2.micro"
-}`,
-    },
-    {
-      name: "variables.tf",
-      description: "The variables file",
-      content: `variable "aws_region" {
-  default = "us-east-1"
-}`,
-    },
-    {
-      name: "outputs.tf",
-      description: "The outputs file",
-      content: `output "instance_ip_addr" {
-  value = aws_instance.example.public_ip
-}`,
-    },
-  ];
-
-  const asseets: Asset[] = [
-    {
-      name: "Javascript",
-      description: "cloud.Function1/Code",
-      content: `exports.handler = async (event) => {
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify('Hello from Lambda!'),
-  };
-  return response;
-};`,
-    },
-    {
-      name: "Javascript 2",
-      description: "cloud.Function2/Code",
-      content: `exports.handler = async (event) => {
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify('Hello from Lambda!'),
-  };
-  return response;
-};`}
-  ];
-
-  const [selectedFile, setSelectedFile] = useState(tfFiles[0]);
+  const [tfFiles, setTfFiles] = useState<CompilationItem[]>([]);
+  const [assets, setAssets] = useState<CompilationItem[]>([]);
+  const [selectedFile, setSelectedFile] = useState<CompilationItem>();
 
   const options: monaco.editor.IStandaloneEditorConstructionOptions = {
     minimap: { enabled: false },
@@ -113,9 +54,22 @@ const compileEditorDidMount = async (editor: any, monaco: any) => {
 }
 
   useEffect(() => {
-    console.log("AwsTerraformTarget", compilations[compilations.length - 1]);
-    console.log("AwsTerraformTarget", compilations);
-  }, [compilations]);
+    if (!items) {
+      return;
+    }
+    const files: CompilationItem[] = [];
+    const assets: CompilationItem[] = []
+    items.forEach((file) => {
+      if (file.name.endsWith(".tf")) {
+        files.push(file);
+      } else {
+        assets.push(file);
+      }
+    });
+    setTfFiles(files);
+    setAssets(assets);
+    setSelectedFile(files[0]);
+  }, [items]);
 
   return (
       <div className="h-full flex bg-slate-500">
@@ -129,7 +83,7 @@ const compileEditorDidMount = async (editor: any, monaco: any) => {
                     <FileButton
                       key={file.name}
                       file={file}
-                      selected={selectedFile.name === file.name}
+                      selected={selectedFile?.name === file.name}
                       onClick={() => setSelectedFile(file)}
                     />
                   )
@@ -140,12 +94,12 @@ const compileEditorDidMount = async (editor: any, monaco: any) => {
               <div className="text-sm font-semibold text-slate-100 uppercase">Assets</div>
             </div>
             <div className="space-y-2">
-              {asseets.map((asset) => {
+              {assets.map((asset) => {
                 return (
                     <FileButton
                       key={asset.name}
                       file={asset}
-                      selected={selectedFile.name === asset.name}
+                      selected={selectedFile?.name === asset.name}
                       onClick={() => setSelectedFile(asset)}
                     />
                   )
@@ -160,7 +114,7 @@ const compileEditorDidMount = async (editor: any, monaco: any) => {
               language="js"
               options={Object.assign({}, options, { readOnly: true })}
               onMount={compileEditorDidMount}
-              value={selectedFile.content}
+              value={selectedFile?.contents}
               />
           </div>
       </div>
