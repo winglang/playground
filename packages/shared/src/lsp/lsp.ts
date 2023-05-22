@@ -1,6 +1,6 @@
 import { load, invoke } from "winglang";
 import { createFsFromVolume } from "@cowasm/memfs";
-import wingcURL from "@wing-playground/console-build/wing/wingc.wasm?url";
+import wingcURL from "@wing-playground/console-build/dist/wingc.wasm?url";
 import { Volume } from "@cowasm/memfs";
 import { Buffer } from "buffer";
 
