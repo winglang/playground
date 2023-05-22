@@ -39,9 +39,9 @@ import {installDependencies} from "@wing-playground/shared/src/containers";
 import {WelcomeModal} from "./WelcomeModal";
 import {CongratsModal} from "./CongratsModal";
 import {SimulatorTarget} from "@wing-playground/shared/src/SimulatorTarget";
+import {AwsTerraformTarget} from "@wing-playground/shared/src/AwsTerraformTarget";
 import {TargetsView, TargetView} from "./TargetsView";
 import {PanelHeader} from "@wing-playground/shared/src/PanelHeader";
-import {Tabs} from "@wing-playground/shared/src/Tabs";
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -205,8 +205,18 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         }
     }, [iframSrc, refIframe]);
 
+    const awsTerraformTarget: TargetView = useMemo(() => {
+        return {
+            title: "AWS/Terraform",
+            Target: () =>
+            <AwsTerraformTarget
+              compilations={compiler.compilations}
+            />
+        }
+    }, []);
 
-  const [currentTab, setCurrentTab] = useState("simulator");
+    const [currentTarget, setCurrentTarget] = useState<TargetView>(simulatorTarget);
+
     return (
         <>
             <div className='flex flex-col h-full'>
@@ -301,39 +311,19 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                             </div>
                         </div>
                     </div>
-                    <Tabs
-                    className={classNames(
-                      "text-white bg-gray-800 border-b border-black",
-                      "uppercase text-xs font-semibold leading-7 tracking-widest",
-                      "rounded-t-lg overflow-hidden"
-                    )}
-                    tabs={[
-                      {
-                        id: "simulator",
-                        name: "Simulator",
-                        panel: (
-                          <div data-cueid="simulation" className='h-full basis-auto rounded-lg overflow-hidden grow'>
-                            {loadingStatus != LoadingStatus.Completed ?
-                              <Loading status={loadingStatus} /> :
-                              <TargetsView targets={[
-                                  simulatorTarget,
-                              ]} />
-                            }
-                          </div>
-                        ),
-                      },
-                      {
-                        id: "the other",
-                        name: "SDK",
-                        panel: (
-                          <div>:)</div>
-                        ),
-                      },
-
-                    ]}
-                    currentTabId={currentTab}
-                    onTabChange={setCurrentTab}
-                  />
+                    <div data-cueid="simulation" className='h-full basis-auto rounded-lg overflow-hidden grow'>
+                      {loadingStatus != LoadingStatus.Completed ?
+                        <Loading status={loadingStatus} /> :
+                        <TargetsView
+                          targets={[
+                              simulatorTarget,
+                              awsTerraformTarget
+                          ]}
+                          currentTarget={currentTarget}
+                          setCurrentTarget={setCurrentTarget}
+                        />
+                      }
+                    </div>
                 </div>
             </div>
         </>
