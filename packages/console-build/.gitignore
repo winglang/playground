@@ -23,8 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-console.server.js
-console.tgz
 playground-console.tgz
 
 wing/wingc.wasm

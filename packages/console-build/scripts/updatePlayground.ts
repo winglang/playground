@@ -134,13 +134,13 @@ ${css}
 
   console.log("Creating the console ui archive...");
   await tar.create({
-    file: "./console.tgz",
+    file: "./dist/console.tgz",
     C: path.join(dir, "console/app/dist/vite"),
     gzip: true
   }, ["."]);
 
   console.log("Updating console server...");
-  await fs.cp(path.join(dir, "console/server/dist/index.js"), "./console.server.js");
+  await fs.cp(path.join(dir, "console/server/dist/index.js"), "./dist/console.server.js");
 }
 
 (async () => {
