@@ -17,6 +17,9 @@
     "test": "jest"
   },
   "dependencies": {
+    "@probot/adapter-aws-lambda-serverless": "^3.0.2",
+    "aws-cdk-lib": "^2.79.1",
+    "execa": "^7.1.1",
     "probot": "^12.2.4"
   },
   "devDependencies": {

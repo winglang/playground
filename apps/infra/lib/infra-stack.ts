@@ -12,6 +12,8 @@ import { HttpApi } from '@aws-cdk/aws-apigatewayv2-alpha';
 import * as apprunner from '@aws-cdk/aws-apprunner-alpha';
 import { join } from 'path';
 import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets';
+import { PreviewsBot } from './previews-bot';
+import { PreviewsEnvironment } from './previews-environment';
 
 export class InfraStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -45,79 +47,85 @@ export class InfraStack extends cdk.Stack {
     // api.root.addMethod("POST", wingIntegration);
 
     const vpc = new ec2.Vpc(this, "DefaultVpc", {
-      maxAzs: 3 // Default is all AZs in region
+      maxAzs: 3 // Default is all AZs in region,
     });
 
-    // const cluster = new ecs.Cluster(this, "WingCluster", {
-    //   vpc: vpc,
-    // });
-
-    // const fargate = new ecs_patterns.ApplicationLoadBalancedFargateService(this, "CompilerService", {
-    //   cluster: cluster,
-    //   desiredCount: 4,
-      
-    //   taskImageOptions: { 
-    //     image: ecs.ContainerImage.fromAsset(join(__dirname, "../../server")),
-    //     containerPort: 3000
-    //   },
-    //   cpu: 4096,
-    //   memoryLimitMiB: 8192,
-    //   publicLoadBalancer: true
-    // });
-
-    // const httpVpcLink = new CfnResource(this, 'HttpVpcLink', {
-    //   type: 'AWS::ApiGatewayV2::VpcLink',
-    //   properties: {
-    //     Name: 'V2 VPC Link',
-    //     SubnetIds: vpc.privateSubnets.map(m => m.subnetId)
-    //   }
-    // });
-
-    // const api2 = new HttpApi(this, 'HttpApiGateway', {
-    //   apiName: 'ApigwFargate',
-    //   description: 'Integration between apigw and Application Load-Balanced Fargate Service',
-    // });
-
-    // const integration = new CfnIntegration(this, 'HttpApiGatewayIntegration', {
-    //   apiId: api2.httpApiId,
-    //   connectionId: httpVpcLink.ref,
-    //   connectionType: 'VPC_LINK',
-    //   description: 'API Integration with AWS Fargate Service',
-    //   integrationMethod: 'ANY', // for GET and POST, use ANY
-    //   integrationType: 'HTTP_PROXY',
-    //   integrationUri: fargate.listener.listenerArn,
-    //   payloadFormatVersion: '1.0', // supported values for Lambda proxy integrations are 1.0 and 2.0. For all other integrations, 1.0 is the only supported value
-    // });
-
-    // new CfnRoute(this, 'Route', {
-    //   apiId: api2.httpApiId,
-    //   routeKey: 'ANY /{proxy+}',  // for something more general use 'ANY /{proxy+}'
-    //   target: `integrations/${integration.ref}`,
-    // })
-
-    // new CfnOutput(this, 'APIGatewayUrl', {
-    //   description: 'API Gateway URL to access the GET endpoint',
-    //   value: api2.url!
-    // })
-
-    const vpcConnector = new apprunner.VpcConnector(this, 'VpcConnector', {
-      vpc,
-      vpcSubnets: vpc.selectSubnets({ subnetType: ec2.SubnetType.PUBLIC }),
-      vpcConnectorName: 'VpcConnector',
-    });    
-
-    new apprunner.Service(this, "wing-compiler-apprunner", {
-      source: apprunner.Source.fromAsset({
-        asset: new DockerImageAsset(this, 'wing-compiler', {
-          directory: join(__dirname, "../../server"),
-        }),
-        imageConfiguration: {
-          port: 3000
-        }
-      }),
-      cpu: apprunner.Cpu.FOUR_VCPU,
-      memory: apprunner.Memory.EIGHT_GB,
-      vpcConnector
+    const cluster = new ecs.Cluster(this, "WingCluster", {
+      vpc: vpc,
     });
+
+    const fargate = new ecs_patterns.ApplicationLoadBalancedFargateService(this, "CompilerService", {
+      cluster: cluster,
+      desiredCount: 1,
+      // taskDefinition: new ecs.FargateTaskDefinition(this, "id", {
+      //   : 
+      // }),
+      taskImageOptions: { 
+        
+        image: ecs.ContainerImage.fromAsset(join(__dirname, "../../compiler")),
+        containerPort: 3000,
+        
+      },
+      cpu: 4096,
+      memoryLimitMiB: 8192,
+      publicLoadBalancer: true
+    });
+
+    const httpVpcLink = new CfnResource(this, 'HttpVpcLink', {
+      type: 'AWS::ApiGatewayV2::VpcLink',
+      properties: {
+        Name: 'V2 VPC Link',
+        SubnetIds: vpc.privateSubnets.map(m => m.subnetId)
+      }
+    });
+
+    const api2 = new HttpApi(this, 'HttpApiGateway', {
+      apiName: 'ApigwFargate',
+      description: 'Integration between apigw and Application Load-Balanced Fargate Service',
+    });
+
+    const integration = new CfnIntegration(this, 'HttpApiGatewayIntegration', {
+      apiId: api2.httpApiId,
+      connectionId: httpVpcLink.ref,
+      connectionType: 'VPC_LINK',
+      description: 'API Integration with AWS Fargate Service',
+      integrationMethod: 'ANY', // for GET and POST, use ANY
+      integrationType: 'HTTP_PROXY',
+      integrationUri: fargate.listener.listenerArn,
+      payloadFormatVersion: '1.0', // supported values for Lambda proxy integrations are 1.0 and 2.0. For all other integrations, 1.0 is the only supported value
+    });
+
+    new CfnRoute(this, 'Route', {
+      apiId: api2.httpApiId,
+      routeKey: 'ANY /{proxy+}',  // for something more general use 'ANY /{proxy+}'
+      target: `integrations/${integration.ref}`,
+    })
+
+    new CfnOutput(this, 'APIGatewayUrl', {
+      description: 'API Gateway URL to access the GET endpoint',
+      value: api2.url!
+    })
+
+    // const vpcConnector = new apprunner.VpcConnector(this, 'VpcConnector', {
+    //   vpc,
+    //   vpcSubnets: vpc.selectSubnets({ subnetType: ec2.SubnetType.PUBLIC }),
+    //   vpcConnectorName: 'VpcConnector',
+    // });    
+
+    // new apprunner.Service(this, "wing-compiler-apprunner", {
+    //   source: apprunner.Source.fromAsset({
+    //     asset: new DockerImageAsset(this, 'wing-compiler', {
+    //       directory: join(__dirname, "../../server"),
+    //     }),
+    //     imageConfiguration: {
+    //       port: 3000
+    //     }
+    //   }),
+    //   cpu: apprunner.Cpu.FOUR_VCPU,
+    //   memory: apprunner.Memory.EIGHT_GB,
+    //   vpcConnector
+    // });
+  
+    new PreviewsBot(this, "PreviewsBot", cluster, vpc);
   }
 }

@@ -1,8 +1,14 @@
-FROM node:18-slim
-WORKDIR /usr/src/app
-COPY package.json package-lock.json ./
-RUN npm ci --production
-RUN npm cache clean --force
-ENV NODE_ENV="production"
-COPY . .
-CMD [ "npm", "start" ]
+FROM public.ecr.aws/lambda/nodejs:18
+WORKDIR ${LAMBDA_TASK_ROOT}
+
+COPY ./package.json ./
+RUN npm install
+
+COPY ./src ./src
+COPY ./handler.ts ./
+COPY ./tsconfig.json ./
+RUN npm run build
+
+RUN npm i -g aws-cdk@2.79.1
+
+CMD ["./lib/handler.handler"]

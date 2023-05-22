@@ -127,6 +127,8 @@ ${css}
   await fs.writeFile(targetHtmlPath, html, "utf-8");
 
   console.log("Copying generated ui scripts...")
+  await fs.cp(path.join(dir, "console/ui/dist/index.global.js"), "./console.ui.js");
+  await fs.cp(path.join(dir, "console/app/dist/vite"), "./console-app", { recursive: true });
   await fs.rm(path.join(dir, "console/app/dist/vite/assets"), { recursive: true, force: true });
   await fs.mkdir(path.join(dir, "console/app/dist/vite/assets"), { recursive: true });
   await fs.cp(path.join(dir, "console/ui/dist/index.global.js"), path.join(dir, "console/app/dist/vite/assets/console.ui.js"));

@@ -1,6 +1,7 @@
 import { Probot, Context } from "probot";
+import { create } from "./environment";
 
-export = (app: Probot) => {
+export default function (app: Probot): void {
   app.on("pull_request.reopened", async (context) => {
     await onPullRequestOpened(context);
   });
@@ -49,6 +50,8 @@ async function onPullRequestOpened(context:  Context<"pull_request"> & {
         issue_number: pr.pull_number,
         body: `Preview URL: ${item.path} - https://play.winglang.io/?code=${content}`
       });
+
+      await create(`${pr.owner}-${pr.repo}-${prData.data.head.ref}`, content);
     }
   }
 }
