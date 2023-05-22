@@ -7,12 +7,14 @@ export interface SimulatorTargetProps {
 
 export const SimulatorTarget = (props: SimulatorTargetProps) => {
     return (
-        <iframe
-            id='console'
-            className='w-full h-full basis-auto'
-            src={props.frameSrc}
-            allowFullScreen={true}
-            ref={props.iframeRef}
-        ></iframe>
+        <div className={"h-full"}>
+            <iframe
+                id='console'
+                className='w-full h-full basis-auto'
+                src={props.frameSrc}
+                allowFullScreen={true}
+                ref={props.iframeRef}
+            ></iframe>
+        </div>
     )
 }

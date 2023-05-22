@@ -39,6 +39,8 @@ import {installDependencies} from "@wing-playground/shared/src/containers";
 import {WelcomeModal} from "./WelcomeModal";
 import {CongratsModal} from "./CongratsModal";
 import {SimulatorTarget} from "@wing-playground/shared/src/SimulatorTarget";
+import {TargetsView, TargetView} from "./TargetsView";
+import {PanelHeader} from "@wing-playground/shared/src/PanelHeader";
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -61,10 +63,6 @@ export type EditorProps = {
     path?: string;
     className?: string;
 }
-
-const PanelHeading: FC<PropsWithChildren> = ({children}) => {
-    return <h3 className='text-white px-4 py-1 bg-gray-800 border-b border-black uppercase text-xs font-semibold leading-7 tracking-widest'>{children}</h3>;
-};
 
 export const ReactMonacoEditor: React.FC<EditorProps> = ({
                                                          }) => {
@@ -199,6 +197,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [showWelcomeModal, setShowWelcomeModal] = useState(true);
     const [showFinishModal, setShowFinishModal] = useState(false);
 
+    const simulatorTarget: TargetView = useMemo(() => {
+        return {
+            title: "Wing Simulator",
+            Target: () => <SimulatorTarget frameSrc={iframSrc} iframeRef={refIframe}/>
+        }
+    }, [iframSrc, refIframe]);
+
     return (
         <>
             <div className='flex flex-col h-full'>
@@ -223,7 +228,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                     <div  className='w-[40%] flex flex-col gap-2 bg-gray-900 z-10'>
                         <div className="flex-1 flex flex-col rounded-lg overflow-hidden">
                             <div data-cueid="instructions" className={"grow bg-gray-700 flex flex-col"}>
-                                <PanelHeading>Instructions</PanelHeading>
+                                <PanelHeader>Instructions</PanelHeader>
 
                                 <div className="grow relative">
                                     <div className="absolute inset-0 overflow-auto">
@@ -274,7 +279,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                             </div>
                         </div>
                         <div data-cueid="code" className='h-[50%] flex flex-col w-full rounded-lg overflow-hidden'>
-                            <PanelHeading>Wing Editor</PanelHeading>
+                            <PanelHeader>Wing Editor</PanelHeader>
                             <div className=' grow w-full relative'>
                                 <div className="absolute inset-0 overflow-hidden">
                                     <Editor
@@ -294,10 +299,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                         </div>
                     </div>
                     <div data-cueid="simulation" className='h-full basis-auto rounded-lg overflow-hidden grow'>
-                        <PanelHeading>Wing Simulator</PanelHeading>
                         {loadingStatus != LoadingStatus.Completed ?
                             <Loading status={loadingStatus} /> :
-                            <SimulatorTarget frameSrc={iframSrc} iframeRef={refIframe}/>
+                            <TargetsView targets={[
+                                simulatorTarget,
+                            ]} />
                         }
                     </div>
                 </div>
