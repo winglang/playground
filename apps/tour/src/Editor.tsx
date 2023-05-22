@@ -240,39 +240,39 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
                                 <div className='px-4 py-3 text-white border-t border-black flex gap-2'>
                                     {editorCode == currentStep?.solution && (
-                                        <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded' onClick={() => resetTutorial()}>
+                                        <button className='px-2 py-0.5 hover:bg-white bg-[#2AD5C1] rounded text-gray-800 font-bold' onClick={() => resetTutorial()}>
                                             Reset
                                         </button>
                                     )}
 
                                     {currentStep?.solution && editorCode !== currentStep.solution &&
-                                        <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded' onClick={() => solveTutorial()}>
-                                            Solve
+                                        <button className='px-2 py-0.5 hover:bg-white bg-[#2AD5C1] rounded text-gray-800 font-bold' onClick={() => solveTutorial()}>
+                                            💡Solve
                                         </button>
                                     }
 
                                     <div className="grow"></div>
                                     {isLastStep &&
-                                        <button className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded', {"opacity-30": downloadInProgress})} disabled={downloadInProgress} onClick={() => downloadCompiledCode(Target.TFAWS)}>
+                                        <button className={classNames('px-2 py-0.5 hover:bg-white bg-[#2AD5C1] rounded text-gray-800 font-bold', {"opacity-30": downloadInProgress})} disabled={downloadInProgress} onClick={() => downloadCompiledCode(Target.TFAWS)}>
                                             {downloadInProgress ? "Compiling..." : "Compile"}
                                         </button>
                                     }
 
                                     {!isFirstStep &&
-                                        <button className='px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded' onClick={() => goToPreviousTutorial()}>
-                                            Previous
+                                        <button className='px-2 py-0.5 hover:bg-white bg-[#2AD5C1] rounded text-gray-800 font-bold' onClick={() => goToPreviousTutorial()}>
+                                            ←Previous
                                         </button>
                                     }
                                     {!isLastStep && (
-                                        <button className={classNames('px-2 py-0.5 hover:bg-gray-500 bg-gray-600 rounded')}
+                                        <button className={classNames('px-2 py-0.5 hover:bg-white bg-[#2AD5C1] rounded text-gray-800 font-bold')}
                                                 onClick={() => goToNextTutorial()}>
-                                            Next
+                                            Next→
                                         </button>
                                     )}
                                     {isLastStep && (
-                                        <button className={classNames('px-2 py-0.5 hover:bg-[#2AD5C1] hover:text-slate-800 bg-slate-800 rounded')}
+                                        <button className={classNames('px-2 py-0.5 hover:bg-white bg-[#2AD5C1] rounded text-gray-800 font-bold')}
                                                 onClick={() => setShowFinishModal(true)}>
-                                            Finish
+                                            Finish→
                                         </button>
                                     )}
                                 </div>

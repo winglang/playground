@@ -3,12 +3,12 @@ import files from './files';
 
 import expressUrl from './assets/express.tgz?url'
 import tarGzCode from "./assets/tar.gz.js?url";
-import winglangSdkUrl from '@wing-playground/console-build/wing/winglang-sdk-webpack.tgz?url'
-import winglangUrl from '@wing-playground/console-build/wing/winglang-webpack.tgz?url'
+import winglangSdkUrl from '@wing-playground/console-build/dist/winglang-sdk-webpack.tgz?url'
+import winglangUrl from '@wing-playground/console-build/dist/winglang-webpack.tgz?url'
 import codespanWasmUrl from '@wing-playground/console-build/wing/codespan-wasm.tgz?url'
 import vm2Url from '@wing-playground/console-build/wing/vm2.tgz?url'
-import consoleCode from "@wing-playground/console-build/console.server.js?url";
-import consoleUrl from "@wing-playground/console-build/console.tgz?url";
+import consoleCode from "@wing-playground/console-build/dist/console.server.js?url";
+import consoleUrl from "@wing-playground/console-build/dist/console.tgz?url";
 
 import constructsJSIIUrl from "constructs/.jsii?url";
 import constructsPackageJsonUrl from "constructs/package.json?url";
