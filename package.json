@@ -5,7 +5,8 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build"
+    "build": "turbo run build",
+    "tsc": "turbo run tsc"
   },
   "devDependencies": {
     "prettier": "^2.8.8",

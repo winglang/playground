@@ -5,4 +5,3 @@ if (process.env.WING_CODE) {
   startPreview(process.env.WING_CODE)
 } else {
   startCompiler
-}

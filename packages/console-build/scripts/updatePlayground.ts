@@ -51,7 +51,7 @@ const updateWing = async () => {
 
   console.log("Compressing Wing CLI...")
   await tar.create({
-    file: path.join(currentDir, "../wing/winglang-webpack.tgz"),
+    file: path.join(currentDir, "../dist/winglang-webpack.tgz"),
     C: wingDistDir,
     gzip: true,
     P: true
@@ -78,13 +78,13 @@ const updateWing = async () => {
 
   console.log("Compressing Wing SDK...")
   await tar.create({
-    file: path.join(currentDir, "../wing/winglang-sdk-webpack.tgz"),
+    file: path.join(currentDir, "../dist/winglang-sdk-webpack.tgz"),
     C: sdkDistDir,
     gzip: true,
     P: true
   }, [".", "../package.json", "../.jsii"]);
 
-  return fs.cp(`${winglangDir}/wingc.wasm`, path.join(currentDir, "../wing/wingc.wasm"))
+  return fs.cp(`${winglangDir}/wingc.wasm`, path.join(currentDir, "../dist/wingc.wasm"))
 }
 
 const updateConsole = async () => {
@@ -136,13 +136,13 @@ ${css}
 
   console.log("Creating the console ui archive...");
   await tar.create({
-    file: "./console.tgz",
+    file: "./dist/console.tgz",
     C: path.join(dir, "console/app/dist/vite"),
     gzip: true
   }, ["."]);
 
   console.log("Updating console server...");
-  await fs.cp(path.join(dir, "console/server/dist/index.js"), "./console.server.js");
+  await fs.cp(path.join(dir, "console/server/dist/index.js"), "./dist/console.server.js");
 }
 
 (async () => {

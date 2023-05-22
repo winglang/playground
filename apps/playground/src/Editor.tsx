@@ -17,30 +17,11 @@ import * as monaco from 'monaco-editor';
 
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 
-import { CloseAction, ErrorAction, MessageTransports, MonacoLanguageClient, MonacoServices } from 'monaco-languageclient';
-import { BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver-protocol/browser.js';
-import { IGrammarDefinition, Registry } from 'monaco-textmate';
-import { wireTmGrammars } from 'monaco-editor-textmate';
 import Editor, { loader } from "@monaco-editor/react";
 import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
 import React, { createRef, useEffect, useState, useRef } from 'react';
 import { WebContainer } from '@webcontainer/api';
-import darkPlusTMTheme from '@wing-playground/shared/src/monaco-themes/dark_plus.js';
-import convertTheme from '@wing-playground/shared/src/monaco-themes/convert-tmtheme.js';
-import wingLanguageConfiguration from '@wing-playground/shared/src/language-configurations/wing-configration.json';
-import { debounce } from 'lodash';
-
-import { Dropdown } from 'semantic-ui-react'
-
-import wingJson from '@wing-playground/shared/src/grammers/wing.tmLanguage.json'
-import jsJson from '@wing-playground/shared/src/grammers/js.tmLanguage.json'
-import LspWorker from '@wing-playground/shared/src/lsp.js?worker'
-import files from '@wing-playground/shared/src/files';
-import { initContainer, installDependencies, prepareForEvaluation } from '@wing-playground/shared/src/containers';
-
-import { Tree, TreeNode, createTree } from '@wing-playground/shared/src/Tree';
-import { FileTree } from 'exploration';
 import { Actions } from '@wing-playground/shared/src/Actions';
 import { Modal } from '@wing-playground/shared/src/Modal';
 import { Loading } from '@wing-playground/shared/src/Loading';
@@ -49,13 +30,13 @@ import { CompilationResult, Compiler, Target } from '@wing-playground/shared/src
 import { CompilationRequest} from '@wing-playground/shared/src/compiler/request';
 import { useExamples, Example } from '@wing-playground/shared/src/use-examples.js';
 import { createAnalytics } from '@wing-playground/shared/src/analytics/analytics';
-import { startLsp } from '@wing-playground/shared/src/lsp/lspClient';
+import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
+import {installDependencies} from "@wing-playground/shared/src/containers";
+import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
   (i) => JSON.parse(i.default)
 );
-
-const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
 loader.config({ monaco });
 
@@ -75,61 +56,17 @@ export type EditorProps = {
     className?: string;
 }
 
-
-
-async function wireGrammers(monaco: any) {
-  const registry = new Registry({
-    getGrammarDefinition: async (scopeName: string, dependantScope: string): Promise<IGrammarDefinition> => {
-      if (scopeName === 'source.wing') {
-        return {
-          format: 'json',
-          content: wingJson
-        };
-      } else if (scopeName === 'source.js') {
-        return {
-          format: 'json',
-          content: jsJson
-        };
-      } else {
-        return {
-          format: 'json',
-          content: jsJson
-        };
-      }
-    }
-  });
-
-  const grammers = new Map();
-
-  grammers.set('wing', 'source.wing');
-  grammers.set('js', 'source.js');
-
-  return wireTmGrammars(monaco, registry, grammers);
-}
-
-enum LoadingStatus {
-  Init = "Initializing WebContainer...",
-  Install = "Installing dependencies...",
-  Eval = "Initializing Console...",
-  CompileError = "Compilation Error",
-  TestFailure = "Tests Failed",
-  Completed = "Ready"
-}
-
 export const ReactMonacoEditor: React.FC<EditorProps> = ({
 }) => {
-    const { examples, setExamples,
+    const { examples,
       currentExample, setCurrentExample,
       languageContext, setLanguageContext,
     } = useExamples();
     const defaultExample = examples[0];
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
-    const monacoRef = useRef<monaco.editor.IStandaloneCodeEditor>();
-    const containerRef = useRef<WebContainer>();
     const ref = createRef<HTMLDivElement>();
     const refIframe = useRef(null);
     const [iframSrc, setIframeSrc] = useState("");
-    const [isCompiling, setIsCompiling] = useState(false);
     const [loadingStatus, setLoadingStatus] = useState(LoadingStatus.Init);
     const [modalVisibility, setModalVisibility] = useState(false);
 
@@ -139,84 +76,31 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [compileExamples, setCompileExamples] = useState<Example[]>(examples);
     const [compileExample, setCompileExample] = useState<Example>(defaultExample);
 
-    const editorWillMount = (monaco: any) => {
-
-      try {
-        monaco.languages.register({
-          id: 'wing',
-          extensions: ['.w', '.wing'],
-          aliases: ['Wing', 'wing']
-        });
-        monaco.languages.register({
-          id: 'js',
-          extensions: ['.js'],
-          aliases: ['JS', 'JavaScript', 'javascript']
-        });
-
-        monaco.languages.setLanguageConfiguration('wing', wingLanguageConfiguration)
-      } catch (error) {
-          console.error(error);
-      }
-
-      monaco.editor.defineTheme('akkd-dark-plus', darkPlusTheme);
-    };
-
-    const editorDidMount = async (editor: any, monaco: any) => {
-      editorRef.current = editor
-      monacoRef.current = monaco
-
-      // install Monaco language client services
-      MonacoServices.install(monaco);
-
-      await wireGrammers(monaco);
-      editorRef.current?.setValue(currentExample.value);
-
-      // do not wait for webcontainers
-      initContainer().then(async instance => {
-        containerRef.current = instance
-        setLoadingStatus(LoadingStatus.Install)
+    const installConsole = async (containerRef: React.MutableRefObject<WebContainer>) => {
         const consoleUrl = await installDependencies(containerRef.current);
-        startLsp({ onError: () => {
-          analytics.track('lsp crash', {
+        setIframeSrc(consoleUrl)
+    }
+    const editorOptions = {
+        minimap: { enabled: false },
+        fontSize: 16
+    }
+    const onLspError = () => {
+        analytics.track('lsp crash', {
             code: editorRef.current?.getValue(),
             version: wingPackageJson.version
-          })
-        }});
-        setIframeSrc(consoleUrl)
-        setLoadingStatus(LoadingStatus.Eval)
-        evaluateCode(undefined, isCompiling);
-      });
-    };
-
-    const evaluateCode = debounce(async (value: string | undefined, isCompiling: boolean) => {
-      if (!containerRef.current || isCompiling) {
-        return
-      }
-
-      console.log('evaluating...', languageContext)
-
-      setIsCompiling(true)
-
-      try {
-        let compileValue = value;
-        do {
-          compileValue = editorRef.current?.getValue()
-          await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
-          const example = examples.find(e => e.text === languageContext.file)!;
-          if (example) {
-            example.value = compileValue!;
-          }
-          await compiler.submit(new CompilationRequest(compileValue!, Target.TFAWS));
-        } while (compileValue !== editorRef.current?.getValue());
-      } finally {
-        setLoadingStatus(LoadingStatus.Completed)
-        setIsCompiling(false)
-      }
-    }, 700)
-
-    const onChange = (value: string | undefined, isCompiling: boolean, ev: monaco.editor.IModelContentChangedEvent) => {
-      evaluateCode(value, isCompiling)
+        });
     }
+    const {isCompiling, evaluateCode, editorWillMount, editorDidMount} = useEditor({
+        editorRef,
+        onLoadingStatusChange: setLoadingStatus,
+        onLspError,
+        installConsole,
+        languageContext,
+        code: currentExample.value,
+        compiler,
+        editorOptions,
+        shouldInitContainer: true,
+    });
 
     useEffect(() => {
         if (ref.current != null) {
@@ -230,8 +114,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       editorRef.current?.setValue(examples.find(e => e.text === languageContext.file)!.value);
     }, [languageContext]);
 
-    const onRun = (event: React.MouseEvent<HTMLElement>) => {
-      evaluateCode(editorRef.current?.getValue(), isCompiling);
+    const onRun = () => {
+      evaluateCode(editorRef.current?.getValue());
     }
 
     const onCompile = (target: Target) => {
@@ -296,16 +180,18 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         </div>
         <div className='flex grow'>
           <div className='flex w-1/3 h-full'>
-            <Editor
-              data-testid="editor"
-              theme="akkd-dark-plus"
-              options={options}
-              path={languageContext.path}
-              language={languageContext.language}
-              onMount={editorDidMount}
-              beforeMount={editorWillMount}
-              onChange={(value, event) => { onChange(value, isCompiling, event) }}
-              />
+              <Editor
+                  data-testid={"editor"}
+                  theme={"akkd-dark-plus"}
+                  options={editorOptions}
+                  path={languageContext.path}
+                  language={languageContext.language}
+                  onMount={editorDidMount}
+                  beforeMount={editorWillMount}
+                  onChange={(value) => {
+                      void evaluateCode(value);
+                  }}/>
+
           </div>
           <div className='flex-1 w-9/12 h-full basis-auto'>
           {loadingStatus != LoadingStatus.Completed ?
