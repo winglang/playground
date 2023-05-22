@@ -24,7 +24,3 @@ dist-ssr
 *.sw?
 
 playground-console.tgz
-
-wing/wingc.wasm
-wing/winglang-webpack.tgz
-wing/winglang-sdk-webpack.tgz

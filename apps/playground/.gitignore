@@ -25,9 +25,6 @@ dist-ssr
 .vercel
 .history
 
-wing/wingc.wasm
-wing/winglang-webpack.tgz
-wing/winglang-sdk-webpack.tgz
 /test-results/
 /playwright-report/
 /playwright/.cache/
