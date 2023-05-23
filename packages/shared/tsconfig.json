@@ -16,6 +16,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"],
+  "include": ["src", "../../apps/tour/src/TerraformTarget.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

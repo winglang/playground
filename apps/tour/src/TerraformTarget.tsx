@@ -15,7 +15,7 @@ import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggle
 
 import * as monaco from 'monaco-editor';
 import classNames from "classnames";
-import { CompilationItem } from "./compiler/compiler";
+import { CompilationItem } from "@wing-playground/shared/src/compiler/compiler";
 
 export interface TerraformTargetProps {
   files?: CompilationItem[];

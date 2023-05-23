@@ -25,7 +25,7 @@ import { WebContainer } from '@webcontainer/api';
 import ReactMarkdown from 'react-markdown'
 
 import { Loading } from '@wing-playground/shared/src/Loading';
-import { CompilationItem, CompilationResult, Compiler, Target } from '@wing-playground/shared/src/compiler/compiler';
+import { Compiler, Target } from '@wing-playground/shared/src/compiler/compiler';
 import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
 import { useExamples, Example } from '@wing-playground/shared/src/use-examples.js';
 import { tutorials } from './tutorials/index.js';
@@ -38,10 +38,13 @@ import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
 import {installDependencies} from "@wing-playground/shared/src/containers";
 import {WelcomeModal} from "./WelcomeModal";
 import {CongratsModal} from "./CongratsModal";
+
 import {SimulatorTarget} from "@wing-playground/shared/src/SimulatorTarget";
-import {TerraformTarget} from "@wing-playground/shared/src/TerraformTarget";
+
 import {TargetsView, TargetView} from "./TargetsView";
 import {PanelHeader} from "@wing-playground/shared/src/PanelHeader";
+import { TerraformTarget } from './TerraformTarget.js';
+import { TfAwsTarget } from './TfAwsTarget.js';
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -210,17 +213,31 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         }
     }, [iframSrc, refIframe]);
 
-    const terraformTargets: TargetView[] = useMemo(() => {
-        return targets.map(target => {
-          const files = targetsOutput.find(t => t.target === target)?.files ?? [];
-          console.log("TARGET", target);
-          console.log("files", files);
-            return {
+    const targetViews: TargetView[] = useMemo(() => {
+      const views: TargetView[] = [];
+
+      targets.forEach(target => {
+        if (target === Target.SIMULATOR) {
+          views.push(simulatorTarget);
+        }
+        if (target.includes("tf-")) {
+        const files = targetsOutput.find(t => t.target === target)?.files ?? [];
+
+        if (target === Target.TFAWS) {
+          views.push({
+            title: "Terraform AWS",
+            Target: () => <TfAwsTarget files={files} />
+          });
+        }
+        else {
+          views.push({
                 title: target,
                 Target: () => <TerraformTarget files={files} />
-
-            }
-        });
+            })
+          }
+        }
+      });
+      return views;
     }, [targets, targetsOutput]);
 
     const [currentTarget, setCurrentTarget] = useState<TargetView>(simulatorTarget);
@@ -244,8 +261,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                     </div>
                 </div>
                 <div className='flex grow gap-2 bg-gray-900 pb-2 px-2'>
-                    <WelcomeModal visible={showWelcomeModal} onClose={() => setShowWelcomeModal(false)}/>
-                    <CongratsModal visible={showFinishModal} onClose={() => setShowFinishModal(false)}/>
+                    {/* <WelcomeModal visible={showWelcomeModal} onClose={() => setShowWelcomeModal(false)}/>
+                    <CongratsModal visible={showFinishModal} onClose={() => setShowFinishModal(false)}/> */}
                     <div  className='w-[40%] flex flex-col gap-2 bg-gray-900 z-10'>
                         <div className="flex-1 flex flex-col rounded-lg overflow-hidden">
                             <div data-cueid="instructions" className={"grow bg-gray-700 flex flex-col"}>
@@ -325,10 +342,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                       }
                       {loadingStatus == LoadingStatus.Completed && (
                         <TargetsView
-                          targets={[
-                              simulatorTarget,
-                              ...terraformTargets,
-                          ]}
+                          targets={targetViews}
                           currentTarget={currentTarget}
                           setCurrentTarget={setCurrentTarget}
                         />
