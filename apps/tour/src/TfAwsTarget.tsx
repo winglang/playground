@@ -182,7 +182,7 @@ export const TfAwsTarget = ({ files, zip, loading }: TfAwsTargetProps) => {
             <div className="text-sm text-slate-100 uppercase flex">
               <div className="space-x-1 grow">
                 <span className="font-semibold">Terraform</span>
-                <span className="">({resources?.length})</span>
+                {resources?.length && <span>({resources?.length})</span>}
               </div>
             </div>
           </div>
@@ -213,7 +213,7 @@ export const TfAwsTarget = ({ files, zip, loading }: TfAwsTargetProps) => {
             <div className="text-sm text-slate-100 uppercase flex">
               <div className="space-x-1 grow">
                 <span className="font-semibold">Assets</span>
-                <span className="">({files?.length})</span>
+                {files?.length && <span>({files?.length})</span>}
               </div>
               <div>
                 <button onClick={() => downloadZip(zip)}>
@@ -224,7 +224,7 @@ export const TfAwsTarget = ({ files, zip, loading }: TfAwsTargetProps) => {
           </div>
 
           <div className="divide-y divide-slate-700 border-y border-slate-700 overflow-y-auto h-1/3">
-          {files?.length === 0  && !loading && (
+            {files?.length === 0  && !loading && (
               <div className="px-2 py-2 text-sm text-slate-400">
                 No assets found
               </div>
