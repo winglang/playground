@@ -99,18 +99,18 @@ export const useEditor = ({editorRef, onLoadingStatusChange, onLspError, code, l
         setIsCompiling(true);
 
         try {
-          const outputs: TargetOutput[] = [];
           let compileValue = editorRef.current?.getValue()
           await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
+
+          setTargetsOutput([]);
           targets.forEach(async target => {
             const compilation = await compiler.compile(new CompilationRequest(compileValue!, target));
             const output = {
               target,
               files: compilation.files
             }
-            outputs.push(output);
-          })
-          setTargetsOutput(outputs);
+            setTargetsOutput(prev => [...prev, output]);
+          });
         } finally {
             onLoadingStatusChange(LoadingStatus.Completed)
             setIsCompiling(false)
