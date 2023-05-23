@@ -173,7 +173,7 @@ export const TfAwsTarget = ({ files, loading }: TfAwsTargetProps) => {
           {resources?.map((resource) => {
             return (
               <FileRow
-                key={resource.name}
+                key={resource.path}
                 title={getResourceName(resource.type)}
                 description={resource.name}
                 icon={<ResourceIcon type={resource.type}/>}
