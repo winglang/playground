@@ -89,6 +89,7 @@ const ResourceIcon = ({type}: {type: string}) => {
 }
 
 export type Resource = {
+  path: string;
   name: string;
   type: string;
   contents: string;
@@ -103,12 +104,16 @@ const getAwsResources = (tfFile: string) => {
 
     const resources: Resource[] = [];
     for (const [key, value] of Object.entries(json.resource)) {
-      const resourceId = Object.keys(value as object)[0];
-      resources.push({
-        name: resourceId,
-        type: key,
-        contents: JSON.stringify(value, null, 2)
-      });
+      for (const [key2, value2] of Object.entries(value as object)) {
+        const path = value2["//"]["metadata"]["path"] || key2;
+        const resourceName = path.split("/").slice(-2, -1)[0];
+        resources.push({
+          path: path,
+          name: resourceName,
+          type: key,
+          contents: JSON.stringify(value2, null, 2)
+        });
+      }
     }
     return resources;
   } catch (e) {
@@ -172,8 +177,11 @@ export const TfAwsTarget = ({ files, loading }: TfAwsTargetProps) => {
                 title={getResourceName(resource.type)}
                 description={resource.name}
                 icon={<ResourceIcon type={resource.type}/>}
-                selected={selectedFile?.name === resource.name}
-                onClick={() => setSelectedFile(resource)}
+                selected={selectedFile?.name === resource.path}
+                onClick={() => setSelectedFile({
+                  name: resource.path,
+                  contents: resource.contents,
+                })}
               />
             )
           })}
@@ -200,6 +208,11 @@ export const TfAwsTarget = ({ files, loading }: TfAwsTargetProps) => {
               )
             })}
         </div>
+
+        <div className="items-center px-2 py-2 border-b border-slate-700">
+          <div className="text-sm font-semibold text-slate-100 uppercase">Download</div>
+        </div>
+
       </div>
       <div className='flex flex-grow min-w-[15rem] max-w-[3/4] bg-[#334155]'>
         <Editor
