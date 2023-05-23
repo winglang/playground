@@ -39,7 +39,7 @@ export const tutorials = [
         code:   code01,
         solution: solution01,
         tutorial: tutorial01,
-        targets: [Target.SIMULATOR, Target.TFAWS, Target.TFGCP],
+        targets: [Target.SIMULATOR, Target.TFAWS],
     },
     {
         id: "2",

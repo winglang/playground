@@ -43,7 +43,6 @@ import {SimulatorTarget} from "@wing-playground/shared/src/SimulatorTarget";
 
 import {TargetsView, TargetView} from "./TargetsView";
 import {PanelHeader} from "@wing-playground/shared/src/PanelHeader";
-import { TerraformTarget } from './TerraformTarget.js';
 import { TfAwsTarget } from './TfAwsTarget.js';
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
@@ -221,22 +220,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         if (target === Target.SIMULATOR) {
           views.push(simulatorTarget);
         }
-        if (target.includes("tf-")) {
+        if (target === Target.TFAWS) {
           const compilation = compilerOutput.find(t => t.target === target);
           const files = compilation?.files;
-
-          if (target === Target.TFAWS) {
-            views.push({
-              title: "Terraform AWS",
-              Target: () => <TfAwsTarget files={files} loading={isCompiling} zip={compilation?.zip} />
-            });
-          }
-          else {
-            views.push({
-                title: target,
-                Target: () => <TerraformTarget files={files} />
-            })
-          }
+          views.push({
+            title: "Terraform AWS",
+            Target: () => <TfAwsTarget files={files} loading={isCompiling} zip={compilation?.zip} />
+          });
         }
       });
       return views;
