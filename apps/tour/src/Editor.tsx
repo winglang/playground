@@ -224,7 +224,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           const compilation = compilerOutput.find(t => t.target === target);
           const files = compilation?.files;
           views.push({
-            title: "Terraform AWS",
+            title: "AWS/TERRAFORM",
             Target: () => <TfAwsTarget files={files} loading={isCompiling} zip={compilation?.zip} />
           });
         }
