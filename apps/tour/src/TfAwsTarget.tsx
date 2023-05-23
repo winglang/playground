@@ -30,17 +30,20 @@ const FileRow = ({title, description, icon, selected, onClick}: {
       <button
       className={classNames(
         "flex items-center w-full px-2 py-1",
-        "text-left text-sm font-medium leading-5 text-gray-900",
-        "hover:bg-gray-100 focus:outline-none focus:bg-gray-100",
-        selected && "bg-gray-100",
+        "text-left text-sm font-medium leading-5",
+        "text-gray-900",
+        "hover:bg-gray-300 focus:bg-gray-300",
+        selected && "bg-gray-200",
       )}
       onClick={onClick}
     >
       <div className="flex gap-x-2 truncate">
-        {icon && <div className="w-6 my-auto shrink-0">{icon}</div>}
+        {icon && <div className="w-6 my-auto shrink-0">
+          {icon}
+        </div>}
         <div className="h-full inline-block align-middle">
           <div>{title}</div>
-          {description && <div className="text-xs text-gray-700 truncate">{description}</div>}
+          {description && <div className="text-xs truncate opacity-80">{description}</div>}
         </div>
       </div>
     </button>
@@ -92,7 +95,6 @@ export type Resource = {
 const getAwsResources = (tfFile: string) => {
   try {
     const json = JSON.parse(tfFile);
-    console.log(json);
     if (!json.resource) {
       return [];
     }
@@ -153,6 +155,7 @@ export const TfAwsTarget = ({ files }: TfAwsTargetProps) => {
               {resources?.map((resource) => {
                 return (
                   <FileRow
+                    key={resource.name}
                     title={getResourceName(resource.type)}
                     description={resource.name}
                     icon={<ResourceIcon type={resource.type}/>}
