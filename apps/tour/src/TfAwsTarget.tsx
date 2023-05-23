@@ -16,6 +16,7 @@ import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggle
 import * as monaco from 'monaco-editor';
 import classNames from "classnames";
 import { CompilationItem } from "@wing-playground/shared/src/compiler/compiler";
+import { Loading } from "@wing-playground/shared/src/Loading";
 
 
 const FileRow = ({title, description, icon, selected, onClick}: {
@@ -32,7 +33,7 @@ const FileRow = ({title, description, icon, selected, onClick}: {
         "flex items-center w-full px-2 py-1",
         "text-left text-sm font-medium leading-5",
         "text-gray-900",
-        "hover:bg-gray-300 focus:bg-gray-300",
+        "hover:bg-gray-300 focus:bg-gray-300 focus:outline-none",
         selected && "bg-gray-200",
       )}
       onClick={onClick}
@@ -79,6 +80,7 @@ const ResourceIcon = ({type}: {type: string}) => {
     "aws_lambda_function",
     "aws_iam_role",
     "aws_iam_role_policy",
+    "aws_iam_role_policy_attachment",
   ].includes(type);
   if (!validType) {
     return null;
@@ -116,9 +118,10 @@ const getAwsResources = (tfFile: string) => {
 
 export interface TfAwsTargetProps {
   files?: CompilationItem[];
+  loading?: boolean;
 }
 
-export const TfAwsTarget = ({ files }: TfAwsTargetProps) => {
+export const TfAwsTarget = ({ files, loading }: TfAwsTargetProps) => {
   const compileEditorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
   const [selectedFile, setSelectedFile] = useState<CompilationItem | undefined>(files?.[0]);
 
@@ -141,65 +144,70 @@ export const TfAwsTarget = ({ files }: TfAwsTargetProps) => {
   }
 
   return (
-      <div className="flex grow bg-slate-500">
-          <div className="w-full max-w-[20rem]">
-            <div className="items-center px-2 py-2 border-b border-slate-700">
-              <div className="text-sm font-semibold text-slate-100 uppercase">Terraform</div>
-            </div>
-            <div className="divide-y divide-slate-700 overflow-y-auto h-1/2">
-              {resources?.length === 0 && (
-                <div className="px-2 py-2 text-sm text-slate-400">
-                  No resources found
-                </div>
-              )}
-              {resources?.map((resource) => {
-                return (
-                  <FileRow
-                    key={resource.name}
-                    title={getResourceName(resource.type)}
-                    description={resource.name}
-                    icon={<ResourceIcon type={resource.type}/>}
-                    selected={selectedFile?.name === resource.name}
-                    onClick={() => setSelectedFile(resource)}
-                  />
-                )
-              })}
-            </div>
+    <div className="flex grow bg-slate-500 relative">
+      {loading && (
+        <div className="absolute inset-0 bg-slate-600/50 items-center align-middle z-10">
+          <Loading status=""/>
+        </div>
+      )}
 
-            <div className="items-center px-2 py-2 border-b border-slate-700">
-              <div className="text-sm font-semibold text-slate-100 uppercase">Assets</div>
+      <div className="w-full max-w-[20rem]">
+        <div className="items-center px-2 py-2 border-b border-slate-700">
+          <div className="text-sm font-semibold text-slate-100 uppercase">Terraform</div>
+        </div>
+        <div className="divide-y divide-slate-700 overflow-y-auto h-1/2">
+          {resources?.length === 0 && !loading && (
+            <div className="px-2 py-2 text-sm text-slate-400">
+              No resources found
             </div>
-
-            <div className="divide-y divide-slate-700 overflow-y-auto h-1/2">
-            {files?.length === 0 && (
-                <div className="px-2 py-2 text-sm text-slate-400">
-                  No assets found
-                </div>
-              )}
-              {files?.map((file) => {
-                return (
-                    <FileRow
-                      key={file.name}
-                      title={file.name}
-                      selected={selectedFile?.name === file.name}
-                      onClick={() => setSelectedFile(file)}
-                    />
-                  )
-                })}
-            </div>
-          </div>
-
-          <div className='flex flex-grow min-w-[15rem] max-w-[3/4] bg-[#334155]'>
-            <Editor
-              key={selectedFile?.name}
-              theme="akkd-dark-plus"
-              path="source.js"
-              language="js"
-              options={Object.assign({}, options, { readOnly: true })}
-              onMount={compileEditorDidMount}
-              value={selectedFile?.contents}
+          )}
+          {resources?.map((resource) => {
+            return (
+              <FileRow
+                key={resource.name}
+                title={getResourceName(resource.type)}
+                description={resource.name}
+                icon={<ResourceIcon type={resource.type}/>}
+                selected={selectedFile?.name === resource.name}
+                onClick={() => setSelectedFile(resource)}
               />
-          </div>
+            )
+          })}
+        </div>
+
+        <div className="items-center px-2 py-2 border-b border-slate-700">
+          <div className="text-sm font-semibold text-slate-100 uppercase">Assets</div>
+        </div>
+
+        <div className="divide-y divide-slate-700 overflow-y-auto h-1/2">
+        {files?.length === 0  && !loading && (
+            <div className="px-2 py-2 text-sm text-slate-400">
+              No assets found
+            </div>
+          )}
+          {files?.map((file) => {
+            return (
+                <FileRow
+                  key={file.name}
+                  title={file.name}
+                  selected={selectedFile?.name === file.name}
+                  onClick={() => setSelectedFile(file)}
+                />
+              )
+            })}
+        </div>
       </div>
+      <div className='flex flex-grow min-w-[15rem] max-w-[3/4] bg-[#334155]'>
+        <Editor
+          key={selectedFile?.name}
+          theme="akkd-dark-plus"
+          path="source.js"
+          language="js"
+          options={Object.assign({}, options, { readOnly: true })}
+          onMount={compileEditorDidMount}
+          value={selectedFile?.contents}
+          />
+      </div>
+    </div>
   )
 }

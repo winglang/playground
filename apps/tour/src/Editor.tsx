@@ -99,7 +99,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     const [targets, setTargets] = useState<Target[]>(tutorials[0].targets);
 
-    const {evaluateCode, editorWillMount, editorDidMount, targetsOutput } = useEditor({
+    const {evaluateCode, editorWillMount, editorDidMount, compilerOutput, isCompiling } = useEditor({
         editorRef,
         onLoadingStatusChange: setLoadingStatus,
         onLspError,
@@ -221,12 +221,12 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           views.push(simulatorTarget);
         }
         if (target.includes("tf-")) {
-        const files = targetsOutput.find(t => t.target === target)?.files ?? [];
+        const files = compilerOutput.find(t => t.target === target)?.files ?? [];
 
         if (target === Target.TFAWS) {
           views.push({
             title: "Terraform AWS",
-            Target: () => <TfAwsTarget files={files} />
+            Target: () => <TfAwsTarget files={files} loading={isCompiling} />
           });
         }
         else {
@@ -238,7 +238,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         }
       });
       return views;
-    }, [targets, targetsOutput]);
+    }, [targets, compilerOutput, isCompiling, simulatorTarget]);
 
     const [currentTarget, setCurrentTarget] = useState<TargetView>(simulatorTarget);
 
@@ -261,8 +261,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                     </div>
                 </div>
                 <div className='flex grow gap-2 bg-gray-900 pb-2 px-2'>
-                    {/* <WelcomeModal visible={showWelcomeModal} onClose={() => setShowWelcomeModal(false)}/>
-                    <CongratsModal visible={showFinishModal} onClose={() => setShowFinishModal(false)}/> */}
+                    <WelcomeModal visible={showWelcomeModal} onClose={() => setShowWelcomeModal(false)}/>
+                    <CongratsModal visible={showFinishModal} onClose={() => setShowFinishModal(false)}/>
                     <div  className='w-[40%] flex flex-col gap-2 bg-gray-900 z-10'>
                         <div className="flex-1 flex flex-col rounded-lg overflow-hidden">
                             <div data-cueid="instructions" className={"grow bg-gray-700 flex flex-col"}>
