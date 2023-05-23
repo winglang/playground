@@ -183,6 +183,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             step: currentStep
         })
         setTargets(currentStep.targets);
+        setCurrentTargetId(targetViews[0]?.title);
     }, [currentStep]);
 
     const downloadCompiledCode = async (target: Target) => {
@@ -240,7 +241,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       return views;
     }, [targets, compilerOutput, isCompiling, simulatorTarget]);
 
-    const [currentTarget, setCurrentTarget] = useState<TargetView>(simulatorTarget);
+    const [currentTargetId, setCurrentTargetId] = useState(targetViews[0]?.title);
 
     return (
         <>
@@ -343,8 +344,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                       {loadingStatus == LoadingStatus.Completed && (
                         <TargetsView
                           targets={targetViews}
-                          currentTarget={currentTarget}
-                          setCurrentTarget={setCurrentTarget}
+                          currentTargetId={currentTargetId}
+                          setCurrentTargetId={setCurrentTargetId}
                         />
                       )}
                     </div>

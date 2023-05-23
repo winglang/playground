@@ -42,7 +42,7 @@ const FileRow = ({title, description, icon, selected, onClick}: {
         {icon && <div className="w-6 my-auto shrink-0">
           {icon}
         </div>}
-        <div className="h-full inline-block align-middle">
+        <div className="h-full inline-block align-middle truncate">
           <div>{title}</div>
           {description && <div className="text-xs truncate opacity-80">{description}</div>}
         </div>
@@ -142,6 +142,10 @@ export const TfAwsTarget = ({ files, loading }: TfAwsTargetProps) => {
   const compileEditorDidMount = async (editor: any, monaco: any) => {
     compileEditorRef.current = editor
   }
+
+  useEffect(() => {
+    setSelectedFile(resources?.[0] || files?.[0]);
+  }, [files, resources]);
 
   return (
     <div className="flex grow bg-slate-500 relative">
