@@ -160,78 +160,82 @@ export const TfAwsTarget = ({ files, downloadCompiledCode, loading, disabled }: 
 
 
   return (
-    <div className="bg-slate-500 grow h-0">
-      <div className="flex grow relative">
+    <div className="bg-slate-500 w-full h-full flex">
+      <div className="h-full w-full relative flex">
         {loading && (
           <div className="absolute inset-0 bg-slate-600/50 items-center align-middle z-10">
             <Loading status=""/>
           </div>
         )}
 
-        <div className="w-full max-w-[20rem]">
-          <div className="items-center px-2 py-2 bg-slate-600">
-            <div className="text-sm text-slate-100 uppercase flex">
-              <div className="space-x-1 grow">
-                <span className="font-semibold">Terraform</span>
-                <span>({resources.length || 0})</span>
+        <div className="h-full w-full max-w-[20rem]">
+          <div className="flex flex-col h-1/2">
+            <div className="items-center px-2 py-2 bg-slate-600">
+              <div className="text-sm text-slate-100 uppercase flex">
+                <div className="space-x-1 grow">
+                  <span className="font-semibold">Terraform</span>
+                  <span>({resources.length || 0})</span>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="divide-y divide-slate-700 border-y border-slate-700 overflow-y-auto h-1/2">
-            {resources?.length === 0 && !loading && (
-              <div className="px-2 py-2 text-sm text-slate-400">
-                No resources found
-              </div>
-            )}
-            {resources?.map((resource) => {
-              return (
-                <FileRow
-                  key={resource.path}
-                  title={getResourceName(resource.type)}
-                  description={resource.name}
-                  icon={<ResourceIcon type={resource.type}/>}
-                  selected={selectedFile?.name === resource.path}
-                  onClick={() => setSelectedFile({
-                    name: resource.path,
-                    contents: resource.contents,
-                  })}
-                />
-              )
-            })}
-          </div>
-
-          <div className="items-center px-2 py-2 bg-slate-600">
-            <div className="text-sm text-slate-100 uppercase flex">
-              <div className="space-x-1 grow">
-                <span className="font-semibold">Assets</span>
-                <span>({files?.length || 0})</span>
-              </div>
-              <div>
-                <button onClick={() => downloadCompiledCode?.()} disabled={disabled}>
-                  <ArrowDownTrayIcon className="w-4 h-4 text-slate-100"/>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="divide-y divide-slate-700 border-y border-slate-700 overflow-y-auto h-1/2">
-            {files?.length === 0  && !loading && (
-              <div className="px-2 py-2 text-sm text-slate-400">
-                No assets found
-              </div>
-            )}
-            {files?.map((file) => {
-              return (
+            <div className="grow divide-y divide-slate-700 border-y border-slate-700 overflow-y-auto">
+              {resources?.length === 0 && !loading && (
+                <div className="px-2 py-2 text-sm text-slate-400">
+                  No resources found
+                </div>
+              )}
+              {resources?.map((resource) => {
+                return (
                   <FileRow
-                    key={file.name}
-                    title={file.name}
-                    selected={selectedFile?.name === file.name}
-                    onClick={() => setSelectedFile(file)}
+                    key={resource.path}
+                    title={getResourceName(resource.type)}
+                    description={resource.name}
+                    icon={<ResourceIcon type={resource.type}/>}
+                    selected={selectedFile?.name === resource.path}
+                    onClick={() => setSelectedFile({
+                      name: resource.path,
+                      contents: resource.contents,
+                    })}
                   />
                 )
               })}
+            </div>
+          </div>
+
+          <div className="flex flex-col grow">
+            <div className="items-center px-2 py-2 bg-slate-600">
+              <div className="text-sm text-slate-100 uppercase flex">
+                <div className="space-x-1 grow">
+                  <span className="font-semibold">Assets</span>
+                  <span>({files?.length || 0})</span>
+                </div>
+                <div>
+                  <button onClick={() => downloadCompiledCode?.()} disabled={disabled}>
+                    <ArrowDownTrayIcon className="w-4 h-4 text-slate-100"/>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="grow divide-y divide-slate-700 border-y border-slate-700 overflow-y-auto">
+              {files?.length === 0  && !loading && (
+                <div className="px-2 py-2 text-sm text-slate-400">
+                  No assets found
+                </div>
+              )}
+              {files?.map((file) => {
+                return (
+                    <FileRow
+                      key={file.name}
+                      title={file.name}
+                      selected={selectedFile?.name === file.name}
+                      onClick={() => setSelectedFile(file)}
+                    />
+                  )
+                })}
+            </div>
           </div>
         </div>
+
         <div className='flex flex-grow min-w-[15rem] max-w-[3/4] bg-[#334155]'>
           <Editor
             key={selectedFile?.name}
