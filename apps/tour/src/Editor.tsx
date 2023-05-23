@@ -242,6 +242,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       return views;
     }, [targets, compilerOutput, isCompiling, simulatorTarget]);
 
+    useEffect(() => {
+      setCurrentTargetId(targetViews[0]?.title);
+    }, [targetViews.length]);
+
     const [currentTargetId, setCurrentTargetId] = useState(targetViews[0]?.title);
 
     return (

@@ -25,6 +25,14 @@ export const TargetsView = ({targets, setCurrentTargetId, currentTargetId}: Targ
     return tabs;
   }, [targets]);
 
+  useEffect(() => {
+    if (targets.find((target) => target.title === currentTargetId)) {
+      return;
+    }
+    setCurrentTargetId?.(targets[0].title);
+    console.log("SET NEW TAB", targets[0].title);
+  }, [currentTargetId, targets, setCurrentTargetId]);
+
   return (
     <Tabs
       className={classNames(

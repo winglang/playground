@@ -168,6 +168,7 @@ export const TfAwsTarget = ({ files, zip, loading }: TfAwsTargetProps) => {
     setSelectedFile(resources?.[0] || files?.[0]);
   }, [files, resources]);
 
+
   return (
     <div className="bg-slate-500 flex grow">
       <div className="flex grow relative">
@@ -182,7 +183,7 @@ export const TfAwsTarget = ({ files, zip, loading }: TfAwsTargetProps) => {
             <div className="text-sm text-slate-100 uppercase flex">
               <div className="space-x-1 grow">
                 <span className="font-semibold">Terraform</span>
-                {resources?.length && <span>({resources?.length})</span>}
+                <span>({resources.length || 0})</span>
               </div>
             </div>
           </div>
@@ -213,7 +214,7 @@ export const TfAwsTarget = ({ files, zip, loading }: TfAwsTargetProps) => {
             <div className="text-sm text-slate-100 uppercase flex">
               <div className="space-x-1 grow">
                 <span className="font-semibold">Assets</span>
-                {files?.length && <span>({files?.length})</span>}
+                <span>({files?.length || 0})</span>
               </div>
               <div>
                 <button onClick={() => downloadZip(zip)}>
