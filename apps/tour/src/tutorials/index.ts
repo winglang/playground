@@ -1,3 +1,4 @@
+import { Target } from "@wing-playground/shared/src/compiler/compiler";
 import code01 from "./01-code.w?raw";
 import solution01 from "./01-solution.w?raw";
 import tutorial01 from "./01-tutorial.md?raw";
@@ -28,6 +29,7 @@ export interface Tutorial {
     code: string;
     solution?: string;
     tutorial?: string
+    targets?: Target[];
 }
 
 export const tutorials = [
@@ -36,41 +38,47 @@ export const tutorials = [
         name:   "Create Queue",
         code:   code01,
         solution: solution01,
-        tutorial: tutorial01
+        tutorial: tutorial01,
+        targets: [Target.TFAWS, Target.TFGCP],
     },
     {
         id: "2",
         name:   "Push Message",
         code:   code02,
         // solution: solution02,
-        tutorial: tutorial02
+        tutorial: tutorial02,
+        targets: [Target.TFAWS],
     },
     {
         id: "3",
         name:   "Logs",
         code:   code03,
         solution: solution03,
-        tutorial: tutorial03
+        tutorial: tutorial03,
+        targets: [Target.TFAWS],
     },
     {
         id: "4",
         name:   "Push Programmatically",
         code:   code04,
         solution: solution04,
-        tutorial: tutorial04
+        tutorial: tutorial04,
+        targets: [Target.TFAWS],
     },
     {
         id: "5",
         name:   "Use Bucket",
         code:   code05,
         solution: solution05,
-        tutorial: tutorial05
+        tutorial: tutorial05,
+        targets: [Target.TFAWS],
     },
     {
         id: "6",
         name:   "Compile for AWS",
         code:   code06,
         // solution: solution06,
-        tutorial: tutorial06
+        tutorial: tutorial06,
+        targets: [Target.TFAWS],
     },
 ]

@@ -39,10 +39,9 @@ import {installDependencies} from "@wing-playground/shared/src/containers";
 import {WelcomeModal} from "./WelcomeModal";
 import {CongratsModal} from "./CongratsModal";
 import {SimulatorTarget} from "@wing-playground/shared/src/SimulatorTarget";
-import {AwsTerraformTarget} from "@wing-playground/shared/src/AwsTerraformTarget";
+import {TerraformTarget} from "@wing-playground/shared/src/TerraformTarget";
 import {TargetsView, TargetView} from "./TargetsView";
 import {PanelHeader} from "@wing-playground/shared/src/PanelHeader";
-import { CompletionItem } from 'monaco-languageclient/.';
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -94,6 +93,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             version: wingPackageJson.version
         });
     }
+
+    const [targets, setTargets] = useState<Target[]>(tutorials[0].targets);
+
     const {evaluateCode, editorWillMount, editorDidMount, targetsOutput } = useEditor({
         editorRef,
         onLoadingStatusChange: setLoadingStatus,
@@ -102,7 +104,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         languageContext,
         code: tutorials[0].code,
         compiler,
-        targets: [Target.TFAWS],
+        targets,
         editorOptions,
         shouldInitContainer: true,
     });
@@ -177,6 +179,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         analytics.track(`tutorial: step: ${currentStepId}: changed`, {
             step: currentStep
         })
+        setTargets(currentStep.targets);
     }, [currentStep]);
 
     const downloadCompiledCode = async (target: Target) => {
@@ -207,13 +210,18 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         }
     }, [iframSrc, refIframe]);
 
-    const awsTerraformTarget: TargetView = useMemo(() => {
-      const files = targetsOutput.find(t => t.target === Target.TFAWS)?.files ?? [];
-      return {
-        title: "AWS/Terraform",
-        Target: () => <AwsTerraformTarget files={files} />
-      }
-    }, [targetsOutput]);
+    const terraformTargets: TargetView[] = useMemo(() => {
+        return targets.map(target => {
+          const files = targetsOutput.find(t => t.target === target)?.files ?? [];
+          console.log("TARGET", target);
+          console.log("files", files);
+            return {
+                title: target,
+                Target: () => <TerraformTarget files={files} />
+
+            }
+        });
+    }, [targets, targetsOutput]);
 
     const [currentTarget, setCurrentTarget] = useState<TargetView>(simulatorTarget);
 
@@ -319,7 +327,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                         <TargetsView
                           targets={[
                               simulatorTarget,
-                              awsTerraformTarget
+                              ...terraformTargets,
                           ]}
                           currentTarget={currentTarget}
                           setCurrentTarget={setCurrentTarget}
