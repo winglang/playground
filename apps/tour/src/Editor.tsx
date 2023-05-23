@@ -225,7 +225,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           const files = compilation?.files;
           views.push({
             title: "AWS/TERRAFORM",
-            Target: () => <TfAwsTarget files={files} loading={isCompiling} zip={compilation?.zip} />
+            Target: () => <TfAwsTarget
+              files={files}
+              loading={isCompiling}
+              downloadCompiledCode={() => downloadCompiledCode(target)}
+            />
           });
         }
       });
@@ -286,11 +290,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                                     }
 
                                     <div className="grow"></div>
-                                    {isLastStep &&
-                                        <button className={classNames('px-2 py-0.5 hover:bg-white bg-[#2AD5C1] rounded text-gray-800 font-bold', {"opacity-30": downloadInProgress})} disabled={downloadInProgress} onClick={() => downloadCompiledCode(Target.TFAWS)}>
-                                            {downloadInProgress ? "Compiling..." : "Compile"}
-                                        </button>
-                                    }
 
                                     {!isFirstStep &&
                                         <button className='px-2 py-0.5 hover:bg-white bg-[#2AD5C1] rounded text-gray-800 font-bold' onClick={() => goToPreviousTutorial()}>

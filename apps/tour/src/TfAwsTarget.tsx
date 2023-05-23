@@ -20,8 +20,6 @@ import classNames from "classnames";
 import { CompilationItem } from "@wing-playground/shared/src/compiler/compiler";
 import { Loading } from "@wing-playground/shared/src/Loading";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
-import AdmZip from "adm-zip";
-
 
 const FileRow = ({title, description, icon, selected, onClick}: {
   title: string,
@@ -124,27 +122,14 @@ const getAwsResources = (tfFile: string) => {
   }
 }
 
-const downloadZip = (zip?: AdmZip) => {
-  if (!zip) {
-    return;
-  }
-  const zipBlob = new Blob([new Uint8Array(zip.toBuffer())]);
-  const url = window.URL.createObjectURL(zipBlob);
-  const zipDownload = document.createElement("a");
-
-  zipDownload.href = url;
-  zipDownload.download = "wing.zip";
-  document.body.appendChild(zipDownload);
-  zipDownload.click();
-}
-
 export interface TfAwsTargetProps {
   files?: CompilationItem[];
-  zip?: AdmZip;
+  downloadCompiledCode?: () => void;
   loading?: boolean;
+  disabled?: boolean;
 }
 
-export const TfAwsTarget = ({ files, zip, loading }: TfAwsTargetProps) => {
+export const TfAwsTarget = ({ files, downloadCompiledCode, loading, disabled }: TfAwsTargetProps) => {
   const compileEditorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
   const [selectedFile, setSelectedFile] = useState<CompilationItem | undefined>(files?.[0]);
 
@@ -222,7 +207,7 @@ export const TfAwsTarget = ({ files, zip, loading }: TfAwsTargetProps) => {
                 <span>({files?.length || 0})</span>
               </div>
               <div>
-                <button onClick={() => downloadZip(zip)}>
+                <button onClick={() => downloadCompiledCode?.()} disabled={disabled}>
                   <ArrowDownTrayIcon className="w-4 h-4 text-slate-100"/>
                 </button>
               </div>

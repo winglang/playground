@@ -79,6 +79,6 @@ export const tutorials = [
         code:   code06,
         // solution: solution06,
         tutorial: tutorial06,
-        targets: [Target.TFAWS],
+        targets: [Target.SIMULATOR, Target.TFAWS],
     },
 ]
