@@ -160,7 +160,7 @@ export const TfAwsTarget = ({ files, downloadCompiledCode, loading, disabled }: 
 
 
   return (
-    <div className="bg-slate-500 flex grow">
+    <div className="bg-slate-500 grow h-0">
       <div className="flex grow relative">
         {loading && (
           <div className="absolute inset-0 bg-slate-600/50 items-center align-middle z-10">
