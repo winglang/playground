@@ -10,7 +10,7 @@ import {LoadingStatus} from "../loading-status";
 import {LanguageContext} from "../use-examples";
 import {debounce} from "lodash";
 import {CompilationRequest} from "../compiler/request";
-import {Compiler, Target} from "../compiler/compiler";
+import {CompilationItem, Compiler, Target} from "../compiler/compiler";
 import React, {useRef, useState} from "react";
 import * as monaco from 'monaco-editor';
 
@@ -22,19 +22,26 @@ export interface UseEditorOptions {
     code: string;
     languageContext: LanguageContext;
     compiler: Compiler;
+    targets: Target[];
     editorOptions: monaco.editor.IStandaloneEditorConstructionOptions;
     installConsole?: (containerRef: React.MutableRefObject<WebContainer>) => Promise<void>;
     editorTheme?: string;
     shouldInitContainer: boolean;
 }
 
+export type TargetOutput = {
+  target: Target,
+  files: CompilationItem[]
+}
+
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
-export const useEditor = ({editorRef, onLoadingStatusChange, onLspError, code, languageContext, compiler, installConsole, editorTheme, shouldInitContainer}: UseEditorOptions) => {
+export const useEditor = ({editorRef, onLoadingStatusChange, onLspError, code, languageContext, compiler, targets, installConsole, editorTheme, shouldInitContainer}: UseEditorOptions) => {
 
     const [isCompiling, setIsCompiling] = useState(false);
     const containerRef = useRef<WebContainer>();
     const monacoRef = useRef<monaco.editor.IStandaloneCodeEditor>();
+    const [targetsOutput, setTargetsOutput] = useState<TargetOutput[]>([]);
 
     const editorWillMount = (monaco: any) => {
 
@@ -89,11 +96,21 @@ export const useEditor = ({editorRef, onLoadingStatusChange, onLspError, code, l
             return;
         }
         console.log('evaluating...', languageContext)
-        setIsCompiling(true)
+        setIsCompiling(true);
+
         try {
-            let compileValue = editorRef.current?.getValue()
-            await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
-            await compiler.submit(new CompilationRequest(compileValue!, Target.TFAWS));
+          const outputs: TargetOutput[] = [];
+          let compileValue = editorRef.current?.getValue()
+          await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
+          targets.forEach(async target => {
+            const compilation = await compiler.compile(new CompilationRequest(compileValue!, target));
+            const output = {
+              target,
+              files: compilation.files
+            }
+            outputs.push(output);
+          })
+          setTargetsOutput(outputs);
         } finally {
             onLoadingStatusChange(LoadingStatus.Completed)
             setIsCompiling(false)
@@ -105,5 +122,6 @@ export const useEditor = ({editorRef, onLoadingStatusChange, onLspError, code, l
         editorDidMount,
         evaluateCode,
         isCompiling,
+        targetsOutput,
     }
 }

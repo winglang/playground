@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { CompilationItem } from "./compiler/compiler";
 
 export interface AwsTerraformTargetProps {
-  items?: CompilationItem[];
+  files?: CompilationItem[];
 }
 
 const FileButton = ({file, icon, selected, onClick}: {
@@ -37,11 +37,9 @@ const FileButton = ({file, icon, selected, onClick}: {
 }
 
 
-export const AwsTerraformTarget = ({ items }: AwsTerraformTargetProps) => {
+export const AwsTerraformTarget = ({ files }: AwsTerraformTargetProps) => {
 
   const compileEditorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
-  const [tfFiles, setTfFiles] = useState<CompilationItem[]>([]);
-  const [assets, setAssets] = useState<CompilationItem[]>([]);
   const [selectedFile, setSelectedFile] = useState<CompilationItem>();
 
   const options: monaco.editor.IStandaloneEditorConstructionOptions = {
@@ -52,24 +50,13 @@ export const AwsTerraformTarget = ({ items }: AwsTerraformTargetProps) => {
 const compileEditorDidMount = async (editor: any, monaco: any) => {
   compileEditorRef.current = editor
 }
-
   useEffect(() => {
-    if (!items) {
+    if (!files) {
       return;
     }
-    const files: CompilationItem[] = [];
-    const assets: CompilationItem[] = []
-    items.forEach((file) => {
-      if (file.name.endsWith(".tf")) {
-        files.push(file);
-      } else {
-        assets.push(file);
-      }
-    });
-    setTfFiles(files);
-    setAssets(assets);
+    console.log(files);
     setSelectedFile(files[0]);
-  }, [items]);
+  }, [files]);
 
   return (
       <div className="h-full flex bg-slate-500">
@@ -78,7 +65,10 @@ const compileEditorDidMount = async (editor: any, monaco: any) => {
               <div className="text-sm font-semibold text-slate-100 uppercase">Terraform</div>
             </div>
             <div className="space-y-2">
-              {tfFiles.map((file) => {
+              {files?.map((file) => {
+                if (file.name.endsWith(".js")) {
+                  return null;
+                }
                 return (
                     <FileButton
                       key={file.name}
@@ -94,7 +84,10 @@ const compileEditorDidMount = async (editor: any, monaco: any) => {
               <div className="text-sm font-semibold text-slate-100 uppercase">Assets</div>
             </div>
             <div className="space-y-2">
-              {assets.map((asset) => {
+              {files?.map((asset) => {
+                if (!asset.name.endsWith(".js")) {
+                  return null;
+                }
                 return (
                     <FileButton
                       key={asset.name}

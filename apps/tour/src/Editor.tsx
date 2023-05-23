@@ -94,7 +94,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             version: wingPackageJson.version
         });
     }
-    const {evaluateCode, editorWillMount, editorDidMount } = useEditor({
+    const {evaluateCode, editorWillMount, editorDidMount, targetsOutput } = useEditor({
         editorRef,
         onLoadingStatusChange: setLoadingStatus,
         onLspError,
@@ -102,6 +102,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         languageContext,
         code: tutorials[0].code,
         compiler,
+        targets: [Target.TFAWS],
         editorOptions,
         shouldInitContainer: true,
     });
@@ -206,58 +207,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         }
     }, [iframSrc, refIframe]);
 
-    const [items, setItems] = useState<CompilationItem[]>([
-      {
-        name: "main.tf",
-
-        contents: `resource "aws_instance" "example" {
-ami           = "ami-0c55b159cbfafe1f0"
-instance_type = "t2.micro"
-}`,
-      },
-      {
-        name: "variables.tf",
-        contents: `variable "aws_region" {
-default = "us-east-1"
-}`,
-      },
-      {
-        name: "outputs.tf",
-        contents: `output "instance_ip_addr" {
-value = aws_instance.example.public_ip
-}`,
-      },
-      {
-        name: "Javascript",
-        contents: `exports.handler = async (event) => {
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify('Hello from Lambda!'),
-  };
-  return response;
-};`,
-      },
-      {
-        name: "Javascript 2",
-
-        contents: `exports.handler = async (event) => {
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify('Hello from Lambda!'),
-  };
-  return response;
-};`}
-    ]);
-
     const awsTerraformTarget: TargetView = useMemo(() => {
-        return {
-            title: "AWS/Terraform",
-            Target: () =>
-            <AwsTerraformTarget
-            items={items}
-            />
-        }
-    }, []);
+      const files = targetsOutput.find(t => t.target === Target.TFAWS)?.files ?? [];
+      return {
+        title: "AWS/Terraform",
+        Target: () => <AwsTerraformTarget files={files} />
+      }
+    }, [targetsOutput]);
 
     const [currentTarget, setCurrentTarget] = useState<TargetView>(simulatorTarget);
 
@@ -356,8 +312,10 @@ value = aws_instance.example.public_ip
                         </div>
                     </div>
                     <div data-cueid="simulation" className='h-full basis-auto rounded-lg overflow-hidden grow'>
-                      {loadingStatus != LoadingStatus.Completed ?
-                        <Loading status={loadingStatus} /> :
+                      {loadingStatus != LoadingStatus.Completed &&
+                        <Loading status={loadingStatus} />
+                      }
+                      {loadingStatus == LoadingStatus.Completed && (
                         <TargetsView
                           targets={[
                               simulatorTarget,
@@ -366,7 +324,7 @@ value = aws_instance.example.public_ip
                           currentTarget={currentTarget}
                           setCurrentTarget={setCurrentTarget}
                         />
-                      }
+                      )}
                     </div>
                 </div>
             </div>

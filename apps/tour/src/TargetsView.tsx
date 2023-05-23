@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import { Tab, Tabs } from "@wing-playground/shared/src/Tabs";
 import classNames from "classnames";
 
@@ -7,15 +7,13 @@ export interface TargetView {
     Target: React.FC;
 }
 export interface TargetsViewProps {
-    targets: TargetView[];
-    currentTarget?: TargetView;
-    setCurrentTarget?: (target: TargetView) => void;
+  targets: TargetView[];
+  currentTarget?: TargetView;
+  setCurrentTarget?: (target: TargetView) => void;
 }
 export const TargetsView = ({targets, setCurrentTarget, currentTarget}: TargetsViewProps) => {
 
-    const [tabs, setTabs] = useState<Tab[]>([]);
-
-    useEffect(() => {
+    const tabs = useMemo(() => {
       const tabs: Tab[] = [];
       targets.forEach((target) => {
         tabs.push({
@@ -24,7 +22,7 @@ export const TargetsView = ({targets, setCurrentTarget, currentTarget}: TargetsV
           panel: <target.Target />,
         });
       });
-      setTabs(tabs);
+      return tabs;
     }, [targets]);
 
     return (
@@ -32,7 +30,7 @@ export const TargetsView = ({targets, setCurrentTarget, currentTarget}: TargetsV
           className={classNames(
             "text-white bg-gray-800 border-b border-black",
             "uppercase text-xs font-semibold leading-7 tracking-widest",
-            "rounded-t-lg overflow-hidden"
+            "rounded-t-lg overflow-hidden",
           )}
           tabs={tabs}
           currentTabId={currentTarget?.title}
