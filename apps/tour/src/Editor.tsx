@@ -222,16 +222,17 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           views.push(simulatorTarget);
         }
         if (target.includes("tf-")) {
-        const files = compilerOutput.find(t => t.target === target)?.files ?? [];
+          const compilation = compilerOutput.find(t => t.target === target);
+          const files = compilation?.files;
 
-        if (target === Target.TFAWS) {
-          views.push({
-            title: "Terraform AWS",
-            Target: () => <TfAwsTarget files={files} loading={isCompiling} />
-          });
-        }
-        else {
-          views.push({
+          if (target === Target.TFAWS) {
+            views.push({
+              title: "Terraform AWS",
+              Target: () => <TfAwsTarget files={files} loading={isCompiling} zip={compilation?.zip} />
+            });
+          }
+          else {
+            views.push({
                 title: target,
                 Target: () => <TerraformTarget files={files} />
             })

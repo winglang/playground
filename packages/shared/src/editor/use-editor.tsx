@@ -13,7 +13,7 @@ import {CompilationRequest} from "../compiler/request";
 import {CompilationItem, Compiler, Target} from "../compiler/compiler";
 import React, {useRef, useState} from "react";
 import * as monaco from 'monaco-editor';
-
+import AdmZip from "adm-zip";
 
 export interface UseEditorOptions {
     editorRef: React.MutableRefObject<any>;
@@ -31,7 +31,8 @@ export interface UseEditorOptions {
 
 export type CompilerOutput = {
   target: Target,
-  files: CompilationItem[]
+  files: CompilationItem[],
+  zip: AdmZip,
 }
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
@@ -108,7 +109,8 @@ export const useEditor = ({editorRef, onLoadingStatusChange, onLspError, code, l
             const compilation = await compiler.compile(new CompilationRequest(compileValue!, target));
             const output = {
               target,
-              files: compilation.files
+              files: compilation.files,
+              zip: compilation.zip
             }
             setCompilerOutput(prev => [...prev, output]);
             if (index === targets.length - 1) {
