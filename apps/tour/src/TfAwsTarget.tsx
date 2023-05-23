@@ -165,7 +165,10 @@ export const TfAwsTarget = ({ files, zip, loading }: TfAwsTargetProps) => {
   }
 
   useEffect(() => {
-    setSelectedFile(resources?.[0] || files?.[0]);
+    setSelectedFile({
+      name: resources[0].path || files?.[0].name || "",
+      contents: resources[0].contents || files?.[0].contents || "",
+    });
   }, [files, resources]);
 
 
