@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import Editor from "@monaco-editor/react";
 
 // support all editor features
@@ -18,79 +18,17 @@ import classNames from "classnames";
 import { CompilationItem } from "@wing-playground/shared/src/compiler/compiler";
 
 
-const FileButton = ({file, icon, selected, onClick}: {
-  file: CompilationItem,
+const FileRow = ({title, description, icon, selected, onClick}: {
+  title: string,
+  description?: string,
   icon?: React.ReactNode,
   selected: boolean,
   onClick: () => void
 }) => {
   return (
-    <button
+    <div className="truncate">
+      <button
       className={classNames(
-        "flex items-center justify-between w-full px-2 py-1",
-        "text-left text-sm font-medium leading-5 text-gray-900",
-        "hover:bg-gray-100 focus:outline-none focus:bg-gray-100",
-        selected && "bg-gray-100",
-      )}
-      onClick={onClick}
-    >
-      {icon && (
-      <div className="flex items-center gap-2">
-        {icon}
-      </div>
-      )}
-      <div className="flex items-center gap-2">
-        <span>{file.name}</span>
-      </div>
-    </button>
-  )
-}
-
-const getResourceName = (type: string) => {
-  if (type === "aws_sqs_queue") {
-    return "SQS";
-
-  }
-  return type;
-}
-
-const getIconName = (type: string) => {
-  switch (type) {
-    case "aws_sqs_queue":
-      return "aws_sqs.svg";
-    case "aws_s3_bucket":
-      return "aws_s3.svg";
-    case "aws_lambda_function":
-      return "aws_lambda.svg";
-    default:
-      return null;
-  }
-}
-
-
-const ResourceIcon = ({type}: {type: string}) => {
-  const iconName = getIconName(type);
-  if (!iconName) {
-    return null;
-  }
-  return  <img className="w-full" src={iconName}/>
-}
-
-export type Resource = {
-  name: string;
-  type: string;
-  contents: string;
-}
-
-const ResourceRow = ({resource, selected, onClick}: {
-  resource: Resource,
-  selected: boolean,
-  onClick: () => void
-}) => {
-  return (
-    <button
-      className={classNames(
-        "truncate",
         "flex items-center w-full px-2 py-1",
         "text-left text-sm font-medium leading-5 text-gray-900",
         "hover:bg-gray-100 focus:outline-none focus:bg-gray-100",
@@ -99,19 +37,59 @@ const ResourceRow = ({resource, selected, onClick}: {
       onClick={onClick}
     >
       <div className="flex gap-x-2 truncate">
-        <div className="w-6 my-auto shrink-0">
-          <ResourceIcon type={resource.type} />
-        </div>
+        {icon && <div className="w-6 my-auto shrink-0">{icon}</div>}
         <div className="h-full inline-block align-middle">
-          <div>{getResourceName(resource.type)}</div>
-          <div className="text-xs text-gray-700 truncate">{resource.name}</div>
+          <div>{title}</div>
+          {description && <div className="text-xs text-gray-700 truncate">{description}</div>}
         </div>
       </div>
     </button>
+  </div>
   )
 }
 
-const extractAwsResources = (tfFile: string) => {
+const getResourceName = (type: string) => {
+
+  switch (type) {
+    case "aws_sqs_queue":
+      return "SQS";
+    case "aws_s3_bucket":
+      return "S3";
+    case "aws_s3_object":
+      return "S3 Object";
+    case "aws_lambda_function":
+      return "Lambda";
+    case "aws_iam_role":
+      return "IAM Role";
+    case "aws_iam_role_policy":
+      return "IAM Policy";
+    default:
+      return type.split("_").slice(1).join(" ").toUpperCase();
+  }
+}
+
+const ResourceIcon = ({type}: {type: string}) => {
+  const validType = [
+    "aws_sqs_queue",
+    "aws_s3_bucket",
+    "aws_s3_object",
+    "aws_lambda_function",
+    "aws_iam_role",
+    "aws_iam_role_policy",
+  ].includes(type);
+  if (!validType) {
+    return null;
+  }
+  return  <img className="w-full" src={`aws/${type}.svg`}/>
+}
+
+export type Resource = {
+  name: string;
+  type: string;
+  contents: string;
+}
+
+const getAwsResources = (tfFile: string) => {
   try {
     const json = JSON.parse(tfFile);
     console.log(json);
@@ -139,10 +117,18 @@ export interface TfAwsTargetProps {
 }
 
 export const TfAwsTarget = ({ files }: TfAwsTargetProps) => {
-
   const compileEditorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
   const [selectedFile, setSelectedFile] = useState<CompilationItem | undefined>(files?.[0]);
-  const [resources, setResources] = useState<Resource[]>([]);
+
+  const resources = useMemo(() => {
+    if (!files) {
+      return [];
+    }
+    const newResources = getAwsResources(
+      files?.find((f) => f.name === "main.tf.json")?.contents || ""
+    );
+    return newResources;
+  }, [files]);
 
   const options: monaco.editor.IStandaloneEditorConstructionOptions = {
     minimap: { enabled: false },
@@ -152,43 +138,46 @@ export const TfAwsTarget = ({ files }: TfAwsTargetProps) => {
     compileEditorRef.current = editor
   }
 
-  useEffect(() => {
-    const filename = "main.tf.json";
-    const newResources = extractAwsResources(
-      files?.find((f) => f.name === filename)?.contents || ""
-    );
-    console.log(newResources);
-    setResources(newResources);
-  }, [files]);
-
   return (
-      <div className="h-full flex bg-slate-500">
-          <div className="w-1/4 min-w-[15rem]">
-            <div className="items-center px-2 py-2 border-b border-slate-500">
+      <div className="flex grow bg-slate-500">
+          <div className="w-full max-w-[20rem]">
+            <div className="items-center px-2 py-2 border-b border-slate-700">
               <div className="text-sm font-semibold text-slate-100 uppercase">Terraform</div>
             </div>
-            <div className="space-y-2">
+            <div className="divide-y divide-slate-700 overflow-y-auto h-1/2">
+              {resources?.length === 0 && (
+                <div className="px-2 py-2 text-sm text-slate-400">
+                  No resources found
+                </div>
+              )}
               {resources?.map((resource) => {
                 return (
-                    <ResourceRow
-                      key={resource.name}
-                      resource={resource}
-                      selected={selectedFile?.name === resource.name}
-                      onClick={() => setSelectedFile(resource)}
-                    />
-                  )
-                })}
+                  <FileRow
+                    title={getResourceName(resource.type)}
+                    description={resource.name}
+                    icon={<ResourceIcon type={resource.type}/>}
+                    selected={selectedFile?.name === resource.name}
+                    onClick={() => setSelectedFile(resource)}
+                  />
+                )
+              })}
             </div>
-            <div className="flex-col grow"/>
-            <div className="items-center px-2 py-2 border-b border-slate-500">
+
+            <div className="items-center px-2 py-2 border-b border-slate-700">
               <div className="text-sm font-semibold text-slate-100 uppercase">Assets</div>
             </div>
-            <div className="space-y-2">
+
+            <div className="divide-y divide-slate-700 overflow-y-auto h-1/2">
+            {files?.length === 0 && (
+                <div className="px-2 py-2 text-sm text-slate-400">
+                  No assets found
+                </div>
+              )}
               {files?.map((file) => {
                 return (
-                    <FileButton
+                    <FileRow
                       key={file.name}
-                      file={file}
+                      title={file.name}
                       selected={selectedFile?.name === file.name}
                       onClick={() => setSelectedFile(file)}
                     />
@@ -197,8 +186,7 @@ export const TfAwsTarget = ({ files }: TfAwsTargetProps) => {
             </div>
           </div>
 
-          <div className='flex flex-grow h-full min-w-[15rem] max-w-[3/4] bg-[#334155]'>
-
+          <div className='flex flex-grow min-w-[15rem] max-w-[3/4] bg-[#334155]'>
             <Editor
               key={selectedFile?.name}
               theme="akkd-dark-plus"
