@@ -186,7 +186,7 @@ export const TfAwsTarget = ({ files, zip, loading }: TfAwsTargetProps) => {
               </div>
             </div>
           </div>
-          <div className="divide-y divide-slate-700 border-y border-slate-700 overflow-y-auto h-1/3">
+          <div className="divide-y divide-slate-700 border-y border-slate-700 overflow-y-auto h-1/2">
             {resources?.length === 0 && !loading && (
               <div className="px-2 py-2 text-sm text-slate-400">
                 No resources found
@@ -223,7 +223,7 @@ export const TfAwsTarget = ({ files, zip, loading }: TfAwsTargetProps) => {
             </div>
           </div>
 
-          <div className="divide-y divide-slate-700 border-y border-slate-700 overflow-y-auto h-1/3">
+          <div className="divide-y divide-slate-700 border-y border-slate-700 overflow-y-auto h-1/2">
             {files?.length === 0  && !loading && (
               <div className="px-2 py-2 text-sm text-slate-400">
                 No assets found
