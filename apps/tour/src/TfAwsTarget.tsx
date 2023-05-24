@@ -21,40 +21,6 @@ import { CompilationItem } from "@wing-playground/shared/src/compiler/compiler";
 import { Loading } from "@wing-playground/shared/src/Loading";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
 
-const FileRow = ({title, description, icon, selected, onClick}: {
-  title: string,
-  description?: string,
-  icon?: React.ReactNode,
-  selected: boolean,
-  onClick: () => void
-}) => {
-  return (
-    <div className="truncate">
-      <button
-        title={title}
-        className={classNames(
-          "flex items-center w-full px-2 py-1",
-          "text-left text-sm font-medium leading-5",
-          "text-gray-900",
-          "hover:bg-gray-300 focus:bg-gray-300 focus:outline-none",
-          selected && "bg-gray-200",
-        )}
-        onClick={onClick}
-      >
-      <div className="flex gap-x-2 truncate">
-        {icon && <div className="w-6 my-auto shrink-0">
-          {icon}
-        </div>}
-        <div className="h-full inline-block align-middle truncate">
-          <div className="truncate">{title}</div>
-          {description && <div className="text-xs truncate opacity-80">{description}</div>}
-        </div>
-      </div>
-    </button>
-  </div>
-  )
-}
-
 const getResourceName = (type: string) => {
   switch (type) {
     case "aws_sqs_queue":
@@ -95,13 +61,6 @@ const ResourceIcon = ({type}: {type: string}) => {
   return  <img className="w-full" src={`aws/${type}.svg`}/>
 }
 
-export type Resource = {
-  path: string;
-  name: string;
-  type: string;
-  contents: string;
-}
-
 const getAwsResources = (tfFile: string) => {
   try {
     const json = JSON.parse(tfFile);
@@ -138,6 +97,105 @@ const getAssets = (files: CompilationItem[]) => {
   return assets;
 }
 
+interface Item {
+  id: string;
+  name: string;
+  description?: string;
+  type?: string;
+  contents: string;
+}
+
+const FileRow = ({title, description, icon, selected, onClick}: {
+  title: string,
+  description?: string,
+  icon?: React.ReactNode,
+  selected: boolean,
+  onClick: () => void
+}) => {
+  return (
+    <div className="truncate">
+      <button
+        title={title}
+        className={classNames(
+          "flex items-center w-full px-2 py-1",
+          "text-left text-sm font-medium leading-5",
+          "text-gray-900",
+          "hover:bg-gray-300 focus:bg-gray-300 focus:outline-none",
+          selected && "bg-gray-300",
+        )}
+        onClick={onClick}
+      >
+      <div className="flex gap-x-2 truncate">
+        {icon && <div className="w-6 my-auto shrink-0">
+          {icon}
+        </div>}
+        <div className="h-full inline-block align-middle truncate">
+          <div className="truncate">{title}</div>
+          {description && <div className="text-xs truncate opacity-80">{description}</div>}
+        </div>
+      </div>
+    </button>
+  </div>
+  )
+}
+
+const ItemsList = ({
+  title,
+  items,
+  selectedItem,
+  loading,
+  placeholder,
+  onClick,
+  actions,
+}:{
+  title: string;
+  items: Item[];
+  selectedItem?: Item;
+  loading: boolean;
+  placeholder?: string;
+  onClick: (item: Item) => void;
+  actions?: React.ReactNode;
+}) => {
+  return (
+    <>
+     <div className="items-center px-2 py-2 border-b border-slate-600 bg-slate-700">
+        <div className="text-sm text-white uppercase flex">
+          <div className="space-x-1 grow">
+            <span className="font-semibold">{title}</span>
+            <span>({items?.length || 0})</span>
+          </div>
+          <div>
+            {actions}
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col grow relative bg-slate-550">
+        <div className="absolute inset-0 overflow-y-auto">
+          <div className="grow divide-y border-b divide-slate-600 border-slate-600">
+            {items.length === 0 && !loading && (
+              <div className="px-2 py-2 text-sm text-slate-200/50 text-center">
+                {placeholder}
+              </div>
+            )}
+            {items.map((item) => {
+              return (
+                <FileRow
+                  key={item.id}
+                  title={item.name}
+                  description={item.description}
+                  icon={item.type && <ResourceIcon type={item.type}/>}
+                  selected={selectedItem?.id === item.id}
+                  onClick={() => onClick(item)}
+                />
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    </>
+  )
+};
+
 export interface TfAwsTargetProps {
   files?: CompilationItem[];
   downloadCompiledCode?: () => void;
@@ -145,26 +203,45 @@ export interface TfAwsTargetProps {
   disabled?: boolean;
 }
 
-export const TfAwsTarget = ({ files, downloadCompiledCode, loading, disabled }: TfAwsTargetProps) => {
+export const TfAwsTarget = ({
+  files,
+  downloadCompiledCode,
+  loading = false,
+  disabled = false
+}: TfAwsTargetProps) => {
   const compileEditorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
-  const [selectedFile, setSelectedFile] = useState<CompilationItem | undefined>(files?.[0]);
+  const [selectedItem, setSelectedItem] = useState<Item | undefined>();
 
-  const resources = useMemo(() => {
+  const resources: Item[] = useMemo(() => {
     if (!files) {
       return [];
     }
     const newResources = getAwsResources(
-      files?.find((f) => f.name === "main.tf.json")?.contents || ""
+      files?.find((file) => file.name === "main.tf.json")?.contents || ""
     );
-    return newResources;
+    return newResources.map((resource) => {
+      return {
+        id: resource.path,
+        name: getResourceName(resource.type),
+        description: resource.name,
+        type: resource.type,
+        contents: resource.contents,
+      }
+    });
   }, [files]);
 
-  const assets = useMemo(() => {
+  const assets: Item[] = useMemo(() => {
     if (!files) {
       return [];
     }
     const newAssets = getAssets(files);
-    return newAssets;
+    return newAssets.map((asset) => {
+      return {
+        id: asset.name,
+        name: asset.name,
+        contents: asset.contents,
+      }
+    });
   }, [files]);
 
   const options: monaco.editor.IStandaloneEditorConstructionOptions = {
@@ -176,10 +253,7 @@ export const TfAwsTarget = ({ files, downloadCompiledCode, loading, disabled }: 
   }
 
   useEffect(() => {
-    setSelectedFile({
-      name: resources[0]?.path || assets?.[0]?.name || "",
-      contents: resources[0]?.contents || assets?.[0]?.contents || "",
-    });
+    setSelectedItem(resources[0] || assets[0]);
   }, [assets, resources]);
 
 
@@ -191,86 +265,39 @@ export const TfAwsTarget = ({ files, downloadCompiledCode, loading, disabled }: 
         </div>
       )}
       <div className="flex flex-col w-1/2 max-w-[20rem] border-r border-slate-900">
-        <div className="items-center px-2 py-2 bg-slate-700">
-          <div className="text-sm text-slate-400 uppercase flex">
-            <div className="space-x-1 grow">
-              <span className="font-semibold">Terraform</span>
-              <span>({resources.length || 0})</span>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col grow relative">
-          <div className="absolute inset-0 overflow-y-auto">
-            <div className="grow divide-y divide-slate-700 border-y border-slate-700">
-              {resources?.length === 0 && !loading && (
-                <div className="px-2 py-2 text-sm text-slate-200/50 text-center">
-                  No resources found
-                </div>
-              )}
-              {resources?.map((resource) => {
-                return (
-                  <FileRow
-                    key={resource.path}
-                    title={getResourceName(resource.type)}
-                    description={resource.name}
-                    icon={<ResourceIcon type={resource.type}/>}
-                    selected={selectedFile?.name === resource.path}
-                    onClick={() => setSelectedFile({
-                      name: resource.path,
-                      contents: resource.contents,
-                    })}
-                  />
-                )
-              })}
-            </div>
-          </div>
-        </div>
+        <ItemsList
+          title="Terraform"
+          items={resources}
+          selectedItem={selectedItem}
+          loading={loading}
+          placeholder="No resources found"
+          onClick={setSelectedItem}
+        />
 
-        <div className="items-center px-2 py-2 bg-slate-700">
-          <div className="text-sm text-slate-400 uppercase flex">
-            <div className="space-x-1 grow">
-              <span className="font-semibold">Assets</span>
-              <span>({assets?.length || 0})</span>
-            </div>
-            <div>
-              {/* <button onClick={downloadCompiledCode} disabled={disabled}>
-                <ArrowDownTrayIcon className="w-4 h-4 text-slate-100"/>
-              </button> */}
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col grow relative">
-          <div className="absolute inset-0 overflow-auto">
-            <div className="grow divide-y divide-slate-700 border-y border-slate-700 overflow-y-auto">
-              {assets?.length === 0  && !loading && (
-                <div className="px-2 py-2 text-sm text-slate-200/50 text-center">
-                  No assets found
-                </div>
-              )}
-              {assets?.map((asset) => {
-                return (
-                    <FileRow
-                      key={asset.name}
-                      title={asset.name}
-                      selected={selectedFile?.name === asset.name}
-                      onClick={() => setSelectedFile(asset)}
-                    />
-                  )
-                })}
-            </div>
-          </div>
-        </div>
+        <ItemsList
+          title="Assets"
+          // actions={
+          //   <button onClick={downloadCompiledCode} disabled={disabled}>
+          //     <ArrowDownTrayIcon className="w-4 h-4 text-slate-100"/>
+          //   </button>
+          // }
+          items={assets}
+          selectedItem={selectedItem}
+          loading={loading}
+          placeholder="No assets found"
+          onClick={setSelectedItem}
+        />
       </div>
 
       <div className='flex flex-grow min-w-[15rem] max-w-[3/4] bg-[#334155]'>
         <Editor
-          key={selectedFile?.name}
+          key={selectedItem?.id}
           theme="akkd-dark-plus"
           path="source.js"
           language="js"
           options={Object.assign({}, options, { readOnly: true })}
           onMount={compileEditorDidMount}
-          value={selectedFile?.contents}
+          value={selectedItem?.contents}
           />
       </div>
     </div>
