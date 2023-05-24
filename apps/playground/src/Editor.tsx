@@ -31,7 +31,7 @@ import { CompilationRequest} from '@wing-playground/shared/src/compiler/request'
 import { useExamples, Example } from '@wing-playground/shared/src/use-examples.js';
 import { createAnalytics } from '@wing-playground/shared/src/analytics/analytics';
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
-import {installDependencies} from "@wing-playground/shared/src/containers";
+import {installDependencies, ConsoleLayouts} from "@wing-playground/shared/src/containers";
 import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
@@ -77,7 +77,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [compileExample, setCompileExample] = useState<Example>(defaultExample);
 
     const installConsole = async (containerRef: React.MutableRefObject<WebContainer>) => {
-        const consoleUrl = await installDependencies(containerRef.current);
+        const consoleUrl = await installDependencies(containerRef.current, ConsoleLayouts.Playground);
         setIframeSrc(consoleUrl)
     }
     const editorOptions = {

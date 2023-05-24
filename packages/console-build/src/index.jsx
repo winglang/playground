@@ -38,9 +38,12 @@ const trpcClient = trpc.createClient({
   ],
 });
 
+let params = new URLSearchParams(window.location.search);
+const layout = Number(params.get("layout"));
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <WingConsole.Console port={port} layout={2} />
+    <WingConsole.Console port={port} layout={layout} />
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <Analytics />
