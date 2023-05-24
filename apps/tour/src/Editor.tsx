@@ -35,7 +35,7 @@ import classNames from 'classnames';
 import { createAnalytics } from '@wing-playground/shared/src/analytics/analytics';
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
 import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
-import {installDependencies} from "@wing-playground/shared/src/containers";
+import {installDependencies, ConsoleLayouts} from "@wing-playground/shared/src/containers";
 import {WelcomeModal} from "./WelcomeModal";
 import {CongratsModal} from "./CongratsModal";
 
@@ -83,7 +83,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [downloadInProgress, setDownloadInProgress] = useState(false);
 
     const installConsole = async (containerRef: React.MutableRefObject<WebContainer>) => {
-        const consoleUrl = await installDependencies(containerRef.current);
+        const consoleUrl = await installDependencies(containerRef.current, ConsoleLayouts.Tour);
         setIframeSrc(consoleUrl)
     }
     const editorOptions = {

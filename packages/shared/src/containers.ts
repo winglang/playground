@@ -13,6 +13,11 @@ import consoleUrl from "@wing-playground/console-build/dist/console.tgz?url";
 import constructsJSIIUrl from "constructs/.jsii?url";
 import constructsPackageJsonUrl from "constructs/package.json?url";
 
+export enum ConsoleLayouts {
+  Playground = 2,
+  Tour = 3
+}
+
 export async function initContainer(): Promise<WebContainer> {
   const jsExamples = import.meta.glob('../examples/*.js', { as: 'raw' });
   const examples = await Promise.all(Object.keys(jsExamples).map(async e => {
@@ -62,7 +67,7 @@ export async function initContainer(): Promise<WebContainer> {
   return webcontainerInstance
 }
 
-export async function installDependencies(webcontainerInstance: WebContainer): Promise<string> {
+export async function installDependencies(webcontainerInstance: WebContainer, consoleLayout: ConsoleLayouts): Promise<string> {
     const chmod = await webcontainerInstance.spawn('chmod', ['+x', 'node_modules/.bin/wing']);
     chmod.output.pipeTo(
         new WritableStream({
@@ -100,7 +105,7 @@ export async function installDependencies(webcontainerInstance: WebContainer): P
           return
         }
         console.log('webcontainer server opened', url, new Date())
-        resolve(`${url}?port=34443`)
+        resolve(`${url}?port=34443&layout=${consoleLayout.valueOf()}`)
       });
     })
 }
