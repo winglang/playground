@@ -38,7 +38,8 @@ const trpcClient = trpc.createClient({
   ],
 });
 
-const layout = Number(query.get("layout"));
+let params = new URLSearchParams(window.location.search);
+const layout = Number(params.get("layout"));
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
