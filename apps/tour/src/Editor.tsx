@@ -225,7 +225,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       }
       setCompilationItems(result.files);
       setIsCompiling(false);
-    }, 700), [compiler]);
+    }, 1000), [compiler]);
 
 
     const [showWelcomeModal, setShowWelcomeModal] = useState(true);
@@ -273,11 +273,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     useEffect(() => {
       setCompilationItems([]);
-      if (currentTargetId === Target.TFAWS) {
+      if (targets.includes(Target.TFAWS)) {
         const value = editorRef.current?.getValue();
         retrieveCompilationFiles(value || "", Target.TFAWS);
       }
-    }, [currentTargetId, editorRef.current?.getValue()]);
+    }, [targets, editorRef.current?.getValue()]);
 
     return (
         <>
