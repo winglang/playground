@@ -1,4 +1,4 @@
-iLet’s get started!mport {useEffect, useMemo, useRef, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import Editor from "@monaco-editor/react";
 
 import "monaco-editor/esm/vs/editor/editor.all.js";
