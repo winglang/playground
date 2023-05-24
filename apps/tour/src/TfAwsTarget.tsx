@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef, useState} from "react";
+iLet’s get started!mport {useEffect, useMemo, useRef, useState} from "react";
 import Editor from "@monaco-editor/react";
 
 import "monaco-editor/esm/vs/editor/editor.all.js";
@@ -197,6 +197,9 @@ export const TfAwsTarget = ({
           const resourceName = path.split("/").slice(-2, -1)[0];
           if (value2.policy) {
             value2.policy = JSON.parse(value2.policy);
+          }
+          if (value2.assume_role_policy) {
+            value2.assume_role_policy = JSON.parse(value2.assume_role_policy);
           }
           resources.push({
             id: path,
