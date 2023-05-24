@@ -61,42 +61,6 @@ const ResourceIcon = ({type}: {type: string}) => {
   return  <img className="w-full" src={`aws/${type}.svg`}/>
 }
 
-const getAwsResources = (tfFile: string) => {
-  try {
-    const json = JSON.parse(tfFile);
-    if (!json.resource) {
-      return [];
-    }
-
-    const resources: Resource[] = [];
-    for (const [key, value] of Object.entries(json.resource)) {
-      for (const [key2, value2] of Object.entries(value as object)) {
-        const path = value2["//"]["metadata"]["path"] || key2;
-        const resourceName = path.split("/").slice(-2, -1)[0];
-        resources.push({
-          path: path,
-          name: resourceName,
-          type: key,
-          contents: JSON.stringify(value2, null, 2)
-        });
-      }
-    }
-    return resources;
-  } catch (e) {
-    return [];
-  }
-}
-
-const getAssets = (files: CompilationItem[]) => {
-  const assets = files.filter((f) => f.name.startsWith(".wing/clients/")).map((file, index) => {
-    return {
-      name: `inflight${index + 1}.js`,
-      contents: file.contents,
-    }
-  });
-  return assets;
-}
-
 interface Item {
   id: string;
   name: string;
@@ -216,25 +180,46 @@ export const TfAwsTarget = ({
     if (!files) {
       return [];
     }
-    const newResources = getAwsResources(
-      files?.find((file) => file.name === "main.tf.json")?.contents || ""
-    );
-    return newResources.map((resource) => {
-      return {
-        id: resource.path,
-        name: getResourceName(resource.type),
-        description: resource.name,
-        type: resource.type,
-        contents: resource.contents,
+
+    const tfFile = files?.find((file) => file.name === "main.tf.json")?.contents;
+    if (!tfFile) {
+      return [];
+    }
+    try {
+      const json = JSON.parse(tfFile);
+      if (!json.resource) {
+        return [];
       }
-    });
+      const resources: Item[] = [];
+      for (const [key, value] of Object.entries(json.resource)) {
+        for (const [key2, value2] of Object.entries(value as object)) {
+          const path = value2["//"]["metadata"]["path"] || key2;
+          const resourceName = path.split("/").slice(-2, -1)[0];
+          resources.push({
+            id: path,
+            name: getResourceName(key),
+            description: resourceName,
+            type: key,
+            contents: JSON.stringify(value2, null, 2)
+          });
+        }
+      }
+      return resources;
+    } catch (e) {
+      return [];
+    }
   }, [files]);
 
   const assets: Item[] = useMemo(() => {
     if (!files) {
       return [];
     }
-    const newAssets = getAssets(files);
+    const newAssets = files.filter((f) => f.name.startsWith(".wing/clients/")).map((file, index) => {
+      return {
+        name: `inflight${index + 1}.js`,
+        contents: file.contents,
+      }
+    });
     return newAssets.map((asset) => {
       return {
         id: asset.name,
