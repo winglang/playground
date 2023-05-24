@@ -8,6 +8,6 @@ Let's wrap the inflight code with a cloud.Function
 new cloud.Function(handler);                                          
 ```
 3. Notice that there are a lot of new resources, including IAM permissions 
-4. 
+4. In IAM policy, find the `sqs:SendMessage` permission generated for the cloud.Function
 
-
+Next, lets build this code for a different target, Wing Simulator
