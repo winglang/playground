@@ -10,4 +10,5 @@ let handler = inflight (s: str) => {
 };                                          
 ```
 2. The inflight code compiled into JS, Look for the code under assets
+3. Add code to push string s into `q` in line 7
 
