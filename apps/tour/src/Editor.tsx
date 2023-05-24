@@ -44,6 +44,7 @@ import {SimulatorTarget} from "@wing-playground/shared/src/SimulatorTarget";
 import {TargetsView, TargetView} from "./TargetsView";
 import {PanelHeader} from "@wing-playground/shared/src/PanelHeader";
 import { TfAwsTarget } from './TfAwsTarget.js';
+import { debounce } from 'lodash';
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -213,10 +214,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       setDownloadInProgress(false);
     };
 
-    const retrieveCompilationFiles = useCallback(async (value: string, target: Target) => {
+    const retrieveCompilationFiles = useCallback(debounce(async (value: string, target: Target) => {
       setIsCompiling(true);
       const request = new CompilationRequest(value, target);
-
       const result = await compiler.compile(request);
       if (result.error) {
         console.error('compilation failed', result.error.stderr);
@@ -225,7 +225,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       }
       setCompilationItems(result.files);
       setIsCompiling(false);
-    }, [compiler]);
+    }, 700), [compiler]);
 
 
     const [showWelcomeModal, setShowWelcomeModal] = useState(true);
