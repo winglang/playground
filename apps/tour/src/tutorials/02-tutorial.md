@@ -6,6 +6,7 @@ inflight functions are functions that are going to run on the cloud
 ```ts
 let handler = inflight (s: str) => {
   log("inflight function was called with ${s}");
+  // Type 'q.' to see the available methods
 };                                          
 ```
 2. The inflight code compiled into JS, Look for the code under assets
