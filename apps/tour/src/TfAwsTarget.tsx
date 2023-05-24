@@ -31,21 +31,22 @@ const FileRow = ({title, description, icon, selected, onClick}: {
   return (
     <div className="truncate">
       <button
-      className={classNames(
-        "flex items-center w-full px-2 py-1",
-        "text-left text-sm font-medium leading-5",
-        "text-gray-900",
-        "hover:bg-gray-300 focus:bg-gray-300 focus:outline-none",
-        selected && "bg-gray-200",
-      )}
-      onClick={onClick}
-    >
+        title={title}
+        className={classNames(
+          "flex items-center w-full px-2 py-1",
+          "text-left text-sm font-medium leading-5",
+          "text-gray-900",
+          "hover:bg-gray-300 focus:bg-gray-300 focus:outline-none",
+          selected && "bg-gray-200",
+        )}
+        onClick={onClick}
+      >
       <div className="flex gap-x-2 truncate">
         {icon && <div className="w-6 my-auto shrink-0">
           {icon}
         </div>}
         <div className="h-full inline-block align-middle truncate">
-          <div>{title}</div>
+          <div className="truncate">{title}</div>
           {description && <div className="text-xs truncate opacity-80">{description}</div>}
         </div>
       </div>
@@ -68,22 +69,27 @@ const getResourceName = (type: string) => {
       return "IAM Role";
     case "aws_iam_role_policy":
       return "IAM Policy";
+    case "aws_sns_topic":
+      return "SNS";
     default:
-      return type.split("_").slice(1).join(" ").toUpperCase();
+      return type.split("_").slice(1).join(" ").toLowerCase();
   }
 }
 
 const ResourceIcon = ({type}: {type: string}) => {
-  const validType = [
+  const resources = [
     "aws_sqs_queue",
     "aws_s3_bucket",
     "aws_s3_object",
     "aws_lambda_function",
+    "aws_lambda_permission",
     "aws_iam_role",
     "aws_iam_role_policy",
     "aws_iam_role_policy_attachment",
-  ].includes(type);
-  if (!validType) {
+    "aws_sns_topic",
+  ];
+
+  if (!resources.includes(type)) {
     return null;
   }
   return  <img className="w-full" src={`aws/${type}.svg`}/>
