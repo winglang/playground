@@ -42,7 +42,7 @@ export const useEditor = ({
   code,
   languageContext,
   compiler,
-  targets,
+  targets = [],
   installConsole,
   editorTheme,
   shouldInitContainer
@@ -111,13 +111,17 @@ export const useEditor = ({
           let compileValue = editorRef.current?.getValue()
           await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
 
-          targets?.forEach(async (target, index) => {
+          targets.forEach(async (target, index) => {
             compiler.submit(new CompilationRequest(compileValue!, target));
             if (index === targets.length - 1) {
               onLoadingStatusChange(LoadingStatus.Completed)
               setIsCompiling(false)
             }
           });
+          if (targets.length === 0) {
+            onLoadingStatusChange(LoadingStatus.Completed)
+            setIsCompiling(false)
+          }
         } catch (error) {
           console.error(error);
           onLoadingStatusChange(LoadingStatus.CompileError)
