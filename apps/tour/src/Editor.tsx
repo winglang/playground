@@ -254,6 +254,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     const targetViews: TargetView[] = useMemo(() => {
       const views: TargetView[] = [];
+
+      if (!outputTargets || outputTargets.length === 0) {
+        return [simulatorTarget];
+      }
+
       outputTargets.forEach(target => {
         if (target === "simulator") {
           views.push(simulatorTarget);
