@@ -122,6 +122,16 @@ const getAwsResources = (tfFile: string) => {
   }
 }
 
+const getAssets = (files: CompilationItem[]) => {
+  const assets = files.filter((f) => f.name.startsWith(".wing/clients/")).map((file, index) => {
+    return {
+      name: `inflight${index + 1}.js`,
+      contents: file.contents,
+    }
+  });
+  return assets;
+}
+
 export interface TfAwsTargetProps {
   files?: CompilationItem[];
   downloadCompiledCode?: () => void;
@@ -143,6 +153,14 @@ export const TfAwsTarget = ({ files, downloadCompiledCode, loading, disabled }: 
     return newResources;
   }, [files]);
 
+  const assets = useMemo(() => {
+    if (!files) {
+      return [];
+    }
+    const newAssets = getAssets(files);
+    return newAssets;
+  }, [files]);
+
   const options: monaco.editor.IStandaloneEditorConstructionOptions = {
     minimap: { enabled: false },
   };
@@ -153,10 +171,10 @@ export const TfAwsTarget = ({ files, downloadCompiledCode, loading, disabled }: 
 
   useEffect(() => {
     setSelectedFile({
-      name: resources[0]?.path || files?.[0]?.name || "",
-      contents: resources[0]?.contents || files?.[0]?.contents || "",
+      name: resources[0]?.path || assets?.[0]?.name || "",
+      contents: resources[0]?.contents || assets?.[0]?.contents || "",
     });
-  }, [files, resources]);
+  }, [assets, resources]);
 
 
   return (
@@ -206,10 +224,10 @@ export const TfAwsTarget = ({ files, downloadCompiledCode, loading, disabled }: 
           <div className="text-sm text-slate-400 uppercase flex">
             <div className="space-x-1 grow">
               <span className="font-semibold">Assets</span>
-              <span>({files?.length || 0})</span>
+              <span>({assets?.length || 0})</span>
             </div>
             <div>
-              <button onClick={() => downloadCompiledCode?.()} disabled={disabled}>
+              <button onClick={downloadCompiledCode} disabled={disabled}>
                 <ArrowDownTrayIcon className="w-4 h-4 text-slate-100"/>
               </button>
             </div>
@@ -218,18 +236,18 @@ export const TfAwsTarget = ({ files, downloadCompiledCode, loading, disabled }: 
         <div className="flex flex-col grow relative">
           <div className="absolute inset-0 overflow-auto">
             <div className="grow divide-y divide-slate-700 border-y border-slate-700 overflow-y-auto">
-              {files?.length === 0  && !loading && (
+              {assets?.length === 0  && !loading && (
                 <div className="px-2 py-2 text-sm text-slate-200/50 text-center">
                   No assets found
                 </div>
               )}
-              {files?.map((file) => {
+              {assets?.map((asset) => {
                 return (
                     <FileRow
-                      key={file.name}
-                      title={file.name}
-                      selected={selectedFile?.name === file.name}
-                      onClick={() => setSelectedFile(file)}
+                      key={asset.name}
+                      title={asset.name}
+                      selected={selectedFile?.name === asset.name}
+                      onClick={() => setSelectedFile(asset)}
                     />
                   )
                 })}

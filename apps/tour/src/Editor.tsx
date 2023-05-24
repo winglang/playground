@@ -275,7 +275,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       setCompilationItems([]);
       if (currentTargetId === Target.TFAWS) {
         const value = editorRef.current?.getValue();
-        retrieveCompilationFiles(value, Target.TFAWS);
+        retrieveCompilationFiles(value || "", Target.TFAWS);
       }
     }, [currentTargetId, editorRef.current?.getValue()]);
 
