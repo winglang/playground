@@ -213,6 +213,21 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       setDownloadInProgress(false);
     };
 
+    const retrieveCompilationFiles = useCallback(async (value: string, target: Target) => {
+      setIsCompiling(true);
+      const request = new CompilationRequest(value, target);
+
+      const result = await compiler.compile(request);
+      if (result.error) {
+        console.error('compilation failed', result.error.stderr);
+        setIsCompiling(false);
+        return;
+      }
+      setCompilationItems(result.files);
+      setIsCompiling(false);
+    }, [compiler]);
+
+
     const [showWelcomeModal, setShowWelcomeModal] = useState(true);
     const [showFinishModal, setShowFinishModal] = useState(false);
 
@@ -258,16 +273,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     useEffect(() => {
       setCompilationItems([]);
-      if (currentTargetId === tfAwsTarget.id) {
-        setIsCompiling(true);
-        const request = new CompilationRequest(editorRef.current?.getValue()!, Target.TFAWS);
-        const compilation = compiler.compile(request);
-        compilation.then(result => {
-          setCompilationItems(result.files);
-          setIsCompiling(false);
-        });
+      if (currentTargetId === Target.TFAWS) {
+        const value = editorRef.current?.getValue();
+        retrieveCompilationFiles(value, Target.TFAWS);
       }
-    }, [currentTargetId, compiler, editorRef.current?.getValue()]);
+    }, [currentTargetId, editorRef.current?.getValue()]);
 
     return (
         <>

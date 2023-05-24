@@ -168,7 +168,7 @@ export const TfAwsTarget = ({ files, downloadCompiledCode, loading, disabled }: 
       )}
       <div className="flex flex-col w-1/2 max-w-[20rem] border-r border-slate-900">
         <div className="items-center px-2 py-2 bg-slate-700">
-          <div className="text-sm text-slate-100 uppercase flex">
+          <div className="text-sm text-slate-400 uppercase flex">
             <div className="space-x-1 grow">
               <span className="font-semibold">Terraform</span>
               <span>({resources.length || 0})</span>
@@ -179,7 +179,7 @@ export const TfAwsTarget = ({ files, downloadCompiledCode, loading, disabled }: 
           <div className="absolute inset-0 overflow-y-auto">
             <div className="grow divide-y divide-slate-700 border-y border-slate-700">
               {resources?.length === 0 && !loading && (
-                <div className="px-2 py-2 text-sm text-slate-400">
+                <div className="px-2 py-2 text-sm text-slate-200/50 text-center">
                   No resources found
                 </div>
               )}
@@ -203,7 +203,7 @@ export const TfAwsTarget = ({ files, downloadCompiledCode, loading, disabled }: 
         </div>
 
         <div className="items-center px-2 py-2 bg-slate-700">
-          <div className="text-sm text-slate-100 uppercase flex">
+          <div className="text-sm text-slate-400 uppercase flex">
             <div className="space-x-1 grow">
               <span className="font-semibold">Assets</span>
               <span>({files?.length || 0})</span>
@@ -219,7 +219,7 @@ export const TfAwsTarget = ({ files, downloadCompiledCode, loading, disabled }: 
           <div className="absolute inset-0 overflow-auto">
             <div className="grow divide-y divide-slate-700 border-y border-slate-700 overflow-y-auto">
               {files?.length === 0  && !loading && (
-                <div className="px-2 py-2 text-sm text-slate-400">
+                <div className="px-2 py-2 text-sm text-slate-200/50 text-center">
                   No assets found
                 </div>
               )}
