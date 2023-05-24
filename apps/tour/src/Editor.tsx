@@ -266,7 +266,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           setIsCompiling(false);
         });
       }
-    }, [currentTargetId, compiler, editorRef]);
+    }, [currentTargetId, compiler, editorRef.current?.getValue()]);
 
     return (
         <>
