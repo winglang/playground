@@ -11,11 +11,11 @@ import {LanguageContext} from "../use-examples";
 import {debounce} from "lodash";
 import {CompilationRequest} from "../compiler/request";
 import {CompilationItem, Compiler, Target} from "../compiler/compiler";
-import React, {useRef, useState} from "react";
+import {useRef, useState, MutableRefObject, useEffect} from "react";
 import * as monaco from 'monaco-editor';
 
 export interface UseEditorOptions {
-    editorRef: React.MutableRefObject<any>;
+    editorRef: MutableRefObject<any>;
     onLoadingStatusChange: (state: LoadingStatus) => void;
     onLspError: () => void;
     code: string;
@@ -23,7 +23,7 @@ export interface UseEditorOptions {
     compiler: Compiler;
     targets?: Target[];
     editorOptions: monaco.editor.IStandaloneEditorConstructionOptions;
-    installConsole?: (containerRef: React.MutableRefObject<WebContainer>) => Promise<void>;
+    installConsole?: (containerRef: MutableRefObject<WebContainer>) => Promise<void>;
     editorTheme?: string;
     shouldInitContainer: boolean;
 }
@@ -35,7 +35,18 @@ export type CompilerOutput = {
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
 
-export const useEditor = ({editorRef, onLoadingStatusChange, onLspError, code, languageContext, compiler, targets, installConsole, editorTheme, shouldInitContainer}: UseEditorOptions) => {
+export const useEditor = ({
+  editorRef,
+  onLoadingStatusChange,
+  onLspError,
+  code,
+  languageContext,
+  compiler,
+  targets,
+  installConsole,
+  editorTheme,
+  shouldInitContainer
+}: UseEditorOptions) => {
 
     const [isCompiling, setIsCompiling] = useState(false);
     const containerRef = useRef<WebContainer>();
@@ -102,14 +113,15 @@ export const useEditor = ({editorRef, onLoadingStatusChange, onLspError, code, l
           let compileValue = editorRef.current?.getValue()
           await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
 
-          setCompilerOutput([]);
+          //setCompilerOutput([]);
           targets?.forEach(async (target, index) => {
-            const compilation = await compiler.compile(new CompilationRequest(compileValue!, target));
-            const output = {
-              target,
-              files: compilation.files,
-            }
-            setCompilerOutput(prev => [...prev, output]);
+            compiler.submit(new CompilationRequest(compileValue!, target));
+            //const compilation = await compiler.compile(new CompilationRequest(compileValue!, target));
+            // const output = {
+            //   target,
+            //   files: compilation.files,
+            // }
+            //setCompilerOutput(prev => [...prev, output]);
             if (index === targets.length - 1) {
               onLoadingStatusChange(LoadingStatus.Completed)
               setIsCompiling(false)
@@ -127,6 +139,6 @@ export const useEditor = ({editorRef, onLoadingStatusChange, onLspError, code, l
         editorDidMount,
         evaluateCode,
         isCompiling,
-        compilerOutput,
+        compilerOutput
     }
 }

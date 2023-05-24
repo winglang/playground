@@ -3,8 +3,9 @@ import { Tab, Tabs } from "@wing-playground/shared/src/Tabs";
 import classNames from "classnames";
 
 export interface TargetView {
-    title: string;
-    Target: FC;
+  id: string;
+  title: string;
+  Target: FC;
 }
 export interface TargetsViewProps {
   targets: TargetView[];
@@ -17,7 +18,7 @@ export const TargetsView = ({targets, setCurrentTargetId, currentTargetId}: Targ
     const tabs: Tab[] = [];
     targets.forEach((target) => {
       tabs.push({
-        id: target.title,
+        id: target.id,
         name: target.title,
         panel: <target.Target />,
       });
@@ -26,11 +27,10 @@ export const TargetsView = ({targets, setCurrentTargetId, currentTargetId}: Targ
   }, [targets]);
 
   useEffect(() => {
-    if (targets.find((target) => target.title === currentTargetId)) {
+    if (targets.find((target) => target.id === currentTargetId)) {
       return;
     }
-    setCurrentTargetId?.(targets[0].title);
-    console.log("SET NEW TAB", targets[0].title);
+    setCurrentTargetId?.(targets[0].id);
   }, [currentTargetId, targets, setCurrentTargetId]);
 
   return (
@@ -43,11 +43,11 @@ export const TargetsView = ({targets, setCurrentTargetId, currentTargetId}: Targ
       tabs={tabs}
       currentTabId={currentTargetId}
       onTabChange={(tabId) => {
-        const target = targets.find((target) => target.title === tabId);
+        const target = targets.find((target) => target.id === tabId);
         if (!target || !setCurrentTargetId) {
           return;
         }
-        setCurrentTargetId(target.title);
+        setCurrentTargetId(target.id);
       }}
     />
   );

@@ -39,7 +39,7 @@ export const tutorials = [
         code:   code01,
         solution: solution01,
         tutorial: tutorial01,
-        targets: [Target.SIMULATOR, Target.TFAWS],
+        targets: ["simulator", Target.TFAWS],
     },
     {
         id: "2",
@@ -47,7 +47,7 @@ export const tutorials = [
         code:   code02,
         // solution: solution02,
         tutorial: tutorial02,
-        targets: [Target.SIMULATOR, Target.TFAWS],
+        targets: ["simulator", Target.TFAWS],
     },
     {
         id: "3",
@@ -55,7 +55,7 @@ export const tutorials = [
         code:   code03,
         solution: solution03,
         tutorial: tutorial03,
-        targets: [Target.SIMULATOR, Target.TFAWS],
+        targets: ["simulator", Target.TFAWS],
     },
     {
         id: "4",
@@ -63,7 +63,7 @@ export const tutorials = [
         code:   code04,
         solution: solution04,
         tutorial: tutorial04,
-        targets: [Target.SIMULATOR, Target.TFAWS],
+        targets: ["simulator", Target.TFAWS],
     },
     {
         id: "5",
@@ -71,7 +71,7 @@ export const tutorials = [
         code:   code05,
         solution: solution05,
         tutorial: tutorial05,
-        targets: [Target.SIMULATOR, Target.TFAWS],
+        targets: ["simulator", Target.TFAWS],
     },
     {
         id: "6",
@@ -79,6 +79,6 @@ export const tutorials = [
         code:   code06,
         // solution: solution06,
         tutorial: tutorial06,
-        targets: [Target.SIMULATOR, Target.TFAWS],
+        targets: ["simulator", Target.TFAWS],
     },
 ]

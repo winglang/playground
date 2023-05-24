@@ -3,7 +3,6 @@ import { Base64Binary } from '../utils';
 import { CompilationRequest } from './request';
 
 export enum Target {
-  SIMULATOR = 'simulator',
   TFAWS = 'tf-aws',
   TFGCP = 'tf-gcp',
   TFAzure = 'tf-azure'

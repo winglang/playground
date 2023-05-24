@@ -25,7 +25,7 @@ import { WebContainer } from '@webcontainer/api';
 import ReactMarkdown from 'react-markdown'
 
 import { Loading } from '@wing-playground/shared/src/Loading';
-import { Compiler, Target } from '@wing-playground/shared/src/compiler/compiler';
+import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
 import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
 import { useExamples, Example } from '@wing-playground/shared/src/use-examples.js';
 import { tutorials } from './tutorials/index.js';
@@ -96,9 +96,16 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         });
     }
 
-    const [targets, setTargets] = useState<Target[]>(tutorials[0].targets);
+    const [outputTargets, setOutputTarget] = useState<string[]>(tutorials[0].targets);
+    const targets: Target[] = useMemo(() => {
+        return outputTargets.filter(t => t !== "simulator") as Target[];
+    }, [outputTargets]);
 
-    const {evaluateCode, editorWillMount, editorDidMount, compilerOutput, isCompiling } = useEditor({
+    const {
+      evaluateCode,
+      editorWillMount,
+      editorDidMount,
+    } = useEditor({
         editorRef,
         onLoadingStatusChange: setLoadingStatus,
         onLspError,
@@ -110,6 +117,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         editorOptions,
         shouldInitContainer: true,
     });
+
+    const [isCompiling, setIsCompiling] = useState(false);
+    const [compilationItems, setCompilationItems] = useState<CompilationItem[]>([]);
 
     useEffect(() => {
         if (ref.current != null) {
@@ -172,75 +182,91 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     }, [currentStep, steps]);
 
     useEffect(() => {
-        if (!currentStep) {
-            return;
-        }
+      if (!currentStep) {
+          return;
+      }
 
-        editorRef.current?.setValue(currentStep.code);
+      editorRef.current?.setValue(currentStep.code);
 
-        analytics.track(`tutorial: step: ${currentStepId}: changed`, {
-            step: currentStep
-        })
-        setTargets(currentStep.targets);
-        setCurrentTargetId(targetViews[0]?.title);
+      analytics.track(`tutorial: step: ${currentStepId}: changed`, {
+          step: currentStep
+      })
+      setOutputTarget(currentStep.targets);
+      setCurrentTargetId(targetViews[0]?.title);
     }, [currentStep]);
 
     const downloadCompiledCode = async (target: Target) => {
-        setDownloadInProgress(true);
-        const result = await compiler.compile(new CompilationRequest(editorRef.current?.getValue()!, target));
-        if (result.error) {
-            console.error('compilation failed', result.error.stderr);
-            return;
-        }
-        console.log("download compile code", result);
-        const zipBlob = new Blob([new Uint8Array(result.zip.toBuffer())]);
-        const url = window.URL.createObjectURL(zipBlob);
-        const zipDownload = document.createElement("a");
-        zipDownload.href = url;
-        zipDownload.download = "hello.tfaws.zip";
-        document.body.appendChild(zipDownload);
-        zipDownload.click();
-        setDownloadInProgress(false);
+      setDownloadInProgress(true);
+      const result = await compiler.compile(new CompilationRequest(editorRef.current?.getValue()!, target));
+      if (result.error) {
+          console.error('compilation failed', result.error.stderr);
+          return;
+      }
+      console.log("download compile code", result);
+      const zipBlob = new Blob([new Uint8Array(result.zip.toBuffer())]);
+      const url = window.URL.createObjectURL(zipBlob);
+      const zipDownload = document.createElement("a");
+      zipDownload.href = url;
+      zipDownload.download = "hello.tfaws.zip";
+      document.body.appendChild(zipDownload);
+      zipDownload.click();
+      setDownloadInProgress(false);
     };
 
     const [showWelcomeModal, setShowWelcomeModal] = useState(true);
     const [showFinishModal, setShowFinishModal] = useState(false);
 
     const simulatorTarget: TargetView = useMemo(() => {
-        return {
-            title: "Wing Simulator",
-            Target: () => <SimulatorTarget frameSrc={iframSrc} iframeRef={refIframe}/>
-        }
+      return {
+        id: "simulator",
+        title: "Wing Simulator",
+        Target: () => <SimulatorTarget frameSrc={iframSrc} iframeRef={refIframe}/>
+      }
     }, [iframSrc, refIframe]);
+
+    const tfAwsTarget: TargetView = useMemo(() => {
+      return {
+        id: Target.TFAWS,
+        title: "AWS/TERRAFORM",
+        Target: () => <TfAwsTarget
+          loading={isCompiling}
+          files={compilationItems}
+          downloadCompiledCode={() => downloadCompiledCode(Target.TFAWS)}
+          disabled={downloadInProgress}
+        />
+      }
+    }, [isCompiling, downloadInProgress, downloadCompiledCode, compilationItems]);
 
     const targetViews: TargetView[] = useMemo(() => {
       const views: TargetView[] = [];
-
-      targets.forEach(target => {
-        if (target === Target.SIMULATOR) {
+      outputTargets.forEach(target => {
+        if (target === "simulator") {
           views.push(simulatorTarget);
         }
         if (target === Target.TFAWS) {
-          const compilation = compilerOutput.find(t => t.target === target);
-          const files = compilation?.files;
-          views.push({
-            title: "AWS/TERRAFORM",
-            Target: () => <TfAwsTarget
-              files={files}
-              loading={isCompiling}
-              downloadCompiledCode={() => downloadCompiledCode(target)}
-            />
-          });
+          views.push(tfAwsTarget);
         }
       });
       return views;
-    }, [targets, compilerOutput, isCompiling, simulatorTarget]);
+    }, [outputTargets, simulatorTarget, tfAwsTarget]);
+
+    const [currentTargetId, setCurrentTargetId] = useState(targetViews[0]?.id);
 
     useEffect(() => {
-      setCurrentTargetId(targetViews[0]?.title);
+      setCurrentTargetId(targetViews[0]?.id);
     }, [targetViews.length]);
 
-    const [currentTargetId, setCurrentTargetId] = useState(targetViews[0]?.title);
+    useEffect(() => {
+      setCompilationItems([]);
+      if (currentTargetId === tfAwsTarget.id) {
+        setIsCompiling(true);
+        const compilation = compiler.compile(new CompilationRequest(editorRef.current?.getValue()!, Target.TFAWS));
+        compilation.then(result => {
+          setCompilationItems(result.files);
+          setIsCompiling(false);
+        });
+      }
+    }, [currentTargetId, compiler, editorRef]);
 
     return (
         <>
