@@ -8,5 +8,5 @@ let handler = inflight (s: str) => {
   log("inflight function was called with ${s}");
 };                                          
 ```
-2. Notice the Inflight1 javascript code under assets
+2. The inflight code compiled into JS, Look for the code under assets
 
