@@ -97,10 +97,12 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         });
     }
 
-    const [outputTargets, setOutputTarget] = useState<string[]>(tutorials[0].targets);
-    const targets: Target[] = useMemo(() => {
-        return outputTargets.filter(t => t !== "simulator") as Target[];
-    }, [outputTargets]);
+    const [targets, setTargets] = useState<string[]>(["simulator"]);
+    const compilerTargets = useMemo(() => {
+      return targets.filter((target) => {
+          return target !== "simulator";
+      }).map((target) => target as Target);
+    }, [targets]);
 
     const {
       evaluateCode,
@@ -114,7 +116,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         languageContext,
         code: tutorials[0].code,
         compiler,
-        targets,
+        targets: compilerTargets,
         editorOptions,
         shouldInitContainer: true,
     });
@@ -192,7 +194,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       analytics.track(`tutorial: step: ${currentStepId}: changed`, {
           step: currentStep
       })
-      setOutputTarget(currentStep.targets);
+      setTargets(currentStep.targets);
       setCurrentTargetId(targetViews[0]?.title);
     }, [currentStep]);
 
@@ -255,11 +257,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const targetViews: TargetView[] = useMemo(() => {
       const views: TargetView[] = [];
 
-      if (!outputTargets || outputTargets.length === 0) {
+      if (!targets || targets.length === 0) {
         return [simulatorTarget];
       }
 
-      outputTargets.forEach(target => {
+      targets.forEach(target => {
         if (target === "simulator") {
           views.push(simulatorTarget);
         }
@@ -268,7 +270,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         }
       });
       return views;
-    }, [outputTargets, simulatorTarget, tfAwsTarget]);
+    }, [targets, simulatorTarget, tfAwsTarget]);
 
     const [currentTargetId, setCurrentTargetId] = useState(targetViews[0]?.id);
 
