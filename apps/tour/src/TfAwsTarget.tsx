@@ -195,6 +195,9 @@ export const TfAwsTarget = ({
         for (const [key2, value2] of Object.entries(value as object)) {
           const path = value2["//"]["metadata"]["path"] || key2;
           const resourceName = path.split("/").slice(-2, -1)[0];
+          if (value2.policy) {
+            value2.policy = JSON.parse(value2.policy);
+          }
           resources.push({
             id: path,
             name: getResourceName(key),
