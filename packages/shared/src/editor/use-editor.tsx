@@ -52,8 +52,6 @@ export const useEditor = ({
     const containerRef = useRef<WebContainer>();
     const monacoRef = useRef<monaco.editor.IStandaloneCodeEditor>();
 
-    const [compilerOutput, setCompilerOutput] = useState<CompilerOutput[]>([]);
-
     const editorWillMount = (monaco: any) => {
 
         try {
@@ -113,15 +111,8 @@ export const useEditor = ({
           let compileValue = editorRef.current?.getValue()
           await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
 
-          //setCompilerOutput([]);
           targets?.forEach(async (target, index) => {
             compiler.submit(new CompilationRequest(compileValue!, target));
-            //const compilation = await compiler.compile(new CompilationRequest(compileValue!, target));
-            // const output = {
-            //   target,
-            //   files: compilation.files,
-            // }
-            //setCompilerOutput(prev => [...prev, output]);
             if (index === targets.length - 1) {
               onLoadingStatusChange(LoadingStatus.Completed)
               setIsCompiling(false)
@@ -139,6 +130,5 @@ export const useEditor = ({
         editorDidMount,
         evaluateCode,
         isCompiling,
-        compilerOutput
     }
 }
