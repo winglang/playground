@@ -4,6 +4,4 @@ let q = new cloud.Queue();
 
 let handler = inflight (s: str) => {
     log("Cloud Function was called with ${s}");
-     // Type 'q.' to see the available methods
-
 };

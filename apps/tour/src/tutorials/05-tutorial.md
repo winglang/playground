@@ -1,5 +1,7 @@
 # Add a Bucket to store the latest message sent to our queue.
 
+To make things shorter we've inlined the inflight handler
+
 1. Paste this code in line 4.
 ```ts
 let b = new cloud.Bucket() as "Bucket: Last Message";
