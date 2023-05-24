@@ -198,6 +198,9 @@ export const TfAwsTarget = ({
           if (value2.policy) {
             value2.policy = JSON.parse(value2.policy);
           }
+          if (value2.assume_role_policy) {
+            value2.assume_role_policy = JSON.parse(value2.assume_role_policy);
+          }
           resources.push({
             id: path,
             name: getResourceName(key),
