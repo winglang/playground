@@ -15,7 +15,7 @@ export interface CompilationItem {
 
 export interface CompilationResult {
   files: CompilationItem[];
-  zip: Zip; 
+  zip: Zip;
   error?: {
     stderr: string;
     stdout: string;

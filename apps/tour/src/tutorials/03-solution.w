@@ -2,6 +2,9 @@ bring cloud;
 
 let q = new cloud.Queue();
 
-new cloud.Function(inflight (s: str) => {
-   log("Cloud Function was called with ${s}");
-});
+let handler = inflight (s: str) => {
+  log("inflight function was called with ${s}");
+  q.push(s);
+};
+
+new cloud.Function(handler);

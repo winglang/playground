@@ -1,6 +1,14 @@
-# Push a message to the queue
+# Inflight function compiles to javascript code
 
-1. In the Wing Simulator, **click on the resource in the center named "cloud.Queue"**. An interaction panel will appear on the right hand side.
-2. Under **Push Message**, type in a message and click **Send**.
+inflight functions are functions that are going to run on the cloud
 
-🔍 Notice how the **Approx size** of the queue has changed.
+1. Paste this inflight function in line 4:
+```ts
+let handler = inflight (s: str) => {
+  log("inflight function was called with ${s}");
+  // Type 'q.' to see the available methods
+};                                          
+```
+2. The inflight code compiled into JS, Look for the code under assets
+3. Add code to push string s into `q` in line 7
+
