@@ -233,9 +233,9 @@ export const TfAwsTarget = ({ files, downloadCompiledCode, loading, disabled }: 
               <span>({assets?.length || 0})</span>
             </div>
             <div>
-              <button onClick={downloadCompiledCode} disabled={disabled}>
+              {/* <button onClick={downloadCompiledCode} disabled={disabled}>
                 <ArrowDownTrayIcon className="w-4 h-4 text-slate-100"/>
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
