@@ -1,11 +1,13 @@
-# Invoke a function and explore the Logs Panel
+# Use cloud.Function for invoking the handler
 
-1. Paste this code in line 4:
+Let's wrap the inflight code with a cloud.Function
+
+1. Add code to push string s into `q` in line 7
+2. Add a cloud.Function resource that will use the handler
 ```ts
-new cloud.Function(inflight (s: str) => {
-    log("Cloud Function was called with ${s}");
-});                                          
+new cloud.Function(handler);                                          
 ```
-2. Find the **cloud.Function** in the simulator and **invoke** it with a payload.
+3. Notice that there are a lot of new resources, including IAM permissions 
+4. 
 
-🔍 Notice the resulting log at the bottom of the simulator.
+
