@@ -6,7 +6,7 @@ import tarGzCode from "./assets/tar.gz.js?url";
 import winglangSdkUrl from '@wing-playground/console-build/dist/winglang-sdk-webpack.tgz?url'
 import winglangUrl from '@wing-playground/console-build/dist/winglang-webpack.tgz?url'
 import codespanWasmUrl from '@wing-playground/console-build/wing/codespan-wasm.tgz?url'
-import vm2Url from '@wing-playground/console-build/wing/vm2.tgz?url'
+import esbuildWasmUrl from '@wing-playground/console-build/wing/esbuild-wasm.tgz?url'
 import consoleCode from "@wing-playground/console-build/dist/console.server.js?url";
 import consoleUrl from "@wing-playground/console-build/dist/console.tgz?url";
 
@@ -32,14 +32,14 @@ export async function initContainer(): Promise<WebContainer> {
   }));
 
 
-  const [winglangSdkData, winglangData, expressData, codespanWasmData, vm2Data,
+  const [winglangSdkData, winglangData, expressData, codespanWasmData, esbuildWasmData,
     tarGzCodeString, consoleCodeString, allConsoleCode,
     constructsJSIIString, constructsPackageJsonString] = await Promise.all([
     fetch(winglangSdkUrl).then((d) => d.arrayBuffer()),
     fetch(winglangUrl).then((d) => d.arrayBuffer()),
     fetch(expressUrl).then((d) => d.arrayBuffer()),
     fetch(codespanWasmUrl).then((d) => d.arrayBuffer()),
-    fetch(vm2Url).then((d) => d.arrayBuffer()),
+    fetch(esbuildWasmUrl).then((d) => d.arrayBuffer()),
     fetch(tarGzCode).then((d) => d.text()),
     fetch(consoleCode).then((d) => d.text()),
     fetch(consoleUrl).then((d) => d.arrayBuffer()),
@@ -58,7 +58,7 @@ export async function initContainer(): Promise<WebContainer> {
     { 'wing.tgz': { file: { contents: new Uint8Array(winglangData) } } },
     { 'express.tgz': { file: { contents: new Uint8Array(expressData)} } },
     { 'codespan-wasm.tgz': { file: { contents: new Uint8Array(codespanWasmData) } } },
-    { 'vm2.tgz': { file: { contents: new Uint8Array(vm2Data) } } },
+    { 'esbuild-wasm.tgz': { file: { contents: new Uint8Array(esbuildWasmData) } } },
     { 'tar.gz.js': { file: { contents: tarGzCodeString } } },
     { 'console.server.js': { file: { contents: consoleCodeString } } },
     { 'console.tgz': { file: { contents: new Uint8Array(allConsoleCode) } } },

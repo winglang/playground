@@ -65,7 +65,7 @@ const updateWing = async () => {
 
   const sdkPackageJson = await import(`${sdkDir}/package.json`);
   const externals = Object.keys(sdkPackageJson.dependencies).filter(m => {
-    const exclude = ["vm2", "@aws-sdk", "aws", "@azure", "@cdktf"]
+    const exclude = ["esbuild-wasm", "@aws-sdk", "aws", "@azure", "@cdktf"]
     return exclude.filter(e => m.startsWith(e)).length > 0;
   });
   await webpack(sdkDistDir, `${sdkDir}/lib/index.js`, {
