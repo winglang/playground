@@ -260,7 +260,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       setCompilationItems([]);
       if (currentTargetId === tfAwsTarget.id) {
         setIsCompiling(true);
-        const compilation = compiler.compile(new CompilationRequest(editorRef.current?.getValue()!, Target.TFAWS));
+        const request = new CompilationRequest(editorRef.current?.getValue()!, Target.TFAWS);
+        const compilation = compiler.compile(request);
         compilation.then(result => {
           setCompilationItems(result.files);
           setIsCompiling(false);

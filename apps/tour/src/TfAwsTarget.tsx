@@ -160,25 +160,24 @@ export const TfAwsTarget = ({ files, downloadCompiledCode, loading, disabled }: 
 
 
   return (
-    <div className="bg-slate-500 w-full h-full flex">
-      <div className="h-full w-full relative flex">
-        {loading && (
-          <div className="absolute inset-0 bg-slate-600/50 items-center align-middle z-10">
-            <Loading status=""/>
-          </div>
-        )}
-
-        <div className="h-full w-full max-w-[20rem]">
-          <div className="flex flex-col h-1/2">
-            <div className="items-center px-2 py-2 bg-slate-600">
-              <div className="text-sm text-slate-100 uppercase flex">
-                <div className="space-x-1 grow">
-                  <span className="font-semibold">Terraform</span>
-                  <span>({resources.length || 0})</span>
-                </div>
-              </div>
+    <div className="bg-slate-500 w-full h-full flex relative">
+      {loading && (
+        <div className="absolute inset-0 bg-slate-600/50 items-center align-middle z-10">
+          <Loading status=""/>
+        </div>
+      )}
+      <div className="flex flex-col w-1/2 max-w-[20rem] border-r border-slate-900">
+        <div className="items-center px-2 py-2 bg-slate-700">
+          <div className="text-sm text-slate-100 uppercase flex">
+            <div className="space-x-1 grow">
+              <span className="font-semibold">Terraform</span>
+              <span>({resources.length || 0})</span>
             </div>
-            <div className="grow divide-y divide-slate-700 border-y border-slate-700 overflow-y-auto">
+          </div>
+        </div>
+        <div className="flex flex-col grow relative">
+          <div className="absolute inset-0 overflow-y-auto">
+            <div className="grow divide-y divide-slate-700 border-y border-slate-700">
               {resources?.length === 0 && !loading && (
                 <div className="px-2 py-2 text-sm text-slate-400">
                   No resources found
@@ -201,21 +200,23 @@ export const TfAwsTarget = ({ files, downloadCompiledCode, loading, disabled }: 
               })}
             </div>
           </div>
+        </div>
 
-          <div className="flex flex-col grow">
-            <div className="items-center px-2 py-2 bg-slate-600">
-              <div className="text-sm text-slate-100 uppercase flex">
-                <div className="space-x-1 grow">
-                  <span className="font-semibold">Assets</span>
-                  <span>({files?.length || 0})</span>
-                </div>
-                <div>
-                  <button onClick={() => downloadCompiledCode?.()} disabled={disabled}>
-                    <ArrowDownTrayIcon className="w-4 h-4 text-slate-100"/>
-                  </button>
-                </div>
-              </div>
+        <div className="items-center px-2 py-2 bg-slate-700">
+          <div className="text-sm text-slate-100 uppercase flex">
+            <div className="space-x-1 grow">
+              <span className="font-semibold">Assets</span>
+              <span>({files?.length || 0})</span>
             </div>
+            <div>
+              <button onClick={() => downloadCompiledCode?.()} disabled={disabled}>
+                <ArrowDownTrayIcon className="w-4 h-4 text-slate-100"/>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col grow relative">
+          <div className="absolute inset-0 overflow-auto">
             <div className="grow divide-y divide-slate-700 border-y border-slate-700 overflow-y-auto">
               {files?.length === 0  && !loading && (
                 <div className="px-2 py-2 text-sm text-slate-400">
@@ -235,18 +236,18 @@ export const TfAwsTarget = ({ files, downloadCompiledCode, loading, disabled }: 
             </div>
           </div>
         </div>
+      </div>
 
-        <div className='flex flex-grow min-w-[15rem] max-w-[3/4] bg-[#334155]'>
-          <Editor
-            key={selectedFile?.name}
-            theme="akkd-dark-plus"
-            path="source.js"
-            language="js"
-            options={Object.assign({}, options, { readOnly: true })}
-            onMount={compileEditorDidMount}
-            value={selectedFile?.contents}
-            />
-        </div>
+      <div className='flex flex-grow min-w-[15rem] max-w-[3/4] bg-[#334155]'>
+        <Editor
+          key={selectedFile?.name}
+          theme="akkd-dark-plus"
+          path="source.js"
+          language="js"
+          options={Object.assign({}, options, { readOnly: true })}
+          onMount={compileEditorDidMount}
+          value={selectedFile?.contents}
+          />
       </div>
     </div>
   )
