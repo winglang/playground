@@ -137,7 +137,7 @@ const ItemsList = ({
         <div className="absolute inset-0 overflow-y-auto">
           <div className="grow divide-y border-b divide-slate-600 border-slate-600">
             {items.length === 0 && !loading && (
-              <div className="px-2 py-2 text-sm text-slate-200/50 text-center">
+              <div className="px-2 py-2 text-sm text-slate-500 text-center">
                 {placeholder}
               </div>
             )}
@@ -249,9 +249,9 @@ export const TfAwsTarget = ({
 
 
   return (
-    <div className="bg-gray-700 w-full h-full p-2">
+    <div className="bg-gray-700 w-full h-full p-2 relative">
       {loading && (
-        <div className="absolute inset-0 bg-slate-600/50 items-center align-middle z-10">
+        <div className="absolute inset-0 bg-slate-600/50 z-20">
           <Loading status=""/>
         </div>
       )}
@@ -289,11 +289,11 @@ export const TfAwsTarget = ({
           classNames(
             "flex flex-col flex-grow min-w-[15rem] max-w-[3/4] relative",
           )}>
-          {/* {!selectedItem && (
-            <div className="absolute inset-0 text-center align-middle z-10">
-              <div className="text-slate-200/50 text-sm">Select a resource or asset to view</div>
+        {!selectedItem && (
+            <div className="absolute inset-0 z-10 text-slate-500 bg-gray-800 grid place-items-center">
+              <div>Select a resource or asset to view</div>
             </div>
-          )} */}
+          )}
           <Editor
             key={selectedItem?.id}
             theme="akkd-dark-plus"
