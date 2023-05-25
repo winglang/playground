@@ -123,7 +123,7 @@ const ItemsList = ({
   actions?: React.ReactNode;
 }) => {
   return (
-    <div className="grow flex flex-col">
+    <div className="grow flex flex-col border border-gray-900 rounded-lg overflow-hidden">
       <PanelHeader>
         <div className="space-x-1 grow">
           <span className="font-semibold">{title}</span>
@@ -135,8 +135,8 @@ const ItemsList = ({
       </PanelHeader>
       <div className="flex flex-col grow relative bg-gray-750">
         <div className="absolute inset-0 overflow-y-auto">
-          <div className="grow divide-y border-b divide-slate-600 border-slate-600">
-            {items.length === 0 && !loading && (
+          <div className="grow divide-y divide-slate-600">
+            {items.length === 0 && (
               <div className="px-2 py-2 text-sm text-slate-500 text-center">
                 {placeholder}
               </div>
@@ -257,10 +257,10 @@ export const TfAwsTarget = ({
       )}
       <div className={classNames(
         "w-full h-full flex relative",
-        "divide-x divide-gray-900 border border-gray-800",
-        "rounded-lg overflow-hidden"
+        "border border-gray-800",
+        "rounded-lg overflow-hidden bg-gray-800 p-2 gap-2"
         )}>
-        <div className="flex flex-col w-1/2 max-w-[20rem] divide-y divide-gray-900">
+        <div className="flex flex-col w-1/2 max-w-[20rem] gap-2">
           <ItemsList
             title="Terraform"
             items={resources}
@@ -272,11 +272,6 @@ export const TfAwsTarget = ({
 
           <ItemsList
             title="Assets"
-            // actions={
-            //   <button onClick={downloadCompiledCode} disabled={disabled}>
-            //     <ArrowDownTrayIcon className="w-4 h-4 text-slate-100"/>
-            //   </button>
-            // }
             items={assets}
             selectedItem={selectedItem}
             loading={loading}
@@ -287,10 +282,11 @@ export const TfAwsTarget = ({
 
         <div className={
           classNames(
-            "flex flex-col flex-grow min-w-[15rem] max-w-[3/4] relative",
-          )}>
-        {!selectedItem && (
-            <div className="absolute inset-0 z-10 text-slate-500 bg-gray-800 grid place-items-center">
+            "flex flex-col flex-grow min-w-[15rem] max-w-[3/4] relative rounded-lg overflow-hidden",
+            "border border-gray-900"
+        )}>
+          {!selectedItem && (
+            <div className="absolute inset-0 z-10 text-slate-500 bg-gray-750 grid place-items-center">
               <div>Select a resource or asset to view</div>
             </div>
           )}
@@ -302,7 +298,7 @@ export const TfAwsTarget = ({
             options={Object.assign({}, options, { readOnly: true })}
             onMount={compileEditorDidMount}
             value={selectedItem?.contents}
-            />
+          />
         </div>
       </div>
     </div>
