@@ -19,7 +19,7 @@ import * as monaco from 'monaco-editor';
 import classNames from "classnames";
 import { CompilationItem } from "@wing-playground/shared/src/compiler/compiler";
 import { Loading } from "@wing-playground/shared/src/Loading";
-import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+import { PanelHeader } from "@wing-playground/shared/src/PanelHeader";
 
 const getResourceName = (type: string) => {
   switch (type) {
@@ -42,7 +42,7 @@ const getResourceName = (type: string) => {
   }
 }
 
-const ResourceIcon = ({type}: {type: string}) => {
+const ResourceIcon = ({type, className}: {type: string, className?: string}) => {
   const resources = [
     "aws_sqs_queue",
     "aws_s3_bucket",
@@ -58,7 +58,7 @@ const ResourceIcon = ({type}: {type: string}) => {
   if (!resources.includes(type)) {
     return null;
   }
-  return  <img className="w-full" src={`aws/${type}.svg`}/>
+  return  <img className={classNames("w-full", className)} src={`aws/${type}.svg`}/>
 }
 
 interface Item {
@@ -81,21 +81,23 @@ const FileRow = ({title, description, icon, selected, onClick}: {
       <button
         title={title}
         className={classNames(
-          "flex items-center w-full px-2 py-1",
+          "flex items-center w-full px-4 py-1",
           "text-left text-sm font-medium leading-5",
-          "text-gray-900",
-          "hover:bg-gray-300 focus:bg-gray-300 focus:outline-none",
-          selected && "bg-gray-300",
+          "hover:bg-slate-600 focus:bg-slate-600 focus:outline-none",
+          selected && "bg-slate-600 text-white",
+          !selected && "text-slate-200",
         )}
         onClick={onClick}
       >
       <div className="flex gap-x-2 truncate">
-        {icon && <div className="w-6 my-auto shrink-0">
-          {icon}
-        </div>}
+        {icon &&
+          <div className="w-6 my-auto shrink-0">
+            {icon}
+          </div>
+        }
         <div className="h-full inline-block align-middle truncate">
           <div className="truncate">{title}</div>
-          {description && <div className="text-xs truncate opacity-80">{description}</div>}
+          {description && <div className="text-xs truncate opacity-70">{description}</div>}
         </div>
       </div>
     </button>
@@ -121,19 +123,17 @@ const ItemsList = ({
   actions?: React.ReactNode;
 }) => {
   return (
-    <>
-     <div className="items-center px-2 py-2 border-b border-slate-600 bg-slate-700">
-        <div className="text-sm text-white uppercase flex">
-          <div className="space-x-1 grow">
-            <span className="font-semibold">{title}</span>
-            <span>({items?.length || 0})</span>
-          </div>
-          <div>
-            {actions}
-          </div>
+    <div className="grow flex flex-col">
+      <PanelHeader>
+        <div className="space-x-1 grow">
+          <span className="font-semibold">{title}</span>
+          <span>({items?.length || 0})</span>
         </div>
-      </div>
-      <div className="flex flex-col grow relative bg-slate-550">
+        <div>
+          {actions}
+        </div>
+      </PanelHeader>
+      <div className="flex flex-col grow relative bg-gray-750">
         <div className="absolute inset-0 overflow-y-auto">
           <div className="grow divide-y border-b divide-slate-600 border-slate-600">
             {items.length === 0 && !loading && (
@@ -156,7 +156,7 @@ const ItemsList = ({
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 };
 
@@ -191,22 +191,22 @@ export const TfAwsTarget = ({
         return [];
       }
       const resources: Item[] = [];
-      for (const [key, value] of Object.entries(json.resource)) {
-        for (const [key2, value2] of Object.entries(value as object)) {
-          const path = value2["//"]["metadata"]["path"] || key2;
+      for (const [resourceType, value] of Object.entries(json.resource)) {
+        for (const [key, content] of Object.entries(value as object)) {
+          const path = content["//"]["metadata"]["path"] || key;
           const resourceName = path.split("/").slice(-2, -1)[0];
-          if (value2.policy) {
-            value2.policy = JSON.parse(value2.policy);
+          if (content.policy) {
+            content.policy = JSON.parse(content.policy);
           }
-          if (value2.assume_role_policy) {
-            value2.assume_role_policy = JSON.parse(value2.assume_role_policy);
+          if (content.assume_role_policy) {
+            content.assume_role_policy = JSON.parse(content.assume_role_policy);
           }
           resources.push({
             id: path,
-            name: getResourceName(key),
+            name: getResourceName(resourceType),
             description: resourceName,
-            type: key,
-            contents: JSON.stringify(value2, null, 2)
+            type: resourceType,
+            contents: JSON.stringify(content, null, 2)
           });
         }
       }
@@ -249,47 +249,61 @@ export const TfAwsTarget = ({
 
 
   return (
-    <div className="bg-slate-500 w-full h-full flex relative">
+    <div className="bg-gray-700 w-full h-full p-2">
       {loading && (
         <div className="absolute inset-0 bg-slate-600/50 items-center align-middle z-10">
           <Loading status=""/>
         </div>
       )}
-      <div className="flex flex-col w-1/2 max-w-[20rem] border-r border-slate-900">
-        <ItemsList
-          title="Terraform"
-          items={resources}
-          selectedItem={selectedItem}
-          loading={loading}
-          placeholder="No resources found"
-          onClick={setSelectedItem}
-        />
-
-        <ItemsList
-          title="Assets"
-          // actions={
-          //   <button onClick={downloadCompiledCode} disabled={disabled}>
-          //     <ArrowDownTrayIcon className="w-4 h-4 text-slate-100"/>
-          //   </button>
-          // }
-          items={assets}
-          selectedItem={selectedItem}
-          loading={loading}
-          placeholder="No assets found"
-          onClick={setSelectedItem}
-        />
-      </div>
-
-      <div className='flex flex-grow min-w-[15rem] max-w-[3/4] bg-[#334155]'>
-        <Editor
-          key={selectedItem?.id}
-          theme="akkd-dark-plus"
-          path="source.js"
-          language="js"
-          options={Object.assign({}, options, { readOnly: true })}
-          onMount={compileEditorDidMount}
-          value={selectedItem?.contents}
+      <div className={classNames(
+        "w-full h-full flex relative",
+        "divide-x divide-gray-900 border border-gray-800",
+        "rounded-lg overflow-hidden"
+        )}>
+        <div className="flex flex-col w-1/2 max-w-[20rem] divide-y divide-gray-900">
+          <ItemsList
+            title="Terraform"
+            items={resources}
+            selectedItem={selectedItem}
+            loading={loading}
+            placeholder="No resources found"
+            onClick={setSelectedItem}
           />
+
+          <ItemsList
+            title="Assets"
+            // actions={
+            //   <button onClick={downloadCompiledCode} disabled={disabled}>
+            //     <ArrowDownTrayIcon className="w-4 h-4 text-slate-100"/>
+            //   </button>
+            // }
+            items={assets}
+            selectedItem={selectedItem}
+            loading={loading}
+            placeholder="No assets found"
+            onClick={setSelectedItem}
+          />
+        </div>
+
+        <div className={
+          classNames(
+            "flex flex-col flex-grow min-w-[15rem] max-w-[3/4] relative",
+          )}>
+          {/* {!selectedItem && (
+            <div className="absolute inset-0 text-center align-middle z-10">
+              <div className="text-slate-200/50 text-sm">Select a resource or asset to view</div>
+            </div>
+          )} */}
+          <Editor
+            key={selectedItem?.id}
+            theme="akkd-dark-plus"
+            path="source.js"
+            language="js"
+            options={Object.assign({}, options, { readOnly: true })}
+            onMount={compileEditorDidMount}
+            value={selectedItem?.contents}
+            />
+        </div>
       </div>
     </div>
   )
