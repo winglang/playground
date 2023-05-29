@@ -20,6 +20,7 @@ import classNames from "classnames";
 import { CompilationItem } from "@wing-playground/shared/src/compiler/compiler";
 import { Loading } from "@wing-playground/shared/src/Loading";
 import { PanelHeader } from "@wing-playground/shared/src/PanelHeader";
+import { Cog8ToothIcon, DocumentIcon } from "@heroicons/react/24/outline";
 
 const getResourceName = (type: string) => {
   switch (type) {
@@ -55,8 +56,11 @@ const ResourceIcon = ({type, className}: {type: string, className?: string}) => 
     "aws_sns_topic",
   ];
 
+  if (type === "file") {
+    return <DocumentIcon className={classNames("w-full", className)} />;
+  }
   if (!resources.includes(type)) {
-    return null;
+    return <Cog8ToothIcon className={classNames("w-full", className)} />;
   }
   return  <img className={classNames("w-full", className)} src={`aws/${type}.svg`}/>
 }
@@ -69,12 +73,13 @@ interface Item {
   contents: string;
 }
 
-const FileRow = ({title, description, icon, selected, onClick}: {
+const FileRow = ({title, description, icon, selected, onClick, className}: {
   title: string,
   description?: string,
   icon?: React.ReactNode,
   selected: boolean,
-  onClick: () => void
+  onClick: () => void,
+  className?: string,
 }) => {
   return (
     <div className="truncate">
@@ -86,12 +91,13 @@ const FileRow = ({title, description, icon, selected, onClick}: {
           "hover:bg-slate-600 focus:bg-slate-600 focus:outline-none",
           selected && "bg-slate-600 text-white",
           !selected && "text-slate-200",
+          className,
         )}
         onClick={onClick}
       >
       <div className="flex gap-x-2 truncate">
         {icon &&
-          <div className="w-6 my-auto shrink-0">
+          <div className={classNames("my-auto shrink-0", description ? "w-6" : "w-4")}>
             {icon}
           </div>
         }
@@ -113,6 +119,7 @@ const ItemsList = ({
   placeholder,
   onClick,
   actions,
+  group
 }:{
   title: string;
   items: Item[];
@@ -121,7 +128,9 @@ const ItemsList = ({
   placeholder?: string;
   onClick: (item: Item) => void;
   actions?: React.ReactNode;
+  group?: boolean;
 }) => {
+
   return (
     <div className="grow flex flex-col border border-gray-900 rounded-lg overflow-hidden">
       <PanelHeader>
@@ -135,22 +144,37 @@ const ItemsList = ({
       </PanelHeader>
       <div className="flex flex-col grow relative bg-gray-750">
         <div className="absolute inset-0 overflow-y-auto">
-          <div className="grow divide-y divide-slate-600">
-            {items.length === 0 && (
+          <div className="grow">
+            {items?.length === 0 && (
               <div className="px-2 py-2 text-sm text-slate-500 text-center">
                 {placeholder}
               </div>
             )}
-            {items.map((item) => {
+            {items.map((item, index) => {
+              const prev = items[index - 1];
+              const next = items[index + 1];
               return (
-                <FileRow
-                  key={item.id}
-                  title={item.name}
-                  description={item.description}
-                  icon={item.type && <ResourceIcon type={item.type}/>}
-                  selected={selectedItem?.id === item.id}
-                  onClick={() => onClick(item)}
-                />
+                <>
+                {group && item.description !== prev?.description && (
+                  <div className="px-2 py-1 text-xs text-slate-300 bg-slate-700 border-b border-slate-800">
+                    {item.description}
+                  </div>
+                )}
+                  <FileRow
+                    key={item.id}
+                    title={item.name}
+                    description={group ? "" : item.description}
+                    icon={item.type && <ResourceIcon type={item.type}/>}
+                    selected={selectedItem?.id === item.id}
+                    onClick={() => onClick(item)}
+                    className={
+                      classNames(
+                        "border-b",
+                        item.description !== next?.description ? "border-slate-800" : "border-slate-700",
+                      )
+                    }
+                  />
+                </>
               )
             })}
           </div>
@@ -210,7 +234,7 @@ export const TfAwsTarget = ({
           });
         }
       }
-      return resources;
+      return resources.sort((a, b) => a.description?.localeCompare(b.description || "") || 0);
     } catch (e) {
       return [];
     }
@@ -230,6 +254,7 @@ export const TfAwsTarget = ({
       return {
         id: asset.name,
         name: asset.name,
+        type: "file",
         contents: asset.contents,
       }
     });
@@ -268,6 +293,7 @@ export const TfAwsTarget = ({
             loading={loading}
             placeholder="No resources found"
             onClick={setSelectedItem}
+            group
           />
 
           <ItemsList
