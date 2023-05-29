@@ -31,10 +31,11 @@ const defaultExamples = await Promise.all(Object.keys(examplesImports).map(async
 const parsed = queryString.parse(location.search);
 let defaultExample: Example;
 if (parsed.code) {
+  const code = parsed.code as string;
   defaultExample = {
     key: 0,
     text: 'default.w',
-    value: Buffer.from(parsed.code as string, 'base64').toString('utf-8')
+    value: Buffer.from(code.replaceAll(' ', '+'), 'base64').toString('utf-8')
   }
 }
 
