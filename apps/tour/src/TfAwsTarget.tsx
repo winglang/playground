@@ -210,7 +210,7 @@ export const TfAwsTarget = ({
           });
         }
       }
-      return resources;
+      return resources.sort((a, b) => a.description?.localeCompare(b.description || "") || 0);
     } catch (e) {
       return [];
     }
