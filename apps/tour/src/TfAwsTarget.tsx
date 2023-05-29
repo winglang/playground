@@ -69,12 +69,13 @@ interface Item {
   contents: string;
 }
 
-const FileRow = ({title, description, icon, selected, onClick}: {
+const FileRow = ({title, description, icon, selected, onClick, className}: {
   title: string,
   description?: string,
   icon?: React.ReactNode,
   selected: boolean,
-  onClick: () => void
+  onClick: () => void,
+  className?: string,
 }) => {
   return (
     <div className="truncate">
@@ -86,6 +87,7 @@ const FileRow = ({title, description, icon, selected, onClick}: {
           "hover:bg-slate-600 focus:bg-slate-600 focus:outline-none",
           selected && "bg-slate-600 text-white",
           !selected && "text-slate-200",
+          className,
         )}
         onClick={onClick}
       >
@@ -135,13 +137,14 @@ const ItemsList = ({
       </PanelHeader>
       <div className="flex flex-col grow relative bg-gray-750">
         <div className="absolute inset-0 overflow-y-auto">
-          <div className="grow divide-y divide-slate-600">
-            {items.length === 0 && (
+          <div className="grow">
+            {items?.length === 0 && (
               <div className="px-2 py-2 text-sm text-slate-500 text-center">
                 {placeholder}
               </div>
             )}
-            {items.map((item) => {
+            {items.map((item, index) => {
+              const next = items[index + 1];
               return (
                 <FileRow
                   key={item.id}
@@ -150,6 +153,10 @@ const ItemsList = ({
                   icon={item.type && <ResourceIcon type={item.type}/>}
                   selected={selectedItem?.id === item.id}
                   onClick={() => onClick(item)}
+                  className={classNames(
+                    "border-b",
+                    item.description !== next?.description ? "border-slate-400" : "border-slate-600"
+                  )}
                 />
               )
             })}
