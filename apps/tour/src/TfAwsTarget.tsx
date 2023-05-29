@@ -148,10 +148,11 @@ const ItemsList = ({
             )}
             {items.map((item, index) => {
               const prev = items[index - 1];
+              const next = items[index + 1];
               return (
                 <>
                 {group && item.description !== prev?.description && (
-                  <div className="px-2 py-1 text-xs text-slate-500">
+                  <div className="px-2 py-1 text-xs text-slate-300 bg-slate-700 border-b border-slate-800">
                     {item.description}
                   </div>
                 )}
@@ -162,7 +163,12 @@ const ItemsList = ({
                     icon={item.type && <ResourceIcon type={item.type}/>}
                     selected={selectedItem?.id === item.id}
                     onClick={() => onClick(item)}
-                    className="border-b border-slate-600"
+                    className={
+                      classNames(
+                        "border-b",
+                        item.description !== next?.description ? "border-slate-800" : "border-slate-700",
+                      )
+                    }
                   />
                 </>
               )
