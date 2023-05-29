@@ -20,6 +20,7 @@ import classNames from "classnames";
 import { CompilationItem } from "@wing-playground/shared/src/compiler/compiler";
 import { Loading } from "@wing-playground/shared/src/Loading";
 import { PanelHeader } from "@wing-playground/shared/src/PanelHeader";
+import { Cog8ToothIcon, DocumentIcon } from "@heroicons/react/24/outline";
 
 const getResourceName = (type: string) => {
   switch (type) {
@@ -55,8 +56,11 @@ const ResourceIcon = ({type, className}: {type: string, className?: string}) => 
     "aws_sns_topic",
   ];
 
+  if (type === "file") {
+    return <DocumentIcon className={classNames("w-full", className)} />;
+  }
   if (!resources.includes(type)) {
-    return null;
+    return <Cog8ToothIcon className={classNames("w-full", className)} />;
   }
   return  <img className={classNames("w-full", className)} src={`aws/${type}.svg`}/>
 }
@@ -250,6 +254,7 @@ export const TfAwsTarget = ({
       return {
         id: asset.name,
         name: asset.name,
+        type: "file",
         contents: asset.contents,
       }
     });
