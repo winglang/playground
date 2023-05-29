@@ -6,4 +6,4 @@ If you have static data that you want to upload to the bucket each time your app
 2. Notice that the `my-file.txt` is already pre-populated
 3. Click on the AWS/TERRAFORM compilation output and explore the `s3 object` terraform asset which is responsible for uploading it
   
-Learn more about [TF s3_object](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object)
+Learn more about terraform s3_object [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object)
