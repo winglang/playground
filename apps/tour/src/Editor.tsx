@@ -25,7 +25,7 @@ import { WebContainer } from '@webcontainer/api';
 import ReactMarkdown from 'react-markdown'
 
 import { Loading } from '@wing-playground/shared/src/Loading';
-import { Compiler, Target } from '@wing-playground/shared/src/compiler/compiler';
+import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
 import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
 import { useExamples, Example } from '@wing-playground/shared/src/use-examples.js';
 import { tutorials } from './tutorials/index.js';
@@ -38,9 +38,13 @@ import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
 import {installDependencies, ConsoleLayouts} from "@wing-playground/shared/src/containers";
 import {WelcomeModal} from "./WelcomeModal";
 import {CongratsModal} from "./CongratsModal";
+
 import {SimulatorTarget} from "@wing-playground/shared/src/SimulatorTarget";
+
 import {TargetsView, TargetView} from "./TargetsView";
 import {PanelHeader} from "@wing-playground/shared/src/PanelHeader";
+import { TfAwsTarget } from './TfAwsTarget.js';
+import { debounce } from 'lodash';
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -92,7 +96,19 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             version: wingPackageJson.version
         });
     }
-    const {evaluateCode, editorWillMount, editorDidMount } = useEditor({
+
+    const [targets, setTargets] = useState<string[]>(["simulator"]);
+    const compilerTargets = useMemo(() => {
+      return targets.filter((target) => {
+          return target !== "simulator";
+      }).map((target) => target as Target);
+    }, [targets]);
+
+    const {
+      evaluateCode,
+      editorWillMount,
+      editorDidMount,
+    } = useEditor({
         editorRef,
         onLoadingStatusChange: setLoadingStatus,
         onLspError,
@@ -100,9 +116,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         languageContext,
         code: tutorials[0].code,
         compiler,
+        targets: compilerTargets,
         editorOptions,
         shouldInitContainer: true,
     });
+
+    const [isCompiling, setIsCompiling] = useState(false);
+    const [compilationItems, setCompilationItems] = useState<CompilationItem[]>([]);
 
     useEffect(() => {
         if (ref.current != null) {
@@ -165,44 +185,106 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     }, [currentStep, steps]);
 
     useEffect(() => {
-        if (!currentStep) {
-            return;
-        }
+      if (!currentStep) {
+          return;
+      }
 
-        editorRef.current?.setValue(currentStep.code);
+      editorRef.current?.setValue(currentStep.code);
 
-        analytics.track(`tutorial: step: ${currentStepId}: changed`, {
-            step: currentStep
-        })
+      analytics.track(`tutorial: step: ${currentStepId}: changed`, {
+          step: currentStep
+      })
+      setTargets(currentStep.targets);
+      setCurrentTargetId(targetViews[0]?.title);
     }, [currentStep]);
 
     const downloadCompiledCode = async (target: Target) => {
-        setDownloadInProgress(true);
-        const result = await compiler.compile(new CompilationRequest(editorRef.current?.getValue()!, target));
-        if (result.error) {
-            console.error('compilation failed', result.error.stderr);
-            return;
-        }
-        console.log("download compile code", result);
-        const zipBlob = new Blob([new Uint8Array(result.zip.toBuffer())]);
-        const url = window.URL.createObjectURL(zipBlob);
-        const zipDownload = document.createElement("a");
-        zipDownload.href = url;
-        zipDownload.download = "hello.tfaws.zip";
-        document.body.appendChild(zipDownload);
-        zipDownload.click();
-        setDownloadInProgress(false);
+      setDownloadInProgress(true);
+      const result = await compiler.compile(new CompilationRequest(editorRef.current?.getValue()!, target));
+      if (result.error) {
+          console.error('compilation failed', result.error.stderr);
+          return;
+      }
+      console.log("download compile code", result);
+      const zipBlob = new Blob([new Uint8Array(result.zip.toBuffer())]);
+      const url = window.URL.createObjectURL(zipBlob);
+      const zipDownload = document.createElement("a");
+      zipDownload.href = url;
+      zipDownload.download = "hello.tfaws.zip";
+      document.body.appendChild(zipDownload);
+      zipDownload.click();
+      setDownloadInProgress(false);
     };
+
+    const retrieveCompilationFiles = useCallback(debounce(async (value: string, target: Target) => {
+      setIsCompiling(true);
+      const request = new CompilationRequest(value, target);
+      const result = await compiler.compile(request);
+      if (result.error) {
+        console.error('compilation failed', result.error.stderr);
+        setIsCompiling(false);
+        return;
+      }
+      setCompilationItems(result.files);
+      setIsCompiling(false);
+    }, 1000), [compiler]);
+
 
     const [showWelcomeModal, setShowWelcomeModal] = useState(true);
     const [showFinishModal, setShowFinishModal] = useState(false);
 
     const simulatorTarget: TargetView = useMemo(() => {
-        return {
-            title: "Wing Simulator",
-            Target: () => <SimulatorTarget frameSrc={iframSrc} iframeRef={refIframe}/>
-        }
+      return {
+        id: "simulator",
+        title: "Wing Simulator",
+        Target: () => <SimulatorTarget frameSrc={iframSrc} iframeRef={refIframe}/>
+      }
     }, [iframSrc, refIframe]);
+
+    const tfAwsTarget: TargetView = useMemo(() => {
+      return {
+        id: Target.TFAWS,
+        title: "AWS/TERRAFORM",
+        Target: () => <TfAwsTarget
+          loading={isCompiling}
+          files={compilationItems}
+          downloadCompiledCode={() => downloadCompiledCode(Target.TFAWS)}
+          disabled={downloadInProgress}
+        />
+      }
+    }, [isCompiling, downloadInProgress, downloadCompiledCode, compilationItems]);
+
+    const targetViews: TargetView[] = useMemo(() => {
+      const views: TargetView[] = [];
+
+      if (!targets || targets.length === 0) {
+        return [simulatorTarget];
+      }
+
+      targets.forEach(target => {
+        if (target === "simulator") {
+          views.push(simulatorTarget);
+        }
+        if (target === Target.TFAWS) {
+          views.push(tfAwsTarget);
+        }
+      });
+      return views;
+    }, [targets, simulatorTarget, tfAwsTarget]);
+
+    const [currentTargetId, setCurrentTargetId] = useState(targetViews[0]?.id);
+
+    useEffect(() => {
+      setCurrentTargetId(targetViews[0]?.id);
+    }, [targetViews.length]);
+
+    useEffect(() => {
+      setCompilationItems([]);
+      if (targets.includes(Target.TFAWS)) {
+        const value = editorRef.current?.getValue();
+        retrieveCompilationFiles(value || "", Target.TFAWS);
+      }
+    }, [targets, editorRef.current?.getValue()]);
 
     return (
         <>
@@ -252,11 +334,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                                     }
 
                                     <div className="grow"></div>
-                                    {isLastStep &&
-                                        <button className={classNames('px-2 py-0.5 hover:bg-white bg-[#2AD5C1] rounded text-gray-800 font-bold', {"opacity-30": downloadInProgress})} disabled={downloadInProgress} onClick={() => downloadCompiledCode(Target.TFAWS)}>
-                                            {downloadInProgress ? "Compiling..." : "Compile"}
-                                        </button>
-                                    }
 
                                     {!isFirstStep &&
                                         <button className='px-2 py-0.5 hover:bg-white bg-[#2AD5C1] rounded text-gray-800 font-bold' onClick={() => goToPreviousTutorial()}>
@@ -299,12 +376,16 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                         </div>
                     </div>
                     <div data-cueid="simulation" className='h-full basis-auto rounded-lg overflow-hidden grow'>
-                        {loadingStatus != LoadingStatus.Completed ?
-                            <Loading status={loadingStatus} /> :
-                            <TargetsView targets={[
-                                simulatorTarget,
-                            ]} />
-                        }
+                      {loadingStatus != LoadingStatus.Completed &&
+                        <Loading status={loadingStatus} />
+                      }
+                      {loadingStatus == LoadingStatus.Completed && (
+                        <TargetsView
+                          targets={targetViews}
+                          currentTargetId={currentTargetId}
+                          setCurrentTargetId={setCurrentTargetId}
+                        />
+                      )}
                     </div>
                 </div>
             </div>
