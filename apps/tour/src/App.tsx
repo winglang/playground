@@ -3,9 +3,10 @@ import { isChrome } from '@wing-playground/shared/src/utils'
 import { VscWarning } from 'react-icons/vsc';
 import { tutorials as mainTutorials, Tutorial } from './tutorials/main';
 import { tutorials as bucketTutorial } from './tutorials/resource/bucket';
+import { tutorials as counterTutorial } from './tutorials/resource/counter';
+import { tutorials as topicTutorial } from './tutorials/resource/topic';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
 
 const tutorialRoutes = [
   {
@@ -14,7 +15,13 @@ const tutorialRoutes = [
   }, {
     path: '/bucket',
     tutorials: bucketTutorial
-  }
+  }, {
+    path: '/counter',
+    tutorials: counterTutorial
+  }, {
+    path: '/topic',
+    tutorials: topicTutorial
+  } 
 ];
 
 function AppView({ tutorials }: { tutorials: Tutorial[] }) {
