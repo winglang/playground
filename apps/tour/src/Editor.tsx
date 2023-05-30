@@ -28,7 +28,6 @@ import { Loading } from '@wing-playground/shared/src/Loading';
 import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
 import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
 import { useExamples, Example } from '@wing-playground/shared/src/use-examples.js';
-import { tutorials } from './tutorials/index.js';
 import { ProgressBar } from './ProgressBar.js';
 import classNames from 'classnames';
 
@@ -45,6 +44,8 @@ import {TargetsView, TargetView} from "./TargetsView";
 import {PanelHeader} from "@wing-playground/shared/src/PanelHeader";
 import { TfAwsTarget } from './TfAwsTarget.js';
 import { debounce } from 'lodash';
+import { tutorials as mainTutorials, Tutorial } from './tutorials/main';
+
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -66,9 +67,11 @@ export type EditorProps = {
     port?: string;
     path?: string;
     className?: string;
+    tutorials?: Tutorial[];
 }
 
 export const ReactMonacoEditor: React.FC<EditorProps> = ({
+  tutorials = mainTutorials
                                                          }) => {
     const { examples,
         languageContext
