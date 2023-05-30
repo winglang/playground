@@ -11,4 +11,4 @@ Topics are a staple of event-driven architectures, especially those that rely on
 5. Can you spot the `Publish` button on the right panel?
 
 
-Click Next to learn how to use the Bucket in inflight
+Click Next to learn how to subscribe a consumer
