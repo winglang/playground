@@ -5,16 +5,16 @@ let bucket = new cloud.Bucket();
 let counter = new cloud.Counter();
 
 topic.onMessage(inflight (message: str) => {
-  log("Subscriber #1: Received message #${counter.peek()}: ${message}, putting upercase version to bucket");
-  bucket.put("message ${counter.peek()} - uppercase.txt", message.uppercase());
+  log("Subscriber #1: Received message: ${message}, putting upercase version to bucket");
+  bucket.put("${message.split(":").at(0)}_uppercase.txt", message.uppercase());
 });
 
 topic.onMessage(inflight (message: str) => {
-  log("Subscriber #2: Received message #${counter.peek()}: ${message}, putting lowercase version to bucket");
-  bucket.put("message ${counter.peek()} - uppercase.txt", message.lowercase());
+  log("Subscriber #2: Received message: ${message}, putting lowercase version to bucket");
+  bucket.put("${message.split(":").at(0)}_lowecase.txt", message.lowercase());
 });
 
 new cloud.Function(inflight (payload: str) => {
-  counter.inc();
-  topic.publish(payload);
+  let val = counter.inc();
+  topic.publish("#${val}: '${payload}'");
 }) as "Publisher";
