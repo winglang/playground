@@ -190,7 +190,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           <RightResizableWidget className={
             classNames(
               "border-slate-900 h-full",
-              "w-1/3 max-w-[50%] flex flex-col min-w-[10rem] min-h-[15rem] border-r border-b"
+              "w-1/3 max-w-[50%] flex flex-col min-w-[10rem] min-h-[15rem] border-r border-b",
+              {
+                "w-5/12": fontSize === 16,
+                "w-1/2": fontSize === 18,
+              }
             )
           }>
             <div className="bg-slate-700 border-b border-slate-900 px-2 py-1 flex justify-end">
