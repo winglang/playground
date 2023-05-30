@@ -308,7 +308,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                     </div>
                 </div>
                 <div className='flex grow gap-2 bg-gray-900 pb-2 px-2'>
-                    <WelcomeModal visible={showWelcomeModal} onClose={() => setShowWelcomeModal(false)}/>
+                    <WelcomeModal visible={false} onClose={() => setShowWelcomeModal(false)}/>
                     <CongratsModal visible={showFinishModal} onClose={() => setShowFinishModal(false)}/>
                     <div  className='w-[40%] flex flex-col gap-2 bg-gray-900 z-10'>
                         <div className="flex-1 flex flex-col rounded-lg overflow-hidden">
