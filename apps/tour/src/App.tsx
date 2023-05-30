@@ -21,7 +21,11 @@ const tutorialRoutes = [
   }, {
     path: '/topic',
     tutorials: topicTutorial
-  } 
+  },
+  {
+    path: '*',
+    tutorials: mainTutorials
+  }
 ];
 
 function AppView({ tutorials }: { tutorials: Tutorial[] }) {
