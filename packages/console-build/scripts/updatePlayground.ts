@@ -18,6 +18,9 @@ const webpack = async (dest: string, filename: string, options: {} = {}) => {
   const { code, map, assets } : { code: string, map: string, assets: {[key: string]: any;} } = await (ncc as any)(filename, options);
   await fs.writeFile(path.join(dest, "index.js"), code, "utf-8");
   return Promise.all(Object.keys(assets).map(async (k) => {
+    if (path.extname(k) === ".zip") {
+      return;
+    }
     await fs.mkdir(path.join(dest, dirname(k)), { recursive: true });
     return fs.writeFile(path.join(dest, k), assets[k].source, "utf-8");
   }))
