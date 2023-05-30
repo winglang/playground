@@ -2,20 +2,18 @@ bring cloud;
 
 let counter = new cloud.Counter(cloud.CounterProps { initial: 1});
 let bucket = new cloud.Bucket();
-let queue = new cloud.Queue();
+let topic = new cloud.Topic();
 
-let consumerCode = inflight (payload: str) => {
+topic.onMessage(inflight (payload: str) => {
   bucket.put("${payload}.txt", "Hello ${counter.inc()}");
-};
-queue.addConsumer(consumerCode);
+});
 
-let consumerCode2 = inflight (payload: str) => {
+topic.onMessage(inflight (payload: str) => {
   bucket.put("${payload}.txt", "Hello ${counter.inc()}");
-};
-queue.addConsumer(consumerCode2);
+});
 
 new cloud.Function(inflight () => {
   for i in 1..100 {
-    queue.push("${i}");
+    topic.publish("${i}");
   }
 }) as "Invoke Me";

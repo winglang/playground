@@ -4,4 +4,3 @@ You can set an initial value for the counter during deployment by passing-in an 
 
 1. Click on the Counter resource in the Wing Simulator.
 2. Notice that the value is already pre-set to 999.
-3. Click on the AWS/TERRAFORM compilation output and explore the `dynamodb table` terraform asset.
