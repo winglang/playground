@@ -28,7 +28,7 @@ import { Loading } from '@wing-playground/shared/src/Loading';
 import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
 import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
 import { useExamples, Example } from '@wing-playground/shared/src/use-examples.js';
-import { tutorials } from './tutorials/resource/bucket/index.js';
+import { tutorials } from './tutorials/resource/counter/index.js';
 import { ProgressBar } from './ProgressBar.js';
 import classNames from 'classnames';
 
