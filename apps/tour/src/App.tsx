@@ -6,7 +6,7 @@ import { tutorials as bucketTutorial } from './tutorials/resource/bucket';
 import { tutorials as counterTutorial } from './tutorials/resource/counter';
 import { tutorials as topicTutorial } from './tutorials/resource/topic';
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 
 const tutorialRoutes = [
   {
@@ -21,7 +21,7 @@ const tutorialRoutes = [
   }, {
     path: '/topic',
     tutorials: topicTutorial
-  } 
+  }
 ];
 
 function AppView({ tutorials }: { tutorials: Tutorial[] }) {
@@ -45,6 +45,7 @@ function App() {
        {tutorialRoutes.map(({ path, tutorials}) =>
         <Route key={path} path={path} element={<AppView tutorials={tutorials}/>}/>
         )}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );
