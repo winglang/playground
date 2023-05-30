@@ -82,8 +82,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         const consoleUrl = await installDependencies(containerRef.current, ConsoleLayouts.Playground);
         setIframeSrc(consoleUrl)
     }
-
-    const [fontSize, setFontSize] = useState(16);
+    const [fontSize, setFontSize] = useState(14);
+    const fontSizes = [12, 14, 16];
 
     const editorOptions = useMemo(() => {
       return {
@@ -190,10 +190,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           <RightResizableWidget className={
             classNames(
               "border-slate-900 h-full",
-              "w-1/3 max-w-[50%] flex flex-col min-w-[10rem] min-h-[15rem] border-r border-b",
+              "max-w-[50%] flex flex-col min-w-[10rem] min-h-[15rem] border-r border-b",
               {
-                "w-5/12": fontSize === 16,
-                "w-1/2": fontSize === 18,
+                "w-[33%]": fontSize === 12,
+                "w-[38%]": fontSize === 14,
+                "w-[43%]": fontSize === 16
               }
             )
           }>
@@ -203,9 +204,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                 value={fontSize}
                 onChange={(e) => setFontSize(parseInt(e.target.value))}
               >
-                <option value={12}>Font Size 12</option>
-                <option value={16}>Font Size 16</option>
-                <option value={18}>Font Size 20</option>
+                {fontSizes.map((size) => (
+                  <option key={size} value={size}>
+                    Font Size {size}
+                  </option>
+                ))}
               </select>
             </div>
             <Editor
