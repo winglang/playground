@@ -5,6 +5,7 @@ import { tutorials as mainTutorials, Tutorial } from './tutorials/main';
 import { tutorials as bucketTutorial } from './tutorials/resource/bucket';
 import { tutorials as counterTutorial } from './tutorials/resource/counter';
 import { tutorials as topicTutorial } from './tutorials/resource/topic';
+import { tutorials as queueTutorial } from './tutorials/resource/queue';
 
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 
@@ -21,6 +22,9 @@ const tutorialRoutes = [
   }, {
     path: '/topic',
     tutorials: topicTutorial
+  }, {
+    path: '/queue',
+    tutorials: queueTutorial
   }
 ];
 
