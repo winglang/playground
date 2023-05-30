@@ -12,7 +12,7 @@ import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom
 const tutorialRoutes = [
   {
     path: '/',
-    tutorials: bucketTutorial
+    tutorials: queueTutorial
   }, {
     path: '/bucket',
     tutorials: bucketTutorial
