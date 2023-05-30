@@ -20,7 +20,7 @@ import { buildWorkerDefinition } from 'monaco-editor-workers';
 import Editor, { loader } from "@monaco-editor/react";
 import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
-import React, { createRef, useEffect, useState, useRef } from 'react';
+import React, { createRef, useEffect, useState, useRef, useMemo } from 'react';
 import { WebContainer } from '@webcontainer/api';
 import { Actions } from '@wing-playground/shared/src/Actions';
 import { Modal } from '@wing-playground/shared/src/Modal';
@@ -33,6 +33,8 @@ import { createAnalytics } from '@wing-playground/shared/src/analytics/analytics
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
 import {installDependencies, ConsoleLayouts} from "@wing-playground/shared/src/containers";
 import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
+import {RightResizableWidget} from "@wing-playground/shared/src/RightResizableWidget";
+import classNames from "classnames";
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
   (i) => JSON.parse(i.default)
@@ -80,10 +82,16 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         const consoleUrl = await installDependencies(containerRef.current, ConsoleLayouts.Playground);
         setIframeSrc(consoleUrl)
     }
-    const editorOptions = {
+
+    const [fontSize, setFontSize] = useState(16);
+
+    const editorOptions = useMemo(() => {
+      return {
         minimap: { enabled: false },
-        fontSize: 16
-    }
+        fontSize: fontSize
+      }
+    }, [fontSize]);
+
     const onLspError = () => {
         analytics.track('lsp crash', {
             code: editorRef.current?.getValue(),
@@ -179,21 +187,36 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           <Actions onRun={onRun} isRunDisabled={isCompiling} onTfAws={onCompile(Target.TFAWS)} onTfAzure={onCompile(Target.TFAzure)} onTfGcp={onCompile(Target.TFGCP)} />
         </div>
         <div className='flex grow'>
-          <div className='flex w-1/3 h-full'>
-              <Editor
-                  data-testid={"editor"}
-                  theme={"akkd-dark-plus"}
-                  options={editorOptions}
-                  path={languageContext.path}
-                  language={languageContext.language}
-                  onMount={editorDidMount}
-                  beforeMount={editorWillMount}
-                  onChange={(value) => {
-                      void evaluateCode(value);
-                  }}/>
-
-          </div>
-          <div className='flex-1 w-9/12 h-full basis-auto'>
+          <RightResizableWidget className={
+            classNames(
+              "border-slate-900 h-full",
+              "w-1/3 max-w-[50%] flex flex-col min-w-[10rem] min-h-[15rem] border-r border-b"
+            )
+          }>
+            <div className="bg-slate-700 border-b border-slate-900 px-2 py-1 flex justify-end">
+              <select
+                className="bg-slate-700 text-slate-250 h-7 px-2 text-xs cursor-pointer focus:outline-none"
+                value={fontSize}
+                onChange={(e) => setFontSize(parseInt(e.target.value))}
+              >
+                <option value={12}>Font Size 12</option>
+                <option value={16}>Font Size 16</option>
+                <option value={18}>Font Size 20</option>
+              </select>
+            </div>
+            <Editor
+              data-testid={"editor"}
+              theme={"akkd-dark-plus"}
+              options={editorOptions}
+              path={languageContext.path}
+              language={languageContext.language}
+              onMount={editorDidMount}
+              beforeMount={editorWillMount}
+              onChange={(value) => {
+                void evaluateCode(value);
+            }}/>
+          </RightResizableWidget>
+          <div className='grow h-full basis-auto'>
           {loadingStatus != LoadingStatus.Completed ?
             <Loading status={loadingStatus} /> :
             <iframe
