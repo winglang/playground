@@ -1,14 +1,8 @@
 import { WebContainer } from '@webcontainer/api';
 import files from './files';
 
-import expressUrl from './assets/express.tgz?url'
+import containerPackageUrl from '@wing-playground/console-build/dist/playground.tgz?url'
 import tarGzCode from "./assets/tar.gz.js?url";
-import winglangSdkUrl from '@wing-playground/console-build/dist/winglang-sdk-webpack.tgz?url'
-import winglangUrl from '@wing-playground/console-build/dist/winglang-webpack.tgz?url'
-import codespanWasmUrl from '@wing-playground/console-build/wing/codespan-wasm.tgz?url'
-import esbuildWasmUrl from '@wing-playground/console-build/wing/esbuild-wasm.tgz?url'
-import consoleCode from "@wing-playground/console-build/dist/console.server.js?url";
-import consoleUrl from "@wing-playground/console-build/dist/console.tgz?url";
 
 import constructsJSIIUrl from "constructs/.jsii?url";
 import constructsPackageJsonUrl from "constructs/package.json?url";
@@ -32,17 +26,11 @@ export async function initContainer(): Promise<WebContainer> {
   }));
 
 
-  const [winglangSdkData, winglangData, expressData, codespanWasmData, esbuildWasmData,
-    tarGzCodeString, consoleCodeString, allConsoleCode,
+  const [containerPackageData,
+    tarGzCodeString,
     constructsJSIIString, constructsPackageJsonString] = await Promise.all([
-    fetch(winglangSdkUrl).then((d) => d.arrayBuffer()),
-    fetch(winglangUrl).then((d) => d.arrayBuffer()),
-    fetch(expressUrl).then((d) => d.arrayBuffer()),
-    fetch(codespanWasmUrl).then((d) => d.arrayBuffer()),
-    fetch(esbuildWasmUrl).then((d) => d.arrayBuffer()),
+    fetch(containerPackageUrl).then((d) => d.arrayBuffer()),
     fetch(tarGzCode).then((d) => d.text()),
-    fetch(consoleCode).then((d) => d.text()),
-    fetch(consoleUrl).then((d) => d.arrayBuffer()),
     fetch(constructsJSIIUrl).then((d) => d.text()),
     fetch(constructsPackageJsonUrl).then((d) => d.text()),
   ])
@@ -54,14 +42,8 @@ export async function initContainer(): Promise<WebContainer> {
     'package.json': { file: { contents: constructsPackageJsonString } }
   })
   await webcontainerInstance.mount(Object.assign({}, files as any,
-    { 'sdk.tgz': { file: { contents: new Uint8Array(winglangSdkData) } } },
-    { 'wing.tgz': { file: { contents: new Uint8Array(winglangData) } } },
-    { 'express.tgz': { file: { contents: new Uint8Array(expressData)} } },
-    { 'codespan-wasm.tgz': { file: { contents: new Uint8Array(codespanWasmData) } } },
-    { 'esbuild-wasm.tgz': { file: { contents: new Uint8Array(esbuildWasmData) } } },
+    { 'playground.tgz': { file: { contents: new Uint8Array(containerPackageData) } } },
     { 'tar.gz.js': { file: { contents: tarGzCodeString } } },
-    { 'console.server.js': { file: { contents: consoleCodeString } } },
-    { 'console.tgz': { file: { contents: new Uint8Array(allConsoleCode) } } },
     ...examples
   ));
   return webcontainerInstance

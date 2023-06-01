@@ -101,14 +101,16 @@ console.log('unzipping')
 const targz = require('./tar.gz.js')
 
 const unzip = () => {
-  return Promise.all([
-    targz.x({ file: 'sdk.tgz', C: 'node_modules/@winglang/sdk/lib', preservePaths: true }),
-    targz.x({ file: 'wing.tgz', C: 'node_modules/winglang/dist', preservePaths: true }),
-    targz.x({ file: 'express.tgz', C: 'node_modules/express', preservePaths: true }),
-    targz.x({ file: 'codespan-wasm.tgz', C: 'node_modules/codespan-wasm', preservePaths: true }),
-    targz.x({ file: 'esbuild-wasm.tgz', C: 'node_modules/esbuild-wasm', preservePaths: true }),
-    targz.x({ file: 'console.tgz', C: './static' })
-  ])
+  return targz.x({ file: 'playground.tgz', C: '.', preservePaths: true }).then(() => {
+    return Promise.all([
+      targz.x({ file: 'winglang-sdk-webpack.tgz', C: 'node_modules/@winglang/sdk/lib', preservePaths: true }),
+      targz.x({ file: 'winglang-webpack.tgz', C: 'node_modules/winglang/dist', preservePaths: true }),
+      targz.x({ file: 'express.tgz', C: 'node_modules/express', preservePaths: true }),
+      targz.x({ file: 'codespan-wasm.tgz', C: 'node_modules/codespan-wasm', preservePaths: true }),
+      targz.x({ file: 'esbuild-wasm.tgz', C: 'node_modules/esbuild-wasm', preservePaths: true }),
+      targz.x({ file: 'console.tgz', C: './static' })
+    ])
+  })
 }
 unzip().then(() => {
   console.log('unzip done!');

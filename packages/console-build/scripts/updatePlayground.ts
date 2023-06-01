@@ -146,9 +146,34 @@ ${css}
   await fs.cp(path.join(dir, "console/server/dist/index.js"), "./dist/console.server.js");
 }
 
+const createContainerPackage = async () => {
+  const currentDir = dirname(fileURLToPath(import.meta.url))
+
+  console.log("Compressing all to one archive...");
+  await fs.cp(path.join(currentDir, "../wing/codespan-wasm.tgz"), path.join(currentDir, "../dist/codespan-wasm.tgz"));
+  await fs.cp(path.join(currentDir, "../wing/esbuild-wasm.tgz"), path.join(currentDir, "../dist/esbuild-wasm.tgz"));
+  await fs.cp(path.join(currentDir, "../wing/express.tgz"), path.join(currentDir, "../dist/express.tgz"));
+  
+  await tar.create({
+    file: path.join(currentDir, "../dist/playground.tgz"),
+    C: path.join(currentDir, "../dist"),
+    gzip: true,
+    P: true,
+    filter: (path) => {
+      console.log(11, path)
+      if (path === './playground.tgz' || path === './wingc.wasm') {
+        return false
+      }
+
+      return true;
+    }
+  }, ["."]);
+}
+
 (async () => {
   await updateWing();
   await updateConsole();
+  await createContainerPackage();
 
   childProcess.execSync("ls -al", {stdio: "inherit"});
   childProcess.execSync("ls -al wing", {stdio: "inherit"});
