@@ -98,17 +98,34 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             version: wingPackageJson.version
         });
     }
+
+     const storeSession = (value: string) => {
+      const url = new URL(window.location.href);
+      url.searchParams.set('session', window.btoa(value));
+      window.history.replaceState({}, '', url.toString());
+    }
+
+    const getSession = () => {
+      const url = new URL(window.location.href);
+      const session = url.searchParams.get('session');
+      if (session) {
+        return window.atob(session);
+      }
+      return null;
+    }
+
     const {isCompiling, evaluateCode, editorWillMount, editorDidMount} = useEditor({
         editorRef,
         onLoadingStatusChange: setLoadingStatus,
         onLspError,
         installConsole,
         languageContext,
-        code: currentExample.value,
+        code: getSession() || currentExample.value,
         compiler,
         editorOptions,
         shouldInitContainer: true,
     });
+
 
     useEffect(() => {
         if (ref.current != null) {
@@ -221,6 +238,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
               beforeMount={editorWillMount}
               onChange={(value) => {
                 void evaluateCode(value);
+                storeSession(value || '');
             }}/>
           </RightResizableWidget>
           <div className='grow h-full basis-auto'>
