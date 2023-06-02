@@ -101,7 +101,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
      const storeSession = (value: string) => {
       const url = new URL(window.location.href);
-      url.searchParams.set("session", window.btoa(value));
+      url.searchParams.set("session", window.btoa(unescape(encodeURIComponent(value))));
       window.history.replaceState({}, '', url.toString());
     }
 
