@@ -101,7 +101,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
      const storeSession = (value: string) => {
       const url = new URL(window.location.href);
-      url.searchParams.set('session', window.btoa(value));
+      url.searchParams.set("session", window.btoa(value));
       window.history.replaceState({}, '', url.toString());
     }
 
@@ -237,8 +237,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
               onMount={editorDidMount}
               beforeMount={editorWillMount}
               onChange={(value) => {
-                void evaluateCode(value);
                 storeSession(value || '');
+                void evaluateCode(value);
             }}/>
           </RightResizableWidget>
           <div className='grow h-full basis-auto'>
