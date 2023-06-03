@@ -18,7 +18,6 @@ store.onDelete(inflight (key: str) => {
   log("Deleted ${key}");
 });
 
-
 new cloud.Function(inflight () => {
   log("uploading file1.txt");
   store.put("file1.txt", "This should be copied");
