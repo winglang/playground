@@ -119,6 +119,7 @@ export const useEditor = ({
             }
           });
           if (targets.length === 0) {
+            compiler.submit(new CompilationRequest(compileValue!, Target.TFAWS));
             onLoadingStatusChange(LoadingStatus.Completed)
             setIsCompiling(false)
           }
