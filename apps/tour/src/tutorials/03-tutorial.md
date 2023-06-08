@@ -1,11 +1,6 @@
-# Invoke a function and explore the Logs Panel
+# Push a message to the queue
 
-1. Paste this code in line 4:
-```ts
-new cloud.Function(inflight (s: str) => {
-    log("Cloud Function was called with ${s}");
-});                                          
-```
-2. Find the **cloud.Function** in the simulator and **invoke** it with a payload.
+1. In the Wing Simulator, **click on the resource in the center named "cloud.Queue"**. An interaction panel will appear on the right hand side.
+2. Under **Push Message**, type in a message and click **Send**.
 
-🔍 Notice the resulting log at the bottom of the simulator.
+🔍 Notice how the **Approx size** of the queue has changed.

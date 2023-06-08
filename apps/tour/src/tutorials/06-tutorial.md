@@ -1,11 +1,14 @@
-# Compile for AWS
+# Add a Bucket to store the latest message sent to our queue.
 
-We finished building and testing our application locally 🥳 
+1. Paste this code in line 4.
+```ts
+let b = new cloud.Bucket() as "Bucket: Last Message";
 
-1. Notice a new tab called *AWS/TERRAFORM* on the right side, next to *WING SIMULATOR*
-2. This is the output of compiling the code to terraform on aws.
-2. You can browse through the different terraform resources that where generate by the code
-3. Look at the generated inflight javascript functions
-4. This view automatically updates when changing the code, play with the code and have fun.
+q.addConsumer(inflight (m: str) => {
+    b.put("latest.txt", m);
+});
+```
+2. Invoke the cloud.Function in the simulator (with a payload).
+3. Find "Bucket: Last Message" in the simulator and download the file from it.
 
-*🧑‍🎓 The compiler generates least privilege permissions, Look for the IAM Policy with `sqs:SendMessage` action*
+🔍 Notice you can also see a preview of the file in the bucket.

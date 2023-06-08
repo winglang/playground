@@ -1,6 +1,5 @@
 import { Target } from "@wing-playground/shared/src/compiler/compiler";
-import code01 from "./01-code.w?raw";
-import solution01 from "./01-solution.w?raw";
+
 import tutorial01 from "./01-tutorial.md?raw";
 
 import code02 from "./02-code.w?raw";
@@ -20,8 +19,12 @@ import solution05 from "./05-solution.w?raw";
 import tutorial05 from "./05-tutorial.md?raw";
 
 import code06 from "./06-code.w?raw";
-// import solution06 from "./06-solution.w?raw";
+import solution06 from "./06-solution.w?raw";
 import tutorial06 from "./06-tutorial.md?raw";
+
+import code07 from "./07-code.w?raw";
+// import solution07 from "./07-solution.w?raw";
+import tutorial07 from "./07-tutorial.md?raw";
 
 export interface Tutorial {
     id: string;
@@ -33,33 +36,32 @@ export interface Tutorial {
 }
 
 export const tutorials = [
-    {
+      {
         id: "1",
+        name:   "Welcome",
+        code: "",
+        tutorial: tutorial01,
+        targets: [],
+    },
+    {
+        id: "2",
         name:   "Create Queue",
-        code:   code01,
-        solution: solution01,
+        code:   code02,
+        solution: solution02,
         tutorial: tutorial01,
         targets: ["simulator"],
     },
     {
-        id: "2",
-        name:   "Push Message",
-        code:   code02,
-        // solution: solution02,
-        tutorial: tutorial02,
-        targets: ["simulator"],
-    },
-    {
         id: "3",
-        name:   "Logs",
+        name:   "Push Message",
         code:   code03,
-        solution: solution03,
+        // solution: solution03,
         tutorial: tutorial03,
         targets: ["simulator"],
     },
     {
         id: "4",
-        name:   "Push Programmatically",
+        name:   "Logs",
         code:   code04,
         solution: solution04,
         tutorial: tutorial04,
@@ -67,7 +69,7 @@ export const tutorials = [
     },
     {
         id: "5",
-        name:   "Use Bucket",
+        name:   "Push Programmatically",
         code:   code05,
         solution: solution05,
         tutorial: tutorial05,
@@ -75,10 +77,18 @@ export const tutorials = [
     },
     {
         id: "6",
-        name:   "Compile for AWS",
+        name:   "Use Bucket",
         code:   code06,
-        // solution: solution06,
+        solution: solution06,
         tutorial: tutorial06,
+        targets: ["simulator"],
+    },
+    {
+        id: "7",
+        name:   "Compile for AWS",
+        code:   code07,
+        // solution: solution07,
+        tutorial: tutorial07,
         targets: [Target.TFAWS, "simulator"],
     },
 ]

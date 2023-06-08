@@ -1,7 +1,11 @@
-# Push a message to the queue programmatically
+# Invoke a function and explore the Logs Panel
 
-1. Add code to push the function's payload to the queue in line 7. (Hint: look at how the payload is added to the log in line 6).
-2. Invoke the cloud.Function in the simulator (notice it's connected to the queue now).
-3. Explore what happens in the cloud.Queue in the simulator.
-   
-🏆 **Bonus:** Look at the code comment in line 10.
+1. Paste this code in line 4:
+```ts
+new cloud.Function(inflight (s: str) => {
+    log("Cloud Function was called with ${s}");
+});                                          
+```
+2. Find the **cloud.Function** in the simulator and **invoke** it with a payload.
+
+🔍 Notice the resulting log at the bottom of the simulator.

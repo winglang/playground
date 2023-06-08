@@ -44,8 +44,9 @@ import {SimulatorTarget} from "@wing-playground/shared/src/SimulatorTarget";
 import {TargetsView, TargetView} from "./TargetsView";
 import {PanelHeader} from "@wing-playground/shared/src/PanelHeader";
 import { TfAwsTarget } from './TfAwsTarget.js';
-import { debounce } from 'lodash';
+import { debounce, set } from 'lodash';
 import { Header } from './Header.js';
+import { Loader } from '@wing-playground/shared/src/loader.js';
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -231,7 +232,14 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     }, 1000), [compiler]);
 
 
-    const [showWelcomeModal, setShowWelcomeModal] = useState(true);
+    const [showTourLoading, setShowTourLoading] = useState(false);
+    useEffect(() => {
+        if (showTourLoading && loadingStatus === LoadingStatus.Completed) {
+            setShowTourLoading(false);
+            goToNextTutorial();
+        }
+    }, [loadingStatus]);
+
     const [showFinishModal, setShowFinishModal] = useState(false);
 
     const simulatorTarget: TargetView = useMemo(() => {
@@ -290,16 +298,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     return (
         <>
           <div className='w-full flex flex-col grow p-6 bg-[#293443]'>
-            <div className='flex grow relative gap-x-4'>
-                <WelcomeModal
-                  visible={showWelcomeModal || loadingStatus !== LoadingStatus.Completed }
-                  loading={!showWelcomeModal && loadingStatus !== LoadingStatus.Completed}
-                  onClose={() => setShowWelcomeModal(false)}
-                />
-
+            <div className='flex grow relative'>
                 <CongratsModal visible={showFinishModal} onClose={() => setShowFinishModal(false)}/>
-
-                <div className='w-[40%] flex flex-col bg-[#293443] z-10'>
+                <div className={
+                  classNames(
+                    "flex flex-col bg-[#293443] z-10",
+                    currentStepId !== "1" ? "w-[40%]" : "w-full"
+                  )}>
                     <Header/>
                     <div className="flex-1 flex flex-col">
                         <div data-cueid="instructions" className="grow flex flex-col">
@@ -328,6 +333,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                                   className={classNames(
                                     "text-[#BDCECC] bg-[#334155]",
                                     "text-xs px-4 py-2 cursor-pointer",
+                                    isFirstStep && "opacity-0"
                                   )}
                                   onClick={() => goToPreviousTutorial()}
                                 >PREV</button>
@@ -339,7 +345,40 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                                   </div>
                                 </div>
 
-                                {!isLastStep && (
+                                {isFirstStep && (
+                                  <>
+                                  {showTourLoading && (
+                                     <button
+                                      className={classNames(
+                                      "text-xs px-4 py-2 border border-transparent",
+                                        "bg-[#334155] text-[#2AD5C1] border-[#2AD5C1] cursor-not-allowed"
+                                      )}
+                                      disabled
+                                    >
+                                       <Loader size="1rem" text="LOADING" />
+                                    </button>
+                                    )}
+                                    {!showTourLoading && (
+                                      <button
+                                        className={classNames(
+                                        "text-[#BDCECC] bg-[#334155]",
+                                        "text-xs px-4 py-2 cursor-pointer border border-transparent",
+                                        )}
+                                        onClick={() => {
+                                          if (loadingStatus !== LoadingStatus.Completed) {
+                                            setShowTourLoading(true);
+                                          } else {
+                                            goToNextTutorial();
+                                          }
+                                        }}
+                                      >
+                                       START
+                                      </button>
+                                    )}
+                                  </>
+                                )}
+
+                                {!isFirstStep && !isLastStep && (
                                     <button
                                     className={classNames(
                                       "text-[#BDCECC] bg-[#334155]",
@@ -348,6 +387,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                                     onClick={() => goToNextTutorial()}
                                   >NEXT</button>
                                 )}
+
                                 {isLastStep && (
                                     <button
                                     className={classNames(
@@ -362,7 +402,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                     </div>
                 </div>
 
-                <div className='grow flex flex-col gap-2'>
+                <div className={
+                  classNames(
+                    currentStepId !== "1" && "grow ml-4 flex flex-col gap-2",
+                    currentStepId === "1" && "w-0 invisible"
+                  )}>
                   <div data-cueid="code" className='h-[40%] flex flex-col w-full rounded-lg overflow-hidden border border-[#1F2937]'>
                     <PanelHeader>
                       <div className="flex">
