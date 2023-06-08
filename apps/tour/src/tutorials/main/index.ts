@@ -40,6 +40,7 @@ export const tutorials = [
       {
         id: "0",
         name:   "Welcome",
+        code: code01,
         tutorial: tutorial00,
         targets: ["simulator"],
     },
