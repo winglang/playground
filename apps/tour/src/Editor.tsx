@@ -45,6 +45,7 @@ import {TargetsView, TargetView} from "./TargetsView";
 import {PanelHeader} from "@wing-playground/shared/src/PanelHeader";
 import { TfAwsTarget } from './TfAwsTarget.js';
 import { debounce } from 'lodash';
+import { Header } from './Header.js';
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -288,75 +289,105 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     return (
         <>
-            <div className='flex flex-col h-full'>
-                <div className="px-0 py-2 bg-gray-900" data-cueid="progress">
-                    <div className="px-6 flex gap-5 items-center">
-                        <div><img src="/turquoise.svg" className='w-10' /></div>
-                        <ProgressBar
-                            current={currentStepId}
-                            steps={tutorials.map(step => ({
-                                id: step.id,
-                                name: step.name,
-                                tutorial: step.tutorial ?? "",
-                                status: "upcoming",
-                            }))}
-                            onStepClick={setCurrentStepId}
-                        />
-                    </div>
-                </div>
-                <div className='flex grow gap-2 bg-gray-900 pb-2 px-2'>
-                    <WelcomeModal visible={showWelcomeModal} onClose={() => setShowWelcomeModal(false)}/>
+            <div className='flex flex-col h-full px-10 py-8 bg-[#293443]'>
+                <Header/>
+                <div className='flex grow gap-2 pb-2 px-2 relative'>
+                    <WelcomeModal
+                      visible={showWelcomeModal || loadingStatus !== LoadingStatus.Completed }
+                      loading={!showWelcomeModal && loadingStatus !== LoadingStatus.Completed}
+                      onClose={() => setShowWelcomeModal(false)}
+                    />
                     <CongratsModal visible={showFinishModal} onClose={() => setShowFinishModal(false)}/>
-                    <div  className='w-[40%] flex flex-col gap-2 bg-gray-900 z-10'>
-                        <div className="flex-1 flex flex-col rounded-lg overflow-hidden">
-                            <div data-cueid="instructions" className={"grow bg-gray-700 flex flex-col"}>
-                                <PanelHeader>Instructions</PanelHeader>
 
+                    <div className='w-[40%] flex flex-col gap-2 bg-[#293443] z-10'>
+                        <div className="flex-1 flex flex-col rounded-lg overflow-hidden">
+                            <div data-cueid="instructions" className="grow flex flex-col">
                                 <div className="grow relative">
                                     <div className="absolute inset-0 overflow-auto">
-                                        <div className='p-4 prose-lg prose-invert prose-p:leading-6 text-gray-100 prose-ol:list-decimal prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-0 prose-p:text-gray-100 prose-headings:text-lg prose-headings:text-white prose-headings:font-bold'>
-                                            <ReactMarkdown children={currentStep?.tutorial ?? ""} />
+                                        <div
+                                          id="instructions__"
+                                          className={classNames(
+                                          'font-sans',
+                                          'py-4 prose-lg prose-invert prose-p:leading-6 text-[#BDCECC] prose-ol:list-decimal',
+                                          'prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-prose-p:text-[#BDCECC]',
+                                          'prose-headings:text-3xl prose-headings:text-white prose-headings:font-bold')}>
+                                            <ReactMarkdown
+                                              children={currentStep?.tutorial ?? ""}
+                                              className={classNames("text-xl")}
+                                            />
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className='px-4 py-3 text-white border-t border-black flex gap-2'>
-                                    {editorCode == currentStep?.solution && (
-                                        <button className='px-2 py-0.5 hover:bg-white bg-[#2AD5C1] rounded text-gray-800 font-bold' onClick={() => resetTutorial()}>
-                                            Reset
-                                        </button>
-                                    )}
+                                <div className='px-4 py-3 text-white flex gap-2 items-center'>
+                                    <button
+                                      disabled={isFirstStep}
+                                      className={classNames(
+                                        "text-[#BDCECC] bg-[#334155]",
+                                        "text-xs px-4 py-2 cursor-pointer",
+                                      )}
+                                      onClick={() => goToPreviousTutorial()}
+                                    >PREV</button>
 
-                                    {currentStep?.solution && editorCode !== currentStep.solution &&
-                                        <button className='px-2 py-0.5 hover:bg-white bg-[#2AD5C1] rounded text-gray-800 font-bold' onClick={() => solveTutorial()}>
-                                            💡Solve
-                                        </button>
-                                    }
+                                    <div className="grow text-center items-center">
+                                      <div className="flex gap-x-2 justify-center font-mono text-sm text-[#BDCECC]">
+                                        <span>{currentStep?.name}</span>
+                                        <span className='font-semibold'>{currentStep?.id}/{tutorials.length}</span>
+                                      </div>
+                                    </div>
 
-                                    <div className="grow"></div>
-
-                                    {!isFirstStep &&
-                                        <button className='px-2 py-0.5 hover:bg-white bg-[#2AD5C1] rounded text-gray-800 font-bold' onClick={() => goToPreviousTutorial()}>
-                                            ←Previous
-                                        </button>
-                                    }
                                     {!isLastStep && (
-                                        <button className={classNames('px-2 py-0.5 hover:bg-white bg-[#2AD5C1] rounded text-gray-800 font-bold')}
-                                                onClick={() => goToNextTutorial()}>
-                                            Next→
-                                        </button>
+                                        <button
+                                        className={classNames(
+                                          "text-[#BDCECC] bg-[#334155]",
+                                          "text-xs px-4 py-2 cursor-pointer",
+                                        )}
+                                        onClick={() => goToNextTutorial()}
+                                      >NEXT</button>
                                     )}
                                     {isLastStep && (
-                                        <button className={classNames('px-2 py-0.5 hover:bg-white bg-[#2AD5C1] rounded text-gray-800 font-bold')}
-                                                onClick={() => setShowFinishModal(true)}>
-                                            Finish→
-                                        </button>
+                                       <button
+                                       className={classNames(
+                                        "text-[#BDCECC] bg-[#334155]",
+                                        "text-xs px-4 py-2 cursor-pointer",
+                                      )}
+                                       onClick={() => setShowFinishModal(true)}
+                                     >FINISH</button>
                                     )}
                                 </div>
                             </div>
                         </div>
-                        <div data-cueid="code" className='h-[50%] flex flex-col w-full rounded-lg overflow-hidden'>
-                            <PanelHeader>Wing Editor</PanelHeader>
+                    </div>
+
+                    <div className='w-full flex flex-col gap-2'>
+                      <div data-cueid="code" className='h-[50%] flex flex-col w-full rounded-lg overflow-hidden'>
+                            <PanelHeader>
+                              <div className="flex">
+                                <span>EDITOR</span>
+                                <div className="grow"/>
+                                {currentStep?.solution && editorCode !== currentStep.solution &&
+                                  <button
+                                  className={classNames(
+                                    "text-[#BDCECC] bg-[#293443]",
+                                    "text-xs px-4 py-2 cursor-pointer",
+                                  )}
+                                  onClick={() => solveTutorial()}
+                                >
+                                  Solve
+                                </button>
+                                }
+                                {editorCode == currentStep?.solution && (
+                                  <button
+                                  className={classNames(
+                                    "text-gray-200 text-xs px-4 cursor-pointer",
+                                    "hover:text-gray-300 bg-gray-650 hover:bg-gray-550",
+                                  )}
+                                  onClick={() => resetTutorial()}>
+                                    Reset
+                                  </button>
+                                )}
+                              </div>
+                            </PanelHeader>
                             <div className=' grow w-full relative'>
                                 <div className="absolute inset-0 overflow-hidden">
                                     <Editor
@@ -373,19 +404,19 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                                         }}/>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div data-cueid="simulation" className='h-full basis-auto rounded-lg overflow-hidden grow'>
-                      {loadingStatus != LoadingStatus.Completed &&
-                        <Loading status={loadingStatus} />
-                      }
-                      {loadingStatus == LoadingStatus.Completed && (
-                        <TargetsView
-                          targets={targetViews}
-                          currentTargetId={currentTargetId}
-                          setCurrentTargetId={setCurrentTargetId}
-                        />
-                      )}
+                      </div>
+                      <div data-cueid="simulation" className='h-full basis-auto rounded-lg overflow-hidden grow'>
+                        {loadingStatus != LoadingStatus.Completed &&
+                          <Loading status={loadingStatus} />
+                        }
+                        {loadingStatus == LoadingStatus.Completed && (
+                          <TargetsView
+                            targets={targetViews}
+                            currentTargetId={currentTargetId}
+                            setCurrentTargetId={setCurrentTargetId}
+                          />
+                        )}
+                      </div>
                     </div>
                 </div>
             </div>
