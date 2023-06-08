@@ -32,9 +32,9 @@ import { tutorials } from './tutorials/index.js';
 import { ProgressBar } from './ProgressBar.js';
 import classNames from 'classnames';
 
-import { createAnalytics } from '@wing-playground/shared/src/analytics/analytics';
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
 import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
+import {useAnalytics} from "@wing-playground/shared/src/analytics/use-analytics";
 import {installDependencies, ConsoleLayouts} from "@wing-playground/shared/src/containers";
 import {WelcomeModal} from "./WelcomeModal";
 import {CongratsModal} from "./CongratsModal";
@@ -58,7 +58,6 @@ StandaloneServices.initialize({
 buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
 const compiler = new Compiler();
-const analytics = createAnalytics('tour');
 
 export type EditorProps = {
     defaultCode?: string;
@@ -79,8 +78,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [iframSrc, setIframeSrc] = useState("");
     const [loadingStatus, setLoadingStatus] = useState(LoadingStatus.Init);
     const [editorCode, setEditorCode] = useState("");
-
     const [downloadInProgress, setDownloadInProgress] = useState(false);
+    const { analytics } = useAnalytics({ name: 'tour', state: loadingStatus });
 
     const installConsole = async (containerRef: React.MutableRefObject<WebContainer>) => {
         const consoleUrl = await installDependencies(containerRef.current, ConsoleLayouts.Tour);

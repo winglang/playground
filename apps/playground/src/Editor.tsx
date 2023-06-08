@@ -29,10 +29,10 @@ import { FilePicker } from '@wing-playground/shared/src/FilePicker.js';
 import { CompilationResult, Compiler, Target } from '@wing-playground/shared/src/compiler/compiler';
 import { CompilationRequest} from '@wing-playground/shared/src/compiler/request';
 import { useExamples, Example } from '@wing-playground/shared/src/use-examples.js';
-import { createAnalytics } from '@wing-playground/shared/src/analytics/analytics';
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
 import {installDependencies, ConsoleLayouts} from "@wing-playground/shared/src/containers";
 import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
+import {useAnalytics} from "@wing-playground/shared/src/analytics/use-analytics";
 import {RightResizableWidget} from "@wing-playground/shared/src/RightResizableWidget";
 import classNames from "classnames";
 
@@ -48,7 +48,6 @@ StandaloneServices.initialize({
 buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
 const compiler = new Compiler();
-const analytics = createAnalytics('playground');
 
 export type EditorProps = {
     defaultCode?: string;
@@ -71,6 +70,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [iframSrc, setIframeSrc] = useState("");
     const [loadingStatus, setLoadingStatus] = useState(LoadingStatus.Init);
     const [modalVisibility, setModalVisibility] = useState(false);
+    const { analytics } = useAnalytics({ name: 'playground', state: loadingStatus });
 
     const compileEditorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
     const [compileResult, setCompileResult] = useState<CompilationResult>();
