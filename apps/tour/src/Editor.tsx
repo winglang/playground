@@ -289,19 +289,20 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     return (
         <>
-            <div className='flex h-full px-6 pb-6 pt-10 bg-[#293443] relative'>
-                <WelcomeModal
-                  visible={showWelcomeModal || loadingStatus !== LoadingStatus.Completed }
-                  loading={!showWelcomeModal && loadingStatus !== LoadingStatus.Completed}
-                  onClose={() => setShowWelcomeModal(false)}
-                />
+          <div className='w-full flex flex-col grow px-10 pb-6 pt-10 bg-[#293443]'>
+            <Header/>
+            <WelcomeModal
+              visible={showWelcomeModal || loadingStatus !== LoadingStatus.Completed}
+              loading={!showWelcomeModal && loadingStatus !== LoadingStatus.Completed}
+              onClose={() => setShowWelcomeModal(false)}
+            />
+            <div className='flex grow relative'>
                 <CongratsModal visible={showFinishModal} onClose={() => setShowFinishModal(false)}/>
 
                 <div className='w-[40%] flex flex-col gap-2 pr-4 bg-[#293443] z-10'>
                     <div className="flex-1 flex flex-col">
                         <div data-cueid="instructions" className="grow flex flex-col">
                             <div className='grow flex flex-col'>
-                                <Header/>
                                 <div className="grow relative">
                                     <div className="absolute inset-0 overflow-auto">
                                         <div
@@ -419,6 +420,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                   </div>
                 </div>
             </div>
+          </div>
         </>
     );
 };
