@@ -24,19 +24,16 @@ import React, {createRef, useEffect, useState, useRef, useCallback, useMemo, FC,
 import { WebContainer } from '@webcontainer/api';
 import ReactMarkdown from 'react-markdown'
 
-import { Loading } from '@wing-playground/shared/src/Loading';
 import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
 import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
 import { useExamples, Example } from '@wing-playground/shared/src/use-examples.js';
 import { tutorials } from './tutorials/index.js';
-import { ProgressBar } from './ProgressBar.js';
 import classNames from 'classnames';
 
 import { createAnalytics } from '@wing-playground/shared/src/analytics/analytics';
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
 import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
 import {installDependencies, ConsoleLayouts} from "@wing-playground/shared/src/containers";
-import {WelcomeModal} from "./WelcomeModal";
 import {CongratsModal} from "./CongratsModal";
 
 import {SimulatorTarget} from "@wing-playground/shared/src/SimulatorTarget";
@@ -287,23 +284,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       setCurrentTargetId(targetViews[0]?.id);
     }, [targetViews.length]);
 
-    const [instructionsText, setInstructionsText] = useState("");
-    useEffect(() => {
-      setInstructionsText("");
-    }, [currentStep?.tutorial]);
-
-    useEffect(() => {
-      const speed = 20;
-      const timer = setTimeout(() => {
-        if (!currentStep?.tutorial || instructionsText === currentStep.tutorial) {
-          return;
-        }
-        setInstructionsText(currentStep?.tutorial.substr(0, instructionsText.length + speed));
-      }, speed);
-
-      return () => clearTimeout(timer);
-    }, [currentStep?.tutorial, instructionsText]);
-
     useEffect(() => {
       setCompilationItems([]);
       if (targets.includes(Target.TFAWS)) {
@@ -335,7 +315,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                                           'prose-pre:overflow-auto',
                                           'prose-headings:text-3xl prose-headings:pb-8 prose-headings:text-[#BDCECC] prose-headings:font-bold')}>
                                             <ReactMarkdown
-                                              children={instructionsText ?? ""}
+                                              children={currentStep?.tutorial ?? ""}
                                               className={classNames("text-xl")}
                                             />
                                         </div>
