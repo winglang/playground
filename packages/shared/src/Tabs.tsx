@@ -54,9 +54,9 @@ export const Tabs = (props: TabsProps) => {
                 key={tab.id}
                 className={classNames(
                   "relative flex items-center cursor-pointer group",
-                  "px-4 py-1 h-full",
-                   isCurrent && "bg-gray-700",
-                    !isCurrent && ["bg-transparent", "hover:bg-gray-700"],
+                  "px-4 py-1 h-full border-b border-transparent",
+                   isCurrent && "border-white",
+                    !isCurrent && "hover:text-white",
                     tab.tabClassName,
                 )}
                 onClick={() => setCurrentTabId(tab.id)}
