@@ -28,7 +28,6 @@ import { Loading } from '@wing-playground/shared/src/Loading';
 import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
 import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
 import { useExamples, Example } from '@wing-playground/shared/src/use-examples.js';
-import { tutorials } from './tutorials/index.js';
 import { ProgressBar } from './ProgressBar.js';
 import classNames from 'classnames';
 
@@ -45,6 +44,8 @@ import {TargetsView, TargetView} from "./TargetsView";
 import {PanelHeader} from "@wing-playground/shared/src/PanelHeader";
 import { TfAwsTarget } from './TfAwsTarget.js';
 import { debounce } from 'lodash';
+import { tutorials as mainTutorials, Tutorial } from './tutorials/main';
+
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -65,9 +66,11 @@ export type EditorProps = {
     port?: string;
     path?: string;
     className?: string;
+    tutorials?: Tutorial[];
 }
 
 export const ReactMonacoEditor: React.FC<EditorProps> = ({
+  tutorials = mainTutorials
                                                          }) => {
     const { examples,
         languageContext
@@ -304,7 +307,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                     </div>
                 </div>
                 <div className='flex grow gap-2 bg-gray-900 pb-2 px-2'>
-                    <WelcomeModal visible={showWelcomeModal} onClose={() => setShowWelcomeModal(false)}/>
+                    <WelcomeModal visible={false} onClose={() => setShowWelcomeModal(false)}/>
                     <CongratsModal visible={showFinishModal} onClose={() => setShowFinishModal(false)}/>
                     <div  className='w-[40%] flex flex-col gap-2 bg-gray-900 z-10'>
                         <div className="flex-1 flex flex-col rounded-lg overflow-hidden">

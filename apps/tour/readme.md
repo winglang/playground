@@ -12,7 +12,8 @@ npm install
 npm run build
 ```
 
-From playground root:
+From apps/tour root:
 
 ```sh
-npm run
+npm run dev
+```
