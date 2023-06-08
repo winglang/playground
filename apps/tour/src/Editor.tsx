@@ -291,7 +291,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [typingDirection, setTypingDirection] = useState<"forward" | "backward">("forward");
 
     useEffect(() => {
-      setTypingDirection("backward");
+      //setTypingDirection("backward");
+      setInstructionsText("");
     }, [currentStep?.tutorial]);
 
     useEffect(() => {
