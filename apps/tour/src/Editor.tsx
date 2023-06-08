@@ -26,7 +26,7 @@ import ReactMarkdown from 'react-markdown'
 
 import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
 import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
-import { useExamples, Example } from '@wing-playground/shared/src/use-examples.js';
+import { useExamples } from '@wing-playground/shared/src/use-examples.js';
 import { ProgressBar } from './ProgressBar.js';
 import classNames from 'classnames';
 
@@ -69,12 +69,8 @@ export type EditorProps = {
     tutorials?: Tutorial[];
 }
 
-export const ReactMonacoEditor: React.FC<EditorProps> = ({
-  tutorials = mainTutorials
-                                                         }) => {
-    const { examples,
-        languageContext
-    } = useExamples();
+export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutorials}) => {
+    const {languageContext} = useExamples();
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
     const ref = createRef<HTMLDivElement>();
     const refIframe = useRef(null);
@@ -140,7 +136,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             status: "upcoming"
         }));
     } );
-    const [currentStepId, setCurrentStepId] = useState("1");
+    const [currentStepId, setCurrentStepId] = useState(tutorials[0].id);
     const currentStep = steps.find(s => s.id === currentStepId);
 
     const goToPreviousTutorial = useCallback(() => {
@@ -231,6 +227,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       setIsCompiling(false);
     }, 1000), [compiler]);
 
+
+    const showWelcome = useMemo(() => {
+      console.log(currentStepId);
+        return currentStepId === "0";
+    }, [currentStepId]);
 
     const [showTourLoading, setShowTourLoading] = useState(false);
     useEffect(() => {
@@ -340,11 +341,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                                 <div className="grow text-center items-center">
                                   <div className="flex gap-x-2 justify-center font-mono text-sm text-[#BDCECC]">
                                     <span>{currentStep?.name}</span>
-                                    <span className='font-semibold'>{currentStep?.id}/{tutorials.length}</span>
+                                    <span className='font-semibold'>{tutorials.findIndex(item => item.id === currentStepId) + 1 }/{tutorials.length}</span>
                                   </div>
                                 </div>
 
-                                {isFirstStep && (
+                                {showWelcome && (
                                   <>
                                   {showTourLoading && (
                                      <button
@@ -377,7 +378,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                                   </>
                                 )}
 
-                                {!isFirstStep && !isLastStep && (
+                                {!showWelcome && !isLastStep && (
                                     <button
                                     className={classNames(
                                       "text-[#BDCECC] bg-[#334155] hover:bg-[#2AD5C1] hover:text-[#334155]",
@@ -405,8 +406,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                   classNames(
                     "grow ml-4 flex flex-col gap-2"
                   )}>
-                  <div data-cueid="code" className='h-[40%] flex flex-col w-full rounded-lg overflow-hidden border border-[#1F2937] bg-[#33415540]'>
-                    <div className={classNames("flex flex-col w-full grow", isFirstStep && "opacity-0")}>
+                  <div data-cueid="code" className='h-[40%] flex flex-col w-full overflow-hidden border border-[#1F2937] bg-[#33415540]'>
+                    <div className={classNames("flex flex-col w-full grow", showWelcome && "opacity-0")}>
                       <PanelHeader>
                         <div className="flex">
                           <span>EDITOR</span>
@@ -454,10 +455,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                   </div>
                   <div data-cueid="simulation" className={
                     classNames(
-                      'flex flex-col grow basis-auto rounded-lg overflow-hidden border border-[#1F2937]',
+                      'flex flex-col grow basis-auto overflow-hidden border border-[#1F2937]',
                       'bg-[#33415540]'
                     )}>
-                    {loadingStatus == LoadingStatus.Completed && !isFirstStep && (
+                    {loadingStatus == LoadingStatus.Completed && !showWelcome && (
                       <TargetsView
                         targets={targetViews}
                         currentTargetId={currentTargetId}

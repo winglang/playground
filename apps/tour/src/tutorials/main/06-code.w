@@ -1,7 +1,11 @@
 bring cloud;
 
 let q = new cloud.Queue();
-// Paste here
+let b = new cloud.Bucket() as "Bucket: Last Message";
+
+q.addConsumer(inflight (m: str) => {
+    b.put("latest.txt", m);
+});
 
 new cloud.Function(inflight (s: str) => {
     log("Cloud Function was called with ${s}");

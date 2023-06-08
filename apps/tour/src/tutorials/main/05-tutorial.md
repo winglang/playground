@@ -1,7 +1,14 @@
-# Push a message to the queue programmatically
+# Add a Bucket to store the latest message sent to our queue.
 
-1. Add code to push the function's payload to the queue in line 7. (Hint: look at how the payload is added to the log in line 6).
-2. Invoke the cloud.Function in the simulator (notice it's connected to the queue now).
-3. Explore what happens in the cloud.Queue in the simulator.
-   
-🏆 **Bonus:** Look at the code comment in line 10.
+1. Paste this code in line 4.
+```ts
+let b = new cloud.Bucket() as "Bucket: Last Message";
+
+q.addConsumer(inflight (m: str) => {
+    b.put("latest.txt", m);
+});
+```
+2. Invoke the cloud.Function in the simulator (with a payload).
+3. Find "Bucket: Last Message" in the simulator and download the file from it.
+
+🔍 Notice you can also see a preview of the file in the bucket.

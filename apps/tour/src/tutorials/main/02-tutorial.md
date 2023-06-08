@@ -1,7 +1,6 @@
-# Let's add the first cloud service to our app
+# Push a message to the queue
 
-Below is an empty Wing source code file. 
-The first line, "bring cloud", lets us access resources from the Wing standard library.
+1. In the Wing Simulator, **click on the resource in the center named "cloud.Queue"**. An interaction panel will appear on the right hand side.
+2. Under **Push Message**, type in a message and click **Send**.
 
-1. **Uncomment line 3**. A **queue** will appear in the simulator to the right. 
-2. Click **Next** to continue
+🔍 Notice how the **Approx size** of the queue has changed.
