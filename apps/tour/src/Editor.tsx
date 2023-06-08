@@ -112,7 +112,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
         onLspError,
         installConsole,
         languageContext,
-        code: tutorials[0].code,
+        code: tutorials[0].code ?? "",
         compiler,
         targets: compilerTargets,
         editorOptions,
