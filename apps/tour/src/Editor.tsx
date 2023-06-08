@@ -328,11 +328,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                 <CongratsModal visible={showFinishModal} onClose={() => setShowFinishModal(false)}/>
                 <div className={
                   classNames(
-                    "flex flex-col bg-[#293443] z-10",
-                    "w-[40%]"
+                    "flex flex-col bg-[#293443] z-10 w-[40%] px-[20px]",
                   )}>
                     <Header/>
-                    <div className="flex-1 flex flex-col">
+                    <div className="flex-1 flex flex-col pt-[20px]">
                         <div data-cueid="instructions" className="grow flex flex-col">
                             <div className='grow flex flex-col'>
                                 <div className="grow relative">
@@ -432,55 +431,58 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                   classNames(
                     "grow ml-4 flex flex-col gap-2"
                   )}>
-                  <div data-cueid="code" className='h-[40%] flex flex-col w-full rounded-lg overflow-hidden border border-[#1F2937]'>
-                    <PanelHeader>
-                      <div className="flex">
-                        <span>EDITOR</span>
-                        <div className="grow"/>
-                        {currentStep?.solution && editorCode !== currentStep.solution &&
-                          <button
-                          className={classNames(
-                            "text-[#BDCECC] bg-[#293443]",
-                            "text-xs px-4 py-2 cursor-pointer",
-                          )}
-                          onClick={() => solveTutorial()}
-                        >
-                          Solve
-                        </button>
-                        }
-                        {editorCode == currentStep?.solution && (
-                          <button
-                          className={classNames(
-                            "text-gray-200 text-xs px-4 cursor-pointer",
-                            "hover:text-gray-300 bg-gray-650 hover:bg-gray-550",
-                          )}
-                          onClick={() => resetTutorial()}>
-                            Reset
+                  <div data-cueid="code" className='h-[40%] flex flex-col w-full rounded-lg overflow-hidden border border-[#1F2937] bg-[#33415540]'>
+                    <div className={classNames("flex flex-col w-full grow", isFirstStep && "opacity-0")}>
+                      <PanelHeader>
+                        <div className="flex">
+                          <span>EDITOR</span>
+                          <div className="grow"/>
+                          {currentStep?.solution && editorCode !== currentStep.solution &&
+                            <button
+                            className={classNames(
+                              "text-[#BDCECC] bg-[#293443]",
+                              "text-xs px-4 py-2 cursor-pointer",
+                            )}
+                            onClick={() => solveTutorial()}
+                          >
+                            Solve
                           </button>
-                        )}
-                      </div>
-                    </PanelHeader>
-                    <div className='grow w-full relative'>
-                      <div className={classNames(
-                        "absolute inset-0 overflow-hidden",
-                        isFirstStep && "opacity-0"
-                        )}>
-                        <Editor
-                          data-testid={"editor"}
-                          theme={"akkd-dark-plus"}
-                          options={editorOptions}
-                          path={languageContext.path}
-                          language={languageContext.language}
-                          onMount={editorDidMount}
-                          beforeMount={editorWillMount}
-                          onChange={(value) => {
-                              void evaluateCode(value);
-                              setEditorCode(value || "");
-                        }}/>
+                          }
+                          {editorCode == currentStep?.solution && (
+                            <button
+                            className={classNames(
+                              "text-gray-200 text-xs px-4 cursor-pointer",
+                              "hover:text-gray-300 bg-gray-650 hover:bg-gray-550",
+                            )}
+                            onClick={() => resetTutorial()}>
+                              Reset
+                            </button>
+                          )}
+                        </div>
+                      </PanelHeader>
+                      <div className='flex flex-col grow w-full relative'>
+                        <div className="absolute inset-0 overflow-hidden">
+                          <Editor
+                            data-testid={"editor"}
+                            theme={"akkd-dark-plus"}
+                            options={editorOptions}
+                            path={languageContext.path}
+                            language={languageContext.language}
+                            onMount={editorDidMount}
+                            beforeMount={editorWillMount}
+                            onChange={(value) => {
+                                void evaluateCode(value);
+                                setEditorCode(value || "");
+                          }}/>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div data-cueid="simulation" className='flex flex-col grow basis-auto rounded-lg overflow-hidden border border-[#1F2937]'>
+                  <div data-cueid="simulation" className={
+                    classNames(
+                      'flex flex-col grow basis-auto rounded-lg overflow-hidden border border-[#1F2937]',
+                      'bg-[#33415540]'
+                    )}>
                     {loadingStatus != LoadingStatus.Completed &&
                       <Loading status={loadingStatus} />
                     }
