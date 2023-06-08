@@ -48,7 +48,7 @@ export const tutorials = [
         name:   "Create Queue",
         code:   code02,
         solution: solution02,
-        tutorial: tutorial01,
+        tutorial: tutorial02,
         targets: ["simulator"],
     },
     {
