@@ -291,12 +291,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         <>
           <div className='w-full flex flex-col grow px-10 pb-6 pt-10 bg-[#293443]'>
             <Header/>
-            <WelcomeModal
-              visible={showWelcomeModal || loadingStatus !== LoadingStatus.Completed}
-              loading={!showWelcomeModal && loadingStatus !== LoadingStatus.Completed}
-              onClose={() => setShowWelcomeModal(false)}
-            />
             <div className='flex grow relative'>
+                <WelcomeModal
+                  visible={showWelcomeModal || loadingStatus !== LoadingStatus.Completed }
+                  loading={!showWelcomeModal && loadingStatus !== LoadingStatus.Completed}
+                  onClose={() => setShowWelcomeModal(false)}
+                />
+
                 <CongratsModal visible={showFinishModal} onClose={() => setShowFinishModal(false)}/>
 
                 <div className='w-[40%] flex flex-col gap-2 pr-4 bg-[#293443] z-10'>
