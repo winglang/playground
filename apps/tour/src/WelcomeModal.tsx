@@ -1,7 +1,6 @@
 import classNames from "classnames";
 
-import { Loader } from '@wing-playground/shared/src/Loader';
-import { Header } from "./Header";
+import { Loader } from '@wing-playground/shared/src/loader';
 
 
 export interface WelcomeModalProps {
