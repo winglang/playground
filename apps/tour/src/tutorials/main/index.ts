@@ -27,12 +27,13 @@ import code07 from "./07-code.w?raw";
 import tutorial07 from "./07-tutorial.md?raw";
 
 export interface Tutorial {
-    id: string;
-    name: string;
-    code: string;
-    solution?: string;
-    tutorial?: string
-    targets?: Target[];
+  id: string;
+  name: string;
+  code: string;
+  solution?: string;
+  tutorial?: string;
+  //TODO: change when "simulator" can be a Target too
+  targets: Target[] | string[];
 }
 
 export const tutorials = [
