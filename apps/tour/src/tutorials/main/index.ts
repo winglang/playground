@@ -56,7 +56,7 @@ export const tutorials = [
         id: "3",
         name:   "Push Message",
         code:   code03,
-        // solution: solution03,
+        solution: solution03,
         tutorial: tutorial03,
         targets: ["simulator"],
     },
