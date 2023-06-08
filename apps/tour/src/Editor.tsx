@@ -309,7 +309,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         if (typingDirection === "forward") {
           setInstructionsText(currentStep?.tutorial.substr(0, instructionsText.length + 5));
         }
-      }, 20);
+      }, 10);
 
       return () => clearTimeout(timer);
     }, [currentStep?.tutorial, instructionsText, typingDirection]);
