@@ -55,7 +55,7 @@ export const Tabs = (props: TabsProps) => {
                 className={classNames(
                   "relative flex items-center cursor-pointer group",
                   "px-4 py-1 h-full border-b border-transparent",
-                   isCurrent && "border-white",
+                   isCurrent && props.tabs.length > 1 && "border-white",
                     !isCurrent && "hover:text-white",
                     tab.tabClassName,
                 )}

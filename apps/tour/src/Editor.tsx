@@ -440,8 +440,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                           {currentStep?.solution && editorCode !== currentStep.solution &&
                             <button
                             className={classNames(
-                              "text-[#BDCECC] bg-[#293443]",
-                              "text-xs px-4 py-2 cursor-pointer",
+                              "text-[#BDCECC] bg-[#293443] hover:bg-[#2AD5C1] hover:text-[#334155]",
+                              "text-xs px-4 py-0.5 leading-none cursor-pointer",
                             )}
                             onClick={() => solveTutorial()}
                           >
@@ -451,8 +451,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                           {editorCode == currentStep?.solution && (
                             <button
                             className={classNames(
-                              "text-gray-200 text-xs px-4 cursor-pointer",
-                              "hover:text-gray-300 bg-gray-650 hover:bg-gray-550",
+                              "text-[#BDCECC] bg-[#293443] hover:bg-[#2AD5C1] hover:text-[#334155]",
+                              "text-xs px-4 cursor-pointer",
                             )}
                             onClick={() => resetTutorial()}>
                               Reset
