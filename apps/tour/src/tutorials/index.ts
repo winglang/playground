@@ -39,7 +39,7 @@ export const tutorials = [
       {
         id: "1",
         name:   "Welcome",
-        code: "",
+        code: code02,
         tutorial: tutorial01,
         targets: [],
     },
