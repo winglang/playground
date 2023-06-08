@@ -296,6 +296,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     }, [currentStep?.tutorial]);
 
     useEffect(() => {
+      const speed = 20;
       const timer = setTimeout(() => {
         if (!currentStep?.tutorial || instructionsText === currentStep.tutorial) {
           return;
@@ -307,9 +308,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           setInstructionsText(instructionsText.substr(0, instructionsText.length - 20));
         }
         if (typingDirection === "forward") {
-          setInstructionsText(currentStep?.tutorial.substr(0, instructionsText.length + 5));
+          setInstructionsText(currentStep?.tutorial.substr(0, instructionsText.length + speed));
         }
-      }, 10);
+      }, speed);
 
       return () => clearTimeout(timer);
     }, [currentStep?.tutorial, instructionsText, typingDirection]);
