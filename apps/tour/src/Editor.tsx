@@ -288,10 +288,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     }, [targetViews.length]);
 
     const [instructionsText, setInstructionsText] = useState("");
-    const [typingDirection, setTypingDirection] = useState<"forward" | "backward">("forward");
-
     useEffect(() => {
-      //setTypingDirection("backward");
       setInstructionsText("");
     }, [currentStep?.tutorial]);
 
@@ -301,19 +298,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         if (!currentStep?.tutorial || instructionsText === currentStep.tutorial) {
           return;
         }
-        if (instructionsText.length === 0) {
-          setTypingDirection("forward");
-        }
-        if (typingDirection === "backward") {
-          setInstructionsText(instructionsText.substr(0, instructionsText.length - 20));
-        }
-        if (typingDirection === "forward") {
-          setInstructionsText(currentStep?.tutorial.substr(0, instructionsText.length + speed));
-        }
+        setInstructionsText(currentStep?.tutorial.substr(0, instructionsText.length + speed));
       }, speed);
 
       return () => clearTimeout(timer);
-    }, [currentStep?.tutorial, instructionsText, typingDirection]);
+    }, [currentStep?.tutorial, instructionsText]);
 
     useEffect(() => {
       setCompilationItems([]);
