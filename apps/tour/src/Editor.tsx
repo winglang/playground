@@ -483,9 +483,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                       'flex flex-col grow basis-auto rounded-lg overflow-hidden border border-[#1F2937]',
                       'bg-[#33415540]'
                     )}>
-                    {loadingStatus != LoadingStatus.Completed &&
-                      <Loading status={loadingStatus} />
-                    }
                     {loadingStatus == LoadingStatus.Completed && !isFirstStep && (
                       <TargetsView
                         targets={targetViews}
