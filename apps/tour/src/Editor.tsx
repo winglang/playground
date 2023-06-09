@@ -447,7 +447,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                     "grow ml-4 flex flex-col gap-2"
                   )}>
                   <div data-cueid="code" className='h-[40%] flex flex-col w-full overflow-hidden border border-gray-800 bg-slate-700/40'>
-                    <div className={classNames("flex flex-col w-full grow", showWelcome && "opacity-0")}>
+                    <div className={
+                      classNames(
+                        showWelcome && "opacity-0",
+                        "flex flex-col w-full grow",
+                      )}>
                       <PanelHeader>
                         <div className="flex">
                           <span>EDITOR</span>
@@ -456,7 +460,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                             <button
                             className={classNames(
                               "text-[#BDCECC] bg-[#293443] hover:bg-[#2AD5C1] hover:text-slate-700",
-                              "text-xs px-4 py-0.5 leading-none cursor-pointer",
+                              "text-xs px-4 py-0.5 leading-none cursor-pointer h-6 my-auto",
                             )}
                             onClick={() => solveTutorial()}
                           >
@@ -498,7 +502,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                       'flex flex-col grow basis-auto overflow-hidden border border-gray-800',
                       'bg-slate-700/40'
                     )}>
-                    {loadingStatus == LoadingStatus.Completed && !showWelcome && (
+                    {!showWelcome && loadingStatus == LoadingStatus.Completed && (
                       <TargetsView
                         targets={targetViews}
                         currentTargetId={currentTargetId}
