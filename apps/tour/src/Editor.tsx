@@ -41,7 +41,7 @@ import {SimulatorTarget} from "@wing-playground/shared/src/SimulatorTarget";
 import {TargetsView, TargetView} from "./TargetsView";
 import {PanelHeader} from "@wing-playground/shared/src/PanelHeader";
 import { TfAwsTarget } from './TfAwsTarget.js';
-import { debounce, set } from 'lodash';
+import { debounce } from 'lodash';
 import { Header } from './Header.js';
 import { Loader } from '@wing-playground/shared/src/loader.js';
 import { tutorials as mainTutorials, Tutorial } from './tutorials/main';
@@ -331,9 +331,17 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                     <div className="flex-1 flex flex-col pt-[20px]">
                         <div data-cueid="instructions" className="grow flex flex-col">
                             <div className='grow flex flex-col'>
-                                <div className="grow relative">
-                                    <div className="absolute inset-0 overflow-auto py-4 pr-2">
-                                        <div
+                                <div className="grow relative overflow-hidden">
+                                {steps.map((step, index) => {
+                                    return (
+                                      <div className={classNames(
+                                        "absolute w-full h-full overflow-auto py-4 pr-2",
+                                        "transition-all duration-300 ease-in-out",
+                                        index === currentStepIndex && "translate-x-0",
+                                        index < currentStepIndex && "-translate-x-full",
+                                        index > currentStepIndex && "translate-x-full",
+                                      )}>
+                                          <div
                                           className={classNames(
                                           'font-sans',
                                           'prose-lg prose-invert prose-p:leading-6 text-[#BDCECC] prose-ol:list-decimal',
@@ -341,11 +349,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                           'prose-pre:overflow-auto',
                                           'prose-headings:text-3xl prose-headings:pb-8 prose-headings:text-[#BDCECC] prose-headings:font-bold')}>
                                             <ReactMarkdown
-                                              children={currentStep?.tutorial ?? ""}
+                                              children={step.tutorial ?? ""}
                                               className={classNames("text-xl")}
                                             />
                                         </div>
-                                    </div>
+                                      </div>
+                                    )
+                                  })}
                                 </div>
                             </div>
 
@@ -355,7 +365,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                 className={classNames(
                                   "absoulte z-10 top-0 left-0 bg-gray-650 h-[4px] -translate-y-1/2",
                                   "transition-all duration-300 ease-out",
-                                  showWelcome && "opacity-0"
+                                  showWelcome && "hidden"
                                 )}
                                 style={
                                   {
@@ -371,7 +381,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                   className={classNames(
                                     "text-[#BDCECC] bg-slate-700 hover:bg-[#2AD5C1] hover:text-slate-700",
                                     "text-xs px-4 py-2 cursor-pointer border border-transparent",
-                                    isFirstStep && "opacity-0"
+                                    isFirstStep && "hidden"
                                   )}
                                   onClick={() => goToPreviousTutorial()}
                                 >PREV</button>
