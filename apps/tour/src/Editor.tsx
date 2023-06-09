@@ -137,36 +137,37 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
         }));
     } );
     const [currentStepId, setCurrentStepId] = useState(tutorials[0].id);
-    const currentStep = steps.find(s => s.id === currentStepId);
+    const currentStep = useMemo(() => {
+      return steps.find(s => s.id === currentStepId)
+    }, [steps, currentStepId]);
+    const currentStepIndex = useMemo(() => {
+        return steps.findIndex(s => s.id === currentStepId);
+    }, [steps, currentStepId]);
 
     const goToPreviousTutorial = useCallback(() => {
-        const currentStepIndex = steps.findIndex(s => s.id === currentStepId);
         const previousStep = steps[currentStepIndex - 1];
         if (previousStep) {
             setCurrentStepId(previousStep.id);
         }
-    }, [steps, currentStepId]);
+    }, [steps, currentStepIndex]);
     const goToNextTutorial = useCallback(() => {
-        const currentStepIndex = steps.findIndex(s => s.id === currentStepId);
         const nextStep = steps[currentStepIndex + 1];
         if (nextStep) {
             setCurrentStepId(nextStep.id);
         }
-    }, [steps, currentStepId]);
+    }, [steps, currentStepIndex]);
     const solveTutorial = useCallback(() => {
-        const currentStepIndex = steps.findIndex(s => s.id === currentStepId);
         const step = steps[currentStepIndex];
         if (step.solution) {
             editorRef.current?.setValue(step.solution);
         }
-    }, [steps, currentStepId]);
+    }, [steps, currentStepIndex]);
     const resetTutorial = useCallback(() => {
-        const currentStepIndex = steps.findIndex(s => s.id === currentStepId);
         const step = steps[currentStepIndex];
         if (step.code) {
             editorRef.current?.setValue(step.code);
         }
-    }, [steps, currentStepId]);
+    }, [steps, currentStepIndex]);
 
     const isFirstStep: boolean = useMemo(() => {
         if(!currentStep) {
@@ -327,7 +328,22 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                 </div>
                             </div>
 
-                            <div className='text-white flex gap-2 items-center'>
+                            <div className="w-full relative">
+                              <div className={classNames("absolute z-10 top-0 left-0 bg-[#BDCECC] w-full h-[1.5px] -translate-y-1/2")}/>
+                              <div
+                                className={classNames(
+                                  "absoulte z-20 top-0 left-0 bg-[#2AD5C1] h-[4px] -translate-y-1/2",
+                                  "transition-all duration-300 ease-out"
+                                )}
+                                style={
+                                  {
+                                    width: `${(currentStepIndex + 1) / tutorials.length * 100}%`
+                                  }
+                                }
+                              />
+                            </div>
+
+                            <div className='text-white flex gap-2 items-center pt-2'>
                                 <button
                                   disabled={isFirstStep}
                                   className={classNames(
@@ -341,7 +357,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                 <div className="grow text-center items-center">
                                   <div className="flex gap-x-2 justify-center font-mono text-sm text-[#BDCECC]">
                                     <span>{currentStep?.name}</span>
-                                    <span className='font-semibold'>{tutorials.findIndex(item => item.id === currentStepId) + 1 }/{tutorials.length}</span>
+                                    <span className='font-semibold'>
+                                      {currentStepIndex + 1 }/{tutorials.length}
+                                    </span>
                                   </div>
                                 </div>
 
