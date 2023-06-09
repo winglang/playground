@@ -16,7 +16,7 @@ export const CodeEditorSkeleton = () => {
         </div>
         <div className="flex gap-x-[25px] h-5">
           <div className="w-5 bg-gray-700 rounded-sm shrink-0"/>
-          <div className="w-[150px] bg-gray-700 rounded-sm shrink-0"/>
+          <div className="w-[70px] bg-gray-700 rounded-sm shrink-0"/>
         </div>
       </div>
     </div>

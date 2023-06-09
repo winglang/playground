@@ -350,10 +350,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                             </div>
 
                             <div className="w-full relative my-6">
-                              <div className={classNames("absolute z-10 top-0 left-0 bg-gray-700 w-full h-[1.5px] -translate-y-1/2")}/>
+                              <div className={classNames("absolute top-0 left-0 bg-gray-700 w-full h-[1.5px] -translate-y-1/2")}/>
                               <div
                                 className={classNames(
-                                  "absoulte z-20 top-0 left-0 bg-gray-700 h-[4px] -translate-y-1/2",
+                                  "absoulte z-10 top-0 left-0 bg-gray-650 h-[4px] -translate-y-1/2",
                                   "transition-all duration-300 ease-out",
                                   showWelcome && "opacity-0"
                                 )}

@@ -283,7 +283,7 @@ export const TfAwsTarget = ({
       <div className="w-full h-full flex relative gap-[1px]">
         <div className="flex flex-col w-1/2 max-w-[20rem] gap-[1px]">
           <ItemsList
-            title="Terraform"
+            title="Resources"
             items={resources}
             selectedItem={selectedItem}
             loading={loading}
