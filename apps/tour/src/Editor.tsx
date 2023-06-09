@@ -288,27 +288,27 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
       setCurrentTargetId(targetViews[0]?.id);
     }, [targetViews.length]);
 
-    const [instructionsText, setInstructionsText] = useState("");
-    useEffect(() => {
-      setInstructionsText("");
-    }, [currentStep?.tutorial]);
+    // const [instructionsText, setInstructionsText] = useState("");
+    // useEffect(() => {
+    //   setInstructionsText("");
+    // }, [currentStep?.tutorial]);
 
-    useEffect(() => {
-      if(showWelcome) {
-        setInstructionsText(currentStep?.tutorial || "");
-        return;
-      }
+    // useEffect(() => {
+    //   if(showWelcome) {
+    //     setInstructionsText(currentStep?.tutorial || "");
+    //     return;
+    //   }
 
-      const timer = setTimeout(() => {
-        if (!currentStep?.tutorial || instructionsText === currentStep.tutorial) {
-          return;
-        }
+    //   const timer = setTimeout(() => {
+    //     if (!currentStep?.tutorial || instructionsText === currentStep.tutorial) {
+    //       return;
+    //     }
 
-        setInstructionsText(currentStep?.tutorial.substr(0, instructionsText.length + 15));
-      }, 20);
+    //     setInstructionsText(currentStep?.tutorial.substr(0, instructionsText.length + 15));
+    //   }, 20);
 
-      return () => clearTimeout(timer);
-    }, [currentStep?.tutorial, instructionsText]);
+    //   return () => clearTimeout(timer);
+    // }, [currentStep?.tutorial, instructionsText]);
 
     useEffect(() => {
       setCompilationItems([]);
@@ -341,7 +341,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                           'prose-pre:overflow-auto',
                                           'prose-headings:text-3xl prose-headings:pb-8 prose-headings:text-[#BDCECC] prose-headings:font-bold')}>
                                             <ReactMarkdown
-                                              children={instructionsText ?? ""}
+                                              children={currentStep?.tutorial ?? ""}
                                               className={classNames("text-xl")}
                                             />
                                         </div>
@@ -365,7 +365,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                               />
                             </div>
 
-                            <div className='text-white flex gap-4 items-center pb-3'>
+                            <div className='text-white flex gap-4 items-center pb-2'>
                                 <button
                                   disabled={isFirstStep}
                                   className={classNames(
