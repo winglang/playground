@@ -274,14 +274,14 @@ export const TfAwsTarget = ({
 
 
   return (
-    <div className="w-full h-full relative bg-gray-800 p-1">
+    <div className="w-full h-full relative bg-gray-800 p-[1px]">
       {loading && (
         <div className="absolute inset-0 bg-slate-600/50 z-20">
           <Loading status=""/>
         </div>
       )}
-      <div className="w-full h-full flex relative gap-1">
-        <div className="flex flex-col w-1/2 max-w-[20rem] gap-1">
+      <div className="w-full h-full flex relative gap-[1px]">
+        <div className="flex flex-col w-1/2 max-w-[20rem] gap-[1px]">
           <ItemsList
             title="Terraform"
             items={resources}

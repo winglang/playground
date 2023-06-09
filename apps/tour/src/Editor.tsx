@@ -230,7 +230,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
 
 
     const showWelcome = useMemo(() => {
-      console.log(currentStepId);
         return currentStepId === "0";
     }, [currentStepId]);
 
@@ -289,6 +288,28 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
       setCurrentTargetId(targetViews[0]?.id);
     }, [targetViews.length]);
 
+    const [instructionsText, setInstructionsText] = useState("");
+    useEffect(() => {
+      setInstructionsText("");
+    }, [currentStep?.tutorial]);
+
+    useEffect(() => {
+      if(showWelcome) {
+        setInstructionsText(currentStep?.tutorial || "");
+        return;
+      }
+
+      const timer = setTimeout(() => {
+        if (!currentStep?.tutorial || instructionsText === currentStep.tutorial) {
+          return;
+        }
+
+        setInstructionsText(currentStep?.tutorial.substr(0, instructionsText.length + 15));
+      }, 20);
+
+      return () => clearTimeout(timer);
+    }, [currentStep?.tutorial, instructionsText]);
+
     useEffect(() => {
       setCompilationItems([]);
       if (targets.includes(Target.TFAWS)) {
@@ -320,7 +341,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                           'prose-pre:overflow-auto',
                                           'prose-headings:text-3xl prose-headings:pb-8 prose-headings:text-[#BDCECC] prose-headings:font-bold')}>
                                             <ReactMarkdown
-                                              children={currentStep?.tutorial ?? ""}
+                                              children={instructionsText ?? ""}
                                               className={classNames("text-xl")}
                                             />
                                         </div>
