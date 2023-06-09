@@ -365,7 +365,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                 className={classNames(
                                   "absoulte z-10 top-0 left-0 bg-gray-650 h-[4px] -translate-y-1/2",
                                   "transition-all duration-300 ease-out",
-                                  showWelcome && "hidden"
+                                  showWelcome && "opacity-0"
                                 )}
                                 style={
                                   {
@@ -381,7 +381,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                   className={classNames(
                                     "text-[#BDCECC] bg-slate-700 hover:bg-[#2AD5C1] hover:text-slate-700",
                                     "text-xs px-4 py-2 cursor-pointer border border-transparent",
-                                    isFirstStep && "hidden"
+                                    isFirstStep && "opacity-0"
                                   )}
                                   onClick={() => goToPreviousTutorial()}
                                 >PREV</button>
