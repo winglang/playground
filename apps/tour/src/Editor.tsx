@@ -425,7 +425,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                   classNames(
                     "grow ml-4 flex flex-col gap-2"
                   )}>
-                  <div data-cueid="code" className='h-[40%] flex flex-col w-full overflow-hidden border border-[#1F2937] bg-[#33415540]'>
+                  <div data-cueid="code" className='h-[40%] flex flex-col w-full overflow-hidden border border-gray-800 bg-slate-700/40'>
                     <div className={classNames("flex flex-col w-full grow", showWelcome && "opacity-0")}>
                       <PanelHeader>
                         <div className="flex">
@@ -474,8 +474,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                   </div>
                   <div data-cueid="simulation" className={
                     classNames(
-                      'flex flex-col grow basis-auto overflow-hidden border border-[#1F2937]',
-                      'bg-[#33415540]'
+                      'flex flex-col grow basis-auto overflow-hidden border border-gray-800',
+                      'bg-slate-700/40'
                     )}>
                     {loadingStatus == LoadingStatus.Completed && !showWelcome && (
                       <TargetsView
