@@ -328,7 +328,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                 </div>
                             </div>
 
-                            <div className="w-full relative">
+                            <div className="w-full relative my-8">
                               <div className={classNames("absolute z-10 top-0 left-0 bg-[#BDCECC] w-full h-[1.5px] -translate-y-1/2")}/>
                               <div
                                 className={classNames(
@@ -337,13 +337,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                 )}
                                 style={
                                   {
-                                    width: `${(currentStepIndex + 1) / tutorials.length * 100}%`
+                                    width: `${currentStepIndex / tutorials.length * 100}%`
                                   }
                                 }
                               />
                             </div>
 
-                            <div className='text-white flex gap-2 items-center pt-2'>
+                            <div className='text-white flex gap-4 items-center'>
                                 <button
                                   disabled={isFirstStep}
                                   className={classNames(
@@ -354,9 +354,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                   onClick={() => goToPreviousTutorial()}
                                 >PREV</button>
 
-                                <div className="grow text-center items-center">
-                                  <div className="flex gap-x-2 justify-center font-mono text-sm text-[#BDCECC]">
-                                    <span>{currentStep?.name}</span>
+                                <div className="grow text-center items-center truncate">
+                                  <div className="flex gap-x-2 justify-center font-mono text-sm text-[#BDCECC] truncate">
+                                    <span className='truncate' title={currentStep?.name}>{currentStep?.name}</span>
                                     <span className='font-semibold'>
                                       {currentStepIndex + 1 }/{tutorials.length}
                                     </span>
