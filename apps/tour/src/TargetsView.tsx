@@ -36,7 +36,7 @@ export const TargetsView = ({targets, setCurrentTargetId, currentTargetId}: Targ
   return (
     <Tabs
       className={classNames(
-        "text-[#BCCDD7] bg-[#334155] border-b border-[#2A3A4B]",
+        "text-[#BCCDD7] bg-slate-700 border-b border-[#2A3A4B]",
         "uppercase text-xs font-semibold leading-7 tracking-widest",
       )}
       tabs={tabs}

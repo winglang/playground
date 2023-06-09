@@ -348,7 +348,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                 <button
                                   disabled={isFirstStep}
                                   className={classNames(
-                                    "text-[#BDCECC] bg-[#334155] hover:bg-[#2AD5C1] hover:text-[#334155]",
+                                    "text-[#BDCECC] bg-slate-700 hover:bg-[#2AD5C1] hover:text-slate-700",
                                     "text-xs px-4 py-2 cursor-pointer border border-transparent",
                                     isFirstStep && "opacity-0"
                                   )}
@@ -370,7 +370,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                      <button
                                       className={classNames(
                                       "text-xs px-4 py-2 border border-transparent",
-                                        "bg-[#334155] text-[#2AD5C1] border-[#2AD5C1] cursor-not-allowed"
+                                        "bg-slate-700 text-[#2AD5C1] border-[#2AD5C1] cursor-not-allowed"
                                       )}
                                       disabled
                                     >
@@ -380,7 +380,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                     {!showTourLoading && (
                                       <button
                                         className={classNames(
-                                          "text-[#BDCECC] bg-[#334155] hover:bg-[#2AD5C1] hover:text-[#334155]",
+                                          "text-[#BDCECC] bg-slate-700 hover:bg-[#2AD5C1] hover:text-slate-700",
                                           "text-xs px-4 py-2 cursor-pointer border border-transparent",
                                         )}
                                         onClick={() => {
@@ -400,7 +400,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                 {!showWelcome && !isLastStep && (
                                     <button
                                     className={classNames(
-                                      "text-[#BDCECC] bg-[#334155] hover:bg-[#2AD5C1] hover:text-[#334155]",
+                                      "text-[#BDCECC] bg-slate-700 hover:bg-[#2AD5C1] hover:text-slate-700",
                                       "text-xs px-4 py-2 cursor-pointer border border-transparent",
                                     )}
                                     onClick={() => goToNextTutorial()}
@@ -410,7 +410,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                 {isLastStep && (
                                     <button
                                     className={classNames(
-                                      "text-[#BDCECC] bg-[#334155] hover:bg-[#2AD5C1] hover:text-[#334155]",
+                                      "text-[#BDCECC] bg-slate-700 hover:bg-[#2AD5C1] hover:text-slate-700",
                                       "text-xs px-4 py-2 cursor-pointer border border-transparent",
                                     )}
                                     onClick={() => setShowFinishModal(true)}
@@ -434,7 +434,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                           {currentStep?.solution && editorCode !== currentStep.solution &&
                             <button
                             className={classNames(
-                              "text-[#BDCECC] bg-[#293443] hover:bg-[#2AD5C1] hover:text-[#334155]",
+                              "text-[#BDCECC] bg-[#293443] hover:bg-[#2AD5C1] hover:text-slate-700",
                               "text-xs px-4 py-0.5 leading-none cursor-pointer",
                             )}
                             onClick={() => solveTutorial()}
@@ -445,7 +445,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                           {editorCode == currentStep?.solution && (
                             <button
                             className={classNames(
-                              "text-[#BDCECC] bg-[#293443] hover:bg-[#2AD5C1] hover:text-[#334155]",
+                              "text-[#BDCECC] bg-[#293443] hover:bg-[#2AD5C1] hover:text-slate-700",
                               "text-xs px-4 cursor-pointer",
                             )}
                             onClick={() => resetTutorial()}>
