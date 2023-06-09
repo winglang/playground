@@ -1,0 +1,24 @@
+export const CodeEditorSkeleton = () => {
+  return (
+    <div className='flex flex-col h-full w-full relative'>
+      <div className="absolute inset-0 overflow-hidden flex flex-col p-[33px] gap-[5px]">
+        <div className="flex gap-x-[25px] h-6">
+          <div className="w-6 bg-gray-700 rounded-sm shrink-0"/>
+          <div className="w-[110px] bg-gray-700 rounded-sm shrink-0"/>
+        </div>
+        <div className="flex gap-x-[25px] h-6">
+          <div className="w-6 bg-gray-700 rounded-sm shrink-0"/>
+          <div className="w-[0px] bg-gray-700 rounded-sm shrink-0"/>
+        </div>
+        <div className="flex gap-x-[25px] h-6">
+          <div className="w-6 bg-gray-700 rounded-sm shrink-0"/>
+          <div className="w-[300px] bg-gray-700 rounded-sm shrink-0"/>
+        </div>
+        <div className="flex gap-x-[25px] h-6">
+          <div className="w-6 bg-gray-700 rounded-sm shrink-0"/>
+          <div className="w-[0px] bg-gray-700 rounded-sm shrink-0"/>
+        </div>
+      </div>
+    </div>
+  );
+}

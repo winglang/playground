@@ -27,7 +27,7 @@ import ReactMarkdown from 'react-markdown'
 import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
 import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
 import { useExamples } from '@wing-playground/shared/src/use-examples.js';
-import { ProgressBar } from './ProgressBar.js';
+import { CodeEditorSkeleton } from './CodeEditorSkeleton.js';
 import classNames from 'classnames';
 
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
@@ -349,11 +349,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                 </div>
                             </div>
 
-                            <div className="w-full relative my-8">
-                              <div className={classNames("absolute z-10 top-0 left-0 bg-[#BDCECC] w-full h-[1.5px] -translate-y-1/2")}/>
+                            <div className="w-full relative my-6">
+                              <div className={classNames("absolute z-10 top-0 left-0 bg-gray-700 w-full h-[1.5px] -translate-y-1/2")}/>
                               <div
                                 className={classNames(
-                                  "absoulte z-20 top-0 left-0 bg-[#2AD5C1] h-[4px] -translate-y-1/2",
+                                  "absoulte z-20 top-0 left-0 bg-gray-700 h-[4px] -translate-y-1/2",
                                   "transition-all duration-300 ease-out",
                                   showWelcome && "opacity-0"
                                 )}
@@ -365,7 +365,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                               />
                             </div>
 
-                            <div className='text-white flex gap-4 items-center'>
+                            <div className='text-white flex gap-4 items-center pb-3'>
                                 <button
                                   disabled={isFirstStep}
                                   className={classNames(
@@ -377,11 +377,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                 >PREV</button>
 
                                 <div className="grow text-center items-center truncate">
-                                  <div className="flex gap-x-2 justify-center font-mono text-sm text-[#BDCECC] truncate">
-                                    <span className='truncate' title={currentStep?.name}>{currentStep?.name}</span>
-                                    <span className='font-semibold'>
-                                      {currentStepIndex + 1 }/{tutorials.length}
-                                    </span>
+                                  <div className="flex gap-x-2 justify-center font-mono text-sm text-gray-450 truncate">
+                                    <span className='truncate uppercase' title={currentStep?.name}>{currentStep?.name}</span>
+                                    <span>{currentStepIndex + 1 }/{tutorials.length}</span>
                                   </div>
                                 </div>
 
@@ -447,6 +445,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                     "grow ml-4 flex flex-col gap-2"
                   )}>
                   <div data-cueid="code" className='h-[40%] flex flex-col w-full overflow-hidden border border-gray-800 bg-slate-700/40'>
+                    {showWelcome &&  <CodeEditorSkeleton/>}
                     <div className={
                       classNames(
                         showWelcome && "opacity-0",
@@ -498,10 +497,15 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                     </div>
                   </div>
                   <div data-cueid="simulation" className={
-                    classNames(
-                      'flex flex-col grow basis-auto overflow-hidden border border-gray-800',
-                      'bg-slate-700/40'
-                    )}>
+                  classNames(
+                    'flex flex-col grow basis-auto overflow-hidden border border-gray-800',
+                    'bg-slate-700/40'
+                  )}>
+                    {showWelcome && (
+                      <div className="flex flex-col items-center justify-center h-full">
+                          <img src='empty_state.svg' className='h-[150px] p-10'/>
+                      </div>
+                    )}
                     {!showWelcome && loadingStatus == LoadingStatus.Completed && (
                       <TargetsView
                         targets={targetViews}
