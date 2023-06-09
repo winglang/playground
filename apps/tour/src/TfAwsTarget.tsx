@@ -274,7 +274,7 @@ export const TfAwsTarget = ({
 
 
   return (
-    <div className="w-full h-full relative bg-gray-900 p-1">
+    <div className="w-full h-full relative bg-gray-800 p-1">
       {loading && (
         <div className="absolute inset-0 bg-slate-600/50 z-20">
           <Loading status=""/>
