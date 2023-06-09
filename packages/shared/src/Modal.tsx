@@ -10,7 +10,7 @@ export function Modal({ onDownload, children, title, setModalVisibility }: Props
   return (
     <div id="defaultModal" aria-hidden="true" className="fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
       <div className="flex h-full">
-        <div className="flex h-full flex-col w-full bg-white rounded-lg shadow dark:bg-[#334155]">  
+        <div className="flex h-full flex-col w-full bg-white rounded-lg shadow dark:bg-slate-700">
           <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
             <div className="flex justify-between items-baseline">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -26,10 +26,10 @@ export function Modal({ onDownload, children, title, setModalVisibility }: Props
                 <span className="sr-only">Close modal</span>
             </button>
           </div>
-          
+
           <div className="flex flex-grow h-full p-6 space-y-6">
             <div className="flex flex-grow w-full h-full text-base leading-relaxed text-gray-500 dark:text-gray-400">
-              
+
               {children}
             </div>
           </div>

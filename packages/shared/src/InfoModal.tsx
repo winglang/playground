@@ -1,4 +1,4 @@
-import React, {FC, PropsWithChildren} from "react";
+import {FC, PropsWithChildren} from "react";
 import classNames from "classnames";
 
 export const InfoModal: FC<PropsWithChildren<{visible: boolean, onClose: () => void}>> = ({visible,onClose, children}) => {

@@ -132,7 +132,7 @@ const ItemsList = ({
 }) => {
 
   return (
-    <div className="grow flex flex-col border border-gray-900 rounded-lg overflow-hidden">
+    <div className="grow flex flex-col">
       <PanelHeader>
         <div className="space-x-1 grow">
           <span className="font-semibold">{title}</span>
@@ -274,20 +274,16 @@ export const TfAwsTarget = ({
 
 
   return (
-    <div className="bg-gray-700 w-full h-full p-2 relative">
+    <div className="w-full h-full relative bg-gray-800 p-[1px]">
       {loading && (
         <div className="absolute inset-0 bg-slate-600/50 z-20">
           <Loading status=""/>
         </div>
       )}
-      <div className={classNames(
-        "w-full h-full flex relative",
-        "border border-gray-800",
-        "rounded-lg overflow-hidden bg-gray-800 p-2 gap-2"
-        )}>
-        <div className="flex flex-col w-1/2 max-w-[20rem] gap-2">
+      <div className="w-full h-full flex relative gap-[1px]">
+        <div className="flex flex-col w-1/2 max-w-[20rem] gap-[1px]">
           <ItemsList
-            title="Terraform"
+            title="Resources"
             items={resources}
             selectedItem={selectedItem}
             loading={loading}
@@ -308,8 +304,7 @@ export const TfAwsTarget = ({
 
         <div className={
           classNames(
-            "flex flex-col flex-grow min-w-[15rem] max-w-[3/4] relative rounded-lg overflow-hidden",
-            "border border-gray-900"
+            "flex flex-col flex-grow min-w-[15rem] max-w-[3/4] relative"
         )}>
           {!selectedItem && (
             <div className="absolute inset-0 z-10 text-slate-500 bg-gray-750 grid place-items-center">

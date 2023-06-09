@@ -1,4 +1,7 @@
 import { Target } from "@wing-playground/shared/src/compiler/compiler";
+
+import tutorial00 from "./00-tutorial.md?raw";
+
 import code01 from "./01-code.w?raw";
 import solution01 from "./01-solution.w?raw";
 import tutorial01 from "./01-tutorial.md?raw";
@@ -34,8 +37,15 @@ export interface Tutorial {
 }
 
 export const tutorials = [
-  {
-    id: "1",
+      {
+        id: "0",
+        name:   "Welcome",
+        code: code01,
+        tutorial: tutorial00,
+        targets: ["simulator"],
+    },
+    {
+        id: "1",
         name:   "Create Queue",
         code:   code01,
         solution: solution01,
