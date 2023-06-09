@@ -45,6 +45,7 @@ const updateWing = async () => {
 
   console.log("Packing Wing CLI...")
   const winglangDir = require.resolve("winglang").replace(/\/dist\/index\.js$/, "");
+  const winglangCompilerDir = require.resolve("@winglang/compiler").replace(/\/dist\/index\.js$/, "");
   const wingDistDir = path.join(`${winglangDir}/dist_webpack`);
   await fs.rm(wingDistDir, { recursive: true, force: true });
   await fs.mkdir(wingDistDir, { recursive: true });
@@ -53,6 +54,7 @@ const updateWing = async () => {
   });
 
   console.log("Compressing Wing CLI...")
+  await fs.cp(`${winglangCompilerDir}/wingc.wasm`, path.join(winglangDir, "./wingc.wasm"))
   await tar.create({
     file: path.join(currentDir, "../dist/winglang-webpack.tgz"),
     C: wingDistDir,
@@ -87,7 +89,7 @@ const updateWing = async () => {
     P: true
   }, [".", "../package.json", "../.jsii"]);
 
-  return fs.cp(`${winglangDir}/wingc.wasm`, path.join(currentDir, "../dist/wingc.wasm"))
+  return fs.cp(`${winglangCompilerDir}/wingc.wasm`, path.join(currentDir, "../dist/wingc.wasm"))
 }
 
 const updateConsole = async () => {
