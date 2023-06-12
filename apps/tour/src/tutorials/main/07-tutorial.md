@@ -1,6 +1,6 @@
 # Tour Completed!
 
-Congratulations on finishing the Winglang Tour! 🎉
+## Congratulations on finishing the Winglang Tour! 🎉
 
 You're now one of us! 🥳
 
