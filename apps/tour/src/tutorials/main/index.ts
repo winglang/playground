@@ -97,8 +97,8 @@ export const tutorials = [
     {
       id: "7",
       name:   "Congrats",
-      code:   code07,
+      code:   "",
       tutorial: tutorial07,
       targets: ["simulator", Target.TFAWS],
-  },
+    },
 ]

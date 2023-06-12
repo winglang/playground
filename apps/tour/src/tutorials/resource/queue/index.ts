@@ -8,7 +8,6 @@ import tutorial02 from "./02-tutorial.md?raw";
 import code03 from "./03-code.w?raw";
 import tutorial03 from "./03-tutorial.md?raw";
 
-import code04 from "./04-code.w?raw";
 import tutorial04 from "./04-tutorial.md?raw";
 
 
@@ -47,7 +46,6 @@ export const tutorials = [
     {
       id: "4",
       name:   "Congrats",
-      code:   code04,
       tutorial: tutorial04,
       targets: ["simulator", Target.TFAWS],
     },

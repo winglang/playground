@@ -186,14 +186,15 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
       if (!currentStep) {
           return;
       }
-
-      editorRef.current?.setValue(currentStep.code);
+      if (currentStep.code) {
+        editorRef.current?.setValue(currentStep.code);
+      }
 
       analytics.track(`tutorial: step: ${currentStepId}: changed`, {
           step: currentStep
       })
-      setTargets(currentStep.targets ?? ["simulator"]);
       setCurrentTargetId(targetViews[0]?.title);
+      setTargets(currentStep.targets ?? ["simulator"]);
     }, [currentStep]);
 
     const downloadCompiledCode = async (target: Target) => {
@@ -283,7 +284,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
 
     useEffect(() => {
       setCurrentTargetId(targetViews[0]?.id);
-    }, [targetViews]);
+    }, [targetViews.length]);
 
     useEffect(() => {
       setCompilationItems([]);
@@ -322,7 +323,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                           'prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-prose-p:text-[#BDCECC]',
                                           'prose-pre:overflow-auto',
                                           'prose-a:text-sky-500',
-                                          'prose-h2:text-[20px] prose-h2:py-4 prose-h2:mt-0',
+                                          'prose-h2:text-[2px] prose-h2:py-4 prose-h2:mt-0',
                                           'prose-headings:text-3xl prose-headings:pb-8 prose-headings:text-[#BDCECC] prose-headings:font-bold')}>
                                             <ReactMarkdown
                                               children={step.tutorial ?? ""}
@@ -405,9 +406,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                     <button
                                     className={classNames(
                                       "text-[#BDCECC] bg-slate-700 hover:bg-[#2AD5C1] hover:text-slate-700",
-                                      "text-xs px-4 py-2 cursor-pointer border border-transparent",
+                                      "text-xs px-4 py-2 border border-transparent",
+                                      loadingStatus !== LoadingStatus.Completed && "cursor-not-allowed" || "cursor-pointer",
                                       isLastStep && "opacity-0"
                                     )}
+                                    disabled={loadingStatus !== LoadingStatus.Completed}
                                     onClick={() => goToNextTutorial()}
                                   >NEXT</button>
                                 )}

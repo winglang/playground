@@ -11,7 +11,6 @@ import tutorial03 from "./03-tutorial.md?raw";
 import code04 from "./04-code.w?raw";
 import tutorial04 from "./04-tutorial.md?raw";
 
-import code05 from "./05-code.w?raw";
 import tutorial05 from "./05-tutorial.md?raw";
 
 export interface Tutorial {
@@ -56,7 +55,6 @@ export const tutorials = [
     {
       id: "5",
       name:   "Congrats",
-      code:   code05,
       tutorial: tutorial05,
       targets: ["simulator", Target.TFAWS],
     },
