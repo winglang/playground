@@ -32,7 +32,7 @@ import tutorial07 from "./07-tutorial.md?raw";
 export interface Tutorial {
   id: string;
   name: string;
-  code: string;
+  code?: string;
   solution?: string;
   tutorial?: string;
   //TODO: change when "simulator" can be a Target too
@@ -97,7 +97,6 @@ export const tutorials = [
     {
       id: "7",
       name:   "Congrats",
-      code:   "",
       tutorial: tutorial07,
       targets: ["simulator", Target.TFAWS],
     },

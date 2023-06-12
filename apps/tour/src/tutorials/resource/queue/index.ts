@@ -10,17 +10,9 @@ import tutorial03 from "./03-tutorial.md?raw";
 
 import tutorial04 from "./04-tutorial.md?raw";
 
+import { Tutorial } from "../../main";
 
-export interface Tutorial {
-    id: string;
-    name: string;
-    code: string;
-    solution?: string;
-    tutorial?: string
-    targets?: Target[];
-}
-
-export const tutorials = [
+export const tutorials: Tutorial[] = [
     {
         id: "1",
         name:   "Queue Definition",
