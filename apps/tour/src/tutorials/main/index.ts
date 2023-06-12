@@ -36,7 +36,7 @@ export interface Tutorial {
   solution?: string;
   tutorial?: string;
   //TODO: change when "simulator" can be a Target too
-  targets: Target[] | string[];
+  targets?: Target[] | string[];
 }
 
 export const tutorials = [
