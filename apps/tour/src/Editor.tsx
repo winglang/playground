@@ -424,7 +424,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                     "grow ml-4 flex flex-col gap-2"
                   )}>
                   <div data-cueid="code" className='h-[40%] flex flex-col w-full overflow-hidden border border-gray-800 bg-slate-700/40'>
-                    {showWelcome &&  <CodeEditorSkeleton/>}
+                    {showWelcome &&  <CodeEditorSkeleton loading={showTourLoading}/>}
                     <div className={
                       classNames(
                         showWelcome && "opacity-0",
@@ -482,7 +482,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                   )}>
                     {showWelcome && (
                       <div className="flex flex-col items-center justify-center h-full">
-                          <img src='empty_state.svg' className='h-[150px] p-10'/>
+                          <img src='empty_state.svg' className={classNames('h-[150px] p-10', showTourLoading && "animate-pulse")}/>
                       </div>
                     )}
                     {!showWelcome && loadingStatus == LoadingStatus.Completed && (
