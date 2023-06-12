@@ -1,6 +1,6 @@
 # Congrats! You’re one of us now
 
-Congratulations on finishing the Winglang Tour! 🎉
+Congratulations on finishing the Topic Tour! 🎉
 
 You're now one of us! 🥳
 

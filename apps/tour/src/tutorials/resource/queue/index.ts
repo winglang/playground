@@ -43,5 +43,12 @@ export const tutorials = [
         code:   code03,
         tutorial: tutorial03,
         targets: ["simulator", Target.TFAWS],
-    }
+    },
+    {
+      id: "4",
+      name:   "Congrats",
+      code:   code04,
+      tutorial: tutorial04,
+      targets: ["simulator", Target.TFAWS],
+    },
 ]
