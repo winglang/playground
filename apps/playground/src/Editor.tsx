@@ -20,21 +20,25 @@ import { buildWorkerDefinition } from 'monaco-editor-workers';
 import Editor, { loader } from "@monaco-editor/react";
 import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
-import React, { createRef, useEffect, useState, useRef, useMemo } from 'react';
+import React, { createRef, useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { WebContainer } from '@webcontainer/api';
-import { Actions } from '@wing-playground/shared/src/Actions';
-import { Modal } from '@wing-playground/shared/src/Modal';
 import { Loading } from '@wing-playground/shared/src/Loading';
-import { FilePicker } from '@wing-playground/shared/src/FilePicker.js';
-import { CompilationResult, Compiler, Target } from '@wing-playground/shared/src/compiler/compiler';
-import { CompilationRequest} from '@wing-playground/shared/src/compiler/request';
-import { useExamples, Example } from '@wing-playground/shared/src/use-examples.js';
+import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
+import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
+
+import { useExamples } from '@wing-playground/shared/src/use-examples.js';
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
 import {installDependencies, ConsoleLayouts} from "@wing-playground/shared/src/containers";
 import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
 import {useAnalytics} from "@wing-playground/shared/src/analytics/use-analytics";
 import {RightResizableWidget} from "@wing-playground/shared/src/RightResizableWidget";
 import classNames from "classnames";
+
+import { SimulatorTarget } from "@wing-playground/shared/src/SimulatorTarget";
+import { TfAwsTarget } from '@wing-playground/shared/src/TfAwsTarget.js';
+import { TargetsView, TargetView } from "@wing-playground/shared/src/TargetsView.js";
+import { PanelHeader } from '@wing-playground/shared/src/PanelHeader';
+import { debounce } from 'lodash';
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
   (i) => JSON.parse(i.default)
@@ -60,23 +64,15 @@ export type EditorProps = {
 export const ReactMonacoEditor: React.FC<EditorProps> = ({
 }) => {
     const { examples,
-      currentExample, setCurrentExample,
-      languageContext, setLanguageContext,
+      currentExample,
+      languageContext,
     } = useExamples();
-    const defaultExample = examples[0];
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
     const ref = createRef<HTMLDivElement>();
     const refIframe = useRef(null);
     const [iframSrc, setIframeSrc] = useState("");
     const [loadingStatus, setLoadingStatus] = useState(LoadingStatus.Init);
-    const [modalVisibility, setModalVisibility] = useState(false);
     const { analytics } = useAnalytics({ name: 'playground', state: loadingStatus });
-
-    const compileEditorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
-    const [compileResult, setCompileResult] = useState<CompilationResult>();
-    const [compileError, setCompileError] = useState('');
-    const [compileExamples, setCompileExamples] = useState<Example[]>(examples);
-    const [compileExample, setCompileExample] = useState<Example>(defaultExample);
 
     const installConsole = async (containerRef: React.MutableRefObject<WebContainer>) => {
         const consoleUrl = await installDependencies(containerRef.current, ConsoleLayouts.Playground);
@@ -98,7 +94,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             version: wingPackageJson.version
         });
     }
-    const {isCompiling, evaluateCode, editorWillMount, editorDidMount} = useEditor({
+    const {
+      evaluateCode,
+      editorWillMount,
+      editorDidMount,
+    } = useEditor({
         editorRef,
         onLoadingStatusChange: setLoadingStatus,
         onLspError,
@@ -106,9 +106,33 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         languageContext,
         code: currentExample.value,
         compiler,
+        targets: [Target.TFAWS],
         editorOptions,
         shouldInitContainer: true,
     });
+
+    const [isCompiling, setIsCompiling] = useState(true);
+    const [compilationItems, setCompilationItems] = useState<CompilationItem[]>([]);
+    const [currentTargetId, setCurrentTargetId] = useState("simulator");
+
+    const retrieveCompilationFiles = useCallback(debounce(async (value: string, target: Target) => {
+      setIsCompiling(true);
+      const request = new CompilationRequest(value, target);
+      const result = await compiler.compile(request);
+      if (result.error) {
+        console.error('compilation failed', result.error.stderr);
+        setIsCompiling(false);
+        return;
+      }
+      setCompilationItems(result.files);
+      setIsCompiling(false);
+    }, 1000), [compiler]);
+
+    useEffect(() => {
+      setCompilationItems([]);
+      const value = editorRef.current?.getValue();
+      retrieveCompilationFiles(value || "", Target.TFAWS);
+    }, [editorRef.current?.getValue()]);
 
     useEffect(() => {
         if (ref.current != null) {
@@ -122,75 +146,36 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       editorRef.current?.setValue(examples.find(e => e.text === languageContext.file)!.value);
     }, [languageContext]);
 
-    const onRun = () => {
-      evaluateCode(editorRef.current?.getValue());
-    }
-
-    const onCompile = (target: Target) => {
-      return async (event: React.MouseEvent<HTMLElement>) => {
-        setModalVisibility(true);
-        try {
-          const result = await compiler.compile(new CompilationRequest(editorRef.current?.getValue()!, target));
-          if (result.error) {
-            setCompileError(`${result.error.stderr}\n${result.error.stdout}`);
-            return;
-          }
-          const examples = result.files.map((f, i) => ({ key: i + 1, text: f.name, value: f.contents }))
-          const example = examples[0];
-          setCompileExamples(examples);
-          setCompileExample(example);
-          setCompileResult(result)
-        } catch (err) {
-          setCompileError((err as any).toString());
-        }
+    const simulatorTarget: TargetView = useMemo(() => {
+      return {
+        id: "simulator",
+        title: "Simulator",
+        Target: () => <SimulatorTarget frameSrc={iframSrc} iframeRef={refIframe}/>
       }
-    }
+    }, [iframSrc, refIframe]);
 
-    const compileEditorDidMount = async (editor: any, monaco: any) => {
-      compileEditorRef.current = editor
-    }
-
-    const onDownload = () => {
-      if (!compileResult) {
-        return;
+    const tfAwsTarget: TargetView = useMemo(() => {
+      return {
+        id: Target.TFAWS,
+        title: "AWS/TERRAFORM",
+        Target: () => <TfAwsTarget
+          loading={isCompiling}
+          files={compilationItems}
+        />
       }
+    }, [isCompiling, compilationItems]);
 
-      const zipBlob = new Blob([new Uint8Array(compileResult!.zip.toBuffer())]);
-      const url = window.URL.createObjectURL(zipBlob);
-      const zipDownload = document.createElement("a");
-
-      zipDownload.href = url;
-      zipDownload.download = "wing.zip";
-      document.body.appendChild(zipDownload);
-      zipDownload.click();
-    }
-
-    useEffect(() => {
-      compileEditorRef.current?.setScrollTop(0);
-    }, [compileExample]);
-
-    useEffect(() => {
-      if (!modalVisibility) {
-        setCompileResult(undefined);
-        setCompileError('')
-      }
-    }, [modalVisibility]);
-
-    const options: monaco.editor.IStandaloneEditorConstructionOptions = {
-      minimap: { enabled: false },
-    };
+    const targetViews: TargetView[] = useMemo(() => {
+      return [simulatorTarget, tfAwsTarget];
+    }, [simulatorTarget, tfAwsTarget]);
 
     return (
       <div className='flex flex-col h-full'>
-        <div className='flex flex-row pt-2 px-2 h-14 justify-between items-baseline bg-[#56657A]'>
-          <FilePicker examples={examples} currentExample={currentExample} setCurrentExample={setCurrentExample} setLanguageContext={setLanguageContext} />
-          <Actions onRun={onRun} isRunDisabled={isCompiling} onTfAws={onCompile(Target.TFAWS)} onTfAzure={onCompile(Target.TFAzure)} onTfGcp={onCompile(Target.TFGCP)} />
-        </div>
-        <div className='flex grow'>
+        <div className='flex grow gap-2'>
           <RightResizableWidget className={
             classNames(
-              "border-slate-900 h-full",
-              "max-w-[50%] flex flex-col min-w-[10rem] min-h-[15rem] border-r border-b",
+              "border border-gray-800 h-full",
+              "max-w-[60%] flex flex-col min-w-[10rem] min-h-[15rem]",
               {
                 "w-[33%]": fontSize === 12,
                 "w-[38%]": fontSize === 14,
@@ -198,19 +183,24 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
               }
             )
           }>
-            <div className="bg-slate-700 border-b border-slate-900 px-2 py-1 flex justify-end">
-              <select
-                className="bg-slate-700 text-slate-250 h-7 px-2 text-xs cursor-pointer focus:outline-none"
-                value={fontSize}
-                onChange={(e) => setFontSize(parseInt(e.target.value))}
-              >
-                {fontSizes.map((size) => (
-                  <option key={size} value={size}>
-                    Font Size {size}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <PanelHeader>
+              <div className="flex">
+                <span>EDITOR</span>
+                <div className="grow"/>
+                <select
+                  className="bg-slate-700 text-slate-250 h-7 px-2 text-xs cursor-pointer focus:outline-none"
+                  value={fontSize}
+                  onChange={(e) => setFontSize(parseInt(e.target.value))}
+                >
+                  {fontSizes.map((size) => (
+                    <option key={size} value={size}>
+                      Font Size {size}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </PanelHeader>
+
             <Editor
               data-testid={"editor"}
               theme={"akkd-dark-plus"}
@@ -223,41 +213,16 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                 void evaluateCode(value);
             }}/>
           </RightResizableWidget>
-          <div className='grow h-full basis-auto'>
-          {loadingStatus != LoadingStatus.Completed ?
-            <Loading status={loadingStatus} /> :
-            <iframe
-              id='console'
-              className='w-full h-full basis-auto'
-              src={iframSrc}
-              allowFullScreen={true}
-              ref={refIframe}
-              ></iframe>}
+          <div className='grow h-full basis-auto border border-gray-800'>
+          {loadingStatus !== LoadingStatus.Completed && <Loading status={loadingStatus} /> }
+          {loadingStatus === LoadingStatus.Completed &&
+            <TargetsView
+              targets={targetViews}
+              currentTargetId={currentTargetId}
+              setCurrentTargetId={setCurrentTargetId}
+            />}
           </div>
         </div>
-        {modalVisibility && <Modal setModalVisibility={setModalVisibility} title='Compilation Output' onDownload={onDownload}>
-          {compileResult && <div className='flex flex-col w-full h-full'>
-              <div className="bg-[#56657A]">
-                <div className="flex">
-                  <FilePicker examples={compileExamples} currentExample={compileExample} setCurrentExample={setCompileExample} />
-                </div>
-              </div>
-              <div className='flex basis-[2/3] flex-grow h-full max-w-[2/3]'>
-                <Editor
-                  theme="akkd-dark-plus"
-                  path="source.js"
-                  language="js"
-                  options={Object.assign({}, options, { readOnly: true })}
-                  onMount={compileEditorDidMount}
-                  value={compileExample.value}
-                  />
-              </div>
-          </div>}
-          {!compileResult && !compileError && <div className="flex w-full justify-center items-center">
-            <Loading status={"Compiling..."} />
-          </div>}
-          <div><pre><code>{compileError}</code></pre></div>
-        </Modal>}
       </div>
     );
 };

@@ -36,15 +36,16 @@ import {useAnalytics} from "@wing-playground/shared/src/analytics/use-analytics"
 import {installDependencies, ConsoleLayouts} from "@wing-playground/shared/src/containers";
 import {CongratsModal} from "./CongratsModal";
 
-import {SimulatorTarget} from "@wing-playground/shared/src/SimulatorTarget";
+import { SimulatorTarget } from "@wing-playground/shared/src/SimulatorTarget";
+import { TfAwsTarget } from '@wing-playground/shared/src/TfAwsTarget.js';
 
-import {TargetsView, TargetView} from "./TargetsView";
+
+import { TargetsView, TargetView } from "@wing-playground/shared/src/TargetsView.js";
 import {PanelHeader} from "@wing-playground/shared/src/PanelHeader";
-import { TfAwsTarget } from './TfAwsTarget.js';
 import { debounce } from 'lodash';
-import { Header } from './Header.js';
 import { Loader } from '@wing-playground/shared/src/loader.js';
 import { tutorials as mainTutorials, Tutorial } from './tutorials/main';
+import { Header } from "@wing-playground/shared/src/Header";
 
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
@@ -325,7 +326,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                 <CongratsModal visible={showFinishModal} onClose={() => setShowFinishModal(false)}/>
                 <div className={
                   classNames(
-                    "flex flex-col bg-[#293443] z-10 w-[40%] px-[20px]",
+                    "flex flex-col bg-[#293443] w-[40%] px-[20px]",
                   )}>
                     <Header/>
                     <div className="flex-1 flex flex-col pt-[20px]">

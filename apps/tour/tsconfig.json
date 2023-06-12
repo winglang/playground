@@ -16,6 +16,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"],
+  "include": ["src", "../../packages/shared/src/TargetsView.tsx", "../../packages/shared/src/TfAwsTarget.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
