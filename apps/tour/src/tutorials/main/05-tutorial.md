@@ -8,7 +8,7 @@ q.addConsumer(inflight (m: str) => {
     b.put("latest.txt", m);
 });
 ```
-2. Invoke the cloud.Function in the simulator (with a payload).
+2. Invoke the **cloud.Function** in the simulator (with a payload).
 3. Find "Bucket: Last Message" in the simulator and download the file from it.
 
 🔍 Notice you can also see a preview of the file in the bucket.

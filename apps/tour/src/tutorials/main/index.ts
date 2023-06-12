@@ -26,6 +26,9 @@ import code06 from "./06-code.w?raw";
 // import solution06 from "./06-solution.w?raw";
 import tutorial06 from "./06-tutorial.md?raw";
 
+import code07 from "./07-code.w?raw";
+import tutorial07 from "./07-tutorial.md?raw";
+
 export interface Tutorial {
   id: string;
   name: string;
@@ -40,9 +43,8 @@ export const tutorials = [
       {
         id: "0",
         name:   "Welcome",
-        code: code01,
+        code:   code01,
         tutorial: tutorial00,
-        targets: ["simulator"],
     },
     {
         id: "1",
@@ -92,4 +94,11 @@ export const tutorials = [
         tutorial: tutorial06,
         targets: [Target.TFAWS, "simulator"],
     },
+    {
+      id: "7",
+      name:   "Congrats",
+      code:   code07,
+      tutorial: tutorial07,
+      targets: ["simulator", Target.TFAWS],
+  },
 ]
