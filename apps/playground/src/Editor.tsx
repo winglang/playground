@@ -214,7 +214,16 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             }}/>
           </RightResizableWidget>
           <div className='grow h-full basis-auto border border-gray-800'>
-          {loadingStatus !== LoadingStatus.Completed && <Loading status={loadingStatus} /> }
+          {loadingStatus !== LoadingStatus.Completed &&
+            <div className="flex flex-col h-full relative">
+              <div className='absolute inset-0 z-10'>
+                <Loading status={loadingStatus} />
+              </div>
+              <div className="flex flex-col items-center justify-center h-full animate-pulse">
+                <img src='empty_state.svg' className='h-[150px] p-10'/>
+              </div>
+            </div>
+          }
           {loadingStatus === LoadingStatus.Completed &&
             <TargetsView
               targets={targetViews}
