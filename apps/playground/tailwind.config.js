@@ -65,7 +65,7 @@ module.exports = {
   plugins: [require("@tailwindcss/typography")],
   theme: {
     fontFamily: {
-      sans: "IBM Plex Sans",
+      sans: ["IBM Plex Sans"],
     },
     extend: {
       colors: {
