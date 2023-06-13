@@ -2,15 +2,29 @@ import { useEffect, useState } from "react";
 import { Header as GlobalHeader } from "@wing-playground/shared/src/Header";
 
 export function Header() {
-  const [stars, setStars] = useState('908');
+  const [stars, setStars] = useState(0);
+  const [watchersCount, setWatchersCount] = useState(0);
+
   useEffect(() => {
     const getStarsCount = async () => {
       const res = await fetch('https://api.github.com/repos/winglang/wing');
       const data = await res.json();
-      setStars(data.watchers_count);
+      setWatchersCount(data.watchers_count);
     };
     getStarsCount();
   }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const random = Math.floor(Math.random() * (50 - 20 + 1) + 20);
+      setStars((prevStars) => Math.min(prevStars + random, watchersCount));
+    }, 20);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [watchersCount]);
+
   return <div className="flex">
   <div className="flex justify-between w-full">
     <GlobalHeader />
