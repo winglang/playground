@@ -1,6 +1,10 @@
-# Push a message to the queue
+# Push a Message to the Queue
 
-1. In the Wing Simulator, **click on the resource in the center named "cloud.Queue"**. An interaction panel will appear on the right hand side.
-2. Under **Push Message**, type in a message and click **Send**.
+Begin by interacting with the Wing Simulator.
 
-🔍 Notice how the **Approx size** of the queue has changed.
+**Click**  on the centrally located resource named `cloud.Queue`. This action will cause an interaction panel to appear on the right-hand side. 
+
+Proceed to the **Push Message** section, enter a message, and then click **Push**.
+
+🔍 Pay attention to how the **Approx size** of the queue changes.
+
