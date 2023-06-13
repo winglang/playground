@@ -88,9 +88,9 @@ const FileRow = ({title, description, icon, selected, onClick, className}: {
         className={classNames(
           "flex items-center w-full px-4 py-1",
           "text-left text-sm font-medium leading-5",
-          "hover:bg-slate-600 focus:bg-slate-600 focus:outline-none",
-          selected && "bg-slate-600 text-white",
-          !selected && "text-slate-300",
+          "hover:bg-slate-200 focus:bg-slate-200 dark:hover:bg-slate-600 dark:focus:bg-slate-600 focus:outline-none",
+          selected && "bg-slate-200 text-slate-700 dark:bg-slate-600 dark:text-white",
+          !selected && "dtext-slate-600 ark:text-slate-300",
           className,
         )}
         onClick={onClick}
@@ -135,18 +135,18 @@ const ItemsList = ({
     <div className="grow flex flex-col">
       <PanelHeader>
         <div className="space-x-1 grow">
-          <span className="font-semibold text-xs capitalize text-slate-300">{title}</span>
+          <span className="font-semibold text-xs capitalize text-slate-900 dark:text-slate-300">{title}</span>
           <span>({items?.length || 0})</span>
         </div>
         <div>
           {actions}
         </div>
       </PanelHeader>
-      <div className="flex flex-col grow relative bg-gray-750 border-t-[0.5px] border-gray-800">
+      <div className="flex flex-col grow relative bg-gray-100 dark:bg-gray-750 border-t-[0.5px] border-gray-800">
         <div className="absolute inset-0 overflow-y-auto">
           <div className="grow">
             {items?.length === 0 && (
-              <div className="px-2 py-2 text-sm text-slate-500 text-center">
+              <div className="px-2 py-2 text-sm text-slate-700 dark:text-slate-500 text-center">
                 {placeholder}
               </div>
             )}
@@ -156,7 +156,7 @@ const ItemsList = ({
               return (
                 <>
                 {group && item.description !== prev?.description && (
-                  <div className="pl-6 pr-2 py-1 text-xs text-slate-300 bg-slate-700 border-b border-slate-800">
+                  <div className="pl-6 pr-2 py-1 text-xs text-slate-800 bg-slate-300 dark:text-slate-300 dark:bg-slate-700 border-b border-slate-800">
                     {item.description}
                   </div>
                 )}
@@ -274,9 +274,9 @@ export const TfAwsTarget = ({
 
 
   return (
-    <div className="w-full h-full relative bg-gray-800">
+    <div className="w-full h-full relative bg-gray-300 dark:bg-gray-800">
       {loading && (
-        <div className="absolute inset-0 bg-slate-600/50 z-20">
+        <div className="absolute inset-0 bg-slate-300/50 dark:bg-slate-600/50 z-20">
           <Loading status=""/>
         </div>
       )}
@@ -307,13 +307,13 @@ export const TfAwsTarget = ({
             "flex flex-col flex-grow min-w-[15rem] max-w-[3/4] relative"
         )}>
           {!selectedItem && (
-            <div className="absolute inset-0 z-10 text-slate-500 bg-gray-750 grid place-items-center">
+            <div className="absolute inset-0 z-10 text-slate-800 bg-gray-300 dark:text-slate-500 dark:bg-gray-750 grid place-items-center">
               <div>Select a resource or asset to view</div>
             </div>
           )}
           <Editor
             key={selectedItem?.id}
-            theme="akkd-dark-plus"
+            theme="akkd-light-plus"
             path="source.js"
             language="js"
             options={Object.assign({}, options, { readOnly: true })}
