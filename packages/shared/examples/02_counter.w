@@ -10,7 +10,7 @@ let queue = new cloud.Queue();
 // implement it.
 let counter = new cloud.Counter();
 
-queue.addConsumer(inflight (message: str) => {
+queue.setConsumer(inflight (message: str) => {
     // Each time the queue receives a message,
     // it increments the counter and puts a
     // file in the bucket using the counter value
