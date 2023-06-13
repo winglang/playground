@@ -323,8 +323,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                           'prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-prose-p:text-[#BDCECC]',
                                           'prose-pre:overflow-auto',
                                           'prose-a:text-sky-500',
-                                          'prose-h2:text-[2px] prose-h2:py-4 prose-h2:mt-0',
-                                          'prose-headings:text-3xl prose-headings:pb-8 prose-headings:text-[#BDCECC] prose-headings:font-bold')}>
+                                          'prose-h3:text-xl prose-h3:pb-4 prose-h3:pt-4 prose-headings:font-sans prose-h3:font-bold',
+                                          'prose-h4:text-xl prose-h4:pb-4 prose-h4:pt-0 prose-headings:font-sans prose-h4:font-bold prose-h4:pt-0',
+                                          'prose-h1:text-3xl prose-headings:pb-8 prose-headings:text-[#BDCECC] prose-h1:font-bold',
+                                          )}>
                                             <ReactMarkdown
                                               children={step.tutorial ?? ""}
                                               className={classNames("text-xl")}

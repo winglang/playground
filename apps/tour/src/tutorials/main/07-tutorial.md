@@ -1,13 +1,20 @@
-# Congrats! You’re one of us now
+# Congrats! You’re one of us now 🎉
 
-Congratulations on finishing the Winglang Tour! 🎉
+You can continute learning Wing using one of these resources.
+#### Interactive Tutorials 
 
-You're now one of us! 🥳
+[Learn about Bucket](/bucket)
 
-Now you can:
+[Introduction to Counter](/counter)
 
-**Learn more**: Continue expanding your Winglang knowledge by exploring our [documentation](https://docs.winglang.io/getting-started).
+[Working with Queue](/queue)
 
-**Try the playground**: Put your skills to the test and have fun experimenting in the [Wing playground](https://playground.winglang.io).
+[The Topic Resource](/topic)
 
-Keep up the great work and enjoy your Winglang journey! 🚀
+### Documentation
+
+[Get started](https://docs.winglang.io/getting-started) on a new project or brush up for your existing Wing code.
+
+### Playground
+
+Put your skills to the test using the [playground](https://docs.winglang.io/getting-started).

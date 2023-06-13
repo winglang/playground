@@ -1,7 +1,7 @@
-# Let's add the first cloud service to our app
+# Creating a Queue
 
-Here is an empty Wing source code file. 
-The first line, "bring cloud", lets us access resources from the Wing standard library.
+In the Wing code editor on the right, you'll find an empty source file.
+The initial statement, "bring cloud", provides us access to resources from the Wing standard library.
 
-1. **Uncomment line 3**. A **queue** will appear in the simulator to the right. 
-2. Click **Next** to continue
+**Uncomment line 3**. Once done, a **queue** will appear in the simulator located at the bottom-right section of this page.
+
