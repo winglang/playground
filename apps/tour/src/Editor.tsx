@@ -363,7 +363,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                             <div className='text-white flex gap-4 items-center pb-2'>
                                 <Button
                                   invisible={isLastStep}
-                                  onClick={() => goToNextTutorial()}
+                                  onClick={() => goToPreviousTutorial()}
                                 >
                                   PREV
                                 </Button>
