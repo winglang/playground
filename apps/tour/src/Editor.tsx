@@ -45,6 +45,7 @@ import { debounce } from 'lodash';
 import { Loader } from '@wing-playground/shared/src/loader.js';
 import { tutorials as mainTutorials, Tutorial } from './tutorials/main';
 import { Header } from "@wing-playground/shared/src/Header";
+import { Button } from "@wing-playground/shared/src/Button";
 
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
@@ -297,12 +298,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
 
     return (
         <>
-          <div className='w-full flex flex-col grow p-6 bg-[#293443]'>
+          <div className='w-full flex flex-col grow p-6 bg-slate-100 dark:bg-[#293443]'>
             <div className='flex grow relative'>
-                <div className={
-                  classNames(
-                    "flex flex-col bg-[#293443] w-[40%] px-[20px]",
-                  )}>
+                <div className="flex flex-col w-[40%] px-[20px]">
                     <Header/>
                     <div className="flex-1 flex flex-col pt-[20px]">
                         <div data-cueid="instructions" className="grow flex flex-col">
@@ -320,13 +318,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                           <div
                                           className={classNames(
                                           'font-sans',
-                                          'prose-lg prose-invert prose-p:leading-6 text-[#BDCECC] prose-ol:list-decimal',
-                                          'prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-prose-p:text-[#BDCECC]',
+                                          'prose-lg prose-invert prose-p:leading-6 text-slate-700 dark:text-[#BDCECC] prose-ol:list-decimal',
+                                          'prose-pre:bg-slate-300 dark:prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-prose-p:text-slate-700 dark:prose-ol:my-prose-p:text-[#BDCECC]',
                                           'prose-pre:overflow-auto',
-                                          'prose-a:text-sky-500',
+                                          'prose-a:text-sky-700 dark:prose-a:text-sky-300',
                                           'prose-h3:text-xl prose-h3:pb-4 prose-h3:pt-4 prose-headings:font-sans prose-h3:font-bold',
-                                          'prose-h4:text-xl prose-h4:pb-4 prose-h4:pt-0 prose-headings:font-sans prose-h4:font-bold prose-h4:pt-0',
-                                          'prose-h1:text-3xl prose-headings:pb-8 prose-headings:text-[#BDCECC] prose-h1:font-bold',
+                                          'prose-h4:text-xl prose-h4:pb-4 prose-h4:pt-0 prose-headings:font-sans prose-h4:font-bold',
+                                          'prose-h1:text-3xl prose-headings:pb-8 prose-headings:text-slate-700 dark:prose-headings:text-[#BDCECC] prose-h1:font-bold',
                                           )}>
                                             <ReactMarkdown
                                               children={step.tutorial ?? ""}
@@ -340,10 +338,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                             </div>
 
                             <div className="w-full relative my-6">
-                              <div className={classNames("absolute top-0 left-0 bg-gray-650 w-full h-[1.5px] -translate-y-1/2")}/>
+                              <div className={classNames("absolute top-0 left-0 bg-gray-400 dark:bg-gray-650 w-full h-[1.5px] -translate-y-1/2")}/>
                               <div
                                 className={classNames(
-                                  "absoulte z-10 top-0 left-0 bg-gray-650 h-[4px] -translate-y-1/2",
+                                  "absoulte z-10 top-0 left-0 bg-gray-400 dark:bg-gray-650 h-[4px] -translate-y-1/2",
                                   "transition-all duration-300 ease-out"
                                 )}
                                 style={
@@ -355,18 +353,15 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                             </div>
 
                             <div className='text-white flex gap-4 items-center pb-2'>
-                                <button
-                                  disabled={isFirstStep}
-                                  className={classNames(
-                                    "text-[#BDCECC] bg-slate-700 hover:bg-[#2AD5C1] hover:text-slate-700",
-                                    "text-xs px-4 py-2 cursor-pointer border border-transparent",
-                                    isFirstStep && "opacity-0"
-                                  )}
-                                  onClick={() => goToPreviousTutorial()}
-                                >PREV</button>
+                                <Button
+                                  invisible={isLastStep}
+                                  onClick={() => goToNextTutorial()}
+                                >
+                                  PREV
+                                </Button>
 
                                 <div className="grow text-center items-center truncate">
-                                  <div className="flex gap-x-2 justify-center font-mono text-sm text-gray-450 truncate">
+                                  <div className="flex gap-x-2 justify-center font-mono text-sm text-gray-700 dark:text-gray-450 truncate">
                                     <span className='truncate uppercase' title={currentStep?.name}>{currentStep?.name}</span>
                                     <span>{currentStepIndex + 1 }/{tutorials.length}</span>
                                   </div>
@@ -386,11 +381,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                     </button>
                                     )}
                                     {!showTourLoading && (
-                                      <button
-                                        className={classNames(
-                                          "text-[#BDCECC] bg-slate-700 hover:bg-[#2AD5C1] hover:text-slate-700",
-                                          "text-xs px-4 py-2 cursor-pointer border border-transparent",
-                                        )}
+                                      <Button
+                                        invisible={isLastStep}
                                         onClick={() => {
                                           if (loadingStatus !== LoadingStatus.Completed) {
                                             setShowTourLoading(true);
@@ -398,34 +390,26 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                             goToNextTutorial();
                                           }
                                         }}
-                                      >
-                                       START
-                                      </button>
+                                      >START</Button>
                                     )}
                                   </>
                                 )}
 
                                 {!showWelcome && (
-                                    <button
-                                    className={classNames(
-                                      "text-[#BDCECC] bg-slate-700 hover:bg-[#2AD5C1] hover:text-slate-700",
-                                      "text-xs px-4 py-2 border border-transparent",
-                                      loadingStatus !== LoadingStatus.Completed && "cursor-not-allowed" || "cursor-pointer",
-                                      isLastStep && "opacity-0"
-                                    )}
-                                    disabled={loadingStatus !== LoadingStatus.Completed}
-                                    onClick={() => goToNextTutorial()}
-                                  >NEXT</button>
+                                    <Button
+                                      invisible={isLastStep}
+                                      disabled={loadingStatus !== LoadingStatus.Completed}
+                                      onClick={() => goToNextTutorial()}
+                                    >
+                                      PREV
+                                    </Button>
                                 )}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className={
-                  classNames(
-                    "grow ml-4 flex flex-col gap-2"
-                  )}>
+                <div className="grow ml-4 flex flex-col gap-2">
                   <div data-cueid="code" className='h-[40%] flex flex-col w-full overflow-hidden border border-gray-800 bg-slate-700/40'>
                     {showWelcome &&  <CodeEditorSkeleton loading={showTourLoading}/>}
                     <div className={
@@ -464,7 +448,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                         <div className="absolute inset-0 overflow-hidden">
                           <Editor
                             data-testid={"editor"}
-                            theme={"akkd-dark-plus"}
+                            theme={"akkd-light-plus"}
                             options={editorOptions}
                             path={languageContext.path}
                             language={languageContext.language}

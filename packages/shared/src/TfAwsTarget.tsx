@@ -90,7 +90,7 @@ const FileRow = ({title, description, icon, selected, onClick, className}: {
           "text-left text-sm font-medium leading-5",
           "hover:bg-slate-600 focus:bg-slate-600 focus:outline-none",
           selected && "bg-slate-600 text-white",
-          !selected && "text-slate-200",
+          !selected && "text-slate-300",
           className,
         )}
         onClick={onClick}
@@ -135,14 +135,14 @@ const ItemsList = ({
     <div className="grow flex flex-col">
       <PanelHeader>
         <div className="space-x-1 grow">
-          <span className="font-semibold">{title}</span>
+          <span className="font-semibold text-xs capitalize text-slate-300">{title}</span>
           <span>({items?.length || 0})</span>
         </div>
         <div>
           {actions}
         </div>
       </PanelHeader>
-      <div className="flex flex-col grow relative bg-gray-750">
+      <div className="flex flex-col grow relative bg-gray-750 border-t-[0.5px] border-gray-800">
         <div className="absolute inset-0 overflow-y-auto">
           <div className="grow">
             {items?.length === 0 && (
@@ -156,7 +156,7 @@ const ItemsList = ({
               return (
                 <>
                 {group && item.description !== prev?.description && (
-                  <div className="px-2 py-1 text-xs text-slate-300 bg-slate-700 border-b border-slate-800">
+                  <div className="pl-6 pr-2 py-1 text-xs text-slate-300 bg-slate-700 border-b border-slate-800">
                     {item.description}
                   </div>
                 )}
@@ -169,7 +169,7 @@ const ItemsList = ({
                     onClick={() => onClick(item)}
                     className={
                       classNames(
-                        "border-b",
+                        "border-b pl-8",
                         item.description !== next?.description ? "border-slate-800" : "border-slate-700",
                       )
                     }
@@ -274,7 +274,7 @@ export const TfAwsTarget = ({
 
 
   return (
-    <div className="w-full h-full relative bg-gray-800 p-[1px]">
+    <div className="w-full h-full relative bg-gray-800">
       {loading && (
         <div className="absolute inset-0 bg-slate-600/50 z-20">
           <Loading status=""/>
