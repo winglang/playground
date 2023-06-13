@@ -46,6 +46,8 @@ import { Loader } from '@wing-playground/shared/src/loader.js';
 import { tutorials as mainTutorials, Tutorial } from './tutorials/main';
 import { Header } from "@wing-playground/shared/src/Header";
 import { Button } from "@wing-playground/shared/src/Button";
+import { useTheme, currentTheme } from "@wing-playground/shared/src/theme-provider";
+import { ConsoleEmptyStateIcon } from "@wing-playground/shared/src/ConsoleEmptyStateIcon.js";
 
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
@@ -80,6 +82,12 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
     const [editorCode, setEditorCode] = useState("");
     const [downloadInProgress, setDownloadInProgress] = useState(false);
     const { analytics } = useAnalytics({ name: 'tour', state: loadingStatus });
+
+    const { theme } = useTheme();
+    const selectedTheme = useMemo(() => {
+      return currentTheme();
+    }, []);
+
 
     const installConsole = async (containerRef: React.MutableRefObject<WebContainer>) => {
         const consoleUrl = await installDependencies(containerRef.current, ConsoleLayouts.Tour);
@@ -338,7 +346,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                             </div>
 
                             <div className="w-full relative my-6">
-                              <div className={classNames("absolute top-0 left-0 bg-gray-400 dark:bg-gray-650 w-full h-[1.5px] -translate-y-1/2")}/>
+                              <div className={classNames("absolute top-0 left-0 bg-gray-200 dark:bg-gray-650 w-full h-[1.5px] -translate-y-1/2")}/>
                               <div
                                 className={classNames(
                                   "absoulte z-10 top-0 left-0 bg-gray-400 dark:bg-gray-650 h-[4px] -translate-y-1/2",
@@ -373,7 +381,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                      <button
                                       className={classNames(
                                       "text-xs px-4 py-2 border border-transparent",
-                                        "bg-slate-700 text-[#2AD5C1] border-[#2AD5C1] cursor-not-allowed"
+                                        "text-slate-600 bg-slate-200 dark:bg-slate-700 dark:text-[#2AD5C1] border-[#2AD5C1] cursor-not-allowed"
                                       )}
                                       disabled
                                     >
@@ -410,7 +418,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                 </div>
 
                 <div className="grow ml-4 flex flex-col gap-2">
-                  <div data-cueid="code" className='h-[40%] flex flex-col w-full overflow-hidden border border-gray-800 bg-slate-700/40'>
+                  <div data-cueid="code" className='h-[40%] flex flex-col w-full overflow-hidden border border-gray-800 bg-slate-200 dark:bg-slate-700/40'>
                     {showWelcome &&  <CodeEditorSkeleton loading={showTourLoading}/>}
                     <div className={
                       classNames(
@@ -448,7 +456,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                         <div className="absolute inset-0 overflow-hidden">
                           <Editor
                             data-testid={"editor"}
-                            theme={"akkd-light-plus"}
+                            theme={selectedTheme === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
                             options={editorOptions}
                             path={languageContext.path}
                             language={languageContext.language}
@@ -465,11 +473,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                   <div data-cueid="simulation" className={
                   classNames(
                     'flex flex-col grow basis-auto overflow-hidden border border-gray-800',
-                    'bg-slate-700/40'
+                    'bg-slate-200 dark:bg-slate-700/40'
                   )}>
                     {showWelcome && (
                       <div className="flex flex-col items-center justify-center h-full">
-                          <img src='empty_state.svg' className={classNames('h-[150px] p-10', showTourLoading && "animate-pulse")}/>
+                          <ConsoleEmptyStateIcon className={classNames('h-[150px] p-10 text-slate-600 dark:text-#394150', showTourLoading && "animate-pulse")}/>
                       </div>
                     )}
                     {!showWelcome && loadingStatus == LoadingStatus.Completed && (

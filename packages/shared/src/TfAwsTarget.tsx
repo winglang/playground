@@ -21,6 +21,7 @@ import { CompilationItem } from "@wing-playground/shared/src/compiler/compiler";
 import { Loading } from "@wing-playground/shared/src/Loading";
 import { PanelHeader } from "@wing-playground/shared/src/PanelHeader";
 import { Cog8ToothIcon, DocumentIcon } from "@heroicons/react/24/outline";
+import { useTheme, currentTheme } from "@wing-playground/shared/src/theme-provider";
 
 const getResourceName = (type: string) => {
   switch (type) {
@@ -200,6 +201,11 @@ export const TfAwsTarget = ({
   const compileEditorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
   const [selectedItem, setSelectedItem] = useState<Item | undefined>();
 
+  const { theme } = useTheme();
+  const selectedTheme = useMemo(() => {
+    return currentTheme();
+  }, []);
+
   const resources: Item[] = useMemo(() => {
     if (!files) {
       return [];
@@ -313,7 +319,7 @@ export const TfAwsTarget = ({
           )}
           <Editor
             key={selectedItem?.id}
-            theme="akkd-light-plus"
+            theme={selectedTheme === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
             path="source.js"
             language="js"
             options={Object.assign({}, options, { readOnly: true })}
