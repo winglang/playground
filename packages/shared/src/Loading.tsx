@@ -14,5 +14,4 @@ export function Loading({ status }: LoadingProps) {
       <span className="pl-[5px]">{status}</span>
     </div>
   </div>
-  
 }

@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import { createRef, ReactNode, useState } from "react";
+
 export interface RightResizableWidgetProps {
   className?: string;
   children?: ReactNode | undefined;
