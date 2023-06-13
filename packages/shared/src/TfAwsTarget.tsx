@@ -21,7 +21,7 @@ import { CompilationItem } from "@wing-playground/shared/src/compiler/compiler";
 import { Loading } from "@wing-playground/shared/src/Loading";
 import { PanelHeader } from "@wing-playground/shared/src/PanelHeader";
 import { Cog8ToothIcon, DocumentIcon } from "@heroicons/react/24/outline";
-import { useTheme, currentTheme } from "@wing-playground/shared/src/theme-provider";
+import { useTheme, getCurrentTheme } from "@wing-playground/shared/src/theme-provider";
 
 const getResourceName = (type: string) => {
   switch (type) {
@@ -202,8 +202,8 @@ export const TfAwsTarget = ({
   const [selectedItem, setSelectedItem] = useState<Item | undefined>();
 
   const { theme } = useTheme();
-  const selectedTheme = useMemo(() => {
-    return currentTheme();
+  const currentTheme = useMemo(() => {
+    return getCurrentTheme();
   }, []);
 
   const resources: Item[] = useMemo(() => {
@@ -319,7 +319,7 @@ export const TfAwsTarget = ({
           )}
           <Editor
             key={selectedItem?.id}
-            theme={selectedTheme === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
+            theme={currentTheme === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
             path="source.js"
             language="js"
             options={Object.assign({}, options, { readOnly: true })}

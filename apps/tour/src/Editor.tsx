@@ -46,8 +46,9 @@ import { Loader } from '@wing-playground/shared/src/loader.js';
 import { tutorials as mainTutorials, Tutorial } from './tutorials/main';
 import { Header } from "@wing-playground/shared/src/Header";
 import { Button } from "@wing-playground/shared/src/Button";
-import { useTheme, currentTheme } from "@wing-playground/shared/src/theme-provider";
+import { useTheme, getCurrentTheme } from "@wing-playground/shared/src/theme-provider";
 import { ConsoleEmptyStateIcon } from "@wing-playground/shared/src/ConsoleEmptyStateIcon.js";
+import { MoonIcon, SunIcon } from '@heroicons/react/24/outline';
 
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
@@ -84,8 +85,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
     const { analytics } = useAnalytics({ name: 'tour', state: loadingStatus });
 
     const { theme } = useTheme();
-    const selectedTheme = useMemo(() => {
-      return currentTheme();
+    const currentTheme = useMemo(() => {
+      return getCurrentTheme();
     }, []);
 
 
@@ -309,7 +310,18 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
           <div className='w-full flex flex-col grow p-6 bg-slate-100 dark:bg-[#293443]'>
             <div className='flex grow relative'>
                 <div className="flex flex-col w-[40%] px-[20px]">
-                    <Header/>
+                    <div className='flex items-center'>
+                      <Header/>
+                      <div className='grow'/>
+                      <button className='rounded text-white bg-slate-400 dark:bg-slate-700 p-1' onClick={() => {
+                        const nextTheme = currentTheme === "light" ? "dark" : "light";
+                        localStorage.setItem("theme", nextTheme);
+                        window.location.reload();
+                      }}>
+                        { currentTheme === "light" && <SunIcon className='w-5 h-5'/> }
+                        { currentTheme === "dark" && <MoonIcon className='w-5 h-5'/> }
+                      </button>
+                    </div>
                     <div className="flex-1 flex flex-col pt-[20px]">
                         <div data-cueid="instructions" className="grow flex flex-col">
                             <div className='grow flex flex-col'>
@@ -362,7 +374,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
 
                             <div className='text-white flex gap-4 items-center pb-2'>
                                 <Button
-                                  invisible={isLastStep}
+                                  invisible={isFirstStep}
                                   onClick={() => goToPreviousTutorial()}
                                 >
                                   PREV
@@ -456,7 +468,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                         <div className="absolute inset-0 overflow-hidden">
                           <Editor
                             data-testid={"editor"}
-                            theme={selectedTheme === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
+                            theme={currentTheme === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
                             options={editorOptions}
                             path={languageContext.path}
                             language={languageContext.language}

@@ -7,10 +7,11 @@ import { tutorials as counterTutorial } from './tutorials/resource/counter';
 import { tutorials as topicTutorial } from './tutorials/resource/topic';
 import { tutorials as queueTutorial } from './tutorials/resource/queue';
 
-import { ThemeProvider } from "@wing-playground/shared/src/theme-provider";
+import { Mode, ThemeProvider } from "@wing-playground/shared/src/theme-provider";
 
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import classNames from 'classnames';
+import { useMemo } from 'react';
 
 const tutorialRoutes = [
   {
@@ -32,9 +33,11 @@ const tutorialRoutes = [
 ];
 
 function AppView({ tutorials }: { tutorials: Tutorial[] }) {
-  const themeMode = "light";
+  const themeMode = useMemo(() => {
+   return localStorage.getItem('theme') || 'dark';
+  }, [localStorage]);
   return (
-    <ThemeProvider mode={themeMode}>
+    <ThemeProvider mode={themeMode as Mode}>
       <div className={classNames("max-h-full h-full flex flex-col")}>
         <ReactMonacoEditor tutorials={tutorials} />
         {/* { isChrome() ? <ReactMonacoEditor tutorials={tutorials} /> :

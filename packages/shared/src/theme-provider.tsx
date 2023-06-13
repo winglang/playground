@@ -132,7 +132,7 @@ export const ThemeProvider = ({
 
 export const useTheme = () => useContext(ThemeContext);
 
-export const currentTheme = () => {
+export const getCurrentTheme = () => {
   const localThemeObject = localStorage.getItem(localStorageThemeKey);
   if (!localThemeObject) {
     return "light";
