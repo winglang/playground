@@ -143,7 +143,7 @@ new cloud.Function(inflight (_: str) => {
         {
           "name": "example-app",
           "dependencies": {
-            
+
           },
           "scripts": {
             "test": "node ./node_modules/winglang/dist/index.js test test.w",

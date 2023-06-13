@@ -95,7 +95,7 @@ export const useEditor = ({
                 }
                 startLsp({ onError: onLspError});
                 onLoadingStatusChange(LoadingStatus.Eval)
-                void evaluateCode(undefined);
+                void evaluateCode("");
             });
         }
     };

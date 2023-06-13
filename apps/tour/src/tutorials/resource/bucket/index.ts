@@ -11,17 +11,11 @@ import tutorial03 from "./03-tutorial.md?raw";
 import code04 from "./04-code.w?raw";
 import tutorial04 from "./04-tutorial.md?raw";
 
+import tutorial05 from "./05-tutorial.md?raw";
 
-export interface Tutorial {
-    id: string;
-    name: string;
-    code: string;
-    solution?: string;
-    tutorial?: string
-    targets?: Target[];
-}
+import { Tutorial } from "../../main";
 
-export const tutorials = [
+export const tutorials: Tutorial[] = [
     {
         id: "1",
         name:   "Bucket Definition",
@@ -50,5 +44,11 @@ export const tutorials = [
         code:   code04,
         tutorial: tutorial04,
         targets: ["simulator", Target.TFAWS],
-    }
+    },
+    {
+      id: "5",
+      name:   "Congrats",
+      tutorial: tutorial05,
+      targets: ["simulator", Target.TFAWS],
+    },
 ]

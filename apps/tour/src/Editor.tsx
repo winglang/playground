@@ -34,7 +34,6 @@ import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
 import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
 import {useAnalytics} from "@wing-playground/shared/src/analytics/use-analytics";
 import {installDependencies, ConsoleLayouts} from "@wing-playground/shared/src/containers";
-import {CongratsModal} from "./CongratsModal";
 
 import { SimulatorTarget } from "@wing-playground/shared/src/SimulatorTarget";
 import { TfAwsTarget } from '@wing-playground/shared/src/TfAwsTarget.js';
@@ -188,14 +187,15 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
       if (!currentStep) {
           return;
       }
-
-      editorRef.current?.setValue(currentStep.code);
+      if (currentStep.code) {
+        editorRef.current?.setValue(currentStep.code);
+      }
 
       analytics.track(`tutorial: step: ${currentStepId}: changed`, {
           step: currentStep
       })
-      setTargets(currentStep.targets);
       setCurrentTargetId(targetViews[0]?.title);
+      setTargets(currentStep.targets ?? ["simulator"]);
     }, [currentStep]);
 
     const downloadCompiledCode = async (target: Target) => {
@@ -242,8 +242,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
         }
     }, [loadingStatus]);
 
-    const [showFinishModal, setShowFinishModal] = useState(false);
-
     const simulatorTarget: TargetView = useMemo(() => {
       return {
         id: "simulator",
@@ -289,28 +287,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
       setCurrentTargetId(targetViews[0]?.id);
     }, [targetViews.length]);
 
-    // const [instructionsText, setInstructionsText] = useState("");
-    // useEffect(() => {
-    //   setInstructionsText("");
-    // }, [currentStep?.tutorial]);
-
-    // useEffect(() => {
-    //   if(showWelcome) {
-    //     setInstructionsText(currentStep?.tutorial || "");
-    //     return;
-    //   }
-
-    //   const timer = setTimeout(() => {
-    //     if (!currentStep?.tutorial || instructionsText === currentStep.tutorial) {
-    //       return;
-    //     }
-
-    //     setInstructionsText(currentStep?.tutorial.substr(0, instructionsText.length + 15));
-    //   }, 20);
-
-    //   return () => clearTimeout(timer);
-    // }, [currentStep?.tutorial, instructionsText]);
-
     useEffect(() => {
       setCompilationItems([]);
       if (targets.includes(Target.TFAWS)) {
@@ -323,7 +299,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
         <>
           <div className='w-full flex flex-col grow p-6 bg-[#293443]'>
             <div className='flex grow relative'>
-                <CongratsModal visible={showFinishModal} onClose={() => setShowFinishModal(false)}/>
                 <div className={
                   classNames(
                     "flex flex-col bg-[#293443] w-[40%] px-[20px]",
@@ -348,7 +323,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                           'prose-lg prose-invert prose-p:leading-6 text-[#BDCECC] prose-ol:list-decimal',
                                           'prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-prose-p:text-[#BDCECC]',
                                           'prose-pre:overflow-auto',
-                                          'prose-headings:text-3xl prose-headings:pb-8 prose-headings:text-[#BDCECC] prose-headings:font-bold')}>
+                                          'prose-a:text-sky-500',
+                                          'prose-h3:text-xl prose-h3:pb-4 prose-h3:pt-4 prose-headings:font-sans prose-h3:font-bold',
+                                          'prose-h4:text-xl prose-h4:pb-4 prose-h4:pt-0 prose-headings:font-sans prose-h4:font-bold prose-h4:pt-0',
+                                          'prose-h1:text-3xl prose-headings:pb-8 prose-headings:text-[#BDCECC] prose-h1:font-bold',
+                                          )}>
                                             <ReactMarkdown
                                               children={step.tutorial ?? ""}
                                               className={classNames("text-xl")}
@@ -365,8 +344,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                               <div
                                 className={classNames(
                                   "absoulte z-10 top-0 left-0 bg-gray-650 h-[4px] -translate-y-1/2",
-                                  "transition-all duration-300 ease-out",
-                                  showWelcome && "opacity-0"
+                                  "transition-all duration-300 ease-out"
                                 )}
                                 style={
                                   {
@@ -427,24 +405,17 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                   </>
                                 )}
 
-                                {!showWelcome && !isLastStep && (
+                                {!showWelcome && (
                                     <button
                                     className={classNames(
                                       "text-[#BDCECC] bg-slate-700 hover:bg-[#2AD5C1] hover:text-slate-700",
-                                      "text-xs px-4 py-2 cursor-pointer border border-transparent",
+                                      "text-xs px-4 py-2 border border-transparent",
+                                      loadingStatus !== LoadingStatus.Completed && "cursor-not-allowed" || "cursor-pointer",
+                                      isLastStep && "opacity-0"
                                     )}
+                                    disabled={loadingStatus !== LoadingStatus.Completed}
                                     onClick={() => goToNextTutorial()}
                                   >NEXT</button>
-                                )}
-
-                                {isLastStep && (
-                                    <button
-                                    className={classNames(
-                                      "text-[#BDCECC] bg-slate-700 hover:bg-[#2AD5C1] hover:text-slate-700",
-                                      "text-xs px-4 py-2 cursor-pointer border border-transparent",
-                                    )}
-                                    onClick={() => setShowFinishModal(true)}
-                                  >FINISH</button>
                                 )}
                             </div>
                         </div>
@@ -456,7 +427,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                     "grow ml-4 flex flex-col gap-2"
                   )}>
                   <div data-cueid="code" className='h-[40%] flex flex-col w-full overflow-hidden border border-gray-800 bg-slate-700/40'>
-                    {showWelcome &&  <CodeEditorSkeleton/>}
+                    {showWelcome &&  <CodeEditorSkeleton loading={showTourLoading}/>}
                     <div className={
                       classNames(
                         showWelcome && "opacity-0",
@@ -514,7 +485,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                   )}>
                     {showWelcome && (
                       <div className="flex flex-col items-center justify-center h-full">
-                          <img src='empty_state.svg' className='h-[150px] p-10'/>
+                          <img src='empty_state.svg' className={classNames('h-[150px] p-10', showTourLoading && "animate-pulse")}/>
                       </div>
                     )}
                     {!showWelcome && loadingStatus == LoadingStatus.Completed && (

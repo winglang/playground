@@ -8,20 +8,11 @@ import tutorial02 from "./02-tutorial.md?raw";
 import code03 from "./03-code.w?raw";
 import tutorial03 from "./03-tutorial.md?raw";
 
-import code04 from "./04-code.w?raw";
 import tutorial04 from "./04-tutorial.md?raw";
 
+import { Tutorial } from "../../main";
 
-export interface Tutorial {
-    id: string;
-    name: string;
-    code: string;
-    solution?: string;
-    tutorial?: string
-    targets?: Target[];
-}
-
-export const tutorials = [
+export const tutorials: Tutorial[] = [
     {
         id: "1",
         name:   "Queue Definition",
@@ -43,5 +34,11 @@ export const tutorials = [
         code:   code03,
         tutorial: tutorial03,
         targets: ["simulator", Target.TFAWS],
-    }
+    },
+    {
+      id: "4",
+      name:   "Congrats",
+      tutorial: tutorial04,
+      targets: ["simulator", Target.TFAWS],
+    },
 ]
