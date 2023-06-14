@@ -73,6 +73,15 @@ export default {
           }
         }
       },
+      'ms': {
+        directory: {
+          'empty': {
+            file: {
+              contents: ""
+            }
+          }
+        }
+      },
       'codespan-wasm': {
         directory: {
           'empty': {
@@ -115,6 +124,7 @@ const unzip = () => {
     targz.x({ file: 'wing.tgz', C: 'node_modules/winglang/dist', preservePaths: true }),
     targz.x({ file: 'express.tgz', C: 'node_modules/express', preservePaths: true }),
     targz.x({ file: 'debug.tgz', C: 'node_modules/debug', preservePaths: true }),
+    targz.x({ file: 'ms.tgz', C: 'node_modules/ms', preservePaths: true }),
     targz.x({ file: 'codespan-wasm.tgz', C: 'node_modules/codespan-wasm', preservePaths: true }),
     targz.x({ file: 'esbuild-wasm.tgz', C: 'node_modules/esbuild-wasm', preservePaths: true }),
     targz.x({ file: 'console.tgz', C: './static' })
