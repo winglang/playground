@@ -5,7 +5,7 @@ export const Header = () => {
   return (
     <div className={
       classNames(
-        "py-4 flex gap-12 items-center font-sans text-slate-800 dark:text-[#BDCECC]",
+        "py-4 flex gap-12 items-center font-sans text-slate-700 dark:text-[#BDCECC]",
         "text-[17px] leading-[20px]"
     )}>
       <a href="https://winglang.io/" target="_blank" rel="noreferrer" className="hover:text-slate-600 dark:hover:text-white">
