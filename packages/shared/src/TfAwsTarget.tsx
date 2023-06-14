@@ -201,10 +201,7 @@ export const TfAwsTarget = ({
   const compileEditorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
   const [selectedItem, setSelectedItem] = useState<Item | undefined>();
 
-  const { theme } = useTheme();
-  const currentTheme = useMemo(() => {
-    return getCurrentTheme();
-  }, []);
+  const { theme, mode } = useTheme();
 
   const resources: Item[] = useMemo(() => {
     if (!files) {
@@ -319,7 +316,7 @@ export const TfAwsTarget = ({
           )}
           <Editor
             key={selectedItem?.id}
-            theme={currentTheme === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
+            theme={mode === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
             path="source.js"
             language="js"
             options={Object.assign({}, options, { readOnly: true })}

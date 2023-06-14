@@ -27,7 +27,7 @@ export interface Theme {
   scrollbar: string;
 }
 
-export type Mode = "dark" | "light" | "auto";
+export type Mode = "dark" | "light";
 
 const localStorageThemeKey = "console-theme";
 
@@ -62,18 +62,40 @@ export const DefaultTheme: Theme = {
     "scrollbar hover:scrollbar-bg-slate-500/10 hover:scrollbar-thumb-slate-700/30 scrollbar-thumb-hover-slate-700/40 scrollbar-thumb-active-slate-700/60 dark:hover:scrollbar-bg-slate-400/10 dark:hover:scrollbar-thumb-slate-400/30 dark:scrollbar-thumb-hover-slate-400/40 dark:scrollbar-thumb-active-slate-400/60",
 };
 
+const setModeInLocalStorage = (mode: Mode) => {
+  localStorage.setItem(localStorageThemeKey, JSON.stringify({ mode: mode }));
+};
+
+const getModeFromLocalStorage = () => {
+  const mediaTheme = window?.matchMedia("(prefers-color-scheme: dark)")?.matches
+    ? "dark"
+    : "light";
+
+  const localThemeObject = localStorage.getItem(localStorageThemeKey);
+  if (!localThemeObject) {
+    return mediaTheme;
+  }
+  return JSON.parse(localThemeObject)?.mode ?? mediaTheme;
+}
+
+export const getCurrentTheme = () => {
+  return getModeFromLocalStorage();
+}
+
+export const setCurrentTheme = (mode: Mode) => {
+  setModeInLocalStorage(mode);
+  window.location.reload();
+}
+
 const ThemeContext = createContext<ThemeProviderProps>({
   theme: DefaultTheme,
+  mode: getCurrentTheme(),
 });
 
 export interface ThemeProviderProps {
   theme?: Theme;
   mode?: Mode;
 }
-
-const setModeInLocalStorage = (mode: Mode) => {
-  localStorage.setItem(localStorageThemeKey, JSON.stringify({ mode: mode }));
-};
 
 const updateDomClassList = (mode: Mode) => {
   if (mode === "dark") {
@@ -84,21 +106,13 @@ const updateDomClassList = (mode: Mode) => {
 };
 
 const setThemeMode = (selectedMode?: Mode) => {
-  const mediaTheme = window?.matchMedia("(prefers-color-scheme: dark)")?.matches
-    ? "dark"
-    : "light";
   if (selectedMode) {
     setModeInLocalStorage(selectedMode);
-    updateDomClassList(selectedMode === "auto" ? mediaTheme : selectedMode);
+    updateDomClassList(selectedMode);
     return;
   }
-  const localThemeObject = localStorage.getItem(localStorageThemeKey);
-  if (!localThemeObject) {
-    updateDomClassList(mediaTheme);
-    return;
-  }
-  const mode = JSON.parse(localThemeObject)?.mode ?? mediaTheme;
-  return updateDomClassList(mode === "auto" ? mediaTheme : mode);
+  const mode = getModeFromLocalStorage();
+  return updateDomClassList(mode);
 };
 
 export const ThemeProvider = ({
@@ -131,12 +145,3 @@ export const ThemeProvider = ({
 };
 
 export const useTheme = () => useContext(ThemeContext);
-
-export const getCurrentTheme = () => {
-  const localThemeObject = localStorage.getItem(localStorageThemeKey);
-  if (!localThemeObject) {
-    return "light";
-  }
-  return JSON.parse(localThemeObject)?.mode ?? "light";
-}
-

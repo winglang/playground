@@ -46,9 +46,9 @@ import { Loader } from '@wing-playground/shared/src/loader.js';
 import { tutorials as mainTutorials, Tutorial } from './tutorials/main';
 import { Header } from "@wing-playground/shared/src/Header";
 import { Button } from "@wing-playground/shared/src/Button";
-import { useTheme, getCurrentTheme } from "@wing-playground/shared/src/theme-provider";
+import { ThemeToggle } from "@wing-playground/shared/src/ThemeToggle";
+import { useTheme } from "@wing-playground/shared/src/theme-provider";
 import { ConsoleEmptyStateIcon } from "@wing-playground/shared/src/ConsoleEmptyStateIcon.js";
-import { MoonIcon, SunIcon } from '@heroicons/react/24/outline';
 
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
@@ -84,11 +84,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
     const [downloadInProgress, setDownloadInProgress] = useState(false);
     const { analytics } = useAnalytics({ name: 'tour', state: loadingStatus });
 
-    const { theme } = useTheme();
-    const currentTheme = useMemo(() => {
-      return getCurrentTheme();
-    }, []);
-
+    const { theme, mode } = useTheme();
 
     const installConsole = async (containerRef: React.MutableRefObject<WebContainer>) => {
         const consoleUrl = await installDependencies(containerRef.current, ConsoleLayouts.Tour);
@@ -313,14 +309,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                     <div className='flex items-center'>
                       <Header/>
                       <div className='grow'/>
-                      <button className='rounded text-white bg-slate-400 dark:bg-slate-700 p-1' onClick={() => {
-                        const nextTheme = currentTheme === "light" ? "dark" : "light";
-                        localStorage.setItem("theme", nextTheme);
-                        window.location.reload();
-                      }}>
-                        { currentTheme === "light" && <SunIcon className='w-5 h-5'/> }
-                        { currentTheme === "dark" && <MoonIcon className='w-5 h-5'/> }
-                      </button>
+                      <ThemeToggle/>
                     </div>
                     <div className="flex-1 flex flex-col pt-[20px]">
                         <div data-cueid="instructions" className="grow flex flex-col">
@@ -468,7 +457,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                         <div className="absolute inset-0 overflow-hidden">
                           <Editor
                             data-testid={"editor"}
-                            theme={currentTheme === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
+                            theme={mode === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
                             options={editorOptions}
                             path={languageContext.path}
                             language={languageContext.language}

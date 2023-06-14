@@ -1,3 +1,5 @@
+import { getCurrentTheme } from "./theme-provider";
+
 export default {
   'node_modules': {
     directory: {
@@ -161,7 +163,7 @@ class AppConfig extends EventEmitter {
   constructor() {
     super();
     this.config = {
-      themeMode: "${localStorage.getItem("theme") || "lighdarkt"}",
+      themeMode: "${getCurrentTheme()}",
     };
   }
   set(key, value) {
