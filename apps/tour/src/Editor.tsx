@@ -315,7 +315,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
       <ThemeProvider mode={currentMode} theme={DefaultTheme}>
           <div className='w-full flex flex-col grow p-6 bg-slate-100 dark:bg-[#293443]'>
             <div className='flex grow relative'>
-                <div className="flex flex-col w-[40%] px-[20px]">
+                <div className="flex flex-col w-[40%] min-w-[25rem] px-[20px]">
                     <div className='flex items-center overflow-auto gap-2'>
                       <Header/>
                       <div className='grow'/>
@@ -371,7 +371,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                               />
                             </div>
 
-                            <div className='text-white flex gap-4 items-center pb-2'>
+                            <div className='text-white flex gap-4 items-center pb-2 overflow-auto'>
                                 <Button
                                   invisible={isFirstStep}
                                   onClick={() => goToPreviousTutorial()}
