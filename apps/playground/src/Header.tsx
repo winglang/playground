@@ -1,41 +1,33 @@
 import { useEffect, useState } from "react";
+import { Header as GlobalHeader } from "@wing-playground/shared/src/Header";
 
 export function Header() {
-  const [stars, setStars] = useState('908');
+  const [stars, setStars] = useState(0);
+  const [watchersCount, setWatchersCount] = useState(0);
+
   useEffect(() => {
     const getStarsCount = async () => {
       const res = await fetch('https://api.github.com/repos/winglang/wing');
       const data = await res.json();
-      setStars(data.watchers_count);
+      setWatchersCount(data.watchers_count);
     };
     getStarsCount();
   }, []);
-  return <div className="h-[80px] flex bg-black border-b border-b-black pl-[10px] pr-[24px]">
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const random = Math.floor(Math.random() * (50 - 20 + 1) + 20);
+      setStars((prevStars) => Math.min(prevStars + random, watchersCount));
+    }, 20);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [watchersCount]);
+
+  return <div className="flex">
   <div className="flex justify-between w-full">
-    <div className="flex justify-between items-center">
-      <a href="https://winglang.io" aria-current="page" className="mr-[40px] cursor-pointer" aria-label="home">
-        <img className="h-[24px] w-[96px]" src="wing_logo.svg" loading="lazy" alt="" />
-      </a>
-      <div className="hidden" aria-label="menu" role="button" tabIndex={0} aria-controls="w-nav-overlay-0" aria-haspopup="menu" aria-expanded="false">
-        <img src="hamburger.svg" loading="lazy" alt="" />
-      </div>
-      <nav role="navigation" className="flex flex-shrink justify-start">
-        <ul role="list" className="flex flex-grow flex-shrink list-none">
-          <li className="flex-shrink cursor-pointer">
-            <a className="font-sans mx-[5px] py-[5px] px-[10px] leading-5 text-[14px] text-[#f1f0f1] font-normal hover:text-[#2ad5c1]" href="https://docs.winglang.io/getting-started" >Getting Started</a>
-          </li>
-          <li className="flex-shrink cursor-pointer">
-            <a className="font-sans mx-[5px] py-[5px] px-[10px] leading-5 text-[14px] text-[#f1f0f1] font-normal hover:text-[#2ad5c1]" href="https://docs.winglang.io" >Docs</a>
-          </li>
-          <li className="flex-shrink cursor-pointer">
-            <a className="font-sans mx-[5px] py-[5px] px-[10px] leading-5 text-[14px] text-[#f1f0f1] font-normal hover:text-[#2ad5c1]" href="https://docs.winglang.io/blog" >Blog</a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-    <div className="flex justify-end text-[#f1f0f1] items-baseline self-center">
-      <span className="text-[17px] text-[#2ad5c1]">Wing Playground </span><span className="text-[12px]">&nbsp; (alpha)</span>
-    </div>
+    <GlobalHeader />
     <div className="flex items-center justify-end">
       <div className="flex items-center justify-end flex-none gap-4">
         <a href="https://t.winglang.io/slack" className="flex items-center justify-center h-[40px]">

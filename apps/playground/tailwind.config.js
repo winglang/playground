@@ -62,7 +62,7 @@ module.exports = {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
     "../../packages/shared/src/**/*.{vue,js,ts,jsx,tsx}",
   ],
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
   theme: {
     fontFamily: {
       sans: ["IBM Plex Sans"],
@@ -71,7 +71,13 @@ module.exports = {
       colors: {
         gray: expandColor(colors.gray),
         slate: expandColor(colors.slate),
+        "monada-light": "#AEF8EC",
+        "monada-dark": "#2ad5c1",
+        "monada-black": "#03120E",
+      },
+      fontSize: {
+        "2xs": "0.7rem",
       },
     },
   },
-}
+};
