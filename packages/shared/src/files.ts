@@ -161,7 +161,7 @@ class AppConfig extends EventEmitter {
   constructor() {
     super();
     this.config = {
-      themeMode: "light",
+      themeMode: "${localStorage.getItem("theme") || "lighdarkt"}",
     };
   }
   set(key, value) {
