@@ -47,7 +47,7 @@ import { tutorials as mainTutorials, Tutorial } from './tutorials/main';
 import { Header } from "@wing-playground/shared/src/Header";
 import { Button } from "@wing-playground/shared/src/Button";
 import { ThemeToggle } from "@wing-playground/shared/src/ThemeToggle";
-import { useTheme } from "@wing-playground/shared/src/theme-provider";
+import { DefaultTheme, ThemeProvider, useTheme, setCurrentTheme } from "@wing-playground/shared/src/theme-provider";
 import { ConsoleEmptyStateIcon } from "@wing-playground/shared/src/ConsoleEmptyStateIcon.js";
 
 
@@ -85,6 +85,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
     const { analytics } = useAnalytics({ name: 'tour', state: loadingStatus });
 
     const { theme, mode } = useTheme();
+    const [currentMode, setCurrentMode] = useState(mode ?? "dark");
+
+    const onToggleTheme = useCallback(() => {
+      const newMode = (currentMode === "light" ? "dark" : "light");
+      setCurrentTheme(newMode);
+      //setCurrentMode(newMode);
+    }, [currentMode]);
 
     const installConsole = async (containerRef: React.MutableRefObject<WebContainer>) => {
         const consoleUrl = await installDependencies(containerRef.current, ConsoleLayouts.Tour);
@@ -252,7 +259,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
       return {
         id: "simulator",
         title: "Simulator",
-        Target: () => <SimulatorTarget frameSrc={iframSrc} iframeRef={refIframe}/>
+        Target: () => <SimulatorTarget
+          frameSrc={iframSrc}
+          iframeRef={refIframe}
+        />
       }
     }, [iframSrc, refIframe]);
 
@@ -302,14 +312,14 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
     }, [targets, editorRef.current?.getValue()]);
 
     return (
-        <>
+      <ThemeProvider mode={currentMode} theme={DefaultTheme}>
           <div className='w-full flex flex-col grow p-6 bg-slate-100 dark:bg-[#293443]'>
             <div className='flex grow relative'>
                 <div className="flex flex-col w-[40%] px-[20px]">
-                    <div className='flex items-center'>
+                    <div className='flex items-center overflow-auto gap-2'>
                       <Header/>
                       <div className='grow'/>
-                      <ThemeToggle/>
+                      <ThemeToggle mode={currentMode} onToggle={onToggleTheme}/>
                     </div>
                     <div className="flex-1 flex flex-col pt-[20px]">
                         <div data-cueid="instructions" className="grow flex flex-col">
@@ -470,8 +480,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                       <div className='flex flex-col grow w-full relative'>
                         <div className="absolute inset-0 overflow-hidden">
                           <Editor
+                            key={currentMode}
                             data-testid={"editor"}
-                            theme={mode === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
+                            theme={currentMode === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
                             options={editorOptions}
                             path={languageContext.path}
                             language={languageContext.language}
@@ -511,6 +522,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                 </div>
             </div>
           </div>
-        </>
+      </ThemeProvider>
     );
 };

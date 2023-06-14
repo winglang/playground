@@ -20,7 +20,7 @@ export const ConsoleEmptyStateIcon = forwardRef<SVGSVGElement, ConsoleEmptyState
           {...props}
         >
           {title && <title id={titleId}>{title}</title>}
-          <g fill-opacity=".5" fill-rule="evenodd" clip-path="url(#a)" clip-rule="evenodd">
+          <g fillOpacity=".5" fillRule="evenodd" clipPath="url(#a)" clipRule="evenodd">
             <path d="M0 0h90v90H0V0Zm20 20h50v50H20V20Zm90-20h262v90H110V0Zm20 20h222v50H130V20Zm-20 90h90v90h-90v-90Zm20 20h50v50h-50v-50Zm90-20h262v90H220v-90Zm20 20h222v50H240v-50Z"/>
           </g>
           <defs>

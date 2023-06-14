@@ -6,12 +6,7 @@ import { tutorials as bucketTutorial } from './tutorials/resource/bucket';
 import { tutorials as counterTutorial } from './tutorials/resource/counter';
 import { tutorials as topicTutorial } from './tutorials/resource/topic';
 import { tutorials as queueTutorial } from './tutorials/resource/queue';
-
-import { getCurrentTheme, Mode, ThemeProvider } from "@wing-playground/shared/src/theme-provider";
-
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
-import classNames from 'classnames';
-import { useMemo } from 'react';
 
 const tutorialRoutes = [
   {
@@ -34,23 +29,17 @@ const tutorialRoutes = [
 
 function AppView({ tutorials }: { tutorials: Tutorial[] }) {
 
-  const currentTheme = useMemo(() => {
-    return getCurrentTheme();
-  }, []);
-
   return (
-    <ThemeProvider mode={currentTheme}>
-      <div className={classNames("max-h-full h-full flex flex-col")}>
-        <ReactMonacoEditor tutorials={tutorials} />
-        {/* { isChrome() ? <ReactMonacoEditor tutorials={tutorials} /> :
-        <div className='h-full flex justify-center content-center items-center'>
-          <div className='h-24 text-xl flex flex-row justify-center content-center items-center text-[#f1f0f1]'>
-            <VscWarning className='text-amber-500'/>
-            <span>This playground uses <a href="https://webcontainers.io/" className='text-teal-500'> Web Containers </a> and only works on Google Chrome.</span>
-            </div>
-        </div> } */}
-      </div>
-    </ThemeProvider>
+    <div className="max-h-full h-full flex flex-col">
+      <ReactMonacoEditor tutorials={tutorials} />
+      {/* { isChrome() ? <ReactMonacoEditor tutorials={tutorials} /> :
+      <div className='h-full flex justify-center content-center items-center'>
+        <div className='h-24 text-xl flex flex-row justify-center content-center items-center text-[#f1f0f1]'>
+          <VscWarning className='text-amber-500'/>
+          <span>This playground uses <a href="https://webcontainers.io/" className='text-teal-500'> Web Containers </a> and only works on Google Chrome.</span>
+          </div>
+      </div> } */}
+    </div>
   )
 }
 

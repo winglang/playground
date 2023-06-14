@@ -1,24 +1,24 @@
 import { MoonIcon, SunIcon } from '@heroicons/react/24/outline';
-import { setCurrentTheme, useTheme } from './theme-provider';
+import { Mode, useTheme } from './theme-provider';
 import classNames from 'classnames';
-import {useCallback} from 'react';
 
-export const ThemeToggle = () => {
-  const { theme, mode } = useTheme();
+export interface ThemeToggleProps {
+  mode: Mode;
+  onToggle: () => void;
+}
 
-  const toggleTheme = useCallback(() => {
-    setCurrentTheme(mode === 'dark' ? 'light' : 'dark');
-  }, [mode]);
+export const ThemeToggle = ({ mode, onToggle } : ThemeToggleProps) => {
+  const { theme } = useTheme();
 
   return (
     <button
       className={
         classNames(
+          theme.textInput,
           "p-1.5 rounded-3xl font-medium",
-          "text-slate-900 dark:text-white",
           "hover:bg-slate-200 hover:dark:bg-slate-700"
       )}
-      onClick={() => toggleTheme()}
+      onClick={onToggle}
 
     >
       {mode === 'light' && <SunIcon className='w-6 h-6'/>}

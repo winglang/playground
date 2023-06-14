@@ -78,7 +78,7 @@ const getModeFromLocalStorage = () => {
   return JSON.parse(localThemeObject)?.mode ?? mediaTheme;
 }
 
-export const getCurrentTheme = () => {
+export const getCurrentMode = () => {
   return getModeFromLocalStorage();
 }
 
@@ -89,12 +89,12 @@ export const setCurrentTheme = (mode: Mode) => {
 
 const ThemeContext = createContext<ThemeProviderProps>({
   theme: DefaultTheme,
-  mode: getCurrentTheme(),
+  mode: getModeFromLocalStorage(),
 });
 
 export interface ThemeProviderProps {
   theme: Theme;
-  mode: Mode;
+  mode?: Mode;
 }
 
 const updateDomClassList = (mode: Mode) => {

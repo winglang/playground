@@ -21,7 +21,7 @@ import { CompilationItem } from "@wing-playground/shared/src/compiler/compiler";
 import { Loading } from "@wing-playground/shared/src/Loading";
 import { PanelHeader } from "@wing-playground/shared/src/PanelHeader";
 import { Cog8ToothIcon, DocumentIcon } from "@heroicons/react/24/outline";
-import { useTheme, getCurrentTheme } from "@wing-playground/shared/src/theme-provider";
+import { useTheme } from "@wing-playground/shared/src/theme-provider";
 
 const getResourceName = (type: string) => {
   switch (type) {
