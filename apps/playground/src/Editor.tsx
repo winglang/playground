@@ -96,18 +96,26 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     }
 
      const storeSession = (value: string) => {
-      const url = new URL(window.location.href);
-      url.searchParams.set("code", window.btoa(unescape(encodeURIComponent(value))));
-      window.history.replaceState({}, '', url.toString());
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.set("code", window.btoa(unescape(encodeURIComponent(value))));
+        window.history.replaceState({}, '', url.toString());
+      } catch (e) {
+        console.error(e);
+      }
     }
 
     const getSession = () => {
-      const url = new URL(window.location.href);
-      const sessionCode = url.searchParams.get('code')?.replaceAll(' ', '+');
-      if (sessionCode) {
-        return window.atob(sessionCode);
+      try {
+        const url = new URL(window.location.href);
+        const sessionCode = url.searchParams.get('code')?.replaceAll(' ', '+');
+        if (sessionCode) {
+          return window.atob(sessionCode);
+        }
+        return null;
+      } catch (e) {
+        return null;
       }
-      return null;
     }
 
     const {
