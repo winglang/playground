@@ -103,7 +103,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     const getSession = () => {
       const url = new URL(window.location.href);
-      const sessionCode = url.searchParams.get('code');
+      const sessionCode = url.searchParams.get('code')?.replaceAll(' ', '+');
       if (sessionCode) {
         return window.atob(sessionCode);
       }
