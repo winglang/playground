@@ -93,8 +93,8 @@ const ThemeContext = createContext<ThemeProviderProps>({
 });
 
 export interface ThemeProviderProps {
-  theme?: Theme;
-  mode?: Mode;
+  theme: Theme;
+  mode: Mode;
 }
 
 const updateDomClassList = (mode: Mode) => {

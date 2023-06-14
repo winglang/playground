@@ -381,8 +381,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                   {showTourLoading && (
                                      <button
                                       className={classNames(
-                                      "text-xs px-4 py-2 border border-transparent",
-                                        "text-slate-600 bg-slate-200 dark:bg-slate-700 dark:text-[#2AD5C1] border-[#2AD5C1] cursor-not-allowed"
+                                        theme.bg2,
+                                        "text-slate-600 dark:text-[#2AD5C1]",
+                                        "text-xs px-4 py-2 border border-transparent",
+                                        "border-[#2AD5C1] cursor-not-allowed"
                                       )}
                                       disabled
                                     >
@@ -410,7 +412,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                       disabled={loadingStatus !== LoadingStatus.Completed}
                                       onClick={() => goToNextTutorial()}
                                     >
-                                      PREV
+                                      NEXT
                                     </Button>
                                 )}
                             </div>
@@ -419,7 +421,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                 </div>
 
                 <div className="grow ml-4 flex flex-col gap-2">
-                  <div data-cueid="code" className='h-[40%] flex flex-col w-full overflow-hidden border border-gray-800 bg-slate-200 dark:bg-slate-700/40'>
+                  <div data-cueid="code" className={
+                    classNames(
+                      'h-[40%] flex flex-col w-full overflow-hidden',
+                      'border border-gray-400 dark:border-gray-800',
+                      'bg-slate-200/40 dark:bg-slate-700/40'
+                    )}
+                  >
                     {showWelcome &&  <CodeEditorSkeleton loading={showTourLoading}/>}
                     <div className={
                       classNames(
@@ -433,7 +441,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                           {currentStep?.solution && editorCode !== currentStep.solution &&
                             <button
                             className={classNames(
-                              "text-[#BDCECC] bg-[#293443] hover:bg-[#2AD5C1] hover:text-slate-700",
+                              theme.text1,
+                              theme.bg1,
+                              theme.bgInputHover,
+                              //"text-[#BDCECC] bg-[#293443] hover:bg-[#2AD5C1] hover:text-slate-700",
                               "text-xs px-4 py-0.5 leading-none cursor-pointer h-6 my-auto",
                             )}
                             onClick={() => solveTutorial()}
@@ -444,8 +455,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                           {editorCode == currentStep?.solution && (
                             <button
                             className={classNames(
-                              "text-[#BDCECC] bg-[#293443] hover:bg-[#2AD5C1] hover:text-slate-700",
-                              "text-xs px-4 cursor-pointer",
+                              theme.text1,
+                              theme.bg1,
+                              theme.bgInputHover,
+                              //"text-[#BDCECC] bg-[#293443] hover:bg-[#2AD5C1] hover:text-slate-700",
+                              "text-xs px-4 py-0.5 leading-none cursor-pointer h-6 my-auto",
                             )}
                             onClick={() => resetTutorial()}>
                               Reset
@@ -473,12 +487,17 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                   </div>
                   <div data-cueid="simulation" className={
                   classNames(
-                    'flex flex-col grow basis-auto overflow-hidden border border-gray-800',
-                    'bg-slate-200 dark:bg-slate-700/40'
+                    'flex flex-col grow basis-auto overflow-hidden border border-gray-400 dark:border-gray-800',
+                    'bg-slate-200/40 dark:bg-slate-700/40'
                   )}>
                     {showWelcome && (
                       <div className="flex flex-col items-center justify-center h-full">
-                          <ConsoleEmptyStateIcon className={classNames('h-[150px] p-10 text-slate-600 dark:text-#394150', showTourLoading && "animate-pulse")}/>
+                          <ConsoleEmptyStateIcon className={
+                            classNames(
+                              'h-[150px] p-10',
+                              'text-gray-400 dark:text-gray-550',
+                              showTourLoading && "animate-pulse"
+                          )}/>
                       </div>
                     )}
                     {!showWelcome && loadingStatus == LoadingStatus.Completed && (

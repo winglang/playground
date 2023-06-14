@@ -174,7 +174,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         <div className='flex grow gap-2'>
           <RightResizableWidget className={
             classNames(
-              "border border-gray-800 h-full",
+              "border border-gray-400 dark:border-gray-800 h-full",
               "max-w-[60%] flex flex-col min-w-[10rem] min-h-[15rem]",
               {
                 "w-[33%]": fontSize === 12,
@@ -213,7 +213,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                 void evaluateCode(value);
             }}/>
           </RightResizableWidget>
-          <div className='grow h-full basis-auto border border-gray-800'>
+          <div className='grow h-full basis-auto border border-gray-400 dark:border-gray-800'>
           {loadingStatus !== LoadingStatus.Completed &&
             <div className="flex flex-col h-full relative">
               <div className='absolute inset-0 z-10'>

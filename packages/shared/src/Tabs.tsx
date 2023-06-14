@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import { ReactNode, useEffect, useState } from "react";
+import { useTheme } from "./theme-provider";
 
 export interface Tab {
   id: string;
@@ -15,11 +16,11 @@ export interface TabsProps {
   currentTabId?: string;
   onTabChange?: (tabId: string) => void;
   renderActiveTabPanelOnly?: boolean;
-  tabsWithNotifications?: string[];
   className?: string;
 }
 
 export const Tabs = (props: TabsProps) => {
+  const { theme } = useTheme();
   const [currentTabId, setCurrentTabId] = useState(props.currentTabId);
 
   useEffect(() => {
@@ -53,11 +54,13 @@ export const Tabs = (props: TabsProps) => {
               <div
                 key={tab.id}
                 className={classNames(
+                  theme.text1,
+                  theme.text3Hover,
                   "relative flex items-center cursor-pointer group",
-                  "px-4 py-1 h-full border-b border-transparent",
-                   isCurrent && props.tabs.length > 1 && "border-white",
-                    !isCurrent && "hover:text-white",
-                    tab.tabClassName,
+                  "px-4 py-1 h-full border-b",
+                  isCurrent && props.tabs.length > 1 && "border-gray-800 dark:border-white",
+                  (!isCurrent || props.tabs.length === 1) && "border-transparent",
+                  tab.tabClassName,
                 )}
                 onClick={() => setCurrentTabId(tab.id)}
               >
@@ -68,25 +71,6 @@ export const Tabs = (props: TabsProps) => {
                     <span className="text-xs">({tab.count})</span>
                   )}
                 </div>
-
-                {props.tabsWithNotifications?.includes(tab.id) && (
-                  <div className="ml-2">
-                    <span className="relative flex h-2 w-2">
-                      <span
-                        className={classNames(
-                          "animate-ping absolute inline-flex h-full w-full rounded-full opacity-75",
-                          "bg-gray-800"
-                        )}
-                      />
-                      <span
-                        className={classNames(
-                          "relative inline-flex rounded-full h-2 w-2",
-                          "bg-gray-800"
-                        )}
-                      />
-                    </span>
-                  </div>
-                )}
               </div>
             );
           })}
