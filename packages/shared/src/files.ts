@@ -1,5 +1,3 @@
-import { getCurrentMode } from "./theme-provider";
-
 export default {
   'node_modules': {
     directory: {
@@ -163,7 +161,7 @@ class AppConfig extends EventEmitter {
   constructor() {
     super();
     this.config = {
-      themeMode: "${getCurrentMode()}",
+      themeMode: "light",
     };
   }
   set(key, value) {
