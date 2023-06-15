@@ -22,7 +22,7 @@ jobs:
       - name: cdk deploy
         uses: youyo/aws-cdk-github-actions@v2
         with:
-          working_dir: apps/compiler
+          working_dir: apps/infra
           cdk_subcommand: 'deploy'
           cdk_args: '--require-approval never'
           actions_comment: false
