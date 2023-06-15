@@ -30,7 +30,7 @@ const compile = async (code: string, target: string): Promise<CompilationResult>
   };
 
   try {
-    const result = await fetch('https://t3qjyxtsq1.execute-api.us-east-1.amazonaws.com/prod', options)
+    const result = await fetch('https://re0pxufp83.execute-api.us-east-1.amazonaws.com/prod', options)
     if (!result.ok) {
       if (result.status === 500) {
         const body = await result.json();

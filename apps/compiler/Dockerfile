@@ -1,10 +1,12 @@
-FROM node:18
-WORKDIR /usr/src/app
+FROM public.ecr.aws/lambda/nodejs:18-x86_64
+WORKDIR ${LAMBDA_TASK_ROOT}
 
-COPY package.json ./
+COPY ./package.json ./
 RUN npm install
+
 COPY ./index.ts ./
+RUN npm run build
+    
+RUN cp ./dist/* ./
 
-EXPOSE 3000
-
-CMD [ "npm", "start" ]
+CMD ["index.handler"]
