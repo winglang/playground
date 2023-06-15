@@ -48,8 +48,6 @@ import { Header } from "@wing-playground/shared/src/Header";
 import { Button } from "@wing-playground/shared/src/Button";
 import { ThemeToggle } from "@wing-playground/shared/src/ThemeToggle";
 import { DefaultTheme, ThemeProvider, useTheme, setCurrentTheme } from "@wing-playground/shared/src/theme-provider";
-import { ConsoleEmptyStateIcon } from "@wing-playground/shared/src/ConsoleEmptyStateIcon.js";
-
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -438,7 +436,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                       'bg-slate-200/40 dark:bg-slate-700/40'
                     )}
                   >
-                    {showWelcome &&  <CodeEditorSkeleton loading={showTourLoading}/>}
                     <div className={
                       classNames(
                         showWelcome && "opacity-0",
@@ -501,16 +498,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                     'flex flex-col grow basis-auto overflow-hidden border border-gray-400 dark:border-gray-800',
                     'bg-slate-200/40 dark:bg-slate-700/40'
                   )}>
-                    {showWelcome && (
-                      <div className="flex flex-col items-center justify-center h-full">
-                          <ConsoleEmptyStateIcon className={
-                            classNames(
-                              'h-[150px] p-10',
-                              'text-gray-400 dark:text-gray-550',
-                              showTourLoading && "animate-pulse"
-                          )}/>
-                      </div>
-                    )}
                     {!showWelcome && loadingStatus == LoadingStatus.Completed && (
                       <TargetsView
                         targets={targetViews}
