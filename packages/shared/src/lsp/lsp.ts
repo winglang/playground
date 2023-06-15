@@ -14,6 +14,8 @@ import {
   CompletionItem,
   DocumentSymbol,
   Hover,
+  Diagnostic,
+  Range
 } from "vscode-languageserver/browser";
 
 import * as wingCompiler from "winglang/dist/wingc";
@@ -76,23 +78,38 @@ connection.onInitialize((_params: InitializeParams) => {
   return result;
 });
 
+let s = self
+const raw_diagnostics: wingCompiler.WingDiagnostic[] = [];
+
 connection.onDidOpenTextDocument(async (params) => {
   const string = JSON.stringify(params);
+  raw_diagnostics.length = 0;
   try {
     wingCompiler.invoke(wingc, "wingc_on_did_open_text_document", string);
-
   } catch (e) {
     s.reportError(e);
   }
+  connection.sendDiagnostics({
+    uri: params.textDocument.uri,
+    diagnostics: raw_diagnostics.map((rd) => {
+      return Diagnostic.create(Range.create(rd.span.start.line, rd.span.start.col, rd.span.end.line, rd.span.end.col), rd.message)
+    })
+  });
 });
-let s = self
 connection.onDidChangeTextDocument(async (params) => {
   const string = JSON.stringify(params);
+  raw_diagnostics.length = 0;
   try {
     wingCompiler.invoke(wingc, "wingc_on_did_change_text_document", string);
   } catch (e) {
     s.reportError(e);
   }
+  connection.sendDiagnostics({
+    uri: params.textDocument.uri,
+    diagnostics: raw_diagnostics.map((rd) => {
+      return Diagnostic.create(Range.create(rd.span.start.line, rd.span.start.col, rd.span.end.line, rd.span.end.col), rd.message)
+    })
+  });
 });
 
 connection.onCompletion(async (params) => {
@@ -169,8 +186,6 @@ connection.onHover(async (params) => {
   }
 });
 connection.listen()
-
-const raw_diagnostics: wingCompiler.WingDiagnostic[] = [];
 
 /**
  * This function is called by the WASM code to immediately
