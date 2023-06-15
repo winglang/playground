@@ -1,0 +1,1 @@
+This unification allows for better integration between the two phases - they can more easily reference variables from one another and pass data between them. It also allows the compiler to automatically generate security policies, network topologies and other cloud mechanics based on intent.
