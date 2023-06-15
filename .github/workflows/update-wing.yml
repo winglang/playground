@@ -30,7 +30,7 @@ jobs:
         run: npm update winglang @winglang/sdk
         working-directory: apps/tour
       - name: Update compiler wing version
-        run: npm update winglang @winglang/sdk
+        run: npm update winglang @winglang/sdk @winglang/compiler
         working-directory: apps/compiler
       - name: Build playground
         run: npm run build
