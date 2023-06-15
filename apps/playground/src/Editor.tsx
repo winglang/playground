@@ -94,6 +94,30 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
             version: wingPackageJson.version
         });
     }
+
+     const storeSession = (value: string) => {
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.set("code", window.btoa(unescape(encodeURIComponent(value))));
+        window.history.replaceState({}, '', url.toString());
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    const getSession = () => {
+      try {
+        const url = new URL(window.location.href);
+        const sessionCode = url.searchParams.get('code')?.replaceAll(' ', '+');
+        if (sessionCode) {
+          return window.atob(sessionCode);
+        }
+        return null;
+      } catch (e) {
+        return null;
+      }
+    }
+
     const {
       evaluateCode,
       editorWillMount,
@@ -104,7 +128,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         onLspError,
         installConsole,
         languageContext,
-        code: currentExample.value,
+        code: getSession() || currentExample.value,
         compiler,
         targets: [Target.TFAWS],
         editorOptions,
@@ -133,6 +157,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       const value = editorRef.current?.getValue();
       retrieveCompilationFiles(value || "", Target.TFAWS);
     }, [editorRef.current?.getValue()]);
+
 
     useEffect(() => {
         if (ref.current != null) {
@@ -210,6 +235,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
               onMount={editorDidMount}
               beforeMount={editorWillMount}
               onChange={(value) => {
+                storeSession(value || '');
                 void evaluateCode(value);
             }}/>
           </RightResizableWidget>
