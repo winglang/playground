@@ -21,8 +21,8 @@ jobs:
         run: npm install
       - name: cdk deploy
         uses: youyo/aws-cdk-github-actions@v2
-        working-directory: apps/compiler
         with:
+          working_dir: apps/compiler
           cdk_subcommand: 'deploy'
           cdk_args: '--require-approval never'
           actions_comment: false
