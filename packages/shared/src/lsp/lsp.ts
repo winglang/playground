@@ -53,7 +53,7 @@ const wingc = await load({
   wingsdkManifestRoot: "/wingsdk",
   imports: {
     env: {
-      send_notification,
+      send_diagnostic,
     },
   },
 });
@@ -108,6 +108,32 @@ connection.onCompletion(async (params) => {
     s.reportError(e);
   }
 });
+connection.onSignatureHelp(async (params) => {
+  try {
+    const result = wingCompiler.invoke(
+      wingc,
+      "wingc_on_signature_help",
+      JSON.stringify(params)
+    ) as string;
+    return JSON.parse(result);
+
+  } catch (e) {
+    s.reportError(e);
+  }
+});
+connection.onDefinition(async (params) => {
+  try {
+    const result = wingCompiler.invoke(
+      wingc,
+      "wingc_on_goto_definition",
+      JSON.stringify(params)
+    ) as string;
+    return JSON.parse(result);
+
+  } catch (e) {
+    s.reportError(e);
+  }
+});
 connection.onDocumentSymbol(async (params) => {
   try {
 
@@ -144,30 +170,21 @@ connection.onHover(async (params) => {
 });
 connection.listen()
 
+const raw_diagnostics: wingCompiler.WingDiagnostic[] = [];
+
 /**
  * This function is called by the WASM code to immediately
  * send a notification to the client.
  */
-function send_notification(
-  type_ptr: number,
-  type_len: number,
+function send_diagnostic(
   data_ptr: number,
   data_len: number
 ) {
-  const type_buf = Buffer.from(
-    (wingc.exports.memory as WebAssembly.Memory).buffer,
-    type_ptr,
-    type_len
-  );
-  const type_str = new TextDecoder().decode(type_buf);
-
   const data_buf = Buffer.from(
     (wingc.exports.memory as WebAssembly.Memory).buffer,
     data_ptr,
     data_len
   );
   const data_str = new TextDecoder().decode(data_buf);
-
-  // purposely not awaiting this, notifications are fire-and-forget
-  void connection.sendNotification(type_str, JSON.parse(data_str));
+  raw_diagnostics.push(JSON.parse(data_str));
 }
