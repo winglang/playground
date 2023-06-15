@@ -244,7 +244,7 @@ export const TfAwsTarget = ({
     if (!files) {
       return [];
     }
-    const newAssets = files.filter((f) => f.name.startsWith(".wing/clients/")).map((file, index) => {
+    const newAssets = files.filter((f) => f.name.startsWith(".wing/inflight")).map((file, index) => {
       return {
         name: `inflight${index + 1}.js`,
         contents: file.contents,
