@@ -95,13 +95,8 @@ const wingInvoke = async (fn: wingCompiler.WingCompilerFunction, params: any) =>
 }
 
 const handleTextChange = async (fn: wingCompiler.WingCompilerFunction, params: DidOpenTextDocumentParams | DidChangeTextDocumentParams, uri: string) => {
-  const string = JSON.stringify(params);
   raw_diagnostics.length = 0;
-  try {
-    wingCompiler.invoke(wingc, fn, string);
-  } catch (e) {
-    s.reportError(e);
-  }
+  wingInvoke(fn, params);
   connection.sendDiagnostics({
     uri: params.textDocument.uri,
     diagnostics: raw_diagnostics.map((rd) => {
