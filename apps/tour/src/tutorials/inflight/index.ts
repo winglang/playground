@@ -3,7 +3,7 @@ import { Target } from "@wing-playground/shared/src/compiler/compiler";
 import tutorial00 from "./00-tutorial.md?raw";
 
 import code01 from "./01-code.w?raw";
-import solution01 from "./01-solution.w?raw";
+//import solution01 from "./01-solution.w?raw";
 import tutorial01 from "./01-tutorial.md?raw";
 
 import code02 from "./02-code.w?raw";
@@ -11,7 +11,7 @@ import solution02 from "./02-solution.w?raw";
 import tutorial02 from "./02-tutorial.md?raw";
 
 import code03 from "./03-code.w?raw";
-import solution03 from "./03-solution.w?raw";
+//import solution03 from "./03-solution.w?raw";
 import tutorial03 from "./03-tutorial.md?raw";
 
 import code04 from "./04-code.w?raw";
@@ -19,7 +19,7 @@ import solution04 from "./04-solution.w?raw";
 import tutorial04 from "./04-tutorial.md?raw";
 
 import code05 from "./05-code.w?raw";
-import solution05 from "./05-solution.w?raw";
+//import solution05 from "./05-solution.w?raw";
 import tutorial05 from "./05-tutorial.md?raw";
 
 import code06 from "./06-code.w?raw";
