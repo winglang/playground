@@ -231,7 +231,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                   </PanelHeader>
 
                   <Editor
-                    data-testid={"editor"}
                     theme={currentMode === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
                     options={editorOptions}
                     path={languageContext.path}

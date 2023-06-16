@@ -142,10 +142,7 @@ const ItemsList = ({
   const { theme } = useTheme();
 
   return (
-    <div className={classNames(
-      "grow flex flex-col",
-      "border-b border-slate-400 dark:border-slate-800"
-    )}>
+    <div className="grow flex flex-col">
       <div className={classNames(
          theme.text1,
          'bg-slate-150 dark:bg-slate-700',
@@ -323,7 +320,10 @@ export const TfAwsTarget = ({
         </div>
       )}
       <div className="w-full h-full flex relative gap-[1px]">
-        <div className="flex flex-col w-1/2 max-w-[20rem]">
+        <div className={classNames(
+          "flex flex-col w-1/2 max-w-[20rem]",
+          "divide-y divide-slate-400 dark:divide-slate-800"
+        )}>
           <ItemsList
             title="Resources"
             items={resources}
