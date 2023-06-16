@@ -2,6 +2,8 @@ import { WebContainer } from '@webcontainer/api';
 import files from './files';
 
 import expressUrl from './assets/express.tgz?url'
+import debugUrl from './assets/debug.tgz?url'
+import msUrl from './assets/ms.tgz?url'
 import tarGzCode from "./assets/tar.gz.js?url";
 import winglangSdkUrl from '@wing-playground/console-build/dist/winglang-sdk-webpack.tgz?url'
 import winglangUrl from '@wing-playground/console-build/dist/winglang-webpack.tgz?url'
@@ -32,12 +34,14 @@ export async function initContainer(): Promise<WebContainer> {
   }));
 
 
-  const [winglangSdkData, winglangData, expressData, codespanWasmData, esbuildWasmData,
+  const [winglangSdkData, winglangData, expressData, debugData, msData, codespanWasmData, esbuildWasmData,
     tarGzCodeString, consoleCodeString, allConsoleCode,
     constructsJSIIString, constructsPackageJsonString] = await Promise.all([
     fetch(winglangSdkUrl).then((d) => d.arrayBuffer()),
     fetch(winglangUrl).then((d) => d.arrayBuffer()),
     fetch(expressUrl).then((d) => d.arrayBuffer()),
+    fetch(debugUrl).then((d) => d.arrayBuffer()),
+    fetch(msUrl).then((d) => d.arrayBuffer()),
     fetch(codespanWasmUrl).then((d) => d.arrayBuffer()),
     fetch(esbuildWasmUrl).then((d) => d.arrayBuffer()),
     fetch(tarGzCode).then((d) => d.text()),
@@ -57,6 +61,8 @@ export async function initContainer(): Promise<WebContainer> {
     { 'sdk.tgz': { file: { contents: new Uint8Array(winglangSdkData) } } },
     { 'wing.tgz': { file: { contents: new Uint8Array(winglangData) } } },
     { 'express.tgz': { file: { contents: new Uint8Array(expressData)} } },
+    { 'debug.tgz': { file: { contents: new Uint8Array(debugData) } } },
+    { 'ms.tgz': { file: { contents: new Uint8Array(msData) } } },
     { 'codespan-wasm.tgz': { file: { contents: new Uint8Array(codespanWasmData) } } },
     { 'esbuild-wasm.tgz': { file: { contents: new Uint8Array(esbuildWasmData) } } },
     { 'tar.gz.js': { file: { contents: tarGzCodeString } } },
