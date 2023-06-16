@@ -3,6 +3,7 @@ import { Header as GlobalHeader } from "@wing-playground/shared/src/Header";
 import { ThemeToggle } from "@wing-playground/shared/src/ThemeToggle";
 import { Mode } from "@wing-playground/shared/src/theme-provider";
 import { useTheme } from "@wing-playground/shared/src/theme-provider";
+import classNames from "classnames";
 
 export interface HeaderProps {
   currentMode: Mode;
@@ -44,7 +45,11 @@ export function Header({ currentMode, onToggleTheme }: HeaderProps) {
       </div>
     </div>
     <div className="flex items-center justify-end">
-      <div className="flex items-center justify-end flex-none gap-4 text-slate-700 dark:text-[#f1f0f1] hover:text-slate-600 dark:hover:text-[#2ad5c1]">
+      <div className={classNames(
+        "flex items-center justify-end flex-none gap-4",
+        "text-slate-700 dark:text-[#f1f0f1] hover:text-slate-600 dark:hover:text-[#2ad5c1]",
+        "transition-colors duration-300",
+      )}>
         <a href="https://t.winglang.io/slack" className="flex items-center justify-center h-[40px]">
           <div className="h-[24px]">
             <svg className="overflow-hidden" width="100%" height="100%" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">

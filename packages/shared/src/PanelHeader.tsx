@@ -5,8 +5,9 @@ import { useTheme } from "./theme-provider";
 export const PanelHeader: FC<PropsWithChildren> = ({children}) => {
   const {theme} = useTheme();
   return <h3 className={classNames(
-    theme.bg3,
     theme.text1,
+    'bg-slate-200 dark:bg-slate-700',
+    "transition-colors duration-300",
     "px-4 py-1 border-b uppercase text-xs font-semibold leading-7 tracking-widest",
     "border-gray-400 dark:border-gray-800",
 

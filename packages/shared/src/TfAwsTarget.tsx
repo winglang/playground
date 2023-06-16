@@ -90,9 +90,16 @@ const FileRow = ({title, description, icon, selected, onClick, className}: {
         className={classNames(
           "flex items-center w-full px-4 py-1",
           "text-left text-sm font-medium leading-5",
-          "hover:bg-slate-200 focus:bg-slate-200 dark:hover:bg-slate-600 dark:focus:bg-slate-600 focus:outline-none",
-          selected && "bg-slate-200 text-slate-700 dark:bg-slate-600 dark:text-white font-semibold",
-          !selected && "text-slate-600 dark:text-slate-300",
+          "transition-colors duration-300",
+          "outline-none",
+          selected && [
+            theme.textInput,
+            "bg-slate-200 dark:bg-slate-750",
+          ],
+          !selected && [
+            theme.text1,
+            "bg-white dark:bg-slate-700",
+          ],
           className,
         )}
         onClick={onClick}
@@ -135,38 +142,54 @@ const ItemsList = ({
   const { theme } = useTheme();
 
   return (
-    <div className="grow flex flex-col">
-      <PanelHeader>
+    <div className={classNames(
+      "grow flex flex-col",
+      "border-b border-slate-400 dark:border-slate-800"
+    )}>
+      <div className={classNames(
+         theme.text1,
+         'bg-slate-150 dark:bg-slate-700',
+         "transition-colors duration-300",
+         "px-4 py-1 uppercase text-xs font-semibold leading-7 tracking-widest",
+      )}>
         <div className="space-x-1 grow">
-          <span className="font-semibold text-xs capitalize text-slate-900 dark:text-slate-300">{title}</span>
+          <span className="font-semibold text-xs capitalize text-slate-900 dark:text-slate-300 transition-colors duration-300">
+            {title}
+          </span>
           <span>({items?.length || 0})</span>
         </div>
         <div>
           {actions}
         </div>
-      </PanelHeader>
-      <div className="flex flex-col grow relative bg-white dark:bg-gray-750 border-t-[0.5px] border-gray-400 dark:border-gray-800">
+      </div>
+      <div className={classNames(
+        "flex flex-col grow relative border-t-[0.5px]",
+        "bg-white dark:bg-gray-750 border-gray-400 dark:border-gray-800",
+        "transition-colors duration-300",
+      )}>
         <div className="absolute inset-0 overflow-y-auto">
-          <div className="grow">
+          <div className={classNames(
+            "grow",
+            "divide-y divide-gray-400 dark:divide-gray-600",
+          )}>
             {items?.length === 0 && (
               <div className={classNames(
                 theme.text2,
-                "px-2 py-2 text-sm text-center"
+                "px-2 py-2 text-sm text-center",
               )}>
                 {placeholder}
               </div>
             )}
             {items.map((item, index) => {
               const prev = items[index - 1];
-              const next = items[index + 1];
               return (
                 <>
                 {group && item.description !== prev?.description && (
                   <div className={classNames(
-                    theme.bg3,
-                    theme.text1,
+                    "bg-slate-150/60 dark:bg-slate-700/60",
+                    "text-slate-500 dark:text-slate-350",
                     "pl-6 pr-2 py-1 text-xs",
-                    "border-b border-gray-400 dark:border-gray-800"
+                    "transition-colors duration-300"
                   )}>
                     {item.description}
                   </div>
@@ -180,9 +203,8 @@ const ItemsList = ({
                     onClick={() => onClick(item)}
                     className={
                       classNames(
-                        "border-b pl-8",
-                        item.description !== next?.description && "border-gray-400 dark:border-gray-800" ,
-                        item.description === next?.description && "border-gray-500 dark:border-gray-700",
+                        "pl-8",
+                        "transition-colors duration-300",
                       )
                     }
                   />
@@ -301,7 +323,7 @@ export const TfAwsTarget = ({
         </div>
       )}
       <div className="w-full h-full flex relative gap-[1px]">
-        <div className="flex flex-col w-1/2 max-w-[20rem] gap-[1px]">
+        <div className="flex flex-col w-1/2 max-w-[20rem]">
           <ItemsList
             title="Resources"
             items={resources}

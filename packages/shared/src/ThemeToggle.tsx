@@ -15,14 +15,26 @@ export const ThemeToggle = ({ mode, onToggle } : ThemeToggleProps) => {
       className={
         classNames(
           theme.textInput,
-          "p-1.5 rounded-3xl font-medium",
-          "hover:bg-slate-200 hover:dark:bg-slate-700"
+          "p-1.5 rounded-3xl font-medium relative",
+          "hover:bg-slate-200 hover:dark:bg-slate-700",
+          "transition-all duration-300",
+          'w-10 h-10',
       )}
       onClick={onToggle}
 
     >
-      {mode === 'light' && <SunIcon className='w-6 h-6'/>}
-      {mode === 'dark' && <MoonIcon className='w-6 h-6'/>}
+      <SunIcon className={classNames(
+        'h-6 w-6',
+        'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
+        'transition-all duration-300',
+        mode === 'light' || 'opacity-0'
+      )}/>
+      <MoonIcon className={classNames(
+        'h-6 w-6',
+        'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
+        'transition-all duration-300',
+        mode === 'dark' || 'opacity-0'
+      )}/>
     </button>
   );
 }

@@ -40,6 +40,7 @@ export const TargetsView = ({targets, setCurrentTargetId, currentTargetId}: Targ
       className={classNames(
         theme.bg3,
         theme.text1,
+        "transition-colors duration-300",
         "border-b border-gray-400 dark:border-gray-800",
         "uppercase text-xs font-semibold leading-7 tracking-widest",
       )}

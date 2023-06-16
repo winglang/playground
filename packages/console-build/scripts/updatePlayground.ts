@@ -81,6 +81,10 @@ const updateWing = async () => {
   const inflighFlights = await glob(`${sdkDir}/lib/target-sim/**/*inflight*`);
   await Promise.all(inflighFlights.map(f => fs.cp(f, path.join(sdkDistDir, basename(f)))));
 
+  console.log("Compressing Wing files...")
+  // copy all the files from skDir/lib to sdkDistDir
+  await fs.cp(`${sdkDir}/lib`, sdkDistDir, { recursive: true });
+
   console.log("Compressing Wing SDK...")
   await tar.create({
     file: path.join(currentDir, "../dist/winglang-sdk-webpack.tgz"),

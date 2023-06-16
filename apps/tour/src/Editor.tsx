@@ -320,7 +320,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
 
     return (
       <ThemeProvider mode={currentMode} theme={DefaultTheme}>
-          <div className='w-full flex flex-col grow p-6 bg-slate-100 dark:bg-[#293443]'>
+          <div className={classNames(
+            'w-full flex flex-col grow p-6',
+            theme.bg4,
+            'transition-all duration-300'
+          )}>
             <div className='flex grow relative'>
                 <div className="flex flex-col w-[40%] min-w-[25rem] px-[20px]">
                     <div className='flex items-center overflow-auto gap-2'>
