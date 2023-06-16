@@ -14,6 +14,8 @@ import {
   CompletionItem,
   DocumentSymbol,
   Hover,
+  Diagnostic,
+  Range
 } from "vscode-languageserver/browser";
 
 import * as wingCompiler from "winglang/dist/wingc";
@@ -53,7 +55,7 @@ const wingc = await load({
   wingsdkManifestRoot: "/wingsdk",
   imports: {
     env: {
-      send_notification,
+      send_diagnostic,
     },
   },
 });
@@ -76,23 +78,38 @@ connection.onInitialize((_params: InitializeParams) => {
   return result;
 });
 
+let s = self
+const raw_diagnostics: wingCompiler.WingDiagnostic[] = [];
+
 connection.onDidOpenTextDocument(async (params) => {
   const string = JSON.stringify(params);
+  raw_diagnostics.length = 0;
   try {
     wingCompiler.invoke(wingc, "wingc_on_did_open_text_document", string);
-
   } catch (e) {
     s.reportError(e);
   }
+  connection.sendDiagnostics({
+    uri: params.textDocument.uri,
+    diagnostics: raw_diagnostics.map((rd) => {
+      return Diagnostic.create(Range.create(rd.span.start.line, rd.span.start.col, rd.span.end.line, rd.span.end.col), rd.message)
+    })
+  });
 });
-let s = self
 connection.onDidChangeTextDocument(async (params) => {
   const string = JSON.stringify(params);
+  raw_diagnostics.length = 0;
   try {
     wingCompiler.invoke(wingc, "wingc_on_did_change_text_document", string);
   } catch (e) {
     s.reportError(e);
   }
+  connection.sendDiagnostics({
+    uri: params.textDocument.uri,
+    diagnostics: raw_diagnostics.map((rd) => {
+      return Diagnostic.create(Range.create(rd.span.start.line, rd.span.start.col, rd.span.end.line, rd.span.end.col), rd.message)
+    })
+  });
 });
 
 connection.onCompletion(async (params) => {
@@ -103,6 +120,32 @@ connection.onCompletion(async (params) => {
       JSON.stringify(params)
     ) as string;
     return JSON.parse(result) as CompletionItem[];
+
+  } catch (e) {
+    s.reportError(e);
+  }
+});
+connection.onSignatureHelp(async (params) => {
+  try {
+    const result = wingCompiler.invoke(
+      wingc,
+      "wingc_on_signature_help",
+      JSON.stringify(params)
+    ) as string;
+    return JSON.parse(result);
+
+  } catch (e) {
+    s.reportError(e);
+  }
+});
+connection.onDefinition(async (params) => {
+  try {
+    const result = wingCompiler.invoke(
+      wingc,
+      "wingc_on_goto_definition",
+      JSON.stringify(params)
+    ) as string;
+    return JSON.parse(result);
 
   } catch (e) {
     s.reportError(e);
@@ -148,26 +191,15 @@ connection.listen()
  * This function is called by the WASM code to immediately
  * send a notification to the client.
  */
-function send_notification(
-  type_ptr: number,
-  type_len: number,
+function send_diagnostic(
   data_ptr: number,
   data_len: number
 ) {
-  const type_buf = Buffer.from(
-    (wingc.exports.memory as WebAssembly.Memory).buffer,
-    type_ptr,
-    type_len
-  );
-  const type_str = new TextDecoder().decode(type_buf);
-
   const data_buf = Buffer.from(
     (wingc.exports.memory as WebAssembly.Memory).buffer,
     data_ptr,
     data_len
   );
   const data_str = new TextDecoder().decode(data_buf);
-
-  // purposely not awaiting this, notifications are fire-and-forget
-  void connection.sendNotification(type_str, JSON.parse(data_str));
+  raw_diagnostics.push(JSON.parse(data_str));
 }
