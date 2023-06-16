@@ -34,7 +34,7 @@ const localStorageThemeKey = "console-theme";
 export const DefaultTheme: Theme = {
   bg1: "bg-slate-300 dark:bg-slate-800",
   bg2: "bg-slate-200 dark:bg-slate-800",
-  bg3: "bg-slate-200 dark:bg-slate-700",
+  bg3: "bg-slate-100 dark:bg-slate-700",
   bg4: "bg-slate-100 dark:bg-[#293443]",
   bgInput: "bg-white dark:bg-slate-800",
   bgInputHover: "hover:bg-slate-50 dark:hover:bg-slate-750",

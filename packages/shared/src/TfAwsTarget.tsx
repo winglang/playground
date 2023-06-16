@@ -92,14 +92,9 @@ const FileRow = ({title, description, icon, selected, onClick, className}: {
           "text-left text-sm font-medium leading-5",
           "transition-colors duration-300",
           "outline-none",
-          selected && [
-            theme.textInput,
-            "bg-slate-200 dark:bg-slate-750",
-          ],
-          !selected && [
-            theme.text1,
-            "bg-white dark:bg-slate-700",
-          ],
+          theme.textInput,
+          selected && "bg-slate-200 dark:bg-slate-750",
+          !selected && "bg-white dark:bg-slate-700",
           className,
         )}
         onClick={onClick}
@@ -184,7 +179,7 @@ const ItemsList = ({
                 {group && item.description !== prev?.description && (
                   <div className={classNames(
                     "bg-slate-150/60 dark:bg-slate-700/60",
-                    "text-slate-500 dark:text-slate-350",
+                    "text-slate-500 dark:text-slate-300",
                     "pl-6 pr-2 py-1 text-xs",
                     "transition-colors duration-300"
                   )}>
