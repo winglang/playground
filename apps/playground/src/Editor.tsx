@@ -39,6 +39,9 @@ import { TfAwsTarget } from '@wing-playground/shared/src/TfAwsTarget.js';
 import { TargetsView, TargetView } from "@wing-playground/shared/src/TargetsView.js";
 import { PanelHeader } from '@wing-playground/shared/src/PanelHeader';
 import { debounce } from 'lodash';
+import { DefaultTheme, ThemeProvider, useTheme } from '@wing-playground/shared/src/theme-provider';
+import { Header } from './Header';
+import { ConsoleEmptyStateIcon } from "@wing-playground/shared/src/ConsoleEmptyStateIcon";
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
   (i) => JSON.parse(i.default)
@@ -73,6 +76,24 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [iframSrc, setIframeSrc] = useState("");
     const [loadingStatus, setLoadingStatus] = useState(LoadingStatus.Init);
     const { analytics } = useAnalytics({ name: 'playground', state: loadingStatus });
+
+    const { theme, mode } = useTheme();
+    const [currentMode, setCurrentMode] = useState(mode ?? "dark");
+
+    const onToggleTheme = useCallback(() => {
+      const newMode = (currentMode === "light" ? "dark" : "light");
+      //setCurrentTheme(newMode);
+      setCurrentMode(newMode);
+      const iframeWindow = (refIframe.current as any)?.contentWindow;
+      if (!iframeWindow) {
+        return;
+      }
+      iframeWindow.postMessage({
+        type: "theme",
+        mode: newMode
+      }, "*");
+
+    }, [currentMode, refIframe.current]);
 
     const installConsole = async (containerRef: React.MutableRefObject<WebContainer>) => {
         const consoleUrl = await installDependencies(containerRef.current, ConsoleLayouts.Playground);
@@ -170,68 +191,75 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     }, [simulatorTarget, tfAwsTarget]);
 
     return (
-      <div className='flex flex-col h-full'>
-        <div className='flex grow gap-2'>
-          <RightResizableWidget className={
-            classNames(
-              "border border-gray-400 dark:border-gray-800 h-full",
-              "max-w-[60%] flex flex-col min-w-[10rem] min-h-[15rem]",
-              {
-                "w-[33%]": fontSize === 12,
-                "w-[38%]": fontSize === 14,
-                "w-[43%]": fontSize === 16
-              }
-            )
-          }>
-            <PanelHeader>
-              <div className="flex">
-                <span>EDITOR</span>
-                <div className="grow"/>
-                <select
-                  className="bg-slate-700 text-slate-250 h-7 px-2 text-xs cursor-pointer focus:outline-none"
-                  value={fontSize}
-                  onChange={(e) => setFontSize(parseInt(e.target.value))}
-                >
-                  {fontSizes.map((size) => (
-                    <option key={size} value={size}>
-                      Font Size {size}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </PanelHeader>
+      <ThemeProvider mode={currentMode} theme={DefaultTheme}>
+        <div className='w-full flex flex-col grow p-6 bg-slate-100 dark:bg-[#293443]'>
+          <div className='flex flex-col grow relative pl-[20px]'>
+            <Header currentMode={currentMode} onToggleTheme={onToggleTheme}/>
+            <div className='flex flex-col h-full'>
+              <div className='flex grow gap-2'>
+                <RightResizableWidget className={
+                  classNames(
+                    "border border-gray-400 dark:border-gray-800 h-full",
+                    "max-w-[60%] flex flex-col min-w-[10rem] min-h-[15rem]",
+                    {
+                      "w-[33%]": fontSize === 12,
+                      "w-[38%]": fontSize === 14,
+                      "w-[43%]": fontSize === 16
+                    }
+                  )
+                }>
+                  <PanelHeader>
+                    <div className="flex">
+                      <span>EDITOR</span>
+                      <div className="grow"/>
+                      <select
+                        className="bg-transparent h-7 px-2 text-xs cursor-pointer focus:outline-none"
+                        value={fontSize}
+                        onChange={(e) => setFontSize(parseInt(e.target.value))}
+                      >
+                        {fontSizes.map((size) => (
+                          <option key={size} value={size}>
+                            Font Size {size}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </PanelHeader>
 
-            <Editor
-              data-testid={"editor"}
-              theme={"akkd-dark-plus"}
-              options={editorOptions}
-              path={languageContext.path}
-              language={languageContext.language}
-              onMount={editorDidMount}
-              beforeMount={editorWillMount}
-              onChange={(value) => {
-                void evaluateCode(value);
-            }}/>
-          </RightResizableWidget>
-          <div className='grow h-full basis-auto border border-gray-400 dark:border-gray-800'>
-          {loadingStatus !== LoadingStatus.Completed &&
-            <div className="flex flex-col h-full relative">
-              <div className='absolute inset-0 z-10'>
-                <Loading status={loadingStatus} />
-              </div>
-              <div className="flex flex-col items-center justify-center h-full animate-pulse">
-                <img src='empty_state.svg' className='h-[150px] p-10'/>
+                  <Editor
+                    data-testid={"editor"}
+                    theme={currentMode === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
+                    options={editorOptions}
+                    path={languageContext.path}
+                    language={languageContext.language}
+                    onMount={editorDidMount}
+                    beforeMount={editorWillMount}
+                    onChange={(value) => {
+                      void evaluateCode(value);
+                  }}/>
+                </RightResizableWidget>
+                <div className='grow h-full basis-auto border border-gray-400 dark:border-gray-800'>
+                {loadingStatus !== LoadingStatus.Completed &&
+                  <div className="flex flex-col h-full relative">
+                    <div className='absolute inset-0 z-10'>
+                      <Loading status={loadingStatus} />
+                    </div>
+                    <div className="absolute inset-0 items-center justify-center flex opacity-40">
+                      <ConsoleEmptyStateIcon className='w-1/3'/>
+                    </div>
+                  </div>
+                }
+                {loadingStatus === LoadingStatus.Completed &&
+                  <TargetsView
+                    targets={targetViews}
+                    currentTargetId={currentTargetId}
+                    setCurrentTargetId={setCurrentTargetId}
+                  />}
+                </div>
               </div>
             </div>
-          }
-          {loadingStatus === LoadingStatus.Completed &&
-            <TargetsView
-              targets={targetViews}
-              currentTargetId={currentTargetId}
-              setCurrentTargetId={setCurrentTargetId}
-            />}
           </div>
         </div>
-      </div>
+      </ThemeProvider>
     );
 };

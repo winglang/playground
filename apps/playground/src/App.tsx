@@ -1,16 +1,9 @@
 import { ReactMonacoEditor } from './Editor'
-import { Header } from './Header'
 
 function App() {
   return (
-    <div className="max-h-full h-full flex flex-col text-slate-700 p-6 bg-[#293443]">
-      <div className='flex flex-col h-full pl-[20px]'>
-        <div className='grow pb-4'>
-          <Header />
-        </div>
-        <ReactMonacoEditor />
-      </div>
-
+    <div className="max-h-full h-full flex flex-col">
+      <ReactMonacoEditor />
       {/* { isChrome() ? <ReactMonacoEditor /> :
       <div className='h-full flex justify-center content-center items-center'>
         <div className='h-24 text-xl flex flex-row justify-center content-center items-center text-[#f1f0f1]'>
