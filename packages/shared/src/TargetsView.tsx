@@ -42,6 +42,7 @@ export const TargetsView = ({targets, setCurrentTargetId, currentTargetId}: Targ
         "bg-slate-200 dark:bg-slate-700",
         "transition-colors duration-300",
         "border-b border-gray-400 dark:border-gray-800",
+        "transition-colors duration-300",
         "uppercase text-xs font-semibold leading-7 tracking-widest",
       )}
       tabs={tabs}

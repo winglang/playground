@@ -85,14 +85,14 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
     const [currentMode, setCurrentMode] = useState(mode ?? "dark");
 
     const onToggleTheme = useCallback(() => {
-      if (!iframSrc) {
-        return;
-      }
       const newMode = (currentMode === "light" ? "dark" : "light");
       setCurrentMode(newMode);
-      setIframeSrc(
-        iframSrc.replace(/theme=(light|dark)/, `theme=${newMode}`)
-      );
+
+      if (iframSrc !== "") {
+        setIframeSrc(
+          iframSrc.replace(/theme=(light|dark)/, `theme=${newMode}`)
+        );
+      }
 
     }, [currentMode, iframSrc]);
 
@@ -337,7 +337,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                     return (
                                       <div className={classNames(
                                         "absolute w-full h-full overflow-auto py-4 pr-2",
-                                        "transition-all duration-300 ease-in-out",
                                         index === currentStepIndex && "translate-x-0",
                                         index < currentStepIndex && "-translate-x-full",
                                         index > currentStepIndex && "translate-x-full",
@@ -345,7 +344,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                           <div
                                           className={classNames(
                                           'font-sans',
-                                          '*:transition-colors duration-300',
                                           'prose-lg prose-invert prose-p:leading-6 text-slate-700 dark:text-[#BDCECC] prose-ol:list-decimal',
                                           'prose-pre:bg-slate-200 dark:prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-prose-p:text-slate-700 dark:prose-ol:my-prose-p:text-[#BDCECC]',
                                           'prose-pre:overflow-auto',
@@ -353,6 +351,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                           'prose-h3:text-xl prose-h3:pb-4 prose-h3:pt-4 prose-headings:font-sans prose-h3:font-bold',
                                           'prose-h4:text-xl prose-h4:pb-4 prose-h4:pt-0 prose-headings:font-sans prose-h4:font-bold',
                                           'prose-h1:text-3xl prose-headings:pb-8 prose-headings:text-slate-700 dark:prose-headings:text-[#BDCECC] prose-h1:font-bold',
+                                          '[&>*]:transition-colors [&>*]:duration-300',
+                                          'prose-h1:transition-colors prose-h1:duration-300',
                                           )}>
                                             <ReactMarkdown
                                               children={step.tutorial ?? ""}
@@ -452,6 +452,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                     classNames(
                       'h-[40%] flex flex-col w-full overflow-hidden',
                       'border border-gray-400 dark:border-gray-800',
+                      'transition-colors duration-300',
                       'bg-slate-200/40 dark:bg-slate-700/40'
                     )}
                   >
@@ -496,7 +497,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                       <div className='flex flex-col grow w-full relative'>
                         <div className="absolute inset-0 overflow-hidden">
                           <Editor
-                            key={currentMode}
                             data-testid={"editor"}
                             theme={currentMode === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
                             options={editorOptions}
@@ -514,10 +514,12 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                   </div>
                   <div data-cueid="simulation" className={
                   classNames(
-                    'flex flex-col grow basis-auto overflow-hidden border border-gray-400 dark:border-gray-800',
+                    'flex flex-col grow basis-auto overflow-hidden border',
+                    'border-gray-400 dark:border-gray-800',
+                    'transition-colors duration-300',
                     'bg-slate-200/40 dark:bg-slate-700/40'
                   )}>
-                    {!showWelcome && loadingStatus == LoadingStatus.Completed && (
+                    {!showWelcome && loadingStatus === LoadingStatus.Completed && (
                       <TargetsView
                         targets={targetViews}
                         currentTargetId={currentTargetId}
