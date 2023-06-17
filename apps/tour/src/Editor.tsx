@@ -347,7 +347,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                           'font-sans',
                                           '*:transition-colors duration-300',
                                           'prose-lg prose-invert prose-p:leading-6 text-slate-700 dark:text-[#BDCECC] prose-ol:list-decimal',
-                                          'prose-pre:bg-slate-300 dark:prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-prose-p:text-slate-700 dark:prose-ol:my-prose-p:text-[#BDCECC]',
+                                          'prose-pre:bg-slate-200 dark:prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-prose-p:text-slate-700 dark:prose-ol:my-prose-p:text-[#BDCECC]',
                                           'prose-pre:overflow-auto',
                                           'prose-a:text-sky-700 dark:prose-a:text-sky-300',
                                           'prose-h3:text-xl prose-h3:pb-4 prose-h3:pt-4 prose-headings:font-sans prose-h3:font-bold',
