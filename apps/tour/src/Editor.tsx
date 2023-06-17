@@ -88,20 +88,16 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
     const onToggleTheme = useCallback(() => {
       const newMode = (currentMode === "light" ? "dark" : "light");
       //setCurrentTheme(newMode);
+      setIframeSrc(
+        iframSrc.replace(/theme=(light|dark)/, `theme=${newMode}`)
+      );
       setCurrentMode(newMode);
-      const iframeWindow = (refIframe.current as any).contentWindow;
-      if (!iframeWindow) {
-        return;
-      }
-      iframeWindow.postMessage({
-        type: "theme",
-        mode: newMode
-      }, "*");
 
-    }, [currentMode]);
+    }, [currentMode, iframSrc]);
 
     const installConsole = async (containerRef: React.MutableRefObject<WebContainer>) => {
         const consoleUrl = await installDependencies(containerRef.current, ConsoleLayouts.Tour);
+        console.log("consoleUrl", consoleUrl);
         setIframeSrc(consoleUrl)
     }
     const editorOptions = {

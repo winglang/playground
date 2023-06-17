@@ -1,5 +1,6 @@
 import { WebContainer } from "@webcontainer/api";
 import { files } from "./files";
+import { getCurrentMode } from "./theme-provider";
 
 export enum ConsoleLayouts {
   Playground = 2,
@@ -57,7 +58,7 @@ export async function installDependencies(
   return new Promise((resolve) => {
     webcontainerInstance.on("server-ready", (port, url) => {
       console.log("webcontainer server opened", url, new Date());
-      resolve(`${url}?layout=${consoleLayout.valueOf()}`);
+      resolve(`${url}?layout=${consoleLayout.valueOf()}&theme=${getCurrentMode()}`);
     });
   });
 }
