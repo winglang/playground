@@ -6,23 +6,23 @@ settings:
 
 dependencies:
   '@wingconsole/app':
-    specifier: ^0.2.189
-    version: 0.2.189(constructs@10.1.314)
+    specifier: ^0.2.190
+    version: 0.2.190(constructs@10.1.314)
 
 packages:
 
-  /@wingconsole/app@0.2.189(constructs@10.1.314):
-    resolution: {integrity: sha512-6/OU9UW4JqQF1jIK7qkO8AHciKoVIiTL7pyT25prDlFjkN2lfNzKBgD1nX+2qaxcgsJj0+xFswIrN2MVI6REPA==}
+  /@wingconsole/app@0.2.190(constructs@10.1.314):
+    resolution: {integrity: sha512-c5ADnh+qQ3bf4xIeK2TdYhhgAB2Tp4TXG8+IY358sVLcvd9+Fz70t4EsBnoDmyeCdEfTkYg6BUPfLm0DU1Na6A==}
     dependencies:
-      '@wingconsole/server': 0.2.189(constructs@10.1.314)
+      '@wingconsole/server': 0.2.190(constructs@10.1.314)
       express: 4.18.2
     transitivePeerDependencies:
       - constructs
       - supports-color
     dev: false
 
-  /@wingconsole/server@0.2.189(constructs@10.1.314):
-    resolution: {integrity: sha512-3ST4ACDMtg0mW2QRA3I3Vbcg138nkVqzigb2ZWsKaD3XVjFrfghZMUANpw29MUjCttxEEbqnodrRkDyeFGUSIQ==}
+  /@wingconsole/server@0.2.190(constructs@10.1.314):
+    resolution: {integrity: sha512-jXS2wUDBliVvXhjvqCJyZPCaKJ2JNvipXiNUdPXwyakMEbBFGPPRqsYfMkroQ727BxyKKhiLjO6lF6RHa4jkzw==}
     dependencies:
       '@winglang/compiler': 0.21.12(constructs@10.1.314)
       '@winglang/sdk': 0.21.12(constructs@10.1.314)

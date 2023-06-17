@@ -27,7 +27,6 @@ import ReactMarkdown from 'react-markdown'
 import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
 import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
 import { useExamples } from '@wing-playground/shared/src/use-examples.js';
-import { CodeEditorSkeleton } from './CodeEditorSkeleton.js';
 import classNames from 'classnames';
 
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
@@ -86,12 +85,14 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
     const [currentMode, setCurrentMode] = useState(mode ?? "dark");
 
     const onToggleTheme = useCallback(() => {
+      if (!iframSrc) {
+        return;
+      }
       const newMode = (currentMode === "light" ? "dark" : "light");
-      //setCurrentTheme(newMode);
+      setCurrentMode(newMode);
       setIframeSrc(
         iframSrc.replace(/theme=(light|dark)/, `theme=${newMode}`)
       );
-      setCurrentMode(newMode);
 
     }, [currentMode, iframSrc]);
 
@@ -344,6 +345,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                           <div
                                           className={classNames(
                                           'font-sans',
+                                          '*:transition-colors duration-300',
                                           'prose-lg prose-invert prose-p:leading-6 text-slate-700 dark:text-[#BDCECC] prose-ol:list-decimal',
                                           'prose-pre:bg-slate-300 dark:prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-prose-p:text-slate-700 dark:prose-ol:my-prose-p:text-[#BDCECC]',
                                           'prose-pre:overflow-auto',
@@ -364,7 +366,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                             </div>
 
                             <div className="w-full relative my-6">
-                              <div className={classNames("absolute top-0 left-0 bg-gray-200 dark:bg-gray-650 w-full h-[1.5px] -translate-y-1/2")}/>
+                              <div className={classNames(
+                                "absolute top-0 left-0 w-full h-[1.5px] -translate-y-1/2",
+                                "bg-gray-200 dark:bg-gray-650",
+                                "transition-colors duration-300"
+                              )}/>
                               <div
                                 className={classNames(
                                   "absoulte z-10 top-0 left-0 bg-gray-400 dark:bg-gray-650 h-[4px] -translate-y-1/2",
@@ -387,7 +393,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                 </Button>
 
                                 <div className="grow text-center items-center truncate">
-                                  <div className="flex gap-x-2 justify-center font-mono text-sm text-gray-700 dark:text-gray-450 truncate">
+                                  <div className={classNames(
+                                    "flex gap-x-2 justify-center font-mono text-sm truncate",
+                                    "text-gray-700 dark:text-gray-450",
+                                    "transition-colors duration-300"
+                                  )}>
                                     <span className='truncate uppercase' title={currentStep?.name}>{currentStep?.name}</span>
                                     <span>{currentStepIndex + 1 }/{tutorials.length}</span>
                                   </div>
