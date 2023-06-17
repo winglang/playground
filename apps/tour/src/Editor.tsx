@@ -27,7 +27,6 @@ import ReactMarkdown from 'react-markdown'
 import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
 import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
 import { useExamples } from '@wing-playground/shared/src/use-examples.js';
-import { CodeEditorSkeleton } from './CodeEditorSkeleton.js';
 import classNames from 'classnames';
 
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
@@ -427,7 +426,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                     "grow ml-4 flex flex-col gap-2"
                   )}>
                   <div data-cueid="code" className='h-[40%] flex flex-col w-full overflow-hidden border border-gray-800 bg-slate-700/40'>
-                    {showWelcome &&  <CodeEditorSkeleton loading={showTourLoading}/>}
                     <div className={
                       classNames(
                         showWelcome && "opacity-0",
@@ -483,11 +481,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                     'flex flex-col grow basis-auto overflow-hidden border border-gray-800',
                     'bg-slate-700/40'
                   )}>
-                    {showWelcome && (
-                      <div className="flex flex-col items-center justify-center h-full">
-                          <img src='empty_state.svg' className={classNames('h-[150px] p-10', showTourLoading && "animate-pulse")}/>
-                      </div>
-                    )}
                     {!showWelcome && loadingStatus == LoadingStatus.Completed && (
                       <TargetsView
                         targets={targetViews}
