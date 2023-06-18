@@ -1,0 +1,7 @@
+{
+  "name": "@wing-playground/container-files",
+  "private": true,
+  "dependencies":{
+    "@wingconsole/app":"^0.2.187"
+  }
+}
