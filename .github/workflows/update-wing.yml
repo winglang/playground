@@ -33,8 +33,7 @@ jobs:
         run: npm update winglang @winglang/sdk @winglang/compiler
         working-directory: apps/compiler
       - name: Update console version
-        run: npm update @wingconsole/app
-        working-directory: packages/container-files
+        run: npm run update
       - name: Build playground
         run: npm run build
         env:
