@@ -2,8 +2,7 @@
   "name": "@wing-playground/container-files",
   "private": true,
   "scripts": {
-    "update": "./update.sh",
-    "build": "cd lib && pnpm --version && pnpm install"
+    "update": "./update.sh"
   },
   "dependencies":{
     "pnpm": "8.3.1"
