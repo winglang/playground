@@ -6,7 +6,7 @@ export const PanelHeader: FC<PropsWithChildren> = ({children}) => {
   const {theme} = useTheme();
   return <h3 className={classNames(
     theme.text1,
-    'bg-slate-100 dark:bg-slate-700',
+    theme.bg3,
     "transition-colors duration-300",
     "px-4 py-1 border-b uppercase text-xs font-semibold leading-7 tracking-widest",
     "border-gray-400 dark:border-gray-800",

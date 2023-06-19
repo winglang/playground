@@ -39,7 +39,7 @@ export const TargetsView = ({targets, setCurrentTargetId, currentTargetId}: Targ
     <Tabs
       className={classNames(
         theme.text1,
-        "bg-slate-100 dark:bg-slate-700",
+        theme.bg3,
         "transition-colors duration-300",
         "border-b border-gray-400 dark:border-gray-800",
         "transition-colors duration-300",
