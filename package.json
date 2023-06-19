@@ -6,6 +6,7 @@
   ],
   "scripts": {
     "build": "turbo run build",
+    "update": "turbo run update",
     "tsc": "turbo run tsc"
   },
   "devDependencies": {

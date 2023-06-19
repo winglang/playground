@@ -1,9 +1,9 @@
 import { FileSystemTree } from "@webcontainer/api";
 
-import indexJs from "../container-files/index.js?raw";
-import testW from "../container-files/test.w?raw";
-import pkgJson from "../container-files/package.json?raw";
-import pnpmLock from "../container-files/pnpm-lock.yaml?raw";
+import indexJs from "@wing-playground/container-files/lib/index.js?raw";
+import testW from "@wing-playground/container-files/lib/test.w?raw";
+import pkgJson from "@wing-playground/container-files/lib/package.json?raw";
+import pnpmLock from "@wing-playground/container-files/lib/pnpm-lock.yaml?raw";
 
 export const files: FileSystemTree = {
   "index.js": {

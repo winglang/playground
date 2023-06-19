@@ -32,6 +32,8 @@ jobs:
       - name: Update compiler wing version
         run: npm update winglang @winglang/sdk @winglang/compiler
         working-directory: apps/compiler
+      - name: Update console version
+        run: npm run update
       - name: Build playground
         run: npm run build
         env:
