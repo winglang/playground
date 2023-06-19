@@ -41,7 +41,6 @@ import { PanelHeader } from '@wing-playground/shared/src/PanelHeader';
 import { debounce } from 'lodash';
 import { DefaultTheme, ThemeProvider, useTheme } from '@wing-playground/shared/src/theme-provider';
 import { Header } from './Header';
-import { ConsoleEmptyStateIcon } from "@wing-playground/shared/src/ConsoleEmptyStateIcon";
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
   (i) => JSON.parse(i.default)
@@ -218,7 +217,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         )}>
           <div className='flex flex-col grow relative pl-[20px]'>
             <Header currentMode={currentMode} onToggleTheme={onToggleTheme}/>
-            <div className='flex flex-col h-full'>
+            <div className='flex flex-col h-full pt-4'>
               <div className='flex grow gap-2'>
                 <RightResizableWidget className={
                   classNames(
@@ -272,9 +271,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                   <div className="flex flex-col h-full relative">
                     <div className='absolute inset-0 z-10'>
                       <Loading status={loadingStatus} />
-                    </div>
-                    <div className="absolute inset-0 items-center justify-center flex opacity-40">
-                      <ConsoleEmptyStateIcon className='w-1/3'/>
                     </div>
                   </div>
                 }
