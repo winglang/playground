@@ -15,7 +15,7 @@ export const ThemeToggle = ({ mode, onToggle } : ThemeToggleProps) => {
       className={
         classNames(
           theme.textInput,
-          "p-1.5 rounded-3xl font-medium flex",
+          "p-1.5 rounded-3xl font-medium flex focus:outline-none",
           "hover:bg-slate-200 hover:dark:bg-slate-700",
           "transition-color duration-300",
       )}
