@@ -55,8 +55,8 @@ export function Header({ currentMode, onToggleTheme }: HeaderProps) {
         <a href="https://github.com/winglang/wing" target="_blank" className={
           classNames(
             "flex gap-2 border-[1px] rounded-[4px] items-center font-sans text-[15px] py-[8px] px-[16px]",
-            //"border-gray-400 dark:border-[#26413c]",
             theme.border4,
+            "transition-colors duration-300",
           )}>
           <div className="h-5">
             <svg className="overflow-hidden" width="100%" height="100%" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -67,6 +67,7 @@ export function Header({ currentMode, onToggleTheme }: HeaderProps) {
           <div className={classNames(
             "w-[1px] h-[1.5em] border-r-[1px]",
             theme.border4,
+            "transition-colors duration-300",
           )}/>
           <div className="text-block-13">⭐️ {stars}<br /></div>
         </a>
