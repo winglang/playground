@@ -38,18 +38,16 @@ export function Header({ currentMode, onToggleTheme }: HeaderProps) {
 
   return <div className="flex">
   <div className="flex justify-between w-full">
-    <div className="flex gap-12">
       <GlobalHeader />
-      <div className="items-center flex">
-        <ThemeToggle mode={currentMode} onToggle={onToggleTheme}/>
-      </div>
-    </div>
     <div className="flex items-center justify-end">
       <div className={classNames(
         "flex items-center justify-end flex-none gap-4",
         "text-slate-700 dark:text-[#f1f0f1] hover:text-slate-600 dark:hover:text-[#2ad5c1]",
         "transition-colors duration-300",
       )}>
+        <div className="mx-2">
+          <ThemeToggle mode={currentMode} onToggle={onToggleTheme}/>
+        </div>
         <a href="https://t.winglang.io/slack" className="flex items-center justify-center h-[40px]">
           <div className="h-[24px]">
             <svg className="overflow-hidden" width="100%" height="100%" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">

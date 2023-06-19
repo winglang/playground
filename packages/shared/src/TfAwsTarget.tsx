@@ -19,7 +19,6 @@ import * as monaco from 'monaco-editor';
 import classNames from "classnames";
 import { CompilationItem } from "@wing-playground/shared/src/compiler/compiler";
 import { Loading } from "@wing-playground/shared/src/Loading";
-import { PanelHeader } from "@wing-playground/shared/src/PanelHeader";
 import { Cog8ToothIcon, DocumentIcon } from "@heroicons/react/24/outline";
 import { useTheme } from "@wing-playground/shared/src/theme-provider";
 
@@ -93,8 +92,8 @@ const FileRow = ({title, description, icon, selected, onClick, className}: {
           "transition-colors duration-300",
           "outline-none",
           theme.textInput,
-          selected && "bg-slate-200 dark:bg-slate-750",
-          !selected && "bg-white dark:bg-slate-700",
+          selected && "bg-slate-200 dark:bg-slate-550",
+          !selected && "bg-white hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-600",
           className,
         )}
         onClick={onClick}
@@ -160,10 +159,7 @@ const ItemsList = ({
         "transition-colors duration-300",
       )}>
         <div className="absolute inset-0 overflow-y-auto">
-          <div className={classNames(
-            "grow",
-            "divide-y divide-gray-400 dark:divide-gray-600",
-          )}>
+          <div className="grow">
             {items?.length === 0 && (
               <div className={classNames(
                 theme.text2,
@@ -181,7 +177,8 @@ const ItemsList = ({
                     "bg-slate-150/60 dark:bg-slate-700/60",
                     "text-slate-500 dark:text-slate-300",
                     "pl-6 pr-2 py-1 text-xs",
-                    "transition-colors duration-300"
+                    "transition-colors duration-300",
+                    "border-y border-gray-400 dark:border-gray-600"
                   )}>
                     {item.description}
                   </div>
