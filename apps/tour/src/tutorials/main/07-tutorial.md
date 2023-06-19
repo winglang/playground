@@ -1,6 +1,6 @@
 # Congrats! You’re one of us now 🎉
 
-You can continute learning Wing using one of these resources.
+You can continue learning Wing using one of these resources.
 #### Interactive Tutorials 
 
 [Learn about Bucket](/bucket)

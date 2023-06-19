@@ -1,6 +1,7 @@
 import {FC, useEffect, useMemo, useState } from "react";
 import { Tab, Tabs } from "@wing-playground/shared/src/Tabs";
 import classNames from "classnames";
+import { useTheme } from "./theme-provider";
 
 export interface TargetView {
   id: string;
@@ -13,6 +14,7 @@ export interface TargetsViewProps {
   setCurrentTargetId?: (targetId: string) => void;
 }
 export const TargetsView = ({targets, setCurrentTargetId, currentTargetId}: TargetsViewProps) => {
+  const {theme} = useTheme();
 
   const tabs = useMemo(() => {
     const tabs: Tab[] = [];
@@ -36,7 +38,12 @@ export const TargetsView = ({targets, setCurrentTargetId, currentTargetId}: Targ
   return (
     <Tabs
       className={classNames(
-        "text-[#BCCDD7] bg-slate-700 border-b border-[#2A3A4B]",
+        theme.text1,
+        theme.bg3,
+        "transition-colors duration-300",
+        "border-b",
+        theme.border4,
+        "transition-colors duration-300",
         "uppercase text-xs font-semibold leading-7 tracking-widest",
       )}
       tabs={tabs}

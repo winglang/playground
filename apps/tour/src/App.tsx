@@ -6,7 +6,6 @@ import { tutorials as bucketTutorial } from './tutorials/resource/bucket';
 import { tutorials as counterTutorial } from './tutorials/resource/counter';
 import { tutorials as topicTutorial } from './tutorials/resource/topic';
 import { tutorials as queueTutorial } from './tutorials/resource/queue';
-
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 
 const tutorialRoutes = [
@@ -29,8 +28,9 @@ const tutorialRoutes = [
 ];
 
 function AppView({ tutorials }: { tutorials: Tutorial[] }) {
+
   return (
-    <div className="max-h-full h-full flex flex-col text-slate-700">
+    <div className="max-h-full h-full flex flex-col">
       <ReactMonacoEditor tutorials={tutorials} />
       {/* { isChrome() ? <ReactMonacoEditor tutorials={tutorials} /> :
       <div className='h-full flex justify-center content-center items-center'>

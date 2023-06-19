@@ -7,8 +7,19 @@ export interface CodeEditorSkeletonProps {
 const CodeRow = ({loading, width} : {loading?: boolean, width: string}) => {
   return (
     <div className="flex gap-x-[25px] h-5">
-      <div className={classNames("w-5 bg-gray-700 rounded-sm shrink-0", loading && "animate-pulse")}/>
-      <div className={classNames("bg-gray-700 rounded-sm shrink-0", loading && "animate-pulse")} style={{width: width}}/>
+      <div className={classNames(
+        "bg-gray-300 dark:bg-gray-650",
+        "w-5 rounded-sm shrink-0",
+        loading && "animate-pulse"
+      )}/>
+      <div
+        className={classNames(
+          "bg-gray-300 dark:bg-gray-650",
+          "rounded-sm shrink-0",
+          loading && "animate-pulse"
+        )}
+        style={{width: width}}
+      />
     </div>
   );
 }

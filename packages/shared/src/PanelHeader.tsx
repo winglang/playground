@@ -1,5 +1,15 @@
 import {FC, PropsWithChildren} from "react";
+import classNames from "classnames";
+import { useTheme } from "./theme-provider";
 
 export const PanelHeader: FC<PropsWithChildren> = ({children}) => {
-    return <h3 className='text-[#BCCDD7] px-4 py-1 bg-slate-700 border-b border-[#2A3A4B] uppercase text-xs font-semibold leading-7 tracking-widest'>{children}</h3>;
+  const {theme} = useTheme();
+  return <h3 className={classNames(
+    theme.text1,
+    theme.bg3,
+    "transition-colors duration-300",
+    "px-4 py-1 border-b uppercase text-xs font-semibold leading-7 tracking-widest",
+    theme.border4,
+
+  )}>{children}</h3>;
 };

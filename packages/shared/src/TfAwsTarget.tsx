@@ -19,8 +19,8 @@ import * as monaco from 'monaco-editor';
 import classNames from "classnames";
 import { CompilationItem } from "@wing-playground/shared/src/compiler/compiler";
 import { Loading } from "@wing-playground/shared/src/Loading";
-import { PanelHeader } from "@wing-playground/shared/src/PanelHeader";
 import { Cog8ToothIcon, DocumentIcon } from "@heroicons/react/24/outline";
+import { useTheme } from "@wing-playground/shared/src/theme-provider";
 
 const getResourceName = (type: string) => {
   switch (type) {
@@ -81,6 +81,7 @@ const FileRow = ({title, description, icon, selected, onClick, className}: {
   onClick: () => void,
   className?: string,
 }) => {
+  const { theme } = useTheme();
   return (
     <div className="truncate">
       <button
@@ -88,9 +89,11 @@ const FileRow = ({title, description, icon, selected, onClick, className}: {
         className={classNames(
           "flex items-center w-full px-4 py-1",
           "text-left text-sm font-medium leading-5",
-          "hover:bg-slate-600 focus:bg-slate-600 focus:outline-none",
-          selected && "bg-slate-600 text-white",
-          !selected && "text-slate-200",
+          "transition-colors duration-300",
+          "outline-none",
+          theme.textInput,
+          selected && "bg-slate-200 dark:bg-slate-550",
+          !selected && "bg-slate-50 hover:bg-slate-100 dark:bg-slate-650 dark:hover:bg-slate-600",
           className,
         )}
         onClick={onClick}
@@ -130,33 +133,54 @@ const ItemsList = ({
   actions?: React.ReactNode;
   group?: boolean;
 }) => {
+  const { theme } = useTheme();
 
   return (
     <div className="grow flex flex-col">
-      <PanelHeader>
+      <div className={classNames(
+         theme.text1,
+         'bg-slate-150 dark:bg-slate-700',
+         "transition-colors duration-300",
+         "px-4 py-1 uppercase text-xs font-semibold leading-7 tracking-widest",
+      )}>
         <div className="space-x-1 grow">
-          <span className="font-semibold">{title}</span>
+          <span className="font-semibold text-xs capitalize text-slate-900 dark:text-slate-300 transition-colors duration-300">
+            {title}
+          </span>
           <span>({items?.length || 0})</span>
         </div>
         <div>
           {actions}
         </div>
-      </PanelHeader>
-      <div className="flex flex-col grow relative bg-gray-750">
+      </div>
+      <div className={classNames(
+        "flex flex-col grow relative border-t-[0.5px]",
+        "bg-white dark:bg-gray-750",
+        theme.border4,
+        "transition-colors duration-300",
+      )}>
         <div className="absolute inset-0 overflow-y-auto">
           <div className="grow">
             {items?.length === 0 && (
-              <div className="px-2 py-2 text-sm text-slate-500 text-center">
+              <div className={classNames(
+                theme.text2,
+                "px-2 py-2 text-sm text-center",
+              )}>
                 {placeholder}
               </div>
             )}
             {items.map((item, index) => {
               const prev = items[index - 1];
-              const next = items[index + 1];
               return (
                 <>
                 {group && item.description !== prev?.description && (
-                  <div className="px-2 py-1 text-xs text-slate-300 bg-slate-700 border-b border-slate-800">
+                  <div className={classNames(
+                    "bg-slate-200/60 dark:bg-slate-700/60",
+                    "text-slate-500 dark:text-slate-300",
+                    "pl-6 pr-2 py-1 text-xs",
+                    "transition-colors duration-300",
+                    "border-y border-slate-100 dark:border-gray-600"
+                  )}>
                     {item.description}
                   </div>
                 )}
@@ -169,8 +193,8 @@ const ItemsList = ({
                     onClick={() => onClick(item)}
                     className={
                       classNames(
-                        "border-b",
-                        item.description !== next?.description ? "border-slate-800" : "border-slate-700",
+                        "pl-8",
+                        "transition-colors duration-300",
                       )
                     }
                   />
@@ -199,6 +223,8 @@ export const TfAwsTarget = ({
 }: TfAwsTargetProps) => {
   const compileEditorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
   const [selectedItem, setSelectedItem] = useState<Item | undefined>();
+
+  const { theme, mode } = useTheme();
 
   const resources: Item[] = useMemo(() => {
     if (!files) {
@@ -274,14 +300,23 @@ export const TfAwsTarget = ({
 
 
   return (
-    <div className="w-full h-full relative bg-gray-800 p-[1px]">
+    <div className={classNames(
+      theme.bg1,
+      "w-full h-full relative"
+    )}>
       {loading && (
-        <div className="absolute inset-0 bg-slate-600/50 z-20">
+        <div className={classNames(
+          "absolute inset-0 z-20",
+          "bg-slate-300/50 dark:bg-slate-600/50"
+        )}>
           <Loading status=""/>
         </div>
       )}
       <div className="w-full h-full flex relative gap-[1px]">
-        <div className="flex flex-col w-1/2 max-w-[20rem] gap-[1px]">
+        <div className={classNames(
+          "flex flex-col w-1/2 max-w-[20rem]",
+          "divide-y divide-slate-400 dark:divide-slate-800"
+        )}>
           <ItemsList
             title="Resources"
             items={resources}
@@ -307,13 +342,18 @@ export const TfAwsTarget = ({
             "flex flex-col flex-grow min-w-[15rem] max-w-[3/4] relative"
         )}>
           {!selectedItem && (
-            <div className="absolute inset-0 z-10 text-slate-500 bg-gray-750 grid place-items-center">
+            <div className={classNames(
+              theme.bg3,
+              theme.text2,
+              "absolute inset-0 z-10 grid place-items-center",
+
+            )}>
               <div>Select a resource or asset to view</div>
             </div>
           )}
           <Editor
             key={selectedItem?.id}
-            theme="akkd-dark-plus"
+            theme={mode === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
             path="source.js"
             language="js"
             options={Object.assign({}, options, { readOnly: true })}
