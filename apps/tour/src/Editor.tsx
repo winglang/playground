@@ -469,28 +469,28 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                           {currentStep?.solution && editorCode !== currentStep.solution &&
                             <button
                             className={classNames(
-                              theme.text1,
-                              theme.bg1,
-                              theme.bgInputHover,
-                              //"text-[#BDCECC] bg-[#293443] hover:bg-[#2AD5C1] hover:text-slate-700",
-                              "text-xs px-4 py-0.5 leading-none cursor-pointer h-6 my-auto",
+                              "text-[9px] px-4 py-0.5 leading-none cursor-pointer h-6 my-auto",
+                              "text-slate-600 dark:text-[#BDCECC]",
+                              "hover:text-slate-650 dark:hover:text-slate-700",
+                              "bg-slate-200 dark:bg-slate-600",
+                              "hover:bg-slate-300 dark:hover:bg-[#2AD5C1]"
                             )}
                             onClick={() => solveTutorial()}
                           >
-                            Solve
+                            SOLVE
                           </button>
                           }
                           {editorCode == currentStep?.solution && (
                             <button
                             className={classNames(
-                              theme.text1,
-                              theme.bg1,
-                              theme.bgInputHover,
-                              //"text-[#BDCECC] bg-[#293443] hover:bg-[#2AD5C1] hover:text-slate-700",
-                              "text-xs px-4 py-0.5 leading-none cursor-pointer h-6 my-auto",
+                              "text-[9px] px-4 py-0.5 leading-none cursor-pointer h-6 my-auto",
+                              "text-slate-600 dark:text-[#BDCECC]",
+                              "hover:text-slate-650 dark:hover:text-slate-700",
+                              "bg-slate-200 dark:bg-slate-600",
+                              "hover:bg-slate-300 dark:hover:bg-[#2AD5C1]"
                             )}
                             onClick={() => resetTutorial()}>
-                              Reset
+                              RESET
                             </button>
                           )}
                         </div>
