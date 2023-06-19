@@ -451,7 +451,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                   <div data-cueid="code" className={
                     classNames(
                       'h-[40%] flex flex-col w-full overflow-hidden',
-                      'border border-gray-400 dark:border-gray-800',
+                      'border',
+                      theme.border4,
                       'transition-colors duration-300',
                       'bg-slate-200/40 dark:bg-slate-700/40'
                     )}
@@ -515,7 +516,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                   <div data-cueid="simulation" className={
                   classNames(
                     'flex flex-col grow basis-auto overflow-hidden border',
-                    'border-gray-400 dark:border-gray-800',
+                    theme.border4,
                     'transition-colors duration-300',
                     'bg-slate-200/40 dark:bg-slate-700/40'
                   )}>

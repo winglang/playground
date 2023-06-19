@@ -58,7 +58,7 @@ export const Tabs = (props: TabsProps) => {
                   theme.text3Hover,
                   "relative flex items-center cursor-pointer group",
                   "px-4 py-1 h-full border-b",
-                  isCurrent && props.tabs.length > 1 && "border-gray-800 dark:border-white",
+                  isCurrent && props.tabs.length > 1 && "border-gray-400 dark:border-white",
                   (!isCurrent || props.tabs.length === 1) && "border-transparent",
                   tab.tabClassName,
                 )}
