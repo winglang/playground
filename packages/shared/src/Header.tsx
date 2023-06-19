@@ -1,7 +1,8 @@
 import classNames from "classnames";
 import { WingLogo } from "./WingLogo";
+import { PropsWithChildren } from "react";
 
-export const Header = () => {
+export const Header = ({children}:PropsWithChildren<{}>) => {
   return (
     <div className={
       classNames(
@@ -17,6 +18,7 @@ export const Header = () => {
       <a href="https://docs.winglang.io/blog" target="_blank" rel="noreferrer">
         Blog
       </a>
+      {children}
     </div>
   );
 }

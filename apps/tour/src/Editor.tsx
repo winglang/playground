@@ -460,7 +460,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                     <div className={
                       classNames(
                         showWelcome && "opacity-0",
-                        "flex flex-col w-full grow",
+                        "flex flex-col w-full grow overflow-auto",
                       )}>
                       <PanelHeader>
                         <div className="flex">

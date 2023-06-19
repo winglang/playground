@@ -37,15 +37,13 @@ export function Header({ currentMode, onToggleTheme }: HeaderProps) {
   }, [watchersCount]);
 
   return <div className="flex">
-  <div className="flex justify-between w-full">
-      <GlobalHeader />
-    <div className="flex items-center justify-end">
+  <div className="justify-between w-full">
+    <GlobalHeader>
       <div className={classNames(
-        "flex items-center justify-end flex-none gap-4",
+        "flex grow items-center justify-end flex-none gap-4",
         "text-slate-700 dark:text-[#f1f0f1] hover:text-slate-600 dark:hover:text-[#2ad5c1]",
         "transition-colors duration-300",
       )}>
-
         <ThemeToggle mode={currentMode} onToggle={onToggleTheme}/>
         <a href="https://t.winglang.io/slack" className="flex items-center justify-center h-[18px]">
           <div className="h-[18px]">
@@ -66,11 +64,14 @@ export function Header({ currentMode, onToggleTheme }: HeaderProps) {
             </svg>
           </div>
           <div className="text-[15px]">Star us</div>
-          <div className="w-[1px] h-[1.5em] border-r-[1px] border-r-[#26413c]"></div>
+          <div className={classNames(
+            "w-[1px] h-[1.5em] border-r-[1px]",
+            theme.border4,
+          )}/>
           <div className="text-block-13">⭐️ {stars}<br /></div>
         </a>
       </div>
-    </div>
+    </GlobalHeader>
   </div>
 </div>
 }

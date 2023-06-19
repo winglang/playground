@@ -213,7 +213,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         <div className={classNames(
           'w-full flex flex-col grow p-6',
           theme.bg4,
-          'transition-colors duration-300'
+          'transition-colors duration-300',
+          'min-w-[43rem]',
         )}>
           <div className='flex flex-col grow relative pl-[20px]'>
             <Header currentMode={currentMode} onToggleTheme={onToggleTheme}/>
@@ -242,7 +243,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                         onChange={(e) => setFontSize(parseInt(e.target.value))}
                       >
                         {fontSizes.map((size) => (
-                          <option key={size} value={size}>
+                          <option key={size} value={size} className='truncate'>
                             Font Size {size}
                           </option>
                         ))}
