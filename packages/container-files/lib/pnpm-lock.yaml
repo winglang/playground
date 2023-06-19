@@ -2,23 +2,23 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@wingconsole/app':
-    specifier: ^0.2.190
-    version: 0.2.190(constructs@10.1.314)
+    specifier: ^0.2.191
+    version: 0.2.191(constructs@10.1.314)
 
 packages:
 
-  /@wingconsole/app@0.2.190(constructs@10.1.314):
-    resolution: {integrity: sha512-c5ADnh+qQ3bf4xIeK2TdYhhgAB2Tp4TXG8+IY358sVLcvd9+Fz70t4EsBnoDmyeCdEfTkYg6BUPfLm0DU1Na6A==}
+  /@wingconsole/app@0.2.191(constructs@10.1.314):
+    resolution: {integrity: sha512-RS3aFSq5+uDXwWHtq/P74zNDS5JyGrRiIaUSep1+WogrK3wuDPngSP+KRBoXVZ+L7myWBfxNwVMfthw/Z8nKNA==}
     dependencies:
-      '@wingconsole/server': 0.2.190(constructs@10.1.314)
+      '@wingconsole/server': 0.2.191(constructs@10.1.314)
       express: 4.18.2
     transitivePeerDependencies:
       - constructs
       - supports-color
     dev: false
 
-  /@wingconsole/server@0.2.190(constructs@10.1.314):
-    resolution: {integrity: sha512-jXS2wUDBliVvXhjvqCJyZPCaKJ2JNvipXiNUdPXwyakMEbBFGPPRqsYfMkroQ727BxyKKhiLjO6lF6RHa4jkzw==}
+  /@wingconsole/server@0.2.191(constructs@10.1.314):
+    resolution: {integrity: sha512-x0WPp+2mX3z8em5uY8u1/2VHIej19UJXilZhk8N7q1WKC3b/rF3CXoXfQYh0WpH/hbIlK9knI0Qr6IzrL/k9ew==}
     dependencies:
       '@winglang/compiler': 0.21.15(constructs@10.1.314)
       '@winglang/sdk': 0.21.15(constructs@10.1.314)
