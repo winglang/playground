@@ -31,5 +31,3 @@ window.addEventListener('message', function(event: any) {
     analytics.track(`tutorial: simulator: ${resourceName}: ${action}`, Object.assign({}, trace, trace.data));
   }
 });
-
-analytics.identify(Math.random().toString())

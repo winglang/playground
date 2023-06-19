@@ -6,13 +6,14 @@
   ],
   "scripts": {
     "build": "turbo run build",
+    "update": "turbo run update",
     "tsc": "turbo run tsc"
   },
   "devDependencies": {
     "prettier": "^2.8.8",
-    "turbo": "^1.9.6"
+    "turbo": "^1.10.3"
   },
   "dependencies": {
-    "react-router-dom": "^6.11.2"
+    "react-router-dom": "^6.13.0"
   }
 }

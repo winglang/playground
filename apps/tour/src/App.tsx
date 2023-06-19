@@ -33,8 +33,9 @@ const tutorialRoutes = [
 ];
 
 function AppView({ tutorials }: { tutorials: Tutorial[] }) {
+
   return (
-    <div className="max-h-full h-full flex flex-col text-slate-700">
+    <div className="max-h-full h-full flex flex-col">
       <ReactMonacoEditor tutorials={tutorials} />
       {/* { isChrome() ? <ReactMonacoEditor tutorials={tutorials} /> :
       <div className='h-full flex justify-center content-center items-center'>

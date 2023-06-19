@@ -1,7 +1,10 @@
 {
   "name": "@wing-playground/container-files",
   "private": true,
+  "scripts": {
+    "update": "./update.sh"
+  },
   "dependencies":{
-    "@wingconsole/app":"^0.2.187"
+    "pnpm": "8.3.1"
   }
 }
