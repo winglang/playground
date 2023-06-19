@@ -223,7 +223,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                 <RightResizableWidget className={
                   classNames(
                     "border h-full",
-                    "border-gray-400 dark:border-gray-800",
+                    theme.border4,
                     "transition-colors duration-300",
                     "max-w-[60%] flex flex-col min-w-[10rem] min-h-[15rem]",
                     {
@@ -265,7 +265,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                 </RightResizableWidget>
                 <div className={classNames(
                   'grow h-full basis-auto border',
-                  'border-gray-400 dark:border-gray-800',
+                  theme.border4,
                   'transition-colors duration-300',
                 )}>
                 {loadingStatus !== LoadingStatus.Completed &&

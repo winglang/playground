@@ -41,7 +41,8 @@ export const TargetsView = ({targets, setCurrentTargetId, currentTargetId}: Targ
         theme.text1,
         theme.bg3,
         "transition-colors duration-300",
-        "border-b border-gray-400 dark:border-gray-800",
+        "border-b",
+        theme.border4,
         "transition-colors duration-300",
         "uppercase text-xs font-semibold leading-7 tracking-widest",
       )}

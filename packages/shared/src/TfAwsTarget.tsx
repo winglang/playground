@@ -155,7 +155,8 @@ const ItemsList = ({
       </div>
       <div className={classNames(
         "flex flex-col grow relative border-t-[0.5px]",
-        "bg-white dark:bg-gray-750 border-gray-400 dark:border-gray-800",
+        "bg-white dark:bg-gray-750",
+        theme.border4,
         "transition-colors duration-300",
       )}>
         <div className="absolute inset-0 overflow-y-auto">
@@ -178,7 +179,7 @@ const ItemsList = ({
                     "text-slate-500 dark:text-slate-300",
                     "pl-6 pr-2 py-1 text-xs",
                     "transition-colors duration-300",
-                    "border-y border-gray-400 dark:border-gray-600"
+                    "border-y border-slate-100 dark:border-gray-600"
                   )}>
                     {item.description}
                   </div>
