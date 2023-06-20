@@ -129,7 +129,7 @@ export const useEditor = ({
 
     const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
     const debounceEvaluateCode = useCallback(
-       (compileValue: string | undefined, time = 700) => {
+       (compileValue: string | undefined, time: number = 700) => {
         clearTimeout(timeoutRef.current);
         timeoutRef.current = setTimeout(() => {
           evaluateCode(compileValue);
