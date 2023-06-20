@@ -8,3 +8,4 @@ Proceed to the **Push Message** section, enter a message, and then click **Push*
 
 🔍 Pay attention to how the **Approx size** of the queue changes.
 
+On the next page you'll be introduced to the `cloud.Function` resource
