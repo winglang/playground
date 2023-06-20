@@ -26,6 +26,22 @@ import code06 from "./06-code.w?raw";
 import solution06 from "./06-solution.w?raw";
 import tutorial06 from "./06-tutorial.md?raw";
 
+import code07 from "./07-code.w?raw";
+import solution07 from "./07-solution.w?raw";
+import tutorial07 from "./07-tutorial.md?raw";
+
+import code08 from "./08-code.w?raw";
+import solution08 from "./08-solution.w?raw";
+import tutorial08 from "./08-tutorial.md?raw";
+
+import code09 from "./09-code.w?raw";
+import solution09 from "./09-solution.w?raw";
+import tutorial09 from "./09-tutorial.md?raw";
+
+import code10 from "./10-code.w?raw";
+import solution10 from "./10-solution.w?raw";
+import tutorial10 from "./10-tutorial.md?raw";
+
 export interface Tutorial {
   id: string;
   name: string;
@@ -46,14 +62,15 @@ export const tutorials = [
     },
     {
         id: "1",
-        name:   "Create Queue",
+        name:   "Preflight - Intro",
         code:   code01,
         tutorial: tutorial01,
+        //solution: solution01,
         targets: [Target.TFAWS, "simulator"],
     },
     {
         id: "2",
-        name:   "Push Message",
+        name:   "Preflight - Hello world",
         code:   code02,
         solution: solution02,
         tutorial: tutorial02,
@@ -61,32 +78,65 @@ export const tutorials = [
     },
     {
         id: "3",
-        name:   "Logs",
+        name:   "Inflight - Intro",
         code:   code03,
         tutorial: tutorial03,
         targets: [Target.TFAWS, "simulator"],
     },
     {
         id: "4",
-        name:   "Push Programmatically",
+        name:   "Inflight - Hello world",
         code:   code04,
         solution: solution04,
         tutorial: tutorial04,
-        targets: ["simulator"],
+        targets: [Target.TFAWS, "simulator"],
     },
     {
         id: "5",
-        name:   "Use Bucket",
+        name:   "Accessing preflight data from inflight code - part 1",
         code:   code05,
+        solution: solution05,
         tutorial: tutorial05,
-        targets: ["simulator"],
+        targets: ["simulator", Target.TFAWS],
     },
     {
         id: "6",
-        name:   "Compile for AWS",
+        name:   "Accessing preflight data from inflight code - part 2",
         code:   code06,
-        solution: solution06,
+        //solution: solution06,
         tutorial: tutorial06,
+        targets: ["simulator", Target.TFAWS],
+    },
+    {
+        id: "7",
+        name:   "Accessing preflight data from inflight code - part 3",
+        code:   code07,
+        //solution: solution07,
+        tutorial: tutorial07,
         targets: [Target.TFAWS, "simulator"],
+    },
+    {
+        id: "8",
+        name:   "Mutability - part 1",
+        code:   code08,
+        solution: solution08,
+        tutorial: tutorial08,
+        targets: [Target.TFAWS, "simulator"],
+    },
+    {
+        id: "9",
+        name:   "Mutability - part 2",
+        code:   code09,
+        solution: solution09,
+        tutorial: tutorial09,
+        targets: ["simulator", Target.TFAWS],
+    },
+    {
+        id: "10",
+        name:   "Different interfaces for different phases",
+        code:   code10,
+        //solution: solution10,
+        tutorial: tutorial10,
+        targets: ["simulator", Target.TFAWS],
     },
 ]

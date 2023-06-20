@@ -1,5 +1,5 @@
 bring cloud;
 
-let helloWorld = inflight () => {
-  log("Hello, World!");
+let helloWorld = inflight (payload: str) => {
+  log("Hello, World! with payload: ${payload}");
 };

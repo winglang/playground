@@ -4,9 +4,9 @@ bring cloud;
 let bucket = new cloud.Bucket();
 
 // inflight code to put a file in the bucket
-let helloWorld = inflight () => {
+let helloWorld = inflight (payload: str) => {
   // The bucket that was defined in the preflight phase is accessed here in the inflight phase.
-  bucket.put("hello.txt", "Hello, World!");
+  bucket.put("hello.txt", "Hello, World! with this payload: ${payload}}");
 };
 
 // preflight code again which defines a serverless function

@@ -1,28 +1,19 @@
-# Different interfaces for the same objects in preflight and inflight
+# Accessing preflight data from inflight code - part 2
 
-As you've seen in the last step, we defined our bucket in preflight, and then used it in inflight.
-If you remember, we also saw at the beginning of the tutorial that we can interact with bucket in the preflight phase, not just create it.
+In the previous step, we've added inflight code that naturally accessed the bucket that was defined in the preflight phase (the code is also available to you in this step).
 
-The actions that can be performed in preflight are different than the actions that can be performed in inflight.
-For example, in preflight we can create a bucket, pre-populate it with files, define events to be called when actions are performed on the bucket, etc. But we can't get files from the bucket, or delete files from it. These are actions that can only be performed in inflight.
+This interaction feels natural not because it is similar to other cloud code you may have written or seen, but because it is similar to code for single machines. It looks and behaves very much like code that instantiates an OS service in one scope and then accesses it from a different scope, right?
 
-This is why we have two different interfaces for the same object, one for preflight and one for inflight.
+The main difference between such code and ours is that ours is split into two execution phases: 
+1. Preflight code that sets up the services at compile time (function and bucket).
+2. Inflight code to access the bucket at runtime - ***from different machines, amd possibly much later***. 
+   
+Another difference is that the services we use here are not OS services (like a file system), but cloud services (like a bucket and a function). Some of them may need to preserve their state between deployments. For example, the bucket may need to preserve the files that were uploaded to it in previous deployments.
 
-You will see autocomplete options and documentation in the IDE extension for an object depending on the phase you are in.
+The Wing compiler does some work behind the scenes to make our cloud code behave like code for single machines. 
 
-Let's see this in practice. 
+The main hurdle it needs to overcome is that inflight code runs at a later time and on different machines than the machine that runs the preflight code. So it can't simply pass pointers to data structures in memory between them.
 
-Try exploring the autocomplete options for the bucket object in the preflight phase. You can do this by typing `bucket.` in the preflight phase in line 11, and see the autocomplete options.
+It also needs to take care of network topology to allow communication between the different services and give them the permissions they need to access each other.
 
-Find the `onCreate` event listener in the options and add it to the bucket. 
-This event listener will be called when a file is created in the bucket.
-
-The onCreate function has one parameter - an inflight function to run whenever a file is created in the bucket.
-
-You can give it the onCreateHandler inflight defined in line 5.
-
-Now, lets add code to the handler that also prints the new file's content.
-
-You can do this by typing `bucket.` in the handler on line 7. You will see that the autocomplete options are different than the ones you saw in the preflight phase. Find the `get` function and use it to get the file's content. Then you can print it to the log, similar to how we print the file's name above it.
-
-Hint: there is a ***solve*** button in the editor if you have difficulties.
+Click ***Next*** to dive deeper into what the compiler does.
