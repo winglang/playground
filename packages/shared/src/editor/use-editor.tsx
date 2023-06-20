@@ -8,7 +8,6 @@ import darkPlusTMTheme from "../monaco-themes/dark_plus";
 import { MonacoServices } from 'monaco-languageclient';
 import {LoadingStatus} from "../loading-status";
 import {LanguageContext} from "../use-examples";
-import {debounce} from "lodash";
 import {CompilationRequest} from "../compiler/request";
 import {CompilationItem, Compiler, Target} from "../compiler/compiler";
 import {useRef, useState, MutableRefObject, useEffect, useCallback} from "react";
