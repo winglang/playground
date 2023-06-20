@@ -101,7 +101,6 @@ export const useEditor = ({
     };
 
     const evaluateCode = async () => {
-      console.log('evaluateCode', editorRef.current?.getValue());
       if (!containerRef.current || isCompiling) {
           return;
       }
