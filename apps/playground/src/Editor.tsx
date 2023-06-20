@@ -260,7 +260,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                     beforeMount={editorWillMount}
                     onChange={(value) => {
                       storeSession(value || '');
-                void evaluateCode(value);
+                      evaluateCode();
                   }}/>
                 </RightResizableWidget>
                 <div className={classNames(

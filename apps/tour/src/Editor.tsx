@@ -506,7 +506,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                             onMount={editorDidMount}
                             beforeMount={editorWillMount}
                             onChange={(value) => {
-                                void evaluateCode(value);
+                                void evaluateCode();
                                 setEditorCode(value || "");
                           }}/>
                         </div>
