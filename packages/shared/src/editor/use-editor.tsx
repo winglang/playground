@@ -11,7 +11,7 @@ import {LanguageContext} from "../use-examples";
 import {debounce} from "lodash";
 import {CompilationRequest} from "../compiler/request";
 import {CompilationItem, Compiler, Target} from "../compiler/compiler";
-import {useRef, useState, MutableRefObject, useEffect} from "react";
+import {useRef, useState, MutableRefObject, useEffect, useCallback} from "react";
 import * as monaco from 'monaco-editor';
 
 export interface UseEditorOptions {
@@ -100,7 +100,7 @@ export const useEditor = ({
         }
     };
 
-    const evaluateCode = debounce(async (value: string | undefined) => {
+    const evaluateCode = async (compileValue: string | undefined) => {
         if (!containerRef.current || isCompiling) {
             return;
         }
@@ -108,7 +108,6 @@ export const useEditor = ({
         setIsCompiling(true);
 
         try {
-          let compileValue = editorRef.current?.getValue()
           await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
 
           targets.forEach(async (target, index) => {
@@ -127,12 +126,30 @@ export const useEditor = ({
           onLoadingStatusChange(LoadingStatus.CompileError)
           setIsCompiling(false)
         }
-    }, 700);
+    };
+
+    const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+    const debounceEvaluateCode = useCallback(
+       (compileValue: string | undefined, time = 700) => {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = setTimeout(() => {
+          evaluateCode(compileValue);
+        }, time);
+
+      },
+      [containerRef.current, isCompiling, languageContext, targets]
+    );
+
+    useEffect(() => {
+      return () => {
+        clearTimeout(timeoutRef.current);
+      };
+    }, []);
 
     return {
         editorWillMount,
         editorDidMount,
-        evaluateCode,
+        evaluateCode: debounceEvaluateCode,
         isCompiling,
     }
 }
