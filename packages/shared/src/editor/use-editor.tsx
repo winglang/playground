@@ -12,6 +12,7 @@ import {CompilationRequest} from "../compiler/request";
 import {CompilationItem, Compiler, Target} from "../compiler/compiler";
 import {useRef, useState, MutableRefObject, useEffect, useCallback} from "react";
 import * as monaco from 'monaco-editor';
+import { useDebounce } from "../use-debounce";
 
 export interface UseEditorOptions {
     editorRef: MutableRefObject<any>;
@@ -94,61 +95,45 @@ export const useEditor = ({
                 }
                 startLsp({ onError: onLspError});
                 onLoadingStatusChange(LoadingStatus.Eval)
-                void evaluateCode("");
+                void evaluateCode();
             });
         }
     };
 
-    const evaluateCode = async (compileValue: string | undefined) => {
-        if (!containerRef.current || isCompiling) {
-            return;
-        }
-        console.log('evaluating...', languageContext)
-        setIsCompiling(true);
+    const evaluateCode = async () => {
+      console.log('evaluateCode', editorRef.current?.getValue());
+      if (!containerRef.current || isCompiling) {
+          return;
+      }
+      console.log('evaluating...', languageContext)
+      setIsCompiling(true);
 
-        try {
-          await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
+      try {
+        const compileValue = editorRef.current?.getValue();
+        await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
 
-          targets.forEach(async (target, index) => {
-            compiler.submit(new CompilationRequest(compileValue!, target));
-            if (index === targets.length - 1) {
-              onLoadingStatusChange(LoadingStatus.Completed)
-              setIsCompiling(false)
-            }
-          });
-          if (targets.length === 0) {
+        targets.forEach(async (target, index) => {
+          compiler.submit(new CompilationRequest(compileValue!, target));
+          if (index === targets.length - 1) {
             onLoadingStatusChange(LoadingStatus.Completed)
             setIsCompiling(false)
           }
-        } catch (error) {
-          console.error(error);
-          onLoadingStatusChange(LoadingStatus.CompileError)
+        });
+        if (targets.length === 0) {
+          onLoadingStatusChange(LoadingStatus.Completed)
           setIsCompiling(false)
         }
+      } catch (error) {
+        console.error(error);
+        onLoadingStatusChange(LoadingStatus.CompileError)
+        setIsCompiling(false)
+      }
     };
-
-    const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
-    const debounceEvaluateCode = useCallback(
-       (compileValue: string | undefined, time: number = 700) => {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = setTimeout(() => {
-          evaluateCode(compileValue);
-        }, time);
-
-      },
-      [containerRef.current, isCompiling, languageContext, targets]
-    );
-
-    useEffect(() => {
-      return () => {
-        clearTimeout(timeoutRef.current);
-      };
-    }, []);
 
     return {
         editorWillMount,
         editorDidMount,
-        evaluateCode: debounceEvaluateCode,
+        evaluateCode: useDebounce(evaluateCode, 700),
         isCompiling,
     }
 }
