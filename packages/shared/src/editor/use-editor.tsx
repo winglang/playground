@@ -100,7 +100,7 @@ export const useEditor = ({
         }
     };
 
-    const evaluateCode = async () => {
+    const evaluateCode = useCallback(async () => {
       if (!containerRef.current || isCompiling) {
           return;
       }
@@ -127,7 +127,7 @@ export const useEditor = ({
         onLoadingStatusChange(LoadingStatus.CompileError)
         setIsCompiling(false)
       }
-    };
+    }, [containerRef, isCompiling, languageContext, targets, compiler]);
 
     return {
         editorWillMount,
