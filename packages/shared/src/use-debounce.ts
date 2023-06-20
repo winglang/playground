@@ -10,7 +10,6 @@ export const useDebounce = (callback: () => void, delay: number) => {
     console.log('debouncedCallback');
       clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(() => {
-        console.log('debouncedCallback run');
         callback();
       }, delay);
 
