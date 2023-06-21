@@ -9,7 +9,7 @@ export const CongratsModal = ({visible, onClose}: {visible: boolean, onClose: ()
                 <div className='pt-8 flex flex-col'>
                     <div className='flex justify-around w-full'>
                         <div className='flex gap-6'>
-                            <a target='_blank' href='https://docs.winglang.io/getting-started' className='hover:text-slate-900'>
+                            <a target='_blank' href='https://docs.winglang.io/' className='hover:text-slate-900'>
                                 <button className='w-[140px] h-[140px] p-2 hover:bg-[#2AD5C1] text-slate-300 hover:text-slate-800 bg-gray-600 rounded-lg space-y-4'>
                                     <div className='flex items-center h-[50px]'>
                                         <img className="h-[50px] mx-auto" src="playgroundicon.svg" loading="lazy" alt="" />
