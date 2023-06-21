@@ -5,6 +5,7 @@ import {WebContainer} from "@webcontainer/api";
 import wingLanguageConfiguration from '../language-configurations/wing-configration.json';
 import convertTheme from "../monaco-themes/convert-tmtheme";
 import darkPlusTMTheme from "../monaco-themes/dark_plus";
+import lightPlusTMTheme from "../monaco-themes/light_plus";
 import { MonacoServices } from 'monaco-languageclient';
 import {LoadingStatus} from "../loading-status";
 import {LanguageContext} from "../use-examples";
@@ -22,9 +23,8 @@ export interface UseEditorOptions {
     languageContext: LanguageContext;
     compiler: Compiler;
     targets?: Target[];
-    editorOptions: monaco.editor.IStandaloneEditorConstructionOptions;
     installConsole?: (containerRef: MutableRefObject<WebContainer>) => Promise<void>;
-    editorTheme?: string;
+    editorTheme?: 'dark' | 'light';
     shouldInitContainer: boolean;
 }
 
@@ -34,6 +34,7 @@ export type CompilerOutput = {
 }
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
+const lightPlusTheme = convertTheme(lightPlusTMTheme);
 
 export const useEditor = ({
   editorRef,
@@ -44,7 +45,7 @@ export const useEditor = ({
   compiler,
   targets = [],
   installConsole,
-  editorTheme,
+  editorTheme = 'dark',
   shouldInitContainer
 }: UseEditorOptions) => {
 
@@ -70,8 +71,9 @@ export const useEditor = ({
         } catch (error) {
             console.error(error);
         }
-
-        monaco.editor.defineTheme(editorTheme || 'akkd-dark-plus', darkPlusTheme);
+        console.log('editor theme', editorTheme);
+        monaco.editor.defineTheme('dark', darkPlusTheme);
+        monaco.editor.defineTheme('light', lightPlusTheme);
     };
 
     const editorDidMount = async (editor: any, monaco: any) => {

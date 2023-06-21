@@ -353,7 +353,7 @@ export const TfAwsTarget = ({
           )}
           <Editor
             key={selectedItem?.id}
-            theme={mode === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
+            theme={mode}
             path="source.js"
             language="js"
             options={Object.assign({}, options, { readOnly: true })}

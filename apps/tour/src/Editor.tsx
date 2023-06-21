@@ -101,9 +101,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
         console.log("consoleUrl", consoleUrl);
         setIframeSrc(consoleUrl)
     }
+    // https://microsoft.github.io/monaco-editor/docs.html#interfaces/editor.IStandaloneEditorConstructionOptions.html
     const editorOptions = {
         minimap: { enabled: false },
-        fontSize: 16
+        fontSize: 16,
+        tabSize: 2,
     }
     const onLspError = () => {
         analytics.track('lsp crash', {
@@ -128,11 +130,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
         onLoadingStatusChange: setLoadingStatus,
         onLspError,
         installConsole,
+        editorTheme: currentMode,
         languageContext,
         code: tutorials[0].code ?? "",
         compiler,
         targets: compilerTargets,
-        editorOptions,
         shouldInitContainer: true,
     });
 
@@ -499,7 +501,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                         <div className="absolute inset-0 overflow-hidden">
                           <Editor
                             data-testid={"editor"}
-                            theme={currentMode === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
+                            theme={currentMode}
                             options={editorOptions}
                             path={languageContext.path}
                             language={languageContext.language}
