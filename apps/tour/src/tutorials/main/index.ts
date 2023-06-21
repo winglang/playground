@@ -29,17 +29,21 @@ import tutorial06 from "./06-tutorial.md?raw";
 import code07 from "./07-code.w?raw";
 import tutorial07 from "./07-tutorial.md?raw";
 
+export interface TutorialPage {
+    id: string;
+    name: string;
+    code?: string;
+    solution?: string;
+    tutorial?: string;
+    //TODO: change when "simulator" can be a Target too
+    targets?: Target[] | string[];
+}
 export interface Tutorial {
-  id: string;
   name: string;
-  code?: string;
-  solution?: string;
-  tutorial?: string;
-  //TODO: change when "simulator" can be a Target too
-  targets?: Target[] | string[];
+  pages: TutorialPage[];
 }
 
-export const tutorials = [
+export const tutorialPages = [
       {
         id: "0",
         name:   "Welcome",
@@ -101,3 +105,8 @@ export const tutorials = [
       targets: ["simulator", Target.TFAWS],
     },
 ]
+
+export const tutorial: Tutorial = {
+    name: "Introduction",
+    pages: tutorialPages,
+}

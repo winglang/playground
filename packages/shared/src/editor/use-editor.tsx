@@ -5,14 +5,15 @@ import {WebContainer} from "@webcontainer/api";
 import wingLanguageConfiguration from '../language-configurations/wing-configration.json';
 import convertTheme from "../monaco-themes/convert-tmtheme";
 import darkPlusTMTheme from "../monaco-themes/dark_plus";
+import lightPlusTMTheme from "../monaco-themes/light_plus";
 import { MonacoServices } from 'monaco-languageclient';
 import {LoadingStatus} from "../loading-status";
 import {LanguageContext} from "../use-examples";
-import {debounce} from "lodash";
 import {CompilationRequest} from "../compiler/request";
 import {CompilationItem, Compiler, Target} from "../compiler/compiler";
-import {useRef, useState, MutableRefObject, useEffect} from "react";
+import {useRef, useState, MutableRefObject, useEffect, useCallback} from "react";
 import * as monaco from 'monaco-editor';
+import { useDebounce } from "../use-debounce";
 
 export interface UseEditorOptions {
     editorRef: MutableRefObject<any>;
@@ -22,9 +23,8 @@ export interface UseEditorOptions {
     languageContext: LanguageContext;
     compiler: Compiler;
     targets?: Target[];
-    editorOptions: monaco.editor.IStandaloneEditorConstructionOptions;
     installConsole?: (containerRef: MutableRefObject<WebContainer>) => Promise<void>;
-    editorTheme?: string;
+    editorTheme?: 'dark' | 'light';
     shouldInitContainer: boolean;
 }
 
@@ -34,6 +34,7 @@ export type CompilerOutput = {
 }
 
 const darkPlusTheme = convertTheme(darkPlusTMTheme);
+const lightPlusTheme = convertTheme(lightPlusTMTheme);
 
 export const useEditor = ({
   editorRef,
@@ -44,7 +45,7 @@ export const useEditor = ({
   compiler,
   targets = [],
   installConsole,
-  editorTheme,
+  editorTheme = 'dark',
   shouldInitContainer
 }: UseEditorOptions) => {
 
@@ -70,8 +71,9 @@ export const useEditor = ({
         } catch (error) {
             console.error(error);
         }
-
-        monaco.editor.defineTheme(editorTheme || 'akkd-dark-plus', darkPlusTheme);
+        console.log('editor theme', editorTheme);
+        monaco.editor.defineTheme('dark', darkPlusTheme);
+        monaco.editor.defineTheme('light', lightPlusTheme);
     };
 
     const editorDidMount = async (editor: any, monaco: any) => {
@@ -95,44 +97,44 @@ export const useEditor = ({
                 }
                 startLsp({ onError: onLspError});
                 onLoadingStatusChange(LoadingStatus.Eval)
-                void evaluateCode("");
+                void evaluateCode();
             });
         }
     };
 
-    const evaluateCode = debounce(async (value: string | undefined) => {
-        if (!containerRef.current || isCompiling) {
-            return;
-        }
-        console.log('evaluating...', languageContext)
-        setIsCompiling(true);
+    const evaluateCode = useCallback(async () => {
+      if (!containerRef.current || isCompiling) {
+          return;
+      }
+      console.log('evaluating...', languageContext)
+      setIsCompiling(true);
 
-        try {
-          let compileValue = editorRef.current?.getValue()
-          await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
+      try {
+        const compileValue = editorRef.current?.getValue();
+        await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
 
-          targets.forEach(async (target, index) => {
-            compiler.submit(new CompilationRequest(compileValue!, target));
-            if (index === targets.length - 1) {
-              onLoadingStatusChange(LoadingStatus.Completed)
-              setIsCompiling(false)
-            }
-          });
-          if (targets.length === 0) {
+        targets.forEach(async (target, index) => {
+          compiler.submit(new CompilationRequest(compileValue!, target));
+          if (index === targets.length - 1) {
             onLoadingStatusChange(LoadingStatus.Completed)
             setIsCompiling(false)
           }
-        } catch (error) {
-          console.error(error);
-          onLoadingStatusChange(LoadingStatus.CompileError)
+        });
+        if (targets.length === 0) {
+          onLoadingStatusChange(LoadingStatus.Completed)
           setIsCompiling(false)
         }
-    }, 700);
+      } catch (error) {
+        console.error(error);
+        onLoadingStatusChange(LoadingStatus.CompileError)
+        setIsCompiling(false)
+      }
+    }, [containerRef, isCompiling, languageContext, targets, compiler]);
 
     return {
         editorWillMount,
         editorDidMount,
-        evaluateCode,
+        evaluateCode: useDebounce(evaluateCode, 700),
         isCompiling,
     }
 }

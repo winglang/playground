@@ -6,5 +6,4 @@ Afterwards, invoke the **cloud.Function** in the simulator. Take note that it's 
 
 Observe the changes to the **cloud.Queue** in the simulator.
 
-🏆 **Bonus:** Pay attention to the code comment on line 10.
-
+In the next step we will consume these pushed messages

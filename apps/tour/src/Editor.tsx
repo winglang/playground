@@ -42,7 +42,7 @@ import { TargetsView, TargetView } from "@wing-playground/shared/src/TargetsView
 import {PanelHeader} from "@wing-playground/shared/src/PanelHeader";
 import { debounce } from 'lodash';
 import { Loader } from '@wing-playground/shared/src/loader.js';
-import { tutorials as mainTutorials, Tutorial } from './tutorials/main';
+import { tutorial as mainTutorial, Tutorial } from './tutorials/main';
 import { Header } from "@wing-playground/shared/src/Header";
 import { Button } from "@wing-playground/shared/src/Button";
 import { ThemeToggle } from "@wing-playground/shared/src/ThemeToggle";
@@ -67,10 +67,10 @@ export type EditorProps = {
     port?: string;
     path?: string;
     className?: string;
-    tutorials?: Tutorial[];
+    tutorial?: Tutorial;
 }
 
-export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutorials}) => {
+export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutorial}) => {
     const {languageContext} = useExamples();
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
     const ref = createRef<HTMLDivElement>();
@@ -79,7 +79,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
     const [loadingStatus, setLoadingStatus] = useState(LoadingStatus.Init);
     const [editorCode, setEditorCode] = useState("");
     const [downloadInProgress, setDownloadInProgress] = useState(false);
-    const { analytics } = useAnalytics({ name: 'tour', state: loadingStatus });
+    const { analytics } = useAnalytics({ name: `tour: ${tutorial.name}`, state: loadingStatus });
 
     const { theme, mode } = useTheme();
     const [currentMode, setCurrentMode] = useState(mode ?? "dark");
@@ -101,9 +101,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
         console.log("consoleUrl", consoleUrl);
         setIframeSrc(consoleUrl)
     }
-    const editorOptions = {
+    const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
         minimap: { enabled: false },
-        fontSize: 16
+        fontSize: 14,
+        tabSize: 2,
     }
     const onLspError = () => {
         analytics.track('lsp crash', {
@@ -128,11 +129,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
         onLoadingStatusChange: setLoadingStatus,
         onLspError,
         installConsole,
+        editorTheme: currentMode,
         languageContext,
-        code: tutorials[0].code ?? "",
+        code: tutorial.pages[0].code ?? "",
         compiler,
         targets: compilerTargets,
-        editorOptions,
         shouldInitContainer: true,
     });
 
@@ -148,12 +149,12 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
     }, []);
 
     const [steps] = useState(() => {
-        return tutorials.map(tutorial => ({
-            ...tutorial,
+        return tutorial.pages.map(page => ({
+            ...page,
             status: "upcoming"
         }));
     } );
-    const [currentStepId, setCurrentStepId] = useState(tutorials[0].id);
+    const [currentStepId, setCurrentStepId] = useState(tutorial.pages[0].id);
     const currentStep = useMemo(() => {
       return steps.find(s => s.id === currentStepId)
     }, [steps, currentStepId]);
@@ -208,7 +209,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
         editorRef.current?.setValue(currentStep.code);
       }
 
-      analytics.track(`tutorial: step: ${currentStepId}: changed`, {
+      analytics.track(`tour: ${tutorial.name}: step: ${currentStepId}: changed`, {
           step: currentStep
       })
       setCurrentTargetId(targetViews[0]?.title);
@@ -378,7 +379,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                 )}
                                 style={
                                   {
-                                    width: `${(currentStepIndex + 1) / tutorials.length * 100}%`
+                                    width: `${(currentStepIndex + 1) / tutorial.pages.length * 100}%`
                                   }
                                 }
                               />
@@ -399,7 +400,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                                     "transition-colors duration-300"
                                   )}>
                                     <span className='truncate uppercase' title={currentStep?.name}>{currentStep?.name}</span>
-                                    <span>{currentStepIndex + 1 }/{tutorials.length}</span>
+                                    <span>{currentStepIndex + 1 }/{tutorial.pages.length}</span>
                                   </div>
                                 </div>
 
@@ -499,14 +500,14 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
                         <div className="absolute inset-0 overflow-hidden">
                           <Editor
                             data-testid={"editor"}
-                            theme={currentMode === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
+                            theme={currentMode}
                             options={editorOptions}
                             path={languageContext.path}
                             language={languageContext.language}
                             onMount={editorDidMount}
                             beforeMount={editorWillMount}
                             onChange={(value) => {
-                                void evaluateCode(value);
+                                void evaluateCode();
                                 setEditorCode(value || "");
                           }}/>
                         </div>

@@ -286,8 +286,11 @@ export const TfAwsTarget = ({
     });
   }, [files]);
 
-  const options: monaco.editor.IStandaloneEditorConstructionOptions = {
+  const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
     minimap: { enabled: false },
+    readOnly: true,
+    fontSize: 12,
+    tabSize: 2,
   };
 
   const compileEditorDidMount = async (editor: any, monaco: any) => {
@@ -353,10 +356,10 @@ export const TfAwsTarget = ({
           )}
           <Editor
             key={selectedItem?.id}
-            theme={mode === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
+            theme={mode}
             path="source.js"
             language="js"
-            options={Object.assign({}, options, { readOnly: true })}
+            options={editorOptions}
             onMount={compileEditorDidMount}
             value={selectedItem?.contents}
           />

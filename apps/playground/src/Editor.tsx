@@ -40,6 +40,7 @@ import { TargetsView, TargetView } from "@wing-playground/shared/src/TargetsView
 import { PanelHeader } from '@wing-playground/shared/src/PanelHeader';
 import { debounce } from 'lodash';
 import { DefaultTheme, ThemeProvider, useTheme } from '@wing-playground/shared/src/theme-provider';
+import { useSession } from "@wing-playground/shared/src/use-session";
 import { Header } from './Header';
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
@@ -95,10 +96,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [fontSize, setFontSize] = useState(14);
     const fontSizes = [12, 14, 16];
 
-    const editorOptions = useMemo(() => {
+    const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = useMemo(() => {
       return {
         minimap: { enabled: false },
-        fontSize: fontSize
+        fontSize: fontSize,
+        tabSize: 2,
       }
     }, [fontSize]);
 
@@ -109,28 +111,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         });
     }
 
-     const storeSession = (value: string) => {
-      try {
-        const url = new URL(window.location.href);
-        url.searchParams.set("code", window.btoa(unescape(encodeURIComponent(value))));
-        window.history.replaceState({}, '', url.toString());
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    const getSession = () => {
-      try {
-        const url = new URL(window.location.href);
-        const sessionCode = url.searchParams.get('code')?.replaceAll(' ', '+');
-        if (sessionCode) {
-          return window.atob(sessionCode);
-        }
-        return null;
-      } catch (e) {
-        return null;
-      }
-    }
+    const {getSession, setSession} = useSession("code");
 
     const {
       evaluateCode,
@@ -141,11 +122,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         onLoadingStatusChange: setLoadingStatus,
         onLspError,
         installConsole,
+        editorTheme: currentMode,
         languageContext,
         code: getSession() || currentExample.value,
         compiler,
         targets: [Target.TFAWS],
-        editorOptions,
         shouldInitContainer: true,
     });
 
@@ -252,16 +233,16 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                   </PanelHeader>
 
                   <Editor
-                    theme={currentMode === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
+                    theme={currentMode}
                     options={editorOptions}
                     path={languageContext.path}
                     language={languageContext.language}
                     onMount={editorDidMount}
                     beforeMount={editorWillMount}
                     onChange={(value) => {
-                      storeSession(value || '');
-                void evaluateCode(value);
-                  }}/>
+                      setSession(value || '');
+                      evaluateCode();
+                    }}/>
                 </RightResizableWidget>
                 <div className={classNames(
                   'grow h-full basis-auto border',

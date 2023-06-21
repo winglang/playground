@@ -6,7 +6,7 @@ import { LoadingStatus } from '../loading-status';
 
 export interface AnalyticsProps {
   name: string;
-  state: LoadingStatus
+  state: LoadingStatus;
 }
 
 const instance = Analytics({
@@ -19,7 +19,6 @@ const instance = Analytics({
 })
 
 instance.page()
-instance.identify(Math.random().toString())
 
 export function useAnalytics({name, state}: AnalyticsProps) {
   useEffect(() => {

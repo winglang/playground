@@ -10,9 +10,9 @@ import tutorial03 from "./03-tutorial.md?raw";
 
 import tutorial04 from "./04-tutorial.md?raw";
 
-import { Tutorial } from "../../main";
+import { Tutorial, TutorialPage } from "../../main";
 
-export const tutorials: Tutorial[] = [
+export const tutorialPages: TutorialPage[] = [
     {
         id: "1",
         name:   "Queue Definition",
@@ -41,4 +41,9 @@ export const tutorials: Tutorial[] = [
       tutorial: tutorial04,
       targets: ["simulator", Target.TFAWS],
     },
-]
+];
+
+export const tutorial: Tutorial = {
+    name: "Queue",
+    pages: tutorialPages,
+}
