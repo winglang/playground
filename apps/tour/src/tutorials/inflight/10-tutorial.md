@@ -17,7 +17,7 @@ But it doesn't mean that we can use this loophole to write unsafe code.
 
 Let's try it out: 
 
-Change the "let" declaration in line 5 to "let var" and see the resulting error in the Simulator window ("Cannot capture reassignable field 'numInvocations'").
+Change the "let" declaration in line 5 to "let var" and see the resulting error in the editor and the Simulator window ("Cannot capture reassignable field 'numInvocations'").
 
 As you can see, the compiler protects us from passing mutable data to inflight code.
 
