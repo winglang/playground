@@ -4,14 +4,7 @@ import { usePreventSave } from "@wing-playground/shared/src/use-prevent-save";
 
 
 function App() {
-
-  const { preventSave, cancelPrevent } = usePreventSave();
-  useEffect(() => {
-    preventSave();
-    return () => {
-      cancelPrevent();
-    }
-  }, [preventSave, cancelPrevent]);
+  usePreventSave({enable: true});
 
   return (
     <div className="max-h-full h-full flex flex-col">

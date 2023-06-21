@@ -1,6 +1,4 @@
 import { ReactMonacoEditor } from './Editor'
-import { isChrome } from '@wing-playground/shared/src/utils'
-import { VscWarning } from 'react-icons/vsc';
 import { tutorials as mainTutorials, Tutorial } from './tutorials/main';
 import { tutorials as bucketTutorial } from './tutorials/resource/bucket';
 import { tutorials as counterTutorial } from './tutorials/resource/counter';
@@ -46,14 +44,7 @@ function AppView({ tutorials }: { tutorials: Tutorial[] }) {
 }
 
 function App() {
-
-  const { preventSave, cancelPrevent } = usePreventSave();
-  useEffect(() => {
-    preventSave();
-    return () => {
-      cancelPrevent();
-    }
-  }, [preventSave, cancelPrevent]);
+  usePreventSave({enable: true});
 
   return (
     <Router>
