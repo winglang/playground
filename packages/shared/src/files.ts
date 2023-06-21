@@ -1,29 +1,17 @@
 import { FileSystemTree } from "@webcontainer/api";
 
-import indexJs from "@wing-playground/container-files/lib/index.js?raw";
-import testW from "@wing-playground/container-files/lib/test.w?raw";
-import pkgJson from "@wing-playground/container-files/lib/package.json?raw";
-import pnpmLock from "@wing-playground/container-files/lib/pnpm-lock.yaml?raw";
+import tarGz from "@wing-playground/container-files/assets/tar.gz.js?raw";
+import unzip from "@wing-playground/container-files/assets/unzip.js?raw";
 
 export const files: FileSystemTree = {
-  "index.js": {
+  "tar.gz.js": {
     file: {
-      contents: indexJs,
+      contents: tarGz,
     },
   },
-  "test.w": {
+  "unzip.js": {
     file: {
-      contents: testW,
-    },
-  },
-  "package.json": {
-    file: {
-      contents: pkgJson,
-    },
-  },
-  "pnpm-lock.yaml": {
-    file: {
-      contents: pnpmLock,
+      contents: unzip,
     },
   },
 };
