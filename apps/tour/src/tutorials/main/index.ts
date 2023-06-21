@@ -107,6 +107,6 @@ export const tutorialPages = [
 ]
 
 export const tutorial: Tutorial = {
-    name: "Getting Started",
+    name: "Introduction",
     pages: tutorialPages,
 }
