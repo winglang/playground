@@ -209,7 +209,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
         editorRef.current?.setValue(currentStep.code);
       }
 
-      analytics.track(`tour: ${tutorial.name} step: ${currentStepId}: changed`, {
+      analytics.track(`tour: ${tutorial.name}: step: ${currentStepId}: changed`, {
           step: currentStep
       })
       setCurrentTargetId(targetViews[0]?.title);
