@@ -1,5 +1,6 @@
 import { WebContainer } from "@webcontainer/api";
 import { files } from "./files";
+import playgroundTgzUrl from "@wing-playground/container-files/dist/playground.tgz?url";
 import { getCurrentMode } from "./theme-provider";
 
 export enum ConsoleLayouts {
@@ -22,10 +23,14 @@ export async function initContainer(): Promise<WebContainer> {
     }),
   );
 
+  const playgroundTgz = await fetch(playgroundTgzUrl).then((d) => d.arrayBuffer())
+
   console.log("booting container", new Date());
   const webcontainerInstance = await WebContainer.boot();
   console.log("mounting files", new Date());
-  await webcontainerInstance.mount({ ...files, ...(examples as any) });
+  await webcontainerInstance.mount({ ...files, ...(examples as any),
+    ...{ "playground.tgz": { file: { contents: new Uint8Array(playgroundTgz) } } }, 
+  });
   return webcontainerInstance;
 }
 
@@ -34,16 +39,16 @@ export async function installDependencies(
   consoleLayout: ConsoleLayouts,
 ): Promise<string> {
   {
-    const install = await webcontainerInstance.spawn("pnpm", ["install"]);
-    install.output.pipeTo(
+    const unzip = await webcontainerInstance.spawn("node", ["unzip.js"]);
+    unzip.output.pipeTo(
       new WritableStream({
         write(data) {
           console.log(data, new Date());
         },
       }),
     );
-    // Wait for chmod command to exit
-    await install.exit;
+    // Wait for unzip command to exit
+    await unzip.exit;
   }
 
   const cnsle = await webcontainerInstance.spawn("node", ["index.js"]);
