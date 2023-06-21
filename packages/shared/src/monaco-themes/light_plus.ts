@@ -1,3 +1,6 @@
+// vs-light-plus theme from VS Code
+// https://github.com/microsoft/vscode/blob/main/extensions/theme-defaults/themes/light_plus.json
+
 export default {
 	"$schema": "vscode://schemas/color-theme",
 	"name": "Light",
