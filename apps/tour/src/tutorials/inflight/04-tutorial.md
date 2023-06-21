@@ -11,6 +11,6 @@ It is preflight code that creates a function with our inflight code as a paramet
 
 You can see that the AWS/Terraform compilation target window now contains a cloud.Function resource that is implemented with an AWS Lambda, a Default resource that has an S3 bucket in which to store the inflight code, and the inflight code itself in the assets.
 
-If you switch to the Simulator tab, you can now click on the the function and invoke it. You should see the log being printed.
+If you switch to the Simulator tab, you can now click on the the cloud.Function resource and invoke it from the right hand side panel with any payload you want. You should see the log being printed.
 
 Click ***Next*** to learn about how to access preflight data from inflight code.

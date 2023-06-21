@@ -1,6 +1,6 @@
 # Inflight - Intro
 
-Inflight code is the runtime that handles the application logic (handle API requests, process queue messages, etc).
+Inflight code is the runtime that handles the application logic (handles API requests, process queue messages, etc).
 
 Unlike preflight code, it is running post-deployment. It can run inside a serverless function (lambda), a container, a VM or a physical server. Therefore, it can be executed multiple times and on different machines in parallel. 
 
