@@ -2,9 +2,12 @@
   "name": "@wing-playground/container-files",
   "private": true,
   "scripts": {
-    "update": "./update.sh"
+    "update": "./update.sh",
+    "build": "./build.sh"
   },
   "dependencies":{
-    "pnpm": "8.3.1"
+    "pnpm": "8.3.1",
+    "tar": "6.1.15",
+    "tsx": "^3.12.7"
   }
 }
