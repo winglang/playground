@@ -1,11 +1,14 @@
 bring cloud;
 
-let bucket = new cloud.Bucket();
+// preflight code which defined a number 
+// that counts the number of invocations of a function.
+let numInvocations = 0;
 
-let onCreateHandler = inflight (fileName: str) => {
-  log("A file was created with name: ${fileName}");
-  let content = bucket.get(fileName);
-  log("Its content is: ${content}");
+let helloWorld = inflight () => {
+  numInvocations = numInvocations + 1;
+  log("Function called ${numInvocations} times");
 };
 
-bucket.onCreate(onCreateHandler);
+// preflight code again which defines a cloud function
+// to run the inflight code when invoked.
+new cloud.Function(helloWorld);

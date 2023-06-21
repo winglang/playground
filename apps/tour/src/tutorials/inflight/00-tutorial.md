@@ -1,4 +1,4 @@
-# Welcome to the inflight/preflight tutorial!
+# Welcome to the preflight/inflight tutorial!
 
 Wing has two execution phases:
 1. ***Preflight:*** Code that runs once, at compile time, to set up the infrastructure of the app in the cloud (create the DB, set up queues, API endpoints, etc).

@@ -1,22 +1,34 @@
-# Mutability - part 1
+# Mutability - a question
 
-As we've seen in the previous step, the compiler does the necessary work for us behind the scenes to allow us to write code that accesses preflight data from inflight code.
+As we've seen in the previous step, the Wing compiler does the necessary work behind the scenes to allow us to write inflight code that references preflight data.
 
-Because the inflight code later runs on different machines than the machine that ran the preflight code, the compiler needs to serialize the preflight data and store it in a way that would allow the inflight code to recreate it later.
+The preflight code runs on one machine at compile time and the inflight code runs on different machines at a later time. Therefore, the inflight code can't simply get a pointer to the preflight data when it runs. That data was stored in the memory of the machine that ran the preflight code in the past (and may not even be turned on anymore). So a pointer, or even a data transfer, would be meaningless. 
 
-This results with an important restriction on mutability. Let's see what happens if we try to modify the preflight data in the inflight code:
+Instead, the compiler needs to serialize the preflight data and transfer it to the inflight code when it needs it. To do that, the compiler generates code with the serialized data and injects it into the generated inflight code when possible. 
 
-Please look in the editor. It is pre-populated with preflight code that creates a function and a counter to count the number of times the function was invoked. It also contains the inflight code that increments the counter when the function is invoked.
+If the data is some cloud service, then the compiler needs to inject the needed information for the inflight code to create a client to access that cloud service. For example, to instantiate an instance of an AWS S3 client from the AWS SDK that points to the storage bucket that was defined in the preflight code. This information is what you saw in the environment variables of the Lambda function in the previous step.
 
-The inflight code that increments the counter is commented out in line 8. Please uncomment it to see the compiler error that it generates in the editor and in the Simulator Window ("Variable numInvocations is not reassignable").
+The compiler's data serialization approach to passing variable references between the inflight and preflight execution phases allows us to write cloud code that feels and behaves very much like code for single machines. But it can also generate unexpected behavior when attempting to mutate this data that crosses machine and time boundaries. 
 
-The reason for this error is that wing types are immutable by default in order to protect them from being changed by inflight code that references them from a different machine at a later time. We need this protection because of the above mentioned serialization. The data that is passed is a copy of the original data, and not a reference to it (we couldn't reference it even if we wanted to because the preflight code that created it already finished running by the time the inflight code that references it runs. The machine that ran it might not even be on anymore). Therefore, if the inflight code changes the data, the original data will not be changed. Even worse, if the inflight code runs on different machines, changes made by one instance will not be visible to other instances.
+For example, take a look at the code below:
+```ts
+bring cloud;
 
-This means that the preflight data that is referenced by inflight code needs to be immutable in order to protect us from un-forseen consequences when changing it by inflight code.
+let numInvocations = 0;
 
-But this restriction doesn't mean we cannot have our counter, we just need to be mindful to how we create it.
+let helloWorld = inflight () => {
+  numInvocations = numInvocations + 1;
+  log("Function called ${numInvocations} times");
+};
 
-Click ***Next*** to learn how to create our counter correctly.
+new cloud.Function(helloWorld);
+```
+
+The preflight part creates a function and a counter to count the number of times the function was invoked. The inflight part increments the counter when the function is invoked and prints a message with its value.
+
+What do you think will happen if this code was allowed to run?
+
+Click ***Next*** to find out. Also to see how Wing protects us from such scenarios.
 
 
 

@@ -31,16 +31,30 @@ import solution07 from "./07-solution.w?raw";
 import tutorial07 from "./07-tutorial.md?raw";
 
 import code08 from "./08-code.w?raw";
-import solution08 from "./08-solution.w?raw";
+//import solution08 from "./08-solution.w?raw";
 import tutorial08 from "./08-tutorial.md?raw";
 
 import code09 from "./09-code.w?raw";
-import solution09 from "./09-solution.w?raw";
+//import solution09 from "./09-solution.w?raw";
 import tutorial09 from "./09-tutorial.md?raw";
 
 import code10 from "./10-code.w?raw";
 import solution10 from "./10-solution.w?raw";
 import tutorial10 from "./10-tutorial.md?raw";
+
+import code11 from "./11-code.w?raw";
+import solution11 from "./11-solution.w?raw";
+import tutorial11 from "./11-tutorial.md?raw";
+
+import code12 from "./12-code.w?raw";
+import solution12 from "./12-solution.w?raw";
+import tutorial12 from "./12-tutorial.md?raw";
+
+import code13 from "./13-code.w?raw";
+import solution13 from "./13-solution.w?raw";
+import tutorial13 from "./13-tutorial.md?raw";
+
+import tutorial14 from "./14-tutorial.md?raw";
 
 export interface Tutorial {
   id: string;
@@ -93,7 +107,7 @@ export const tutorials = [
     },
     {
         id: "5",
-        name:   "Accessing preflight data from inflight code - part 1",
+        name:   "Accessing preflight data from inflight code",
         code:   code05,
         solution: solution05,
         tutorial: tutorial05,
@@ -101,7 +115,7 @@ export const tutorials = [
     },
     {
         id: "6",
-        name:   "Accessing preflight data from inflight code - part 2",
+        name:   "Compiler challenges",
         code:   code06,
         //solution: solution06,
         tutorial: tutorial06,
@@ -109,7 +123,7 @@ export const tutorials = [
     },
     {
         id: "7",
-        name:   "Accessing preflight data from inflight code - part 3",
+        name:   "Compiler inner workings",
         code:   code07,
         //solution: solution07,
         tutorial: tutorial07,
@@ -117,26 +131,58 @@ export const tutorials = [
     },
     {
         id: "8",
-        name:   "Mutability - part 1",
+        name:   "Mutability - a question",
         code:   code08,
-        solution: solution08,
+        //solution: solution08,
         tutorial: tutorial08,
         targets: [Target.TFAWS, "simulator"],
     },
     {
         id: "9",
-        name:   "Mutability - part 2",
+        name:   "Mutability - answer to the question",
         code:   code09,
-        solution: solution09,
+        //solution: solution09,
         tutorial: tutorial09,
         targets: ["simulator", Target.TFAWS],
     },
     {
         id: "10",
-        name:   "Different interfaces for different phases",
+        name:   "Mutability protections",
         code:   code10,
-        //solution: solution10,
+        solution: solution10,
         tutorial: tutorial10,
+        targets: ["simulator", Target.TFAWS],
+    },
+    {
+        id: "11",
+        name:   "Mutability - how to create a counter",
+        code:   code11,
+        solution: solution11,
+        tutorial: tutorial11,
+        targets: ["simulator", Target.TFAWS],
+    },
+    {
+        id: "12",
+        name:   "Contract per phase - explanation",
+        code:   code12,
+        //solution: solution12,
+        tutorial: tutorial12,
+        targets: ["simulator", Target.TFAWS],
+    },
+    {
+        id: "13",
+        name:   "Contract per phase - in practice",
+        code:   code13,
+        solution: solution13,
+        tutorial: tutorial13,
+        targets: ["simulator", Target.TFAWS],
+    },
+    {
+        id: "14",
+        name:   "Contract per phase - in practice",
+        //code:   code13,
+        //solution: solution13,
+        tutorial: tutorial14,
         targets: ["simulator", Target.TFAWS],
     },
 ]

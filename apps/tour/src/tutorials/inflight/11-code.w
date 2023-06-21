@@ -2,7 +2,7 @@ bring cloud;
 
 // preflight code which defined a number 
 // that counts the number of invocations of a function.
-let numInvocations = 1;
+let var numInvocations = 0;
 
 let helloWorld = inflight () => {
   numInvocations = numInvocations + 1;

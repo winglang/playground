@@ -19,6 +19,6 @@ You can see that the AWS/Terraform compilation target window has changed again. 
 
 Now switch to the Simulator tab and click on the cloud.Bucket. You should see the file "hello.txt" there (in the right hand side panel).
 
-Note that although are code uploads a file to a bucket, this is still preflight code that runs only once at compile time. So the file is pre-populated in the bucket during deployment, not when the app is running.
+Note that although our code uploads a file to a bucket, this is still preflight code that runs only once at compile time. So the file is pre-populated in the bucket during deployment, not when the app is running.
 
 Click ***Next*** to learn about inflight code.

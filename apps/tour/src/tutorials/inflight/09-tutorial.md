@@ -1,23 +1,25 @@
-# Mutability - part 2
+# Mutability - the answer
 
-For every immutable type in Wing, we have a mutable counterpart. For example, the immutable type ***num*** can become mutable if we use "let var" to instantiate it.
+For your convenience, this is the code from the previous step:
+```ts
+bring cloud;
 
-Can this be used to modify preflight data from inflight code? let's try it out: 
+let numInvocations = 0;
 
-Change the "let" declaration in line 5 to "let var" and see the resulting error in the Simulator Window ("Cannot capture reassignable field 'numInvocations'").
+let helloWorld = inflight () => {
+  numInvocations = numInvocations + 1;
+  log("Function called ${numInvocations} times");
+};
 
-This error makes sense, if types are immutable by default to protect from mutation by inflight code, then it makes sense the compiler would also protect us from passing mutable data to inflight code.
+new cloud.Function(helloWorld);
+```
 
-So how can we count the number of invocations? we need to use an explicit resource for that that, one that is designed to be changed atomically (because function invocations can happen in parallel) and to save a shared state between machines (because the invocations can happen on different machines).
+Have you figured out the problem with it yet?
 
-Fortunately, Wing has such a resource, the cloud.Counter, and it has its own tutorial that you are welcome to try out.
+The answer is that no matter how many times the function is invoked, it will print that same output: "Function called 1 times".
 
-But to satisfy your curiosity, you can click the ***solve*** button on the upper right corner of the editor to see how to use the cloud.Counter to count the number of invocations. The comments on the code explain how it works. You can play with it in the Simulator Window and invoke the cloud.Function a number of times to see the counter incrementing.
+The reason for this was explained in the previous step. The compiler doesn't transfer a pointer to the ***numInvocations*** variable from the inflight phase. Instead, it serializes the value of the variable in the preflight phase (which is 0) and injects it into the generated inflight code. This means that whenever the inflight code runs, and no matter how many times it runs, it will see the same value of 0 for ***numInvocations***.
 
-We've solved the private case of the counter, but there is a more general lesson to learn from this:
+You can see the generated inflight code in the AWS/Terraform compilation target window, in the "inflight.js" file in the assets section. It gets the value of ***numInvocations*** as a parameter that is pre-coded to equal 0.
 
-***If you need to change preflight data from inflight code, you should remember that this data is shared between machines and at different times, and can be modified from several machines in parallel, so you should use resources that allow you to perform these operations safely.***
-
-After covering the main limitation that the compiler imposes on sharing data between preflight and inflight code, let's see a cool ability that the compiler gives us:
-
-Click ***Next*** to learn how Wing exposes different contracts for the same object in preflight and inflight code.
+Click ***Next*** to see how Wing protects us from such scenarios.

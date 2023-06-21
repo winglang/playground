@@ -12,6 +12,6 @@ When the code is compiled to a specific cloud provider it will be substituted by
 
 Please check out the AWS/Terraform compilation target window on the bottom-right. Notice how the cloud.Bucket resource is implemented with an S3 Bucket in the Terraform definitions. You can also see that it has default public access definitions and encryption configuration. We will talk about how to control these later.
 
-You can now switch to the Simulator tab and play with the Bucket (upload, download, delete files, etc).
+You can now switch to the Simulator tab and play with the Bucket (upload, download, delete files, etc) by clicking on the cloud.Bucket and using the right hand side panel to interact with it.
 
 Click ***Next*** to continue.

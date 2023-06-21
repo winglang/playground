@@ -27,7 +27,7 @@ const tutorialRoutes = [
     path: '/queue',
     tutorials: queueTutorial
   }, {
-    path: '/inflight',
+    path: '/preflight-inflight',
     tutorials: inflightTutorial
   }
 ];
