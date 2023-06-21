@@ -1,12 +1,12 @@
 import { ReactMonacoEditor } from './Editor'
-import { isChrome } from '@wing-playground/shared/src/utils'
-import { VscWarning } from 'react-icons/vsc';
 import { tutorials as mainTutorials, Tutorial } from './tutorials/main';
 import { tutorials as bucketTutorial } from './tutorials/resource/bucket';
 import { tutorials as counterTutorial } from './tutorials/resource/counter';
 import { tutorials as topicTutorial } from './tutorials/resource/topic';
 import { tutorials as queueTutorial } from './tutorials/resource/queue';
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
+import { useEffect } from 'react';
+import { usePreventSave } from "@wing-playground/shared/src/use-prevent-save";
 
 const tutorialRoutes = [
   {
@@ -44,6 +44,8 @@ function AppView({ tutorials }: { tutorials: Tutorial[] }) {
 }
 
 function App() {
+  usePreventSave({enable: true});
+
   return (
     <Router>
       <Routes>
