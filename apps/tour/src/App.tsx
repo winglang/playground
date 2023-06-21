@@ -7,6 +7,8 @@ import { tutorials as counterTutorial } from './tutorials/resource/counter';
 import { tutorials as topicTutorial } from './tutorials/resource/topic';
 import { tutorials as queueTutorial } from './tutorials/resource/queue';
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
+import { useEffect } from 'react';
+import { usePreventSave } from "@wing-playground/shared/src/use-prevent-save";
 
 const tutorialRoutes = [
   {
@@ -44,6 +46,15 @@ function AppView({ tutorials }: { tutorials: Tutorial[] }) {
 }
 
 function App() {
+
+  const { preventSave, cancelPrevent } = usePreventSave();
+  useEffect(() => {
+    preventSave();
+    return () => {
+      cancelPrevent();
+    }
+  }, [preventSave, cancelPrevent]);
+
   return (
     <Router>
       <Routes>
