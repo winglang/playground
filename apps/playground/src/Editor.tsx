@@ -23,7 +23,7 @@ import getMessageServiceOverride from 'vscode/service-override/messages';
 import React, { createRef, useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { WebContainer } from '@webcontainer/api';
 import { Loading } from '@wing-playground/shared/src/Loading';
-import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
+import { Compiler, Target, CompilationItem, CompilationResult } from '@wing-playground/shared/src/compiler/compiler';
 import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
 
 import { useExamples } from '@wing-playground/shared/src/use-examples.js';
@@ -36,6 +36,7 @@ import classNames from "classnames";
 
 import { SimulatorTarget } from "@wing-playground/shared/src/SimulatorTarget";
 import { TfAwsTarget } from '@wing-playground/shared/src/TfAwsTarget.js';
+import { PreflightView } from '@wing-playground/shared/src/PreflightView';
 import { TargetsView, TargetView } from "@wing-playground/shared/src/TargetsView.js";
 import { PanelHeader } from '@wing-playground/shared/src/PanelHeader';
 import { debounce } from 'lodash';
@@ -132,6 +133,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     const [isCompiling, setIsCompiling] = useState(true);
     const [compilationItems, setCompilationItems] = useState<CompilationItem[]>([]);
+    const [preflightOutput, setPreflightOutput] = useState<string | undefined>();
     const [currentTargetId, setCurrentTargetId] = useState("simulator");
 
     const retrieveCompilationFiles = useCallback(debounce(async (value: string, target: Target) => {
@@ -147,12 +149,22 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       setIsCompiling(false);
     }, 1000), [compiler]);
 
+    const retrievePreflightOutput = useCallback(debounce(async (value: string, target: Target) => {
+      const request = new CompilationRequest(value, target);
+      const result = await compiler.compile(request);
+      if (result.error) {
+        console.error('compilation failed', result.error.stderr);
+        return;
+      }
+      setPreflightOutput(result.stdout);
+    }, 1000), [compiler]);
+
     useEffect(() => {
       setCompilationItems([]);
-      const value = editorRef.current?.getValue();
-      retrieveCompilationFiles(value || "", Target.TFAWS);
+      const value = editorRef.current?.getValue() || "";
+      retrieveCompilationFiles(value, Target.TFAWS);
+      retrievePreflightOutput(value, Target.SIM);
     }, [editorRef.current?.getValue()]);
-
 
     useEffect(() => {
         if (ref.current != null) {
@@ -185,9 +197,19 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       }
     }, [isCompiling, compilationItems]);
 
+    const preflightView: TargetView = useMemo(() => {
+      return {
+        id: "preflight-logs-view",
+        title: "Preflight Logs",
+        Target: () => <PreflightView
+          stdout={preflightOutput}
+        />
+      }
+    }, [isCompiling, preflightOutput]);
+
     const targetViews: TargetView[] = useMemo(() => {
-      return [simulatorTarget, tfAwsTarget];
-    }, [simulatorTarget, tfAwsTarget]);
+      return [simulatorTarget, tfAwsTarget, preflightView];
+    }, [simulatorTarget, tfAwsTarget, preflightView]);
 
     return (
       <ThemeProvider mode={currentMode} theme={DefaultTheme}>

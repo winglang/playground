@@ -56,7 +56,7 @@ export const tutorialPages = [
         code:   code01,
         solution: solution01,
         tutorial: tutorial01,
-        targets: ["simulator"],
+        targets: ["simulator", Target.SIM],
     },
     {
         id: "2",
@@ -64,7 +64,7 @@ export const tutorialPages = [
         code:   code02,
         // solution: solution02,
         tutorial: tutorial02,
-        targets: ["simulator"],
+        targets: ["simulator", Target.SIM],
     },
     {
         id: "3",
@@ -72,7 +72,7 @@ export const tutorialPages = [
         code:   code03,
         solution: solution03,
         tutorial: tutorial03,
-        targets: ["simulator"],
+        targets: ["simulator", Target.SIM],
     },
     {
         id: "4",
@@ -80,7 +80,7 @@ export const tutorialPages = [
         code:   code04,
         solution: solution04,
         tutorial: tutorial04,
-        targets: ["simulator"],
+        targets: ["simulator", Target.SIM],
     },
     {
         id: "5",
@@ -88,7 +88,7 @@ export const tutorialPages = [
         code:   code05,
         solution: solution05,
         tutorial: tutorial05,
-        targets: ["simulator"],
+        targets: ["simulator", Target.SIM],
     },
     {
         id: "6",
@@ -96,13 +96,13 @@ export const tutorialPages = [
         code:   code06,
         // solution: solution06,
         tutorial: tutorial06,
-        targets: [Target.TFAWS, "simulator"],
+        targets: [Target.TFAWS, "simulator", Target.SIM],
     },
     {
       id: "7",
       name:   "Congrats",
       tutorial: tutorial07,
-      targets: ["simulator", Target.TFAWS],
+      targets: ["simulator", Target.TFAWS, Target.SIM],
     },
 ]
 

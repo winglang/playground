@@ -31,8 +31,12 @@ const walk = async (dirPath) => {
   return files
 }
 
-const targetToExtension = (target: string): string => {
-  return target.toLowerCase().replace(/-/g, "");
+const targetToExtension = (target: Target): string => {
+  if (target === Target.SIM) {
+    return "wsim";
+  } else {
+    return target.toLowerCase().replace(/-/g, "");
+  }
 }
 
 export const handler = async (event: APIGatewayEvent, context: Context): Promise<APIGatewayProxyResult> => {
@@ -54,7 +58,7 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
     const wingFile = `/tmp/${rand}.w`;
     const request = JSON.parse(event.body!) as Request;
     await writeFile(wingFile, request.code, "utf-8");
-    await util.promisify(exec)(`${join(require.resolve("winglang"), "../../../.bin/wing")} compile ${wingFile} -t ${request.target}`);
+    const { stdout, stderr } = await util.promisify(exec)(`${join(require.resolve("winglang"), "../../../.bin/wing")} compile ${wingFile} -t ${request.target}`);
     const outDir = join('/tmp', 'target', `${rand}.${targetToExtension(request.target)}`);
 
     let zip = new Zip();
@@ -64,7 +68,11 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
     return {
       statusCode: 200,
       headers: cors,
-      body: buffer.toString('base64'),
+      body: JSON.stringify({
+        data: buffer.toString('base64'),
+        stderr,
+        stdout
+      })
     };
   } catch (err) {
     console.log(`Error: ${JSON.stringify(err, null, 2)}`);

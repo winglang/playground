@@ -3,6 +3,7 @@ import { Base64Binary } from '../utils';
 import { CompilationRequest } from './request';
 
 export enum Target {
+  SIM = 'sim',
   TFAWS = 'tf-aws',
   TFGCP = 'tf-gcp',
   TFAzure = 'tf-azure'
@@ -16,6 +17,8 @@ export interface CompilationItem {
 export interface CompilationResult {
   files: CompilationItem[];
   zip: Zip;
+  stderr: string;
+  stdout: string;
   error?: {
     stderr: string;
     stdout: string;
@@ -30,7 +33,7 @@ const compile = async (code: string, target: string): Promise<CompilationResult>
   };
 
   try {
-    const result = await fetch('https://re0pxufp83.execute-api.us-east-1.amazonaws.com/prod', options)
+    const result = await fetch('https://99cysfsbp6.execute-api.us-east-1.amazonaws.com/prod', options)
     if (!result.ok) {
       if (result.status === 500) {
         const body = await result.json();
@@ -42,6 +45,8 @@ const compile = async (code: string, target: string): Promise<CompilationResult>
         return {
           files: [],
           zip: new Zip(),
+          stderr: "",
+          stdout: "",
           error: {
             stderr: body.error.stderr,
             stdout: body.error.stdout,
@@ -51,6 +56,8 @@ const compile = async (code: string, target: string): Promise<CompilationResult>
         return {
           files: [],
           zip: new Zip(),
+          stderr: "",
+          stdout: "",
           error: {
             stderr: 'unknown error occured',
             stdout: '',
@@ -59,10 +66,8 @@ const compile = async (code: string, target: string): Promise<CompilationResult>
       }
     }
 
-    const zipText = await result.text();
-    // const zipText = str;
-
-    const buffer = Base64Binary.decode(zipText, null)
+    const { stderr, stdout, data } = await result.json();
+    const buffer = Base64Binary.decode(data, null)
     const zip = new Zip(buffer, { readEntries: true });
 
     const files: CompilationItem[] = []
@@ -81,7 +86,7 @@ const compile = async (code: string, target: string): Promise<CompilationResult>
       });
     });
 
-    const body: CompilationResult = { files, zip }
+    const body: CompilationResult = { files, zip, stderr, stdout }
     if (!body.error) {
       body.files = body.files.map(f => ({ ...f, name: f.name.replace(/.*tfaws\//, "")}) );
     }

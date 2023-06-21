@@ -36,7 +36,7 @@ import {installDependencies, ConsoleLayouts} from "@wing-playground/shared/src/c
 
 import { SimulatorTarget } from "@wing-playground/shared/src/SimulatorTarget";
 import { TfAwsTarget } from '@wing-playground/shared/src/TfAwsTarget.js';
-
+import { PreflightView } from '@wing-playground/shared/src/PreflightView';
 
 import { TargetsView, TargetView } from "@wing-playground/shared/src/TargetsView.js";
 import {PanelHeader} from "@wing-playground/shared/src/PanelHeader";
@@ -139,6 +139,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
 
     const [isCompiling, setIsCompiling] = useState(false);
     const [compilationItems, setCompilationItems] = useState<CompilationItem[]>([]);
+    const [preflightOutput, setPreflightOutput] = useState<string | undefined>();
 
     useEffect(() => {
         if (ref.current != null) {
@@ -247,6 +248,16 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       setIsCompiling(false);
     }, 1000), [compiler]);
 
+    const retrievePreflightOutput = useCallback(debounce(async (value: string, target: Target) => {
+      const request = new CompilationRequest(value, target);
+      const result = await compiler.compile(request);
+      if (result.error) {
+        console.error('compilation failed', result.error.stderr);
+        return;
+      }
+      setPreflightOutput(result.stdout);
+    }, 1000), [compiler]);
+
 
     const showWelcome = useMemo(() => {
         return currentStepId === "0";
@@ -284,6 +295,16 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       }
     }, [isCompiling, downloadInProgress, downloadCompiledCode, compilationItems]);
 
+    const preflightView: TargetView = useMemo(() => {
+      return {
+        id: "preflight-logs-view",
+        title: "Preflight Logs",
+        Target: () => <PreflightView
+          stdout={preflightOutput}
+        />
+      }
+    }, [isCompiling, preflightOutput]);
+
     const targetViews: TargetView[] = useMemo(() => {
       const views: TargetView[] = [];
 
@@ -298,6 +319,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
         if (target === Target.TFAWS) {
           views.push(tfAwsTarget);
         }
+        if (target === Target.SIM) {
+          views.push(preflightView);
+        }
       });
       return views;
     }, [targets, simulatorTarget, tfAwsTarget]);
@@ -310,10 +334,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
 
     useEffect(() => {
       setCompilationItems([]);
+      const value = editorRef.current?.getValue() || "";
       if (targets.includes(Target.TFAWS)) {
-        const value = editorRef.current?.getValue();
-        retrieveCompilationFiles(value || "", Target.TFAWS);
+        retrieveCompilationFiles(value, Target.TFAWS);
       }
+      retrievePreflightOutput(value, Target.SIM);
     }, [targets, editorRef.current?.getValue()]);
 
     return (
