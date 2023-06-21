@@ -4,7 +4,7 @@ import { tutorial as bucketTutorial } from './tutorials/resource/bucket';
 import { tutorial as counterTutorial } from './tutorials/resource/counter';
 import { tutorial as topicTutorial } from './tutorials/resource/topic';
 import { tutorial as queueTutorial } from './tutorials/resource/queue';
-import { tutorials as inflightTutorial } from './tutorials/inflight';
+import { tutorial as inflightTutorial } from './tutorials/inflight';
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import { useEffect } from 'react';
 import { usePreventSave } from "@wing-playground/shared/src/use-prevent-save";

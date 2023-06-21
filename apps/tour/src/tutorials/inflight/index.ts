@@ -55,19 +55,10 @@ import solution13 from "./13-solution.w?raw";
 import tutorial13 from "./13-tutorial.md?raw";
 
 import tutorial14 from "./14-tutorial.md?raw";
+import {Tutorial, TutorialPage} from "../main";
 
-export interface Tutorial {
-  id: string;
-  name: string;
-  code: string;
-  solution?: string;
-  tutorial?: string;
-  //TODO: change when "simulator" can be a Target too
-  targets: Target[] | string[];
-}
-
-export const tutorials = [
-      {
+export const tutorialPages: TutorialPage[] = [
+    {
         id: "0",
         name:   "Welcome",
         code: code01,
@@ -186,3 +177,8 @@ export const tutorials = [
         targets: ["simulator", Target.TFAWS],
     },
 ]
+
+export const tutorial: Tutorial = {
+    name: "Preflight-Inflight",
+    pages: tutorialPages,
+}
