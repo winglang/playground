@@ -96,10 +96,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [fontSize, setFontSize] = useState(14);
     const fontSizes = [12, 14, 16];
 
-    const editorOptions = useMemo(() => {
+    const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = useMemo(() => {
       return {
         minimap: { enabled: false },
-        fontSize: fontSize
+        fontSize: fontSize,
+        tabSize: 2,
       }
     }, [fontSize]);
 
@@ -121,11 +122,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         onLoadingStatusChange: setLoadingStatus,
         onLspError,
         installConsole,
+        editorTheme: currentMode,
         languageContext,
         code: getSession() || currentExample.value,
         compiler,
         targets: [Target.TFAWS],
-        editorOptions,
         shouldInitContainer: true,
     });
 
@@ -232,7 +233,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                   </PanelHeader>
 
                   <Editor
-                    theme={currentMode === "light" ? "akkd-light-plus" : "akkd-dark-plus"}
+                    theme={currentMode}
                     options={editorOptions}
                     path={languageContext.path}
                     language={languageContext.language}
@@ -241,7 +242,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                     onChange={(value) => {
                       setSession(value || '');
                       evaluateCode();
-                  }}/>
+                    }}/>
                 </RightResizableWidget>
                 <div className={classNames(
                   'grow h-full basis-auto border',
