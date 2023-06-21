@@ -1,9 +1,9 @@
 import { ReactMonacoEditor } from './Editor'
-import { tutorials as mainTutorials, Tutorial } from './tutorials/main';
-import { tutorials as bucketTutorial } from './tutorials/resource/bucket';
-import { tutorials as counterTutorial } from './tutorials/resource/counter';
-import { tutorials as topicTutorial } from './tutorials/resource/topic';
-import { tutorials as queueTutorial } from './tutorials/resource/queue';
+import { tutorial as mainTutorial, Tutorial } from './tutorials/main';
+import { tutorial as bucketTutorial } from './tutorials/resource/bucket';
+import { tutorial as counterTutorial } from './tutorials/resource/counter';
+import { tutorial as topicTutorial } from './tutorials/resource/topic';
+import { tutorial as queueTutorial } from './tutorials/resource/queue';
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import { useEffect } from 'react';
 import { usePreventSave } from "@wing-playground/shared/src/use-prevent-save";
@@ -11,27 +11,27 @@ import { usePreventSave } from "@wing-playground/shared/src/use-prevent-save";
 const tutorialRoutes = [
   {
     path: '/',
-    tutorials: mainTutorials
+    tutorial: mainTutorial
   }, {
     path: '/bucket',
-    tutorials: bucketTutorial
+    tutorial: bucketTutorial
   }, {
     path: '/counter',
-    tutorials: counterTutorial
+    tutorial: counterTutorial
   }, {
     path: '/topic',
-    tutorials: topicTutorial
+    tutorial: topicTutorial
   }, {
     path: '/queue',
-    tutorials: queueTutorial
+    tutorial: queueTutorial
   }
 ];
 
-function AppView({ tutorials }: { tutorials: Tutorial[] }) {
+function AppView({ tutorial }: { tutorial: Tutorial }) {
 
   return (
     <div className="max-h-full h-full flex flex-col">
-      <ReactMonacoEditor tutorials={tutorials} />
+      <ReactMonacoEditor tutorial={tutorial} />
       {/* { isChrome() ? <ReactMonacoEditor tutorials={tutorials} /> :
       <div className='h-full flex justify-center content-center items-center'>
         <div className='h-24 text-xl flex flex-row justify-center content-center items-center text-[#f1f0f1]'>
@@ -49,8 +49,8 @@ function App() {
   return (
     <Router>
       <Routes>
-       {tutorialRoutes.map(({ path, tutorials}) =>
-        <Route key={path} path={path} element={<AppView tutorials={tutorials}/>}/>
+       {tutorialRoutes.map(({ path, tutorial}) =>
+        <Route key={path} path={path} element={<AppView tutorial={tutorial}/>}/>
         )}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
