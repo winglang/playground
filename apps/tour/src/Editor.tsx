@@ -101,10 +101,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorials = mainTutori
         console.log("consoleUrl", consoleUrl);
         setIframeSrc(consoleUrl)
     }
-    // https://microsoft.github.io/monaco-editor/docs.html#interfaces/editor.IStandaloneEditorConstructionOptions.html
-    const editorOptions = {
+    const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
         minimap: { enabled: false },
-        fontSize: 16,
+        fontSize: 14,
         tabSize: 2,
     }
     const onLspError = () => {

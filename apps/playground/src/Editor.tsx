@@ -95,8 +95,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     const [fontSize, setFontSize] = useState(14);
     const fontSizes = [12, 14, 16];
 
-    // https://microsoft.github.io/monaco-editor/docs.html#interfaces/editor.IStandaloneEditorConstructionOptions.html
-    const editorOptions = useMemo(() => {
+    const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = useMemo(() => {
       return {
         minimap: { enabled: false },
         fontSize: fontSize,
@@ -143,6 +142,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         onLoadingStatusChange: setLoadingStatus,
         onLspError,
         installConsole,
+        editorTheme: currentMode,
         languageContext,
         code: getSession() || currentExample.value,
         compiler,
