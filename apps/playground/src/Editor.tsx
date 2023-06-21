@@ -40,6 +40,7 @@ import { TargetsView, TargetView } from "@wing-playground/shared/src/TargetsView
 import { PanelHeader } from '@wing-playground/shared/src/PanelHeader';
 import { debounce } from 'lodash';
 import { DefaultTheme, ThemeProvider, useTheme } from '@wing-playground/shared/src/theme-provider';
+import { useSession } from "@wing-playground/shared/src/use-session";
 import { Header } from './Header';
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
@@ -109,28 +110,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         });
     }
 
-     const storeSession = (value: string) => {
-      try {
-        const url = new URL(window.location.href);
-        url.searchParams.set("code", window.btoa(unescape(encodeURIComponent(value))));
-        window.history.replaceState({}, '', url.toString());
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    const getSession = () => {
-      try {
-        const url = new URL(window.location.href);
-        const sessionCode = url.searchParams.get('code')?.replaceAll(' ', '+');
-        if (sessionCode) {
-          return window.atob(sessionCode);
-        }
-        return null;
-      } catch (e) {
-        return null;
-      }
-    }
+    const {getSession, setSession} = useSession("code");
 
     const {
       evaluateCode,
@@ -259,7 +239,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                     onMount={editorDidMount}
                     beforeMount={editorWillMount}
                     onChange={(value) => {
-                      storeSession(value || '');
+                      setSession(value || '');
                       evaluateCode();
                   }}/>
                 </RightResizableWidget>
