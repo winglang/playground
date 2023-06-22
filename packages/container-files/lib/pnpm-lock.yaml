@@ -2,26 +2,26 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@wingconsole/app':
-    specifier: ^0.2.194
-    version: 0.2.194(constructs@10.1.314)
+    specifier: ^0.22.8
+    version: 0.22.8(constructs@10.1.314)
 
 packages:
 
-  /@wingconsole/app@0.2.194(constructs@10.1.314):
-    resolution: {integrity: sha512-EC+tx0FN1iwS/jD9XAsHrw6USdH7+wxLQxt9eGfMtU3jPnoh4UXX21hDD8gXiyaMVVP2swJIxoK1G0PLBfnHaw==}
+  /@wingconsole/app@0.22.8(constructs@10.1.314):
+    resolution: {integrity: sha512-dXZvAapekXP9/fV/G6ILTQdOiJP3Sdks650dJngawKJfvEhULOEK6D1YDNr4k3CMdK3Urn48PoXzOjfk7F37FA==}
     dependencies:
-      '@wingconsole/server': 0.2.194(constructs@10.1.314)
+      '@wingconsole/server': 0.22.8(constructs@10.1.314)
       express: 4.18.2
     transitivePeerDependencies:
       - constructs
       - supports-color
     dev: false
 
-  /@wingconsole/server@0.2.194(constructs@10.1.314):
-    resolution: {integrity: sha512-j7jhdCIi6gn69+zwOcZZNYSF/vwI8Kqlvarq5M7dQiy6qDw6h1tmFdlJQWpKtIzMnv7qEjigaoUDIz+ATwI0LA==}
+  /@wingconsole/server@0.22.8(constructs@10.1.314):
+    resolution: {integrity: sha512-r+17+PJK/2F5mEZglrVT+BGe/tq2r6jp6Cbl3TuOhQYSNt0I+Dc0ZijiqN7cQHJU1wZFy1UKkGIRsgKjUq4B7A==}
     dependencies:
-      '@winglang/compiler': 0.21.23(constructs@10.1.314)
-      '@winglang/sdk': 0.21.23(constructs@10.1.314)
+      '@winglang/compiler': 0.22.8(constructs@10.1.314)
+      '@winglang/sdk': 0.22.8(constructs@10.1.314)
       codespan-wasm: 0.4.0
       debug: 4.3.4
       ms: 2.1.3
@@ -30,19 +30,19 @@ packages:
       - supports-color
     dev: false
 
-  /@winglang/compiler@0.21.23(constructs@10.1.314):
-    resolution: {integrity: sha512-Z2kPqNqb7vLEBCFnaGq9cKqHc8KUPkLpmKQsZv8TLEtAUDFVS3rzwwZu0jc9/sIKIh0U48bVhQhqZxtyltPdOA==}
+  /@winglang/compiler@0.22.8(constructs@10.1.314):
+    resolution: {integrity: sha512-bksZ5eqsBbk+KkhZB5l6PJRJGPXw+5tkNRdvaA9seBj8TcOUcLyKn1gdy1fXKl5wyRW/K48nyv2H6OxI6+fY+g==}
     engines: {node: '>=v18.0.0'}
     dependencies:
-      '@winglang/sdk': 0.21.23(constructs@10.1.314)
+      '@winglang/sdk': 0.22.8(constructs@10.1.314)
     transitivePeerDependencies:
       - constructs
     dev: false
     bundledDependencies:
       - wasi-js
 
-  /@winglang/sdk@0.21.23(constructs@10.1.314):
-    resolution: {integrity: sha512-E2fk0/75y693MSVoyXvm2Jaoj4+HhaWJtM/FexDIcqa0BgjjhKHaud2QkRjZpezrel2orzb+Y0o7c6//mfS0/g==}
+  /@winglang/sdk@0.22.8(constructs@10.1.314):
+    resolution: {integrity: sha512-hgA/RSFNP2XiboBAsun79tBiVOeAERN7zorrG7HEp0rLXYSaLPrWNnU3Urij3M19hYoM9htVa7PrXDYf7sPpkQ==}
     engines: {node: '>= 16.16.0'}
     peerDependencies:
       constructs: ~10.1.228
