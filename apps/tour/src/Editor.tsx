@@ -213,7 +213,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
           step: currentStep
       })
       setCurrentTargetId(targetViews[0]?.title);
-      setTargets(currentStep.targets ?? ["simulator"]);
+      setTargets(currentStep.targets ?? []);
     }, [currentStep]);
 
     const downloadCompiledCode = async (target: Target) => {
@@ -288,7 +288,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       const views: TargetView[] = [];
 
       if (!targets || targets.length === 0) {
-        return [simulatorTarget];
+        return views;
       }
 
       targets.forEach(target => {
@@ -521,7 +521,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                     'transition-colors duration-300',
                     'bg-slate-200/40 dark:bg-slate-700/40'
                   )}>
-                    {!showWelcome && loadingStatus === LoadingStatus.Completed && (
+                    {!showWelcome && targetViews.length > 0 && loadingStatus === LoadingStatus.Completed && (
                       <TargetsView
                         targets={targetViews}
                         currentTargetId={currentTargetId}
