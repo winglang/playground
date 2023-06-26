@@ -3,4 +3,4 @@
 cd lib
 rm -rf node_modules pnpm-lock.yaml
 pnpm --version
-pnpm update @wingconsole/app
+pnpm update -L @wingconsole/app

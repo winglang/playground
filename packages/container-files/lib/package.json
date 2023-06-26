@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "@wingconsole/app": "^0.2.194"
+    "@wingconsole/app": "^0.22.12"
   }
 }
