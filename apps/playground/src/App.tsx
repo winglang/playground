@@ -16,7 +16,7 @@ function App() {
               <span>The Winglang Playground experience is compatible exclusively with Chrome on desktop computers.</span>
             </div>
             <div>
-              <span>Please, open this page in chrome or try our  <a href="https://www.winglang.io/docs" className='text-teal-500'> getting started guide.</a></span>
+              <span>Please open this page in Chrome, or consider trying our  <a href="https://www.winglang.io/docs" className='text-teal-500'> Getting Started guide.</a></span>
             </div>
             </div>
         </div>
