@@ -6,7 +6,9 @@ import { tutorial as topicTutorial } from './tutorials/resource/topic';
 import { tutorial as queueTutorial } from './tutorials/resource/queue';
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import { usePreventSave } from "@wing-playground/shared/src/use-prevent-save";
-import { isChrome } from '@wing-playground/shared/src/utils';
+import { getBrowser, isChrome } from '@wing-playground/shared/src/utils';
+import { useAnalytics } from '@wing-playground/shared/src/analytics/use-analytics';
+import { LoadingStatus } from '@wing-playground/shared/src/loading-status';
 
 const tutorialRoutes = [
   {
@@ -28,10 +30,19 @@ const tutorialRoutes = [
 ];
 
 function AppView({ tutorial }: { tutorial: Tutorial }) {
+
+  const chrome = isChrome();
+  if (!chrome) {
+
+    const { analytics } = useAnalytics({ name: `tour: ${tutorial.name}`, state: LoadingStatus.Completed });
+    analytics.track(`tour: ${tutorial.name}: blocked for device`, {
+      device: getBrowser()
+  })
+
   return (
     <div className="max-h-full h-full flex flex-col">
-      {isChrome() && <ReactMonacoEditor tutorial={tutorial} />}
-      {!isChrome() &&
+      {chrome && <ReactMonacoEditor tutorial={tutorial} />}
+      {!chrome &&
         <div className='h-full flex justify-center content-center items-center bg-[#293443]'>
           <div className='h-24 text-xl flex-row justify-center content-center items-center text-[#f1f0f1] text-center leading-relaxed'>
             <div>
