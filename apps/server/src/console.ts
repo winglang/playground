@@ -9,7 +9,17 @@ const { createConsoleApp } = require("../disttt/index.js");
 
 export async function startConsole() {
   const app = express();
+  let isDestructing = false;
   app.post('/update-code', cors(), bodyParser.json(), async (req, res) => {
+    if (!isDestructing) {
+      isDestructing = true;
+      console.log("setting self destructing time out...")
+      setTimeout(() => {
+        console.log("machine timed out, killing process.")
+        process.exit(0);
+      }, 1000 * 60 * 15);
+    }
+
     console.log("writing code to file", req.body);
     await writeFile("wing/test.w", req.body.code, "utf-8");
     res.sendStatus(200);
@@ -21,9 +31,5 @@ export async function startConsole() {
     express: app
   });
   
-  setTimeout(() => {
-    console.log("machine timed out, killing process.")
-    process.exit(0);
-  }, 1000 * 60 * 15)
   console.log(`Console server is running on http://localhost:${server.port}.`);
 }

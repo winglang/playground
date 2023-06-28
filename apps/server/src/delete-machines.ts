@@ -1,4 +1,4 @@
-export async function deleteMachines(prefix: string, timeout: number) {
+export async function deleteMachines(prefix: string, timeout: number, hardTimeout: number) {
   const appsRespone = await fetch("https://api.fly.io/graphql", {
     method: "POST",
     headers: {
@@ -10,6 +10,12 @@ export async function deleteMachines(prefix: string, timeout: number) {
         apps {
           nodes{
             id
+            machines {
+              nodes {
+                state
+              }
+              totalCount
+            }
             createdAt
           }
         }
@@ -17,11 +23,16 @@ export async function deleteMachines(prefix: string, timeout: number) {
     })
   });
   const apps = await appsRespone.json();
+  console.log("checking apps for deletion...");
   for (const node of apps.data.apps.nodes) {
-    console.log("checking app for deletion...", node);
-    if (node.id.startsWith(prefix) && new Date((new Date(node.createdAt).getTime()) + timeout).getTime() < Date.now()) {
-      console.log("deleting app...", node);
-      const rr = await fetch("https://api.fly.io/graphql", {
+    if (
+      node.id.startsWith(prefix) &&
+      (new Date((new Date(node.createdAt).getTime()) + hardTimeout).getTime() < Date.now() ||
+      (new Date((new Date(node.createdAt).getTime()) + timeout).getTime() < Date.now() &&
+        node.machines.totalCount === 0 ||
+        node.machines.nodes.every(n => n.state === "destroyed")))) {
+      console.log("deleting app...", JSON.stringify(node));
+      await fetch("https://api.fly.io/graphql", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${process.env.FLY_API_TOKEN}`,
@@ -40,7 +51,6 @@ export async function deleteMachines(prefix: string, timeout: number) {
           }
         })
       });
-      console.log("app deleted...", node, await rr.json());
     }
   }
 }

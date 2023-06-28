@@ -3,10 +3,11 @@ import urlExist from "./url-exist";
 import { sleep } from "./sleep";
 
 export async function createMachine() {
+  console.log("creating machine...")
   const appName = `test-play-test-${Math.random().toString().slice(12, -1)}`;
   const hostname = `${appName}.fly.dev`
   const appUrl = `https://${hostname}`
-  await fetch("https://api.machines.dev/v1/apps", {
+  const appRes = await fetch("https://api.machines.dev/v1/apps", {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${process.env.FLY_API_TOKEN}`
@@ -16,7 +17,10 @@ export async function createMachine() {
       "org_slug": "personal"
     })
   });
-  const rr = await fetch("https://api.fly.io/graphql", {
+  if (!appRes.ok) {
+    throw new Error("failed to create app: " + appName);
+  }
+  const ipRes = await fetch("https://api.fly.io/graphql", {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${process.env.FLY_API_TOKEN}`,
@@ -27,11 +31,16 @@ export async function createMachine() {
       "variables":{"input":{"appId":appName,"type":"shared_v4"}}
     })
   })
-  await rr.json();
-  // await sleep(3000);
-  console.log("verifying dns...", appName);
+  if (!ipRes.ok) {
+    throw new Error("failed to create shared ip: " + appName);
+  }
+  console.log("resolving dns...", appName);
+  let resolveCount = 0;
   while (true) {
     try {
+      if (resolveCount++ > 100) {
+        throw new Error("failed to resolve dns: " + hostname);
+      }
       const resolver = new Resolver();
       const resolved = await resolver.resolve(hostname);
       console.log(resolved);
@@ -41,7 +50,7 @@ export async function createMachine() {
       await sleep(500);
     }
   }
-  const resp = await fetch(`https://api.machines.dev/v1/apps/${appName}/machines`, {
+  const machineRes = await fetch(`https://api.machines.dev/v1/apps/${appName}/machines`, {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${process.env.FLY_API_TOKEN}`
@@ -101,27 +110,40 @@ export async function createMachine() {
       }
     })
   });
-  const data = await resp.json() as any;
+  if (!machineRes.ok) {
+    throw new Error("failed to create machine: " + appName);
+  }
+  const data = await machineRes.json() as any;
+  if (!data.id || !data.instance_id) {
+    throw new Error("unexpected create machine data: " + JSON.stringify(data));
+  }
   console.log("waiting for started state", appUrl);
-  await fetch(`https://api.machines.dev/v1/apps/${appName}/machines/${data.id}/wait?instance_id=${data.instance_id}`, {
+  const waitRes = await fetch(`https://api.machines.dev/v1/apps/${appName}/machines/${data.id}/wait?instance_id=${data.instance_id}`, {
     method: "GET",
     headers: {
       "Authorization": `Bearer ${process.env.FLY_API_TOKEN}`
     },
   });
+  if (!waitRes.ok) {
+    throw new Error("failed to wait for machine: " + appName + ":" + data.id);
+  }
   
+  let fetchCount = 0;
   while (true) {
     try {
-      console.log('verifying machine...', Date.now());
+      if (fetchCount++ > 300) {
+        throw new Error("failed to fetch machine: " + hostname);
+      }
+      console.log('fetching machine...', hostname, Date.now());
       if (await urlExist(appUrl)) {
-        console.log('machine verified...', Date.now());
+        console.log('machine fetched...', hostname, Date.now());
         break;
       } else {
-        console.log('failed to verify machine, sleeping...', Date.now());
+        console.log('failed to fetch machine, sleeping...', hostname, Date.now());
         await sleep(200);  
       }
     } catch (err) {
-      console.log(err)
+      console.log(err, hostname)
       await sleep(200);
     }
   }

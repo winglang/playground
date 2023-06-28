@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import { createMachine } from "./create-machine";
 import { deleteMachines } from "./delete-machines";
 import cors from "cors";
+import { verifyMachine } from "./verify-machine";
 
 const queue: string[] = [];
 const limit = 5;
@@ -14,17 +15,26 @@ export async function startController() {
   const port = 3000
 
   app.post("/create", async (req, res) => {
-    if (queue.length > 0) {
-      console.log("serving machine...")
-      const machine = queue.pop();
-      res.json({ machine });
-      return fillQueue();
-    } else {
-      console.log("creating machine...")
+    try {
+      if (queue.length > 0) {
+        do {
+          const machine = queue.pop();
+          if (await verifyMachine(machine)) {
+            console.log("serving machine...")
+            res.json({ machine });
+            return fillQueue();
+          }
+        } while (queue.length > 0);
+      }
+
       const startTime = Date.now();
       const machine = await createMachine();
       console.log(`Machine created in ${Date.now() - startTime}ms`, machine);
-      return res.json({ machine });
+      res.json({ machine });
+      return fillQueue();
+    } catch (err) {
+      console.error("create machine failed", err)
+      return res.status(500);
     }
   });
 
@@ -33,7 +43,11 @@ export async function startController() {
   })
 
   const deleteApps = async () => {
-    await deleteMachines("test-play-test-", 1000 * 60 * 15);
+    try {
+      await deleteMachines("test-play-test-", 1000 * 60 * 30, 1000 * 60 * 60 * 24);
+    } catch (err) {
+      console.error("deleting apps failed", err)
+    }
     setTimeout(() => {
       deleteApps();
     }, 60000);
