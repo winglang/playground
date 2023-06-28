@@ -13,7 +13,7 @@ export interface HeaderProps {
 export function Header({ currentMode, onToggleTheme }: HeaderProps) {
   const { theme } = useTheme();
 
-  const [stars, setStars] = useState(0);
+  const [stars, setStars] = useState('0');
   const [watchersCount, setWatchersCount] = useState(0);
 
   useEffect(() => {
@@ -26,14 +26,10 @@ export function Header({ currentMode, onToggleTheme }: HeaderProps) {
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      const random = Math.floor(Math.random() * (50 - 20 + 1) + 20);
-      setStars((prevStars) => Math.min(prevStars + random, watchersCount));
-    }, 20);
-
-    return () => {
-      clearInterval(timer);
-    };
+      const stars = watchersCount.toString();
+      const starsK = stars.length > 3 ?
+        `${stars.slice(0, -3)}.${stars.slice(-3, -2)}k` : stars;
+      setStars(starsK);
   }, [watchersCount]);
 
   return <div className="flex">
