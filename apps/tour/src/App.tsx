@@ -33,11 +33,11 @@ function AppView({ tutorial }: { tutorial: Tutorial }) {
 
   const chrome = isChrome();
   if (!chrome) {
-
     const { analytics } = useAnalytics({ name: `tour: ${tutorial.name}`, state: LoadingStatus.Completed });
     analytics.track(`tour: ${tutorial.name}: blocked for device`, {
       device: getBrowser()
-  })
+    });
+  }
 
   return (
     <div className="max-h-full h-full flex flex-col">
@@ -73,4 +73,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
