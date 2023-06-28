@@ -11,4 +11,5 @@ rm -rf .//node_modules/.pnpm/*/node_modules/@winglang/sdk/node_modules/@aws-sdk 
 popd
 rm -rf "${dir}/dist"
 mkdir -p "${dir}/dist"
+npx tsx ./patches/patch-console.ts
 tar zcf "${dir}/dist"/playground.tgz -C "${dir}/lib" .
