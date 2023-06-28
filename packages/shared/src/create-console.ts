@@ -18,6 +18,7 @@ export const createConsole = async (consoleLayout: ConsoleLayouts) => {
 
   //   }
   // }
+  console.log("using machine", data.machine);
   return { 
     uiUrl: `${data.machine}/?layout=${consoleLayout.valueOf()}&theme=${getCurrentMode()}` as string,
     updateUrl: `${data.machine}/update-code`

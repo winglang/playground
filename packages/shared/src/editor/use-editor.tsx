@@ -112,13 +112,17 @@ export const useEditor = ({
 
       try {
         const compileValue = editorRef.current?.getValue();
-        await fetch(consoleRef.current, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ code: compileValue })
-        })
+        let currentValue = compileValue;
+        do {
+          await fetch(consoleRef.current, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ code: compileValue })
+          })
+          currentValue = editorRef.current?.getValue();
+        } while (currentValue !== compileValue);
         // await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
 
         targets.forEach(async (target, index) => {
