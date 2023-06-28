@@ -324,9 +324,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
             'transition-all duration-300'
           )}>
             <div className='flex grow relative'>
-                <div className="flex flex-col w-[40%] min-w-[25rem] px-[20px]">
+                <div className="flex flex-col w-[40%] min-w-[25rem] px-[11px]">
                     <div className='flex items-center overflow-auto gap-2'>
-                      <Header/>
+                      <Header>
+                      <a href="https://www.winglang.io/docs/start-here/installation" target="_blank" rel="noreferrer">
+                        Install
+                      </a>
+                      </Header>
                       <div className='grow'/>
                       <ThemeToggle mode={currentMode} onToggle={onToggleTheme}/>
                     </div>

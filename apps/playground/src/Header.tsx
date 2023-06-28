@@ -51,7 +51,7 @@ export function Header({ currentMode, onToggleTheme }: HeaderProps) {
         <a href="https://github.com/winglang/wing" target="_blank" className={
           classNames(
             "flex gap-2 border-[1px] rounded-[4px] items-center font-sans text-[15px] py-[8px] px-[16px]",
-            theme.border4,
+            "border-slate-300 dark:border-slate-800",
             "transition-colors duration-300",
           )}>
           <div className="h-5">
@@ -62,7 +62,7 @@ export function Header({ currentMode, onToggleTheme }: HeaderProps) {
           <div className="text-[15px]">Star us</div>
           <div className={classNames(
             "w-[1px] h-[1.5em] border-r-[1px]",
-            theme.border4,
+            "border-slate-300 dark:border-slate-800",
             "transition-colors duration-300",
           )}/>
           <div className="text-block-13">⭐️ {stars}<br /></div>
