@@ -5,7 +5,7 @@ import cors from "cors";
 import { writeFile } from "fs/promises";
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { createConsoleApp } = require("./disttt/index.js");
+const { createConsoleApp } = require("../disttt/index.js");
 
 export async function startConsole() {
   const app = express();
@@ -24,6 +24,6 @@ export async function startConsole() {
   setTimeout(() => {
     console.log("machine timed out, killing process.")
     process.exit(0);
-  }, 1000 * 60)
+  }, 1000 * 60 * 15)
   console.log(`Console server is running on http://localhost:${server.port}.`);
 }

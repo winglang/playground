@@ -5,6 +5,7 @@ import { sleep } from "./sleep";
 export async function createMachine() {
   const appName = `test-play-test-${Math.random().toString().slice(12, -1)}`;
   const hostname = `${appName}.fly.dev`
+  const appUrl = `https://${hostname}`
   await fetch("https://api.machines.dev/v1/apps", {
     method: "POST",
     headers: {
@@ -26,8 +27,9 @@ export async function createMachine() {
       "variables":{"input":{"appId":appName,"type":"shared_v4"}}
     })
   })
-  console.log(await rr.json());
+  await rr.json();
   // await sleep(3000);
+  console.log("verifying dns...", appName);
   while (true) {
     try {
       const resolver = new Resolver();
@@ -35,8 +37,8 @@ export async function createMachine() {
       console.log(resolved);
       break;
     } catch (err) {
-      console.log(err)
-      await sleep(200);
+      // console.log(err)
+      await sleep(500);
     }
   }
   const resp = await fetch(`https://api.machines.dev/v1/apps/${appName}/machines`, {
@@ -100,15 +102,13 @@ export async function createMachine() {
     })
   });
   const data = await resp.json() as any;
-  console.log(data);
+  console.log("waiting for started state", appUrl);
   await fetch(`https://api.machines.dev/v1/apps/${appName}/machines/${data.id}/wait?instance_id=${data.instance_id}`, {
     method: "GET",
     headers: {
       "Authorization": `Bearer ${process.env.FLY_API_TOKEN}`
     },
   });
-  
-  const appUrl = `https://${hostname}`
   
   while (true) {
     try {

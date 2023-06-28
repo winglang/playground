@@ -6,7 +6,7 @@ const urlExist = async url => {
 		let cancel = setTimeout(() => {
 			console.log('verify timeout...');
 			resolve(true);
-		}, 4000);
+		}, 6000);
 		if (typeof url !== "string") {
 			throw new TypeError(`Expected a string, got ${typeof url}`)
 		}
