@@ -23,7 +23,7 @@ export interface UseEditorOptions {
     languageContext: LanguageContext;
     compiler: Compiler;
     targets?: Target[];
-    installConsole?: (containerRef: MutableRefObject<WebContainer>) => Promise<void>;
+    installConsole?: (containerRef: MutableRefObject<WebContainer>) => Promise<string>;
     editorTheme?: 'dark' | 'light';
     shouldInitContainer: boolean;
 }
@@ -50,7 +50,7 @@ export const useEditor = ({
 }: UseEditorOptions) => {
 
     const [isCompiling, setIsCompiling] = useState(false);
-    const containerRef = useRef<WebContainer>();
+    const consoleRef = useRef<string>();
     const monacoRef = useRef<monaco.editor.IStandaloneCodeEditor>();
 
     const editorWillMount = (monaco: any) => {
@@ -88,22 +88,23 @@ export const useEditor = ({
 
         if(shouldInitContainer) {
             // do not wait for webcontainers
-            initContainer().then(async instance => {
-                containerRef.current = instance;
+            // initContainer().then(async instance => {
+                // containerRef.current = null;
                 onLoadingStatusChange(LoadingStatus.Install);
                 if (installConsole) {
                     // @ts-ignore
-                    await installConsole(containerRef);
+                    const url = await installConsole();
+                    consoleRef.current = url;
                 }
                 startLsp({ onError: onLspError});
-                onLoadingStatusChange(LoadingStatus.Eval)
+                onLoadingStatusChange(LoadingStatus.Completed)
                 void evaluateCode();
-            });
+            // });
         }
     };
 
     const evaluateCode = useCallback(async () => {
-      if (!containerRef.current || isCompiling) {
+      if (!consoleRef.current || isCompiling) {
           return;
       }
       console.log('evaluating...', languageContext)
@@ -111,7 +112,14 @@ export const useEditor = ({
 
       try {
         const compileValue = editorRef.current?.getValue();
-        await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
+        await fetch(consoleRef.current, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ code: compileValue })
+        })
+        // await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
 
         targets.forEach(async (target, index) => {
           compiler.submit(new CompilationRequest(compileValue!, target));
@@ -129,7 +137,7 @@ export const useEditor = ({
         onLoadingStatusChange(LoadingStatus.CompileError)
         setIsCompiling(false)
       }
-    }, [containerRef, isCompiling, languageContext, targets, compiler]);
+    }, [isCompiling, languageContext, targets, compiler]);
 
     return {
         editorWillMount,

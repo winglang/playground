@@ -41,6 +41,7 @@ import { PanelHeader } from '@wing-playground/shared/src/PanelHeader';
 import { debounce } from 'lodash';
 import { DefaultTheme, ThemeProvider, useTheme } from '@wing-playground/shared/src/theme-provider';
 import { useSession } from "@wing-playground/shared/src/use-session";
+import { createConsole } from "@wing-playground/shared/src/create-console";
 import { Header } from './Header';
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
@@ -89,9 +90,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     }, [currentMode, iframSrc]);
 
-    const installConsole = async (containerRef: React.MutableRefObject<WebContainer>) => {
-        const consoleUrl = await installDependencies(containerRef.current, ConsoleLayouts.Playground);
-        setIframeSrc(consoleUrl)
+    const installConsole = async (): Promise<string> => {
+        // const consoleUrl = await installDependencies(containerRef.current, ConsoleLayouts.Playground);
+        const { uiUrl, updateUrl } = await createConsole(ConsoleLayouts.Playground);
+        setIframeSrc(uiUrl)
+        return updateUrl;
     }
     const [fontSize, setFontSize] = useState(14);
     const fontSizes = [12, 14, 16];

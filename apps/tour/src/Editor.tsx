@@ -100,6 +100,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
         const consoleUrl = await installDependencies(containerRef.current, ConsoleLayouts.Tour);
         console.log("consoleUrl", consoleUrl);
         setIframeSrc(consoleUrl)
+        return "";
     }
     const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
         minimap: { enabled: false },
