@@ -23,10 +23,10 @@ export const ThemeToggle = ({ mode, onToggle } : ThemeToggleProps) => {
 
     >
       {mode === 'light' && (
-        <SunIcon className='h-6 w-6'/>
+        <SunIcon className='h-[26px] w-[24px]'/>
       )}
       {mode === 'dark' && (
-        <MoonIcon className='h-6 w-6'/>
+        <MoonIcon className='h-[26px] w-[24px]'/>
       )}
     </button>
   );
