@@ -1,24 +1,26 @@
 import classNames from "classnames";
 import { WingLogo } from "./WingLogo";
-import { PropsWithChildren } from "react";
 
-export const Header = ({children}:PropsWithChildren) => {
+export interface HeaderProps {
+  tabs: {
+    name: string;
+    href: string;
+  }[];
+}
+
+export const Header = ({tabs}: HeaderProps) => {
   return (
     <div className={
       classNames(
-        "py-2 flex gap-12 items-center font-sans text-slate-700 dark:text-[#BDCECC]",
-        "text-[17px] leading-[20px]"
+        "flex items-center font-sans font-normal text-[#1c1e21] dark:text-[#2bd5c1]",
+        "text-[17px] leading-[20px] h-[80px]"
     )}>
-      <a href="https://winglang.io/" target="_blank" rel="noreferrer" className="hover:text-slate-600 dark:hover:text-white">
-          <WingLogo className='h-[24px] w-[88px]' />
+      <a href="https://winglang.io/" target="_blank" rel="noreferrer" className="hover:text-slate-600 dark:hover:text-white mr-[40px] decoration-0">
+          <WingLogo className="h-[24px] w-[88px]"/>
       </a>
-      <a href="https://docs.winglang.io/" target="_blank" rel="noreferrer">
-        Docs
-      </a>
-      <a href="https://docs.winglang.io/blog" target="_blank" rel="noreferrer">
-        Blog
-      </a>
-      {children}
+      {tabs.map((tab, index) => (
+        <a href={tab.href} target="_blank" rel="noreferrer" className="px-[24px] py-[8px] decoration-0">{tab.name}</a>
+      ))}
     </div>
   );
 }

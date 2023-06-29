@@ -319,22 +319,31 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
     return (
       <ThemeProvider mode={currentMode} theme={DefaultTheme}>
           <div className={classNames(
-            'w-full flex flex-col grow p-6',
+            'w-full flex flex-col grow px-6 pb-6',
             theme.bg4,
             'transition-all duration-300'
           )}>
             <div className='flex grow relative'>
                 <div className="flex flex-col w-[40%] min-w-[25rem] px-[11px]">
                     <div className='flex items-center overflow-auto gap-2'>
-                      <Header>
-                      <a href="https://www.winglang.io/docs/start-here/installation" target="_blank" rel="noreferrer">
-                        Install
-                      </a>
-                      </Header>
+                      <Header tabs={[
+                        {
+                          name: "Install",
+                          href: "https://www.winglang.io/docs/start-here/installation"
+                        },
+                        {
+                          name: "Docs",
+                          href: "https://docs.winglang.io/"
+                        },
+                        {
+                          name: "Blog",
+                          href: "https://docs.winglang.io/blog"
+                        },
+                      ]}/>
                       <div className='grow'/>
                       <ThemeToggle mode={currentMode} onToggle={onToggleTheme}/>
                     </div>
-                    <div className="flex-1 flex flex-col pt-[20px]">
+                    <div className="flex-1 flex flex-col">
                         <div data-cueid="instructions" className="grow flex flex-col">
                             <div className='grow flex flex-col'>
                                 <div className="grow relative overflow-hidden">
@@ -452,7 +461,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                     </div>
                 </div>
 
-                <div className="grow ml-4 flex flex-col gap-2">
+                <div className="grow ml-4 flex flex-col gap-2 pt-6">
                   <div data-cueid="code" className={
                     classNames(
                       'h-[40%] flex flex-col w-full overflow-hidden',

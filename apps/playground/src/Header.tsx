@@ -34,10 +34,23 @@ export function Header({ currentMode, onToggleTheme }: HeaderProps) {
 
   return <div className="flex">
   <div className="flex justify-between w-full">
-    <GlobalHeader/>
+      <GlobalHeader tabs={[
+        {
+          name: "Install",
+          href: "https://www.winglang.io/docs/start-here/installation"
+        },
+        {
+          name: "Docs",
+          href: "https://docs.winglang.io/"
+        },
+        {
+          name: "Blog",
+          href: "https://docs.winglang.io/blog"
+        },
+      ]}/>
       <div className={classNames(
         "flex grow items-center justify-end flex-none gap-4",
-        "text-slate-700 dark:text-[#f1f0f1] hover:text-slate-600 dark:hover:text-[#2ad5c1]",
+        "text-[#1c1e21] dark:text-[#f1f0f1] hover:text-slate-600 dark:hover:text-[#2ad5c1]",
         "transition-colors duration-300",
       )}>
         <ThemeToggle mode={currentMode} onToggle={onToggleTheme}/>
