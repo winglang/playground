@@ -40,7 +40,7 @@ export function Header({ currentMode, onToggleTheme }: HeaderProps) {
           href: "https://www.winglang.io/docs/start-here/installation"
         },
         {
-          name: "Learn",
+          name: "Tour",
           href: "http://learn.winglang.io/"
         },
         {
