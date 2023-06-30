@@ -469,7 +469,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                     </div>
                 </div>
 
-                <div className="grow ml-4 flex flex-col gap-2">
+                <div className="grow ml-4 flex flex-col gap-2 pt-6">
                   <div data-cueid="code" className={
                     classNames(
                       'h-[40%] flex flex-col w-full overflow-hidden',
