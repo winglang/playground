@@ -195,7 +195,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
           'w-full flex flex-col grow px-[32px] pb-[32px]',
           theme.bg4,
           'transition-colors duration-300',
-          'min-w-[43rem]',
+          'min-w-[1024px]',
         )}>
           <div className='flex flex-col grow relative'>
             <Header currentMode={currentMode} onToggleTheme={onToggleTheme}/>

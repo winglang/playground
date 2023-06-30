@@ -52,6 +52,10 @@ export function Header({ currentMode, onToggleTheme }: HeaderProps) {
           href: "https://www.winglang.io/community"
         },
         {
+          name: "Contributing",
+          href: "https://www.winglang.io/contributing"
+        },
+        {
           name: "Blog",
           href: "https://docs.winglang.io/blog"
         },
@@ -102,7 +106,7 @@ export function Header({ currentMode, onToggleTheme }: HeaderProps) {
         <a href="https://learn.winglang.io/"
             target="_blank"
             className={classNames(
-              "hidden lg:flex",
+              "hidden medium:flex",
               "bg-[#2ad5c1] text-[#03120e] rounded px-[24px] py-[1px] h-[40px]",
               "items-center gap-2 font-sans font-medium text-[14px]",
               "border-[1px] border-[#2ad5c1]",

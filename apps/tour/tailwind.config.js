@@ -79,6 +79,9 @@ module.exports = {
       fontSize: {
         "2xs": "0.7rem",
       },
+      screens: {
+        'small': '1200px',
+      },
     },
   },
 };
