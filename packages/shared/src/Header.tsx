@@ -30,7 +30,7 @@ export const Header = ({tabs, size = "auto"}: HeaderProps) => {
               "decoration-0",
               "px-[12px] py-[8px]",
               "text-[16px] leading-[20px]",
-              size === "auto" && "small:px-[24px] lg:text-[17px]"
+              size === "auto" && "small:px-[24px] small:text-[17px]"
             )
           }>{tab.name}</a>
         ))}
