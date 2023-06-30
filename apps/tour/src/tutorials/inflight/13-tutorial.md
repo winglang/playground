@@ -14,6 +14,4 @@ We can see some interesting things if we look deeper:
 
 As you've probably figured out already, by understanding the intent of the developer from the code (i.e. that the function should be able to put files in the bucket because it calls the bucket.put function), the compiler is also able to build the connection map that you see in the simulator.
 
-Now that you have a better understanding of how the compiler works, let's discuss the implications of this approach - the abilities it unlocks and the limitations it puts on us.
-
-Click ***Next*** to find out about mutability in Wing.
+Now that you have a better understanding of how the compiler works, click ***Next*** to finish this tutorial.

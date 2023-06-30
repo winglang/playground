@@ -16,6 +16,8 @@ We've solved the private case of the counter, but there is a more general lesson
 
 ***If you need to change preflight data from inflight code, you should remember that this data is shared between machines and at different times. It can also be modified from several machines in parallel. So you should use resources that allow you to perform these operations safely.***
 
-After covering the main limitation that the compiler imposes on sharing data between preflight and inflight code, let's see a cool ability that the compiler gives us:
+Congratulation! you've covered a lot of preflight-inflight ground in this tutorial and you should now have a good understanding of the basics of the two execution phases.
 
-Click ***Next*** to learn how Wing exposes different contracts for the same object in preflight and inflight code.
+If you're interested to learn more about how the compiler works to implement the two execution phases you can click ***Next*** and stay two additional steps with us.
+
+Alternatively, you can skip them and finish the tutorial by clicking ***Finish***.

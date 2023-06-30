@@ -1,6 +1,6 @@
 # Compiler challenges
 
-In the previous step, we've added inflight code that naturally accessed the bucket that was defined in the preflight phase (the code is also available to you in this step).
+In the previous steps, we've seen inflight code that naturally referenced a bucket that was defined in the preflight phase (the code is also available to you in this step).
 
 The reason this interaction feels natural is because it's similar to good code that you've written or seen in the past. Not cloud code though, but good code for single machines. 
 

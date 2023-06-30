@@ -42,14 +42,6 @@ import code5dot2 from "./05.2-code.w?raw";
 import solution5dot2 from "./05.2-solution.w?raw";
 import tutorial5dot2 from "./05.2-tutorial.md?raw";
 
-import code06 from "./06-code.w?raw";
-import solution06 from "./06-solution.w?raw";
-import tutorial06 from "./06-tutorial.md?raw";
-
-import code07 from "./07-code.w?raw";
-import solution07 from "./07-solution.w?raw";
-import tutorial07 from "./07-tutorial.md?raw";
-
 import code08 from "./08-code.w?raw";
 //import solution08 from "./08-solution.w?raw";
 import tutorial08 from "./08-tutorial.md?raw";
@@ -65,6 +57,14 @@ import tutorial10 from "./10-tutorial.md?raw";
 import code11 from "./11-code.w?raw";
 import solution11 from "./11-solution.w?raw";
 import tutorial11 from "./11-tutorial.md?raw";
+
+import code12 from "./12-code.w?raw";
+import solution12 from "./12-solution.w?raw";
+import tutorial12 from "./12-tutorial.md?raw";
+
+import code13 from "./13-code.w?raw";
+import solution13 from "./13-solution.w?raw";
+import tutorial13 from "./13-tutorial.md?raw";
 
 import tutorial14 from "./14-tutorial.md?raw";
 import {Tutorial, TutorialPage} from "../main";
@@ -157,22 +157,6 @@ export const tutorialPages: TutorialPage[] = [
         targets: ["simulator", Target.TFAWS],
     },
     {
-        id: "6",
-        name:   "Compiler challenges",
-        code:   code06,
-        //solution: solution06,
-        tutorial: tutorial06,
-        targets: ["simulator", Target.TFAWS],
-    },
-    {
-        id: "7",
-        name:   "Compiler inner workings",
-        code:   code07,
-        //solution: solution07,
-        tutorial: tutorial07,
-        targets: [Target.TFAWS, "simulator"],
-    },
-    {
         id: "8",
         name:   "Mutability - a question",
         code:   code08,
@@ -203,6 +187,22 @@ export const tutorialPages: TutorialPage[] = [
         solution: solution11,
         tutorial: tutorial11,
         targets: ["simulator", Target.TFAWS],
+    },
+    {
+        id: "12",
+        name:   "Compiler challenges",
+        code:   code12,
+        //solution: solution12,
+        tutorial: tutorial12,
+        targets: ["simulator", Target.TFAWS],
+    },
+    {
+        id: "13",
+        name:   "Compiler inner workings",
+        code:   code13,
+        //solution: solution13,
+        tutorial: tutorial13,
+        targets: [Target.TFAWS, "simulator"],
     },
     {
         id: "14",
