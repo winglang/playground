@@ -319,7 +319,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
     return (
       <ThemeProvider mode={currentMode} theme={DefaultTheme}>
           <div className={classNames(
-            'w-full flex flex-col grow p-6',
+            'w-full flex flex-col grow px-6 pb-6',
             theme.bg4,
             'transition-all duration-300'
           )}>
