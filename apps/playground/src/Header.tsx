@@ -99,8 +99,9 @@ export function Header({ currentMode, onToggleTheme }: HeaderProps) {
         <a href="https://learn.winglang.io/"
             target="_blank"
             className={classNames(
+              "hidden lg:flex",
               "bg-[#2ad5c1] text-[#03120e] rounded px-[24px] py-[1px] h-[40px]",
-              "flex items-center gap-2 font-sans font-medium text-[14px]",
+              "items-center gap-2 font-sans font-medium text-[14px]",
               "border-[1px] border-[#2ad5c1]",
             )}
           >
