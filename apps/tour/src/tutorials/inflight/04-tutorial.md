@@ -1,16 +1,18 @@
-# Inflight - Run Hello world
+# Inflight - Run hello world
 
-Let's put our inflight code inside a function so we can see the log being printed.
+Let's execute our helloWorld inflight code inside a cloud.Function service. It represents an ephemeral (short lived) compute resource (e.g. AWS Lambda).
 
-To do that, please copy this code to the editor in line 7:
+To do that, copy this code to the editor in line 7:
 ```ts
 new cloud.Function(helloWorld);
 ```
 
-It is preflight code that creates a function with our inflight code as a parameter. This inflight code will run whenever the function is invoked.
+It is preflight code that creates the cloud.Function and gives it our inflight function (helloWorld) as a parameter. 
 
-You can see that the AWS/Terraform compilation target window now contains a cloud.Function resource that is implemented with an AWS Lambda, a Default resource that has an S3 bucket in which to store the inflight code, and the inflight code itself in the assets.
+As a result, our inflight code will run and print "hello world" to the log whenever the cloud.Function is invoked.
 
-If you switch to the Simulator tab, you can now click on the the cloud.Function resource and invoke it from the right hand side panel with any payload you want. You should see the log being printed.
+You can test it out in the simulator. Click the cloud.Function and invoke it (in the right hand panel) to see the logs being generated (at the bottom of the Simulator window).
 
-Click ***Next*** to learn about how to access preflight data from inflight code.
+When inflight code is compiled, it is converted into JavaScript code that is ready to be executed in various compute platforms.
+
+Click ***Next*** to see the compilation artifacts generated from this step's code.

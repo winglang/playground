@@ -1,17 +1,13 @@
 # Inflight - Intro
 
-Inflight code is the runtime that handles the application logic (handles API requests, process queue messages, etc).
+Inflight code is the runtime that handles our application logic. For example, handles API requests, processes queue messages, etc.
 
-Unlike preflight code, it is running post-deployment. It can run inside a serverless function (lambda), a container, a VM or a physical server. Therefore, it can be executed multiple times and on different machines in parallel. 
+Unlike preflight code, which runs at compile time on a single machine, inflight code runs post-deployment on compute platforms in the cloud. These platforms can be long running ones, like containers, VMs or physical machines. Or they can be ephemeral (short lived), like function services (Lambda). 
 
-Let's begin with a simple inflight example.
+Therefore, inflight code can be executed multiple times and on different machines in parallel. 
 
-We have pre-populated the editor with inflight code that prints "Hello World!" to the log.
+We have pre-populated the editor with simple inflight code that prints "Hello World!" to the log.
 
 ***Notice that the code has the `inflight` phase modifier to indicate that it is inflight code.***
-
-You can see that the AWS/Terraform compilation target window has an asset in it for this code (below the resources).
-
-It can be populated to run inside long-running services or function services (i.e. AWS Lambda).
 
 Click ***Next*** to run this code.
