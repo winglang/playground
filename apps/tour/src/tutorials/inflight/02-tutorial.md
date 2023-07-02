@@ -1,6 +1,6 @@
 # Preflight - Changing resource configuration
 
-We can do a lot more in preflight than just simple resource creation. We can configure services, set up event listers for actions performed on them, run logic to compose them into more complex resources, etc.
+Preflight code can be used for much more than simple resource creation. We can use it to configure services, set up event listers on them, run logic to compose them into more complex resources, etc.
 
 Let's start with a simple service configuration.
 

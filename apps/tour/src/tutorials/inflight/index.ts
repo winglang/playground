@@ -18,6 +18,10 @@ import code02dot5 from "./02.5-code.w?raw";
 import solution02dot5 from "./02.5-solution.w?raw";
 import tutorial02dot5 from "./02.5-tutorial.md?raw";
 
+import code02dot6 from "./02.6-code.w?raw";
+import solution02dot6 from "./02.6-solution.w?raw";
+import tutorial02dot6 from "./02.6-tutorial.md?raw";
+
 import code03 from "./03-code.w?raw";
 import solution03 from "./03-solution.w?raw";
 import tutorial03 from "./03-tutorial.md?raw";
@@ -108,6 +112,14 @@ export const tutorialPages: TutorialPage[] = [
         solution: solution02dot5,
         tutorial: tutorial02dot5,
         targets: [Target.TFAWS, "simulator"],
+    },
+    {
+        id: "2.6",
+        name:   "Functions with specific behavior",
+        code:   code02dot6,
+        solution: solution02dot6,
+        tutorial: tutorial02dot6,
+        //targets: [Target.TFAWS, "simulator"],
     },
     {
         id: "3",

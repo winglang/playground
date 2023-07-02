@@ -3,14 +3,14 @@
 Congrats! You now know Wing's main concept - the two execution phases 🎉
 
 #### Recap of what we've covered in this tutorial:
-1. Definitions of the two execution phases: preflight and inflight.
-2. How to write preflight code.
-3. How to write inflight code.
-4. How to reference data from preflight code in inflight code.
-5. What the compiler does behind the scenes to make this possible.
-6. Wing's mutability model.
-7. How Wing exposes different contracts for the same object in the two execution phases.
-
+1. Preflight code is code that runs once, at compile time, to generate the infrastructure configuration of your cloud application.
+2. Inflight code is code that runs at runtime to handle your application logic.
+3. Wing programs start in preflight, but can switch to inflight using the inflight keyword.
+4. Objects in Wing have different contracts in preflight and inflight. 
+5. The IDE will display the contract that is relevant to the current execution phase.
+6. Inflight methods can only be called in inflight contexts, and preflight functions from preflight contexts.
+7. Inflight code can reference data from preflight, but the data cannot be mutated.
+8. How the Wing compiler works to make the above possible.
 
 You can continue to dive into more advanced concepts of preflight and inflight code, namely, preflight, inflight and mixed phase classes in the [next tutorial](/advanced-inflight-preflight).
 

@@ -18,6 +18,6 @@ This connection is visualized in the Simulator window on the right.
 
 But it's not just a diagram, you can click the cloud.Function and invoke it, then check out the file in the cloud.Bucket.
 
-You may have noticed that we've used two different bucket functions to add files to it. One in preflight code in previous steps (***addObject***), and another in inflight code in this step (***put***).
+As you may have noticed, the bucket's ***put*** function that we've used in this step from inflight code serves a similar purpose to the ***addObject*** function that we've used in previous steps from preflight code.
 
-click ***Next*** to learn about the different contracts that are available for the same objects in the two execution phases.
+Click ***Next*** to learn about the different contracts that are available for the same objects in the two execution phases.

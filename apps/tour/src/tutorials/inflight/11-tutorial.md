@@ -2,7 +2,7 @@
 
 So how can we count the number of invocations? 
 
-We need to use an explicit resource for that that, one that is designed to be changed atomically (because function invocations can happen in parallel) and to save a shared state between machines (because the invocations can happen on different machines).
+We need to use an explicit resource for that. One that is designed to be changed atomically (because function invocations can happen in parallel) and to save a shared state between machines (because the invocations can happen on different machines).
 
 Fortunately, Wing has such a resource, the cloud.Counter, and it has its own tutorial that you are welcome to try out.
 
@@ -18,6 +18,6 @@ We've solved the private case of the counter, but there is a more general lesson
 
 Congratulation! you've covered a lot of preflight-inflight ground in this tutorial and you should now have a good understanding of the basics of the two execution phases.
 
-If you're interested to learn more about how the compiler works to implement the two execution phases you can click ***Next*** and stay two additional steps with us.
+If you're interested to learn more about how the compiler works to implement the two execution phases you can click ***Next*** and stay for two additional steps with us.
 
 Alternatively, you can skip them and finish the tutorial by clicking ***Finish***.

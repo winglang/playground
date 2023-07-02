@@ -6,7 +6,7 @@ Unlike preflight code, which runs at compile time on a single machine, inflight 
 
 Therefore, inflight code can be executed multiple times and on different machines in parallel. 
 
-We have pre-populated the editor with simple inflight code that prints "Hello World!" to the log.
+The editor contains simple inflight code that prints "Hello World!" to the log.
 
 ***Notice that the code has the `inflight` phase modifier to indicate that it is inflight code.***
 
