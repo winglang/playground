@@ -192,14 +192,14 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
     return (
       <ThemeProvider mode={currentMode} theme={DefaultTheme}>
         <div className={classNames(
-          'w-full flex flex-col grow p-6',
+          'w-full flex flex-col grow px-[32px] pb-[32px]',
           theme.bg4,
           'transition-colors duration-300',
-          'min-w-[43rem]',
+          'min-w-[1024px]',
         )}>
-          <div className='flex flex-col grow relative pl-[20px]'>
+          <div className='flex flex-col grow relative'>
             <Header currentMode={currentMode} onToggleTheme={onToggleTheme}/>
-            <div className='flex flex-col h-full pt-4'>
+            <div className='flex flex-col h-full'>
               <div className='flex grow gap-2'>
                 <RightResizableWidget className={
                   classNames(
