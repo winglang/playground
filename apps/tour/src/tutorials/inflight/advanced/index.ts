@@ -62,6 +62,14 @@ import code11 from "./11-code.w?raw";
 import solution11 from "./11-solution.w?raw";
 import tutorial11 from "./11-tutorial.md?raw";
 
+import code12 from "./12-code.w?raw";
+import solution12 from "./12-solution.w?raw";
+import tutorial12 from "./12-tutorial.md?raw";
+
+import code13 from "./13-code.w?raw";
+import solution13 from "./13-solution.w?raw";
+import tutorial13 from "./13-tutorial.md?raw";
+
 import tutorial14 from "./14-tutorial.md?raw";
 import {Tutorial, TutorialPage} from "../main";
 
@@ -191,6 +199,22 @@ export const tutorialPages: TutorialPage[] = [
         solution: solution11,
         tutorial: tutorial11,
         targets: ["simulator", Target.TFAWS],
+    },
+    {
+        id: "12",
+        name:   "Compiler challenges",
+        code:   code12,
+        //solution: solution12,
+        tutorial: tutorial12,
+        targets: ["simulator", Target.TFAWS],
+    },
+    {
+        id: "13",
+        name:   "Compiler inner workings",
+        code:   code13,
+        //solution: solution13,
+        tutorial: tutorial13,
+        targets: [Target.TFAWS, "simulator"],
     },
     {
         id: "14",
