@@ -28,6 +28,7 @@ import { CompilationRequest } from '@wing-playground/shared/src/compiler/request
 
 import { useExamples } from '@wing-playground/shared/src/use-examples.js';
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
+import { FilePicker } from '@wing-playground/shared/src/FilePicker.js';
 import {installDependencies, ConsoleLayouts} from "@wing-playground/shared/src/containers";
 import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
 import {useAnalytics} from "@wing-playground/shared/src/analytics/use-analytics";
@@ -67,8 +68,8 @@ export type EditorProps = {
 export const ReactMonacoEditor: React.FC<EditorProps> = ({
 }) => {
     const { examples,
-      currentExample,
-      languageContext,
+      currentExample, setCurrentExample,
+      languageContext, setLanguageContext,
     } = useExamples();
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
     const ref = createRef<HTMLDivElement>();
@@ -216,7 +217,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                 }>
                   <PanelHeader>
                     <div className="flex">
-                      <span>EDITOR</span>
+                      <div className="bg-transparent h-7 px-2 text-xs cursor-pointer focus:outline-none" style={{marginTop:"-2px"}}>
+                        <FilePicker examples={examples} currentExample={currentExample} setCurrentExample={setCurrentExample} setLanguageContext={setLanguageContext} />
+                      </div>
                       <div className="grow"/>
                       <select
                         className="bg-transparent h-7 px-2 text-xs cursor-pointer focus:outline-none"
