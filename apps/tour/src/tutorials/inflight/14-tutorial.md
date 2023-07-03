@@ -34,7 +34,7 @@ Alternatively, you can explore other tutorials and documentation pages:
 
 [Get started](https://docs.winglang.io/getting-started) on a new project or brush up for your existing Wing code.
 
-[Learn about Wing's core concepts](https://docs.winglang.io/concepts).
+[Learn about Wing's core concepts](https://www.winglang.io/docs/category/core-concepts).
 
 #### Playground
 
