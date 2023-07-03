@@ -217,7 +217,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                 }>
                   <PanelHeader>
                     <div className="flex">
-                      <span>EDITOR</span>
                       <div className="bg-transparent h-7 px-2 text-xs cursor-pointer focus:outline-none" style={{marginTop:"-2px"}}>
                         <FilePicker examples={examples} currentExample={currentExample} setCurrentExample={setCurrentExample} setLanguageContext={setLanguageContext} />
                       </div>
