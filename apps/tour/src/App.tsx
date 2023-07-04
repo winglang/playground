@@ -10,21 +10,24 @@ import { getBrowser, isChrome } from '@wing-playground/shared/src/utils';
 import { useAnalytics } from '@wing-playground/shared/src/analytics/use-analytics';
 import { LoadingStatus } from '@wing-playground/shared/src/loading-status';
 
+const routePrefix = import.meta.env.VITE_TOUR_BASE_PATH === '/learn' ? '/learn' : '';
+const basePath = import.meta.env.VITE_TOUR_BASE_PATH === '/learn' ? '/learn' : '/';
+
 const tutorialRoutes = [
   {
-    path: '/',
+    path: basePath,
     tutorial: mainTutorial
   }, {
-    path: '/bucket',
+    path: `${routePrefix}/bucket`,
     tutorial: bucketTutorial
   }, {
-    path: '/counter',
+    path: `${routePrefix}/counter`,
     tutorial: counterTutorial
   }, {
-    path: '/topic',
+    path: `${routePrefix}/topic`,
     tutorial: topicTutorial
   }, {
-    path: '/queue',
+    path: `${routePrefix}/queue`,
     tutorial: queueTutorial
   }
 ];
@@ -67,7 +70,7 @@ function App() {
        {tutorialRoutes.map(({ path, tutorial}) =>
         <Route key={path} path={path} element={<AppView tutorial={tutorial}/>}/>
         )}
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Navigate to={basePath} />} />
       </Routes>
     </Router>
   );
