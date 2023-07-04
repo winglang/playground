@@ -26,5 +26,8 @@
         }
       ]
     }
-  ]
+  ],
+    "rewrites":  [
+      {"source": "/learn/(.*)", "destination": "/learn"}
+    ]
 }
