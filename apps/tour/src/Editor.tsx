@@ -472,7 +472,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                 <div className="grow ml-4 flex flex-col gap-2 pt-6">
                   <div data-cueid="code" className={
                     classNames(
-                      'h-[40%] flex flex-col w-full overflow-hidden',
+                      'h-[40%] flex flex-col w-full',
                       'border',
                       theme.border4,
                       'transition-colors duration-300',
@@ -482,7 +482,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                     <div className={
                       classNames(
                         showWelcome && "opacity-0",
-                        "flex flex-col w-full grow overflow-auto",
+                        "flex flex-col w-full grow",
                       )}>
                       <PanelHeader>
                         <div className="flex">
@@ -518,7 +518,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                         </div>
                       </PanelHeader>
                       <div className='flex flex-col grow w-full relative'>
-                        <div className="absolute inset-0 overflow-hidden">
+                        <div className="absolute inset-0">
                           <Editor
                             data-testid={"editor"}
                             theme={currentMode}
