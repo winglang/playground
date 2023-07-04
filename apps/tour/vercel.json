@@ -27,7 +27,7 @@
       ]
     }
   ],
-    "rewrites":  [
-      {"source": "/(.*)", "destination": "/learn"}
-    ]
+  "redirects": [
+    { "source": "/learn/:slug", "destination": "/learn"}
+  ]
 }

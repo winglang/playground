@@ -12,19 +12,19 @@ import { LoadingStatus } from '@wing-playground/shared/src/loading-status';
 
 const tutorialRoutes = [
   {
-    path: '/',
+    path: '/learn',
     tutorial: mainTutorial
   }, {
-    path: '/bucket',
+    path: 'learn/bucket',
     tutorial: bucketTutorial
   }, {
-    path: '/counter',
+    path: 'learn/counter',
     tutorial: counterTutorial
   }, {
-    path: '/topic',
+    path: 'learn/topic',
     tutorial: topicTutorial
   }, {
-    path: '/queue',
+    path: 'learn/queue',
     tutorial: queueTutorial
   }
 ];
@@ -67,7 +67,7 @@ function App() {
        {tutorialRoutes.map(({ path, tutorial}) =>
         <Route key={path} path={path} element={<AppView tutorial={tutorial}/>}/>
         )}
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Navigate to="/learn" />} />
       </Routes>
     </Router>
   );
