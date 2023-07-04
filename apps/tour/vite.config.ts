@@ -5,6 +5,7 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 const base_path = process.env.TOUR_BASE_PATH || "./";
 const out_dir = process.env.TOUR_OUT_DIR;
 
+
 // https://vitejs.dev/config/
 export default defineConfig({
   base: base_path,
