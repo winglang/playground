@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 const base_path = process.env.TOUR_BASE_PATH || "./";
-const out_dir = process.env.TOUR_OUT_DIR || "dist";
+const out_dir = process.env.TOUR_OUT_DIR;
 
 // https://vitejs.dev/config/
 export default defineConfig({
