@@ -26,8 +26,5 @@
         }
       ]
     }
-  ],
-  "redirects": [
-    { "source": "/learn/:slug", "destination": "/learn"}
   ]
 }
