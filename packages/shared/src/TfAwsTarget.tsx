@@ -62,7 +62,7 @@ const ResourceIcon = ({type, className}: {type: string, className?: string}) => 
   if (!resources.includes(type)) {
     return <Cog8ToothIcon className={classNames("w-full", className)} />;
   }
-  return  <img className={classNames("w-full", className)} src={`aws/${type}.svg`}/>
+  return  <img className={classNames("w-full", className)} src={`learn/aws/${type}.svg`}/>
 }
 
 interface Item {
