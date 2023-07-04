@@ -1,4 +1,4 @@
-import {useEffect, MutableRefObject} from "react";
+import { MutableRefObject } from "react";
 
 export interface SimulatorTargetProps {
   frameSrc: string;
