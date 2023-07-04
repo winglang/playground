@@ -2,9 +2,11 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 
+const base_path = process.env.BASE_PATH || "./";
+
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "./",
+  base: base_path,
   resolve: {
     // preserveSymlinks: true,
     alias: {
