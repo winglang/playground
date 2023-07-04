@@ -10,7 +10,7 @@ import { getBrowser, isChrome } from '@wing-playground/shared/src/utils';
 import { useAnalytics } from '@wing-playground/shared/src/analytics/use-analytics';
 import { LoadingStatus } from '@wing-playground/shared/src/loading-status';
 
-const tutorialRoutes = [ 
+const tutorialRoutes = [
   {
     path: '/learn',
     tutorial: mainTutorial
