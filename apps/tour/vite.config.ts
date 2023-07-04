@@ -4,6 +4,7 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 const base_path = process.env.TOUR_BASE_PATH || "./";
 
+console.log("process.env", process.env);
 console.log("base_path", base_path);
 
 // https://vitejs.dev/config/
