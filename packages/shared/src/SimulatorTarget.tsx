@@ -34,7 +34,6 @@ export const SimulatorTarget = (props: SimulatorTargetProps) => {
         src={props.frameSrc}
         allowFullScreen={true}
         ref={props.iframeRef}
-        scrolling="no"
       ></iframe>
     </div>
   )
