@@ -11,7 +11,7 @@ If the data is some cloud service, then the compiler needs to inject the needed 
 The compiler's data serialization approach to passing variable references between the inflight and preflight execution phases allows us to write cloud code that feels and behaves very much like code for single machines. But it can also generate unexpected behavior when attempting to mutate this data that crosses machine and time boundaries. 
 
 For example, take a look at the code below:
-```ts
+```wing
 bring cloud;
 
 let numInvocations = 0;

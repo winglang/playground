@@ -9,7 +9,7 @@ Instead, the compiler needs to serialize the preflight data and transfer it to t
 This serialization approach can generate unexpected behavior when attempting to mutate data that crosses machine and time boundaries. 
 
 For example, take a look at the code below:
-```ts
+```wing
 bring cloud;
 
 let numInvocations = 0;

@@ -1,7 +1,7 @@
 # Mutability - the answer
 
 For your convenience, this is the code from the previous step:
-```ts
+```wing
 bring cloud;
 
 let numInvocations = 0;

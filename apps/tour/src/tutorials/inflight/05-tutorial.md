@@ -7,7 +7,7 @@ Let's see what it looks like:
 The editor contains preflight code that adds a storage bucket and a function to our app. It also contains empty inflight code that runs whenever the function is invoked. 
 
 Let's modify it to put a file in the bucket by pasting this code to line 8:
-```ts
+```wing
   // The bucket that was defined in the preflight phase is accessed here in the inflight phase.
   bucket.put("hello.txt", "Hello, World! with this payload: ${payload}}");
 ```

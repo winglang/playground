@@ -3,7 +3,8 @@
 Let's execute our helloWorld inflight code inside a cloud.Function, which is Wing's ephemeral (short lived) compute resource (i.e. AWS Lambda).
 
 To do that, copy this code to the editor in line 7:
-```ts
+
+```wing
 new cloud.Function(helloWorld);
 ```
 
