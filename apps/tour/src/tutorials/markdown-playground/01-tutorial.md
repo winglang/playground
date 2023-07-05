@@ -1,4 +1,4 @@
-# This is H1
+# This is H1 in step 1
 Here is some plain text.
 
 <strong>this is strong</strong>
@@ -17,19 +17,19 @@ These are the details
 Text in H3
 
 ```wing
-bucket.addObject("hello.txt", "Hello World!");
+bucket.addObject("hello.txt", "Hello World from step 1!");
 ```
 
 ```wing
 bring cloud;
-new cloud.Function(helloWorld);
+new cloud.Function(helloWorldOne);
 ```
 
 ```wing
 new cloud.Function(inflight () => {
-    log("hello");
+    log("hello from 1");
     if true {
-        log("hello");
+        log("hello from 1");
     }
 })
 ```
