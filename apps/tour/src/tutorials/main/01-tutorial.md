@@ -1,4 +1,4 @@
-# Creating a Queue
+# Defining your first cloud resource
 
 See the code editor on the right? It has an initial empty Wing program.
 
