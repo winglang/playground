@@ -2,9 +2,12 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 
+const base_path = process.env.VITE_TOUR_BASE_PATH || "./";
+const out_dir = process.env.VITE_TOUR_OUT_DIR;
+
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/learn",
+  base: base_path,
   resolve: {
     // preserveSymlinks: true,
     alias: {
@@ -41,7 +44,7 @@ export default defineConfig({
   },
   build: {
     target: "es2022",
-    outDir: "dist/learn",
+    outDir: out_dir,
     commonjsOptions: {
       // This is needed because winglang is symlinked
       include: [
