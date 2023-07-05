@@ -7,7 +7,7 @@ import MonacoWrapper from './MonacoWrapper';
 import SyntaxHighlighterWrapper from './SyntaxHighlighterWrapper';
 import { Button } from "@wing-playground/shared/src/Button";
 
-const MarkdownRender = ({ markdown, theme = 'light', editorOptions }) => {
+const MarkdownRender = ({ markdown = "", theme = 'light' }) => {
   
   // Function to render code with syntax highlighter
   const components = {
@@ -39,9 +39,9 @@ const MarkdownRender = ({ markdown, theme = 'light', editorOptions }) => {
               </Button>
             </div>
           </CopyToClipboard>
-          <MonacoWrapper editorOptions={editorOptions} currentMode={theme} language={match[1]} value={children[0]} />
-          <br />
-          <SyntaxHighlighterWrapper currentMode={theme} language={match[1]} value={children[0]} />
+          <MonacoWrapper currentMode={theme} language={match[1]} value={children[0]} />
+         {false && <br />}
+         {false && <SyntaxHighlighterWrapper currentMode={theme} language={match[1]} value={children[0]} />}
         </div>
       ) : (
         <code style={{ color: '#d9534f', padding: '1px 5px', borderRadius: '4px'}} className={className} {...props}>
@@ -64,4 +64,4 @@ const MarkdownRender = ({ markdown, theme = 'light', editorOptions }) => {
   />;
 };
 
-export default MarkdownRender;
+export default React.memo(MarkdownRender);

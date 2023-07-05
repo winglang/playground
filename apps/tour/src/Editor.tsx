@@ -379,7 +379,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                                             <MarkdownRender
                                               markdown={step.tutorial ?? ""}
                                               theme={currentMode}
-                                              editorOptions={editorOptions}
                                             />
                                         </div>
                                       </div>

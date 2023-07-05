@@ -1,3 +1,4 @@
+import React from 'react';
 import Editor from '@monaco-editor/react';
 
 function countLines(str) {
@@ -14,7 +15,24 @@ const wrapperStyle = {
     marginBottom: '-1em',
   };
 
-const MonacoWrapper = ({ language, value, editorOptions, currentMode }) => {    
+  const options = {
+    fontSize: 14,
+    tabSize: 2,
+    minimap: { enabled: false },
+    scrollbar: { vertical: "hidden", horizontal: "hidden" },
+    scrollBeyondLastLine: false, // disable scrolling beyond the last line
+    padding: { top: 10, bottom: 0 },
+    lineNumbers: "off",
+    readOnly: true,
+    autoSize: true,
+    autoHeight: true,
+    hover: false,
+    verticalScrollbarSize: 0,
+    renderIndentGuides: false, // Disable indent guides
+    renderLineHighlight: 'none',
+}
+
+const MonacoWrapper = ({ language, value, currentMode }) => {    
     const lines = countLines(value);
     const height = `${1.7*lines + 1}vh`;
 
@@ -25,28 +43,15 @@ const MonacoWrapper = ({ language, value, editorOptions, currentMode }) => {
                     key={"syntac-highlighter"}
                     data-testid={"syntax-highlighter"}
                     theme={currentMode}
-                    options={{
-                        ...editorOptions,
-                        minimap: { enabled: false },
-                        scrollbar: { vertical: "hidden", horizontal: "hidden" },
-                        scrollBeyondLastLine: false, // disable scrolling beyond the last line
-                        padding: { top: 10, bottom: 0 },
-                        lineNumbers: "off",
-                        readOnly: true,
-                        autoSize: true,
-                        autoHeight: true,
-                        hover: false,
-                        verticalScrollbarSize: 0,
-                        renderIndentGuides: false, // Disable indent guides
-                        renderLineHighlight: 'none',
-                    }}
                     height={height}
-                    language={language}
-                    value={value}
+                    defaultLanguage={language}
+                    defaultValue={value}
+                    loading={'...'}
+                    options={options}
                 />
             </div>
         </div>
   );
 };
 
-export default MonacoWrapper;
+export default React.memo(MonacoWrapper);
