@@ -22,7 +22,7 @@ const MarkdownRender = ({ markdown = "", theme = 'light' }) => {
       };
 
       return !inline && match ? (
-        <div style={{ position: 'relative', marginTop: '-14px', marginBottom: '-14px', marginLeft: '-21px', marginRight: '-21px' }}>
+        <div style={{ position: 'relative', marginTop: '-1em', marginBottom: '-1em', marginLeft: '-1.5em', marginRight: '-1.5em' }}>
           <CopyToClipboard text={children[0]} onCopy={handleCopy}>
           
             <div 

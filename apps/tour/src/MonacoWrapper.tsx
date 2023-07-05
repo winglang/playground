@@ -34,7 +34,7 @@ const wrapperStyle = {
 
 const MonacoWrapper = ({ language, value, currentMode }) => {    
     const lines = countLines(value);
-    const height = `${1.7*lines + 1}vh`;
+    const height = `${1.5*lines + 1}em`;
 
     return (
         <div style={wrapperStyle}>
