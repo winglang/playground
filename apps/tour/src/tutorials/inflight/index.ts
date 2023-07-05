@@ -69,17 +69,13 @@ export const tutorialPages: TutorialPage[] = [
     {
         id: "0",
         name:   "Welcome",
-        code: code01,
         tutorial: tutorial00,
-        //targets: [Target.TFAWS, "simulator"],
     },
     {
         id: "1",
         name:   "Preflight - Wing's default execution phase",
         code:   code01,
         tutorial: tutorial01,
-        //solution: solution01,
-        //targets: [],
     },
     {
         id: "1.5",
