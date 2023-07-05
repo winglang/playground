@@ -22,7 +22,7 @@ import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
 import React, {createRef, useEffect, useState, useRef, useCallback, useMemo, FC, PropsWithChildren} from 'react';
 import { WebContainer } from '@webcontainer/api';
-import ReactMarkdown from 'react-markdown'
+import MarkdownRender from './MarkdownRender';
 
 import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
 import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
@@ -60,6 +60,8 @@ StandaloneServices.initialize({
 buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
 const compiler = new Compiler();
+
+let i = 0;
 
 export type EditorProps = {
     defaultCode?: string;
@@ -376,9 +378,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                                           '[&>*]:transition-colors [&>*]:duration-300',
                                           'prose-h1:transition-colors prose-h1:duration-300',
                                           )}>
-                                            <ReactMarkdown
-                                              children={step.tutorial ?? ""}
-                                              className={classNames("text-xl")}
+                                            <MarkdownRender
+                                              markdown={step.tutorial ?? ""}
+                                              theme={currentMode}
+                                              editorOptions={editorOptions}
                                             />
                                         </div>
                                       </div>
@@ -520,6 +523,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                       <div className='flex flex-col grow w-full relative'>
                         <div className="absolute inset-0">
                           <Editor
+                            key={`main-editor-${i++}`}
                             data-testid={"editor"}
                             theme={currentMode}
                             options={editorOptions}

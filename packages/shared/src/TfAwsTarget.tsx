@@ -185,7 +185,7 @@ const ItemsList = ({
                   </div>
                 )}
                   <FileRow
-                    key={item.id}
+                    key={selectedItem?.id}
                     title={item.name}
                     description={group ? "" : item.description}
                     icon={item.type && <ResourceIcon type={item.type}/>}
