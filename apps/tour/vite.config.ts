@@ -2,8 +2,6 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 
-const out_dir = process.env.VITE_TOUR_OUT_DIR;
-
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "/learn",
