@@ -16,7 +16,7 @@ export const Header = ({tabs, size = "auto"}: HeaderProps) => {
         "flex items-center font-sans font-normal text-[#1c1e21] dark:text-[#2bd5c1]",
         "h-[80px] w-full",
     )}>
-      <a href="https://winglang.io/" target="_blank" rel="noreferrer" className={classNames(
+      <a href="https://winglang.io/" rel="noreferrer" className={classNames(
         "hover:text-slate-600 dark:hover:text-white mr-[16px] decoration-0",
         size === "auto" && "small:mr-[40px]"
       )}>
@@ -25,7 +25,7 @@ export const Header = ({tabs, size = "auto"}: HeaderProps) => {
 
       <div className="overflow-x-auto flex grow">
         {tabs.map((tab, index) => (
-          <a href={tab.href} target="_blank" rel="noreferrer" className={
+          <a href={tab.href} rel="noreferrer" className={
             classNames(
               "decoration-0",
               "px-[12px] py-[8px]",
