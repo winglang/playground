@@ -61,8 +61,6 @@ buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
 const compiler = new Compiler();
 
-let i = 0;
-
 export type EditorProps = {
     defaultCode?: string;
     hostname?: string;
@@ -523,7 +521,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                       <div className='flex flex-col grow w-full relative'>
                         <div className="absolute inset-0">
                           <Editor
-                            key={`main-editor-${i++}`}
                             data-testid={"editor"}
                             theme={currentMode}
                             options={editorOptions}
