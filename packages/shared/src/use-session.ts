@@ -19,7 +19,7 @@ function fromBinary(str: string): string {
 export const useSession = (key: string) => {
   const setSession = (value: string): void => {
     try {
-      const url = new URL(window.location.href);
+      const url = new URL(window.location.origin + window.location.pathname);
       url.searchParams.set(key, toBinary(value));
       window.history.replaceState({}, '', url.toString());
     } catch (e) {
