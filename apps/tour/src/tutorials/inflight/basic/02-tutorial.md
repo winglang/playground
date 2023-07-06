@@ -4,10 +4,12 @@ Preflight code can be used for much more than simple resource creation. We can u
 
 Let's start with a simple service configuration.
 
-Look at the code in the Editor and See that we've made our bucket public. It means that anyone can access it and read its contents.
+Look at the code in the Editor and See that we've made our `cloud.Bucket` public. It means that anyone can access it and read its contents.
 
-Check out the ***AWS/Terraform compilation target window***. Can you see how the Terraform definitions have changed? 
+Check out the **AWS/Terraform compilation** compilation target window. Can you see how the Terraform definitions have changed? 
 
-You can modify it back to be private and see if you can spot the differences. The "s3 bucket public access block" has changed (click on it to see how), and an "s3 bucket policy" was added to allow anyone to get objects from the bucket.
+You can change back the `cloud.Bucket` to be private in the Editor and see if you can spot the differences in the AWS/Terraform compilation window. 
 
-Click ***Next*** to add code that will populate the bucket with a file containing the text "hello world" during deployment.
+The **"s3 bucket public access block"** has changed (click on it to see how), and an **"s3 bucket policy"** was added to allow anyone to get objects from the bucket.
+
+Click **NEXT** to add code that will populate the bucket with a file containing the text "hello world" during deployment.

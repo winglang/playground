@@ -481,7 +481,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                   >
                     <div className={
                       classNames(
-                        showWelcome && "opacity-0",
+                        (showWelcome || !currentStep?.code) && "opacity-0",
                         "flex flex-col w-full grow",
                       )}>
                       <PanelHeader>

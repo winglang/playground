@@ -159,18 +159,18 @@ export const tutorialPages: TutorialPage[] = [
     {
         id: "8",
         name:   "Mutability - a question",
-        code:   code08,
+        //code:   code08,
         //solution: solution08,
         tutorial: tutorial08,
-        targets: [Target.TFAWS, "simulator"],
+        //targets: [Target.TFAWS, "simulator"],
     },
     {
         id: "9",
         name:   "Mutability - answer to the question",
-        code:   code09,
+        //code:   code09,
         //solution: solution09,
         tutorial: tutorial09,
-        targets: ["simulator", Target.TFAWS],
+        //targets: ["simulator", Target.TFAWS],
     },
     {
         id: "10",

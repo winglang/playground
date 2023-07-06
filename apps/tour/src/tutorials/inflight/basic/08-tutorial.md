@@ -26,7 +26,7 @@ The preflight part creates a function and a counter to count the number of times
 
 What do you think will happen if this code was allowed to run?
 
-Click ***Next*** to find out.
+Click **NEXT** to find out.
 
 
 

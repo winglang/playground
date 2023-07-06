@@ -16,10 +16,8 @@ new cloud.Function(helloWorld);
 
 Have you figured out the problem with it yet?
 
-The answer is that no matter how many times the function is invoked, it will print that same output: "Function called 1 times".
+The answer is that no matter how many times the function is invoked, it will print that same output: *"Function called 1 times"*.
 
-The reason for this was explained in the previous step. The compiler doesn't transfer a pointer to the ***numInvocations*** variable from the inflight phase. Instead, it serializes the value of the variable in the preflight phase (which is 0) and injects it into the generated inflight code. This means that whenever the inflight code runs, and no matter how many times it runs, it will see the same value of 0 for ***numInvocations***.
+The reason for this was explained in the previous step. The compiler doesn't transfer a pointer to the `numInvocations` variable from the inflight phase. Instead, it serializes the value of the variable in the preflight phase (which is 0) and injects it into the generated inflight code. This means that whenever the inflight code runs, and no matter how many times it runs, it will see the same value of **"0"** for `numInvocations`.
 
-You can see the generated inflight code in the AWS/Terraform compilation target window, in the "inflight.js" file in the assets section. It gets the value of ***numInvocations*** as a parameter that is pre-coded to equal 0.
-
-Click ***Next*** to see how Wing protects us from such scenarios.
+Click **NEXT** to see how Wing protects us from such scenarios.

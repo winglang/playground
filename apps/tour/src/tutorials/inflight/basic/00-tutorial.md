@@ -10,4 +10,4 @@ Wing's main innovation is that it unifies both execution phases under the same p
 
 In this tutorial you will learn what this unification means in practice and how to write code that takes advantage of it.
 
-Click ***Start*** to begin.
+Click **START** to begin.

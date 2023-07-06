@@ -8,6 +8,6 @@ Therefore, inflight code can be executed multiple times and on different machine
 
 The editor contains simple inflight code that prints "Hello World!" to the log.
 
-***Notice that the code has the `inflight` phase modifier to indicate that it is inflight code.***
+> ***Notice that the code has the `inflight` phase modifier to indicate that it is inflight code.***
 
-Click ***Next*** to run this code.
+Click **NEXT** to run this code.
