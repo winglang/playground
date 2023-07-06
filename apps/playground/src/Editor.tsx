@@ -21,14 +21,13 @@ import Editor, { loader } from "@monaco-editor/react";
 import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
 import React, { createRef, useEffect, useState, useRef, useMemo, useCallback } from 'react';
-import { WebContainer } from '@webcontainer/api';
 import { Loading } from '@wing-playground/shared/src/Loading';
 import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
 import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
 
 import { useExamples } from '@wing-playground/shared/src/use-examples.js';
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
-import {installDependencies, ConsoleLayouts} from "@wing-playground/shared/src/containers";
+import {ConsoleLayouts} from "@wing-playground/shared/src/containers";
 import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
 import {useAnalytics} from "@wing-playground/shared/src/analytics/use-analytics";
 import {RightResizableWidget} from "@wing-playground/shared/src/RightResizableWidget";
@@ -90,12 +89,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
 
     }, [currentMode, iframSrc]);
 
-    const installConsole = async (): Promise<string> => {
-        // const consoleUrl = await installDependencies(containerRef.current, ConsoleLayouts.Playground);
-        const { uiUrl, updateUrl } = await createConsole(ConsoleLayouts.Playground);
-        setIframeSrc(uiUrl)
-        return updateUrl;
-    }
     const [fontSize, setFontSize] = useState(14);
     const fontSizes = [12, 14, 16];
 
@@ -124,13 +117,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         editorRef,
         onLoadingStatusChange: setLoadingStatus,
         onLspError,
-        installConsole,
         editorTheme: currentMode,
         languageContext,
         code: getSession() || currentExample.value,
         compiler,
         targets: [Target.TFAWS],
-        shouldInitContainer: true,
+        layout: ConsoleLayouts.Playground,
+        setIframeSrc,
     });
 
     const [isCompiling, setIsCompiling] = useState(true);

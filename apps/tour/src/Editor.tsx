@@ -96,12 +96,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
 
     }, [currentMode, iframSrc]);
 
-    const installConsole = async (containerRef: React.MutableRefObject<WebContainer>) => {
-        const consoleUrl = await installDependencies(containerRef.current, ConsoleLayouts.Tour);
-        console.log("consoleUrl", consoleUrl);
-        setIframeSrc(consoleUrl)
-        return "";
-    }
     const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
         minimap: { enabled: false },
         fontSize: 14,
@@ -129,13 +123,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
         editorRef,
         onLoadingStatusChange: setLoadingStatus,
         onLspError,
-        installConsole,
         editorTheme: currentMode,
         languageContext,
         code: tutorial.pages[0].code ?? "",
         compiler,
         targets: compilerTargets,
-        shouldInitContainer: true,
+        layout: ConsoleLayouts.Tour,
+        setIframeSrc,
     });
 
     const [isCompiling, setIsCompiling] = useState(false);

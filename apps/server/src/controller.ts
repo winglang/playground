@@ -1,12 +1,13 @@
 import express from "express";
 import bodyParser from "body-parser";
+import cors from "cors";
 import { createMachine } from "./create-machine";
 import { deleteMachines } from "./delete-machines";
-import cors from "cors";
 import { verifyMachine } from "./verify-machine";
+import { expressMetrics } from "./metrics";
+import { flyAppsPrefix, queueSize, appUptimeLimitInSeconds, appStaleLimitInSeconds } from "./config";
 
 const queue: string[] = [];
-const limit = 5;
 
 export async function startController() {
   const app = express();
@@ -19,8 +20,8 @@ export async function startController() {
       if (queue.length > 0) {
         do {
           const machine = queue.pop();
-          if (await verifyMachine(machine)) {
-            console.log("serving machine...")
+          if (machine && await verifyMachine(machine)) {
+            console.log("serving machine...", machine)
             res.json({ machine });
             return fillQueue();
           }
@@ -28,7 +29,7 @@ export async function startController() {
       }
 
       const startTime = Date.now();
-      const machine = await createMachine();
+      const machine = await createMachine(req.header("Fly-Region"));
       console.log(`Machine created in ${Date.now() - startTime}ms`, machine);
       res.json({ machine });
       return fillQueue();
@@ -38,13 +39,15 @@ export async function startController() {
     }
   });
 
+  expressMetrics(queue, app);
+
   app.listen(port, () => {
     console.log(`Controller server is listening on port ${port}`)
   })
 
   const deleteApps = async () => {
     try {
-      await deleteMachines("test-play-test-", 1000 * 60 * 30, 1000 * 60 * 60 * 24);
+      await deleteMachines(flyAppsPrefix, appStaleLimitInSeconds, appUptimeLimitInSeconds);
     } catch (err) {
       console.error("deleting apps failed", err)
     }
@@ -58,12 +61,14 @@ export async function startController() {
 }
 
 async function fillQueue() {
-  const numToFill = limit - queue.length;
+  const numToFill = queueSize - queue.length;
   console.log("filling queue...", numToFill);
   for (let i = 0; i < numToFill; i++) {
     createMachine().then((machine) => {
       queue.push(machine);
       console.log("enqueued machine...", machine);
+    }).catch((err) => {
+      console.error("failed to enqueue machine...", err);
     });
   }
 }

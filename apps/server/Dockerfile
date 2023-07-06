@@ -1,14 +1,22 @@
-FROM node:20
+FROM node:20-alpine as Builder
 
 WORKDIR /app
 
 COPY . .
 
 RUN ["npm", "install"]
-
 RUN ["npm", "run", "build"]
 
-EXPOSE 3000
-EXPOSE 3001
+FROM node:20-alpine
 
-CMD ["node", "./dist/index.js"]
+WORKDIR /app
+
+COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/node_modules /app/node_modules
+COPY --from=builder /app/app/dist /app/app/dist
+COPY --from=builder /app/package.json /app/package.json
+COPY --from=builder /app/wing /app/wing
+
+EXPOSE 3000
+
+CMD ["node", "/app/dist/index.js"]

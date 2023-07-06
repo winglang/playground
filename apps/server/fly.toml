@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for test-play-test on 2023-06-27T21:00:35+03:00
+# fly.toml app configuration file generated for test-play-test on 2023-07-02T14:29:49+03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -27,3 +27,7 @@ primary_region = "lhr"
   [[services.ports]]
     port = 443
     handlers = ["tls", "http"]
+
+[metrics]
+port = 3000
+path = "/metrics"

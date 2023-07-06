@@ -1,169 +1,46 @@
-import { Resolver } from "node:dns/promises"
 import urlExist from "./url-exist";
 import { sleep } from "./sleep";
+import { FlyClient } from "./fly-client";
+import { flyAppsPrefix, flyAppsImage, maxFlyApps } from "./config";
 
-export async function createMachine() {
+export async function createMachine(region?: string) {
+  const client = new FlyClient();
   console.log("creating machine...")
-  const appName = `test-play-test-${Math.random().toString().slice(12, -1)}`;
+  const appsCount = await client.appsCount();
+  if (appsCount > maxFlyApps) {
+    throw new Error(`cannot create more apps. count ${appsCount}, limit ${maxFlyApps}`)
+  }
+  const appName = `${flyAppsPrefix}${Math.random().toString().slice(12, -1)}`;
   const hostname = `${appName}.fly.dev`
   const appUrl = `https://${hostname}`
-  const appRes = await fetch("https://api.machines.dev/v1/apps", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${process.env.FLY_API_TOKEN}`
-    },
-    body: JSON.stringify({
-      "app_name": appName,
-      "org_slug": "personal"
-    })
-  });
-  if (!appRes.ok) {
-    throw new Error("failed to create app: " + appName);
-  }
-  const ipRes = await fetch("https://api.fly.io/graphql", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${process.env.FLY_API_TOKEN}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      "query":"mutation($input: AllocateIPAddressInput!) { allocateIpAddress(input: $input) { ipAddress { id address type region createdAt } } }",
-      "variables":{"input":{"appId":appName,"type":"shared_v4"}}
-    })
-  })
-  if (!ipRes.ok) {
-    throw new Error("failed to create shared ip: " + appName);
-  }
-  console.log("resolving dns...", appName);
-  let resolveCount = 0;
-  while (true) {
-    try {
-      if (resolveCount++ > 100) {
-        throw new Error("failed to resolve dns: " + hostname);
-      }
-      const resolver = new Resolver();
-      const resolved = await resolver.resolve(hostname);
-      console.log(resolved);
-      break;
-    } catch (err) {
-      // console.log(err)
-      await sleep(500);
-    }
-  }
-  const machineRes = await fetch(`https://api.machines.dev/v1/apps/${appName}/machines`, {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${process.env.FLY_API_TOKEN}`
-    },
-    body: JSON.stringify({
-      "config": {
-        "guest": {
-          "cpus": 1,
-          "cpu_kind": "shared",
-          "memory_mb": 1024
-        },
-        "env": {
-          "IS_CONTROLLER": "false"
-        },
-        "auto_destroy": true,
-        "image": "registry.fly.io/test-play-test:latest",
-        "services": [
-          {
-            "ports": [
-              {
-                "port": 443,
-                "handlers": [
-                  "tls",
-                  "http"
-                ]
-              },
-              {
-                "port": 80,
-                "handlers": [
-                  "http"
-                ]
-              }
-            ],
-            "protocol": "tcp",
-            "internal_port": 3000
-          }
-        ],
-        "checks": {
-        //   "http-get": {
-        //     "type": "http",
-        //     "port": 3000,
-        //     "protocol": "http",
-        //     "method": "GET",
-        //     "path": "/",
-        //     "interval": "15s",
-        //     "timeout": "10s"
-        // }
-        //     "httpget": {
-        //         "type": "http",
-        //         "port": 8080,
-        //         "method": "GET",
-        //         "path": "/",
-        //         "interval": "15s",
-        //         "timeout": "10s"
-        //     }
-        }
-      }
-    })
-  });
-  if (!machineRes.ok) {
-    throw new Error("failed to create machine: " + appName);
-  }
-  const data = await machineRes.json() as any;
-  if (!data.id || !data.instance_id) {
-    throw new Error("unexpected create machine data: " + JSON.stringify(data));
-  }
+  await client.createApp(appName);
+  const [_, machineRes] = await Promise.all([
+    client.allocateIpAddress(appName), 
+    client.createMachine(appName, flyAppsImage, region)
+  ]);
+
   console.log("waiting for started state", appUrl);
-  const waitRes = await fetch(`https://api.machines.dev/v1/apps/${appName}/machines/${data.id}/wait?instance_id=${data.instance_id}`, {
-    method: "GET",
-    headers: {
-      "Authorization": `Bearer ${process.env.FLY_API_TOKEN}`
-    },
-  });
-  if (!waitRes.ok) {
-    throw new Error("failed to wait for machine: " + appName + ":" + data.id);
-  }
-  
+  await client.waitForMachineState(appName, machineRes);
+
   let fetchCount = 0;
+  console.log('fetching machine...', hostname, Date.now());
   while (true) {
+    if (fetchCount++ > 300) {
+      throw new Error("failed to fetch machine: " + hostname);
+    }
     try {
-      if (fetchCount++ > 300) {
-        throw new Error("failed to fetch machine: " + hostname);
-      }
-      console.log('fetching machine...', hostname, Date.now());
       if (await urlExist(appUrl)) {
         console.log('machine fetched...', hostname, Date.now());
         break;
       } else {
-        console.log('failed to fetch machine, sleeping...', hostname, Date.now());
-        await sleep(200);  
+        throw new Error(`url doesnt yet exists, sleeping...', ${hostname}`);
       }
     } catch (err) {
-      console.log(err, hostname)
+      if (fetchCount % 50 === 0) {
+        console.log(err, hostname)
+      }
       await sleep(200);
     }
   }
-  // await sleep(2000);
-  // await waitForMachine(appUrl, hostname);
   return appUrl;
-}
-
-async function waitForMachine(url: string, hostname: string) {
-  try {
-    const resolver = new Resolver();
-    await resolver.resolve(hostname);
-    // const controller = new AbortController()
-    // setTimeout(() => controller.abort(), 1500)
-    console.debug(`making a request to ${url}`);
-    await fetch(url, {cache: "no-store"});
-    return true;
-  } catch (err) {
-    console.debug("fetch error", err);
-    await sleep(1000);
-    return waitForMachine(url, hostname);
-  }
 }

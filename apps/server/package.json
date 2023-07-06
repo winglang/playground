@@ -11,7 +11,8 @@
     "watch:controller": "IS_CONTROLLER=true npm run watch",
     "delete-all": "tsx scripts/delete-all-machines.ts",
     "test": "npx vitest",
-    "build": "tsup-node --format=esm --target=es2022 src/index.ts"
+    "update": "./update.sh",
+    "build": "./build.sh"
   },
   "author": "",
   "license": "ISC",
@@ -21,12 +22,13 @@
     "vitest-mock-express": "^2.0.3"
   },
   "dependencies": {
-    "@wingconsole/app": "latest",
+    "@wingconsole/server": "^0.23.24",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "esbuild-wasm": "^0.18.10",
     "express": "^4.18.2",
+    "prom-client": "^14.2.0",
     "tsup": "^7.1.0",
     "tsx": "^3.12.7",
     "url-exist": "^3.0.1"
