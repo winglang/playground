@@ -11,8 +11,8 @@ import { getBrowser, isChrome } from '@wing-playground/shared/src/utils';
 import { useAnalytics } from '@wing-playground/shared/src/analytics/use-analytics';
 import { LoadingStatus } from '@wing-playground/shared/src/loading-status';
 
-const basePath = import.meta.env.VITE_TOUR_BASE_PATH === '/learn' ? '/learn' : '/';
-const routePrefix = import.meta.env.VITE_TOUR_BASE_PATH === '/learn' ? 'learn' : '';
+const basePath = import.meta.env.VITE_BASE_PATH === '/learn' ? '/learn' : '/';
+const routePrefix = import.meta.env.VITE_BASE_PATH === '/learn' ? 'learn' : '';
 
 const tutorialRoutes = [
   {

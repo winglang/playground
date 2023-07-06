@@ -1,7 +1,7 @@
 import { FiCommand } from "react-icons/fi";
 import classNames from "classnames";
 
-const routePrefix = import.meta.env.VITE_TOUR_BASE_PATH === '/learn' ? '/learn/' : '';
+const routePrefix = import.meta.env.VITE_BASE_PATH ?? '';
 
 export interface LoadingProps {
   status: string;
@@ -14,7 +14,7 @@ export function Loading({ status }: LoadingProps) {
     "transition-colors duration-300",
   )}>
     <div className="mt-[20%]">
-      <img className="h-[64px] w-[136px]" src={`${routePrefix}wing_logo.svg`} loading="lazy" alt="" />
+      <img className="h-[64px] w-[136px]" src={`${routePrefix}/wing_logo.svg`} loading="lazy" alt="" />
     </div>
     <div className="flex items-center">
       <FiCommand className="animate-spin"/>
