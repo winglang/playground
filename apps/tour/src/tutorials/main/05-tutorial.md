@@ -2,7 +2,7 @@
 
 Begin by pasting the following code on line 4:
 
-```ts
+```wing
 let b = new cloud.Bucket() as "Bucket: Last Message";
 
 q.setConsumer(inflight (m: str) => {

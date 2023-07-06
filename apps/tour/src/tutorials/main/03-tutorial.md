@@ -2,7 +2,7 @@
 
 First, paste the following code on line 4:
 
-```ts
+```wing
 new cloud.Function(inflight (s: str) => {
   if s == "" {
     log("Function was invoked without a payload");

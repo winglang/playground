@@ -22,7 +22,7 @@ import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
 import React, {createRef, useEffect, useState, useRef, useCallback, useMemo, FC, PropsWithChildren} from 'react';
 import { WebContainer } from '@webcontainer/api';
-import ReactMarkdown from 'react-markdown'
+import MarkdownRender from './MarkdownRender';
 
 import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
 import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
@@ -376,9 +376,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                                           '[&>*]:transition-colors [&>*]:duration-300',
                                           'prose-h1:transition-colors prose-h1:duration-300',
                                           )}>
-                                            <ReactMarkdown
-                                              children={step.tutorial ?? ""}
-                                              className={classNames("text-xl")}
+                                            <MarkdownRender
+                                              markdown={step.tutorial ?? ""}
+                                              theme={currentMode}
                                             />
                                         </div>
                                       </div>
@@ -472,7 +472,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                 <div className="grow ml-4 flex flex-col gap-2 pt-6">
                   <div data-cueid="code" className={
                     classNames(
-                      'h-[40%] flex flex-col w-full overflow-hidden',
+                      'h-[40%] flex flex-col w-full',
                       'border',
                       theme.border4,
                       'transition-colors duration-300',
@@ -482,7 +482,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                     <div className={
                       classNames(
                         showWelcome && "opacity-0",
-                        "flex flex-col w-full grow overflow-auto",
+                        "flex flex-col w-full grow",
                       )}>
                       <PanelHeader>
                         <div className="flex">
@@ -518,7 +518,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                         </div>
                       </PanelHeader>
                       <div className='flex flex-col grow w-full relative'>
-                        <div className="absolute inset-0 overflow-hidden">
+                        <div className="absolute inset-0">
                           <Editor
                             data-testid={"editor"}
                             theme={currentMode}

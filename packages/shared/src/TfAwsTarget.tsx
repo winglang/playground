@@ -22,6 +22,8 @@ import { Loading } from "@wing-playground/shared/src/Loading";
 import { Cog8ToothIcon, DocumentIcon } from "@heroicons/react/24/outline";
 import { useTheme } from "@wing-playground/shared/src/theme-provider";
 
+const routePrefix = import.meta.env.VITE_TOUR_BASE_PATH === '/learn' ? '/learn/' : '';
+
 const getResourceName = (type: string) => {
   switch (type) {
     case "aws_sqs_queue":
@@ -62,7 +64,7 @@ const ResourceIcon = ({type, className}: {type: string, className?: string}) => 
   if (!resources.includes(type)) {
     return <Cog8ToothIcon className={classNames("w-full", className)} />;
   }
-  return  <img className={classNames("w-full", className)} src={`aws/${type}.svg`}/>
+  return  <img className={classNames("w-full", className)} src={`${routePrefix}aws/${type}.svg`}/>
 }
 
 interface Item {
@@ -185,7 +187,7 @@ const ItemsList = ({
                   </div>
                 )}
                   <FileRow
-                    key={item.id}
+                    key={selectedItem?.id}
                     title={item.name}
                     description={group ? "" : item.description}
                     icon={item.type && <ResourceIcon type={item.type}/>}
