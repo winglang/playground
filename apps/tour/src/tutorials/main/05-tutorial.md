@@ -2,13 +2,6 @@
 
 Begin by pasting the following code on line 4:
 
-```wing
-let b = new cloud.Bucket() as "Bucket: Last Message";
-
-q.setConsumer(inflight (m: str) => {
-    b.put("latest.txt", m);
-});
-```
 
 Afterward, invoke the **cloud.Function** in the simulator (remember to include a payload). 
 
