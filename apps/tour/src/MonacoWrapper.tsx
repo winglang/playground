@@ -17,6 +17,8 @@ const wrapperStyle = {
     marginBottom: '-1em',
   };
 
+let i = 0;
+
 const options: monaco.editor.IStandaloneEditorConstructionOptions = {
     fontSize: 14,
     tabSize: 2,
@@ -47,6 +49,7 @@ const MonacoWrapper = ({ language, value, currentMode }: { language: string, val
                     defaultValue={value}
                     loading={'...'}
                     options={options}
+                    path={`syntax-highlighter-${i++}.w`}
                 />
             </div>
         </div>
