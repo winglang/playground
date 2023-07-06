@@ -12,7 +12,7 @@ export function Loading({ status }: LoadingProps) {
     "transition-colors duration-300",
   )}>
     <div className="mt-[20%]">
-      <img className="h-[64px] w-[136px]" src="learn/wing_logo.svg" loading="lazy" alt="" />
+      <img className="h-[64px] w-[136px]" src="/learn/wing_logo.svg" loading="lazy" alt="" />
     </div>
     <div className="flex items-center">
       <FiCommand className="animate-spin"/>
