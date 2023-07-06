@@ -8,7 +8,7 @@ into the queue for testing.
 Under the `new cloud.Queue()` statement (line 4), write the following code (you can copy & paste,
 but typing is always more fun):
 
-```ts
+```wing
 new cloud.Function(inflight (s: str) => {
   if s == "" {
     log("Function was invoked without a payload");

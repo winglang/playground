@@ -4,6 +4,7 @@ import { tutorial as bucketTutorial } from './tutorials/resource/bucket';
 import { tutorial as counterTutorial } from './tutorials/resource/counter';
 import { tutorial as topicTutorial } from './tutorials/resource/topic';
 import { tutorial as queueTutorial } from './tutorials/resource/queue';
+import { tutorial as markdownPlayground } from './tutorials/markdown-playground';
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import { usePreventSave } from "@wing-playground/shared/src/use-prevent-save";
 import { getBrowser, isChrome } from '@wing-playground/shared/src/utils';
@@ -29,6 +30,9 @@ const tutorialRoutes = [
   }, {
     path: `${routePrefix}/queue`,
     tutorial: queueTutorial
+  }, {
+    path: `${routePrefix}/markdown-playground`,
+    tutorial: markdownPlayground
   }
 ];
 
@@ -49,10 +53,10 @@ function AppView({ tutorial }: { tutorial: Tutorial }) {
         <div className='h-full flex justify-center content-center items-center bg-[#293443]'>
           <div className='h-24 text-xl flex-row justify-center content-center items-center text-[#f1f0f1] text-center leading-relaxed'>
             <div>
-              <span>The Winglang Learn experience is compatible exclusively with Chrome on desktop computers.</span>
+              <span>Unfortunately, the Wing Tutorial is only compatible with Chrome for desktop at the moment.</span>
             </div>
             <div>
-            <span>Please open this page in Chrome, or consider trying our  <a href="https://www.winglang.io/docs" className='text-teal-500'> Getting Started guide.</a></span>
+              <span>Please open this page in Chrome, or <a href="https://www.winglang.io/docs" className='text-teal-500'>get started</a> with Wing on your system.</span>
             </div>
             </div>
         </div>

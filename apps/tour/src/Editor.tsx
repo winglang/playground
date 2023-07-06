@@ -22,7 +22,7 @@ import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
 import React, {createRef, useEffect, useState, useRef, useCallback, useMemo, FC, PropsWithChildren} from 'react';
 import { WebContainer } from '@webcontainer/api';
-import ReactMarkdown from 'react-markdown'
+import MarkdownRender from './MarkdownRender';
 
 import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
 import { CompilationRequest } from '@wing-playground/shared/src/compiler/request';
@@ -376,9 +376,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                                           '[&>*]:transition-colors [&>*]:duration-300',
                                           'prose-h1:transition-colors prose-h1:duration-300',
                                           )}>
-                                            <ReactMarkdown
-                                              children={step.tutorial ?? ""}
-                                              className={classNames("text-xl")}
+                                            <MarkdownRender
+                                              markdown={step.tutorial ?? ""}
+                                              theme={currentMode}
                                             />
                                         </div>
                                       </div>

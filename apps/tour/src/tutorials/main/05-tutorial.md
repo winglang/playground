@@ -9,7 +9,7 @@ message that we consume into this bucket.
 
 Let's begin by pasting the following code on line 4:
 
-```ts
+```wing
 let b = new cloud.Bucket() as "Bucket: Last Message";
 
 q.setConsumer(inflight (m: str) => {
