@@ -9,6 +9,8 @@ export interface Tab {
   panel?: ReactNode | (() => ReactNode);
   count?: number;
   tabClassName?: string;
+  isDisabled?: boolean;
+  tooltip?: string;
 }
 
 export interface TabsProps {
@@ -54,15 +56,21 @@ export const Tabs = (props: TabsProps) => {
               <div
                 key={tab.id}
                 className={classNames(
-                  theme.text1,
-                  theme.text3Hover,
-                  "relative flex items-center cursor-pointer group",
+                  !tab.isDisabled ? theme.text1 : theme.text2,
+                  !tab.isDisabled && theme.text3Hover,
+                  !tab.isDisabled && "cursor-pointer",
+                  "relative flex items-center group",
                   "px-4 py-1 h-full border-b",
                   isCurrent && props.tabs.length > 1 && "border-gray-400 dark:border-white",
                   (!isCurrent || props.tabs.length === 1) && "border-transparent",
                   tab.tabClassName,
                 )}
-                onClick={() => setCurrentTabId(tab.id)}
+                onClick={() => {
+                  if (tab.isDisabled) {
+                    return;
+                  }
+                  setCurrentTabId(tab.id)
+                }}
               >
                 {tab.icon && <div className="mr-1.5">{tab.icon}</div>}
                 <div className="whitespace-nowrap space-x-1">
@@ -71,6 +79,20 @@ export const Tabs = (props: TabsProps) => {
                     <span className="text-xs">({tab.count})</span>
                   )}
                 </div>
+                {tab.tooltip && (
+                    <span className={classNames(
+                        "after:content-[''] after:absolute",
+                        "after:top-full after:left-1/2 after:ml-[-5px]",
+                        "after:border-[5px] after:border:solid after:border-t-gray-800",
+                        "after:border-r-transparent after:border-b-transparent after:border-l-transparent",
+                        "pointer-events-none",
+                        "absolute -top-8 w-max px-2 py-1",
+                        "rounded bg-gray-800 text-sm font-medium text-gray-50",
+                        "opacity-0 shadow transition-opacity group-hover:opacity-80"
+                    )}>
+                      {tab.tooltip}
+                    </span>
+                  )}
               </div>
             );
           })}

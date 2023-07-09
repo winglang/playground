@@ -186,9 +186,25 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       }
     }, [isCompiling, compilationItems]);
 
+    const tfGcpTarget: TargetView = {
+        id: Target.TFGCP,
+        title: "GCP/TERRAFORM",
+        Target: () => <></>,
+        disabled: true,
+        tooltip: "Coming soon",
+    }
+
+    const tfAzureTarget: TargetView = {
+        id: Target.TFAzure,
+        title: "AZURE/TERRAFORM",
+        Target: () => <></>,
+        disabled: true,
+        tooltip: "Coming soon",
+    }
+
     const targetViews: TargetView[] = useMemo(() => {
-      return [simulatorTarget, tfAwsTarget];
-    }, [simulatorTarget, tfAwsTarget]);
+      return [simulatorTarget, tfAwsTarget, tfGcpTarget, tfAzureTarget];
+    }, [simulatorTarget, tfAwsTarget, tfGcpTarget, tfAzureTarget]);
 
     return (
       <ThemeProvider mode={currentMode} theme={DefaultTheme}>
