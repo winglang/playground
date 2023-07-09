@@ -63,7 +63,7 @@
     "@types/react-dom": "^18.2.4",
     "@vercel/ncc": "^0.36.1",
     "@vitejs/plugin-react": "^4.0.0",
-    "@wing-playground/console-build": "*",
+    "@wing-playground/container-files": "*",
     "@wing-playground/shared": "*",
     "autoprefixer": "^10.4.14",
     "classnames": "^2.3.2",
