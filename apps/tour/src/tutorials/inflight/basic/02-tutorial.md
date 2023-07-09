@@ -12,4 +12,4 @@ You can change back the `cloud.Bucket` to be private in the Editor and see if yo
 
 The **"s3 bucket public access block"** has changed (click on it to see how), and an **"s3 bucket policy"** was added to allow anyone to get objects from the bucket.
 
-Click **NEXT** to add code that will populate the bucket with a file containing the text "hello world" during deployment.
+Click **NEXT** to create and run a preflight hello world.
