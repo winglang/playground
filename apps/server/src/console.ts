@@ -1,35 +1,13 @@
-// import { createConsoleApp } from "@wingconsole/app";
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import express from "express";
 import bodyParser from "body-parser";
-// import cors from "cors";
 import { writeFile } from "fs/promises";
 import { machineIdleLimitInSeconds } from "./config";
 import { createConsoleServer } from "@wingconsole/server";
 
 export async function startConsole() {
-  // const app = express();
   let killTimeout: NodeJS.Timeout;
-  // app.use((req, res, next) => {
-  //   if (req.path === "/") {
-  //     return next();
-  //   }
-
-  //   if (killTimeout) {
-  //     clearTimeout(killTimeout);
-  //   }
-  //   killTimeout = setTimeout(() => {
-  //     console.log("machine timed out, killing process.", new Date())
-  //     process.exit(0);
-  //   }, 1000 * machineIdleLimitInSeconds);
-  //   next();
-  // });
-  // app.post('/update-code', cors(), bodyParser.json(), async (req, res) => {
-  //   console.log("writing code to file", req.body);
-  //   await writeFile("wing/test.w", req.body.code, "utf-8");
-  //   res.sendStatus(200);
-  // })
 
   const staticDir = join(dirname(fileURLToPath(import.meta.url)),"../app/dist");
 
@@ -75,28 +53,5 @@ export async function startConsole() {
     },
   })
 
-  console.log(`Server is running on http://localhost:${server.port}.`);
-  // const server = await createConsoleServer({
-  //   wingfile: "wing/test.w",
-  //   requestedPort: 3000,
-  //   onExpressCreated(app) {
-  //     app.post("/update-code", bodyParser.json(), async (req, res) => {
-  //       console.log("writing code to file", req.body);
-  //       await writeFile("wing/test.w", req.body.code, "utf-8");
-  //       res.sendStatus(200);
-  //     });
-  //     app.get("/heartbeat", (req, res, next) => {
-  //       if (killTimeout) {
-  //         clearTimeout(killTimeout);
-  //       }
-  //       killTimeout = setTimeout(() => {
-  //         console.log("machine timed out, killing process.", new Date())
-  //         process.exit(0);
-  //       }, 1000 * machineIdleLimitInSeconds);
-  //       next();
-  //     })
-  //   },
-  // });
-  
-  console.log(`Console server is running on http://localhost:${server.port}.`);
+  console.log(`Server is running on http://localhost:${server.port}`);
 }

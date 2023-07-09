@@ -21,7 +21,6 @@ import Editor, { loader } from "@monaco-editor/react";
 import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
 import React, {createRef, useEffect, useState, useRef, useCallback, useMemo, FC, PropsWithChildren} from 'react';
-import { WebContainer } from '@webcontainer/api';
 import ReactMarkdown from 'react-markdown'
 
 import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
@@ -32,7 +31,7 @@ import classNames from 'classnames';
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
 import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
 import {useAnalytics} from "@wing-playground/shared/src/analytics/use-analytics";
-import {installDependencies, ConsoleLayouts} from "@wing-playground/shared/src/containers";
+import {ConsoleLayouts} from "@wing-playground/shared/src/containers";
 
 import { SimulatorTarget } from "@wing-playground/shared/src/SimulatorTarget";
 import { TfAwsTarget } from '@wing-playground/shared/src/TfAwsTarget.js';
@@ -47,6 +46,7 @@ import { Header } from "@wing-playground/shared/src/Header";
 import { Button } from "@wing-playground/shared/src/Button";
 import { ThemeToggle } from "@wing-playground/shared/src/ThemeToggle";
 import { DefaultTheme, ThemeProvider, useTheme, setCurrentTheme } from "@wing-playground/shared/src/theme-provider";
+import { ServerError } from "@wing-playground/shared/src/ServerError";
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -119,6 +119,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       evaluateCode,
       editorWillMount,
       editorDidMount,
+      serverConsoleFailed,
     } = useEditor({
         editorRef,
         onLoadingStatusChange: setLoadingStatus,
@@ -325,7 +326,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                       <div className='grow'/>
                       <ThemeToggle mode={currentMode} onToggle={onToggleTheme}/>
                     </div>
-                    <div className="flex-1 flex flex-col pt-[20px]">
+                    {!serverConsoleFailed && <div className="flex-1 flex flex-col pt-[20px]">
                         <div data-cueid="instructions" className="grow flex flex-col">
                             <div className='grow flex flex-col'>
                                 <div className="grow relative overflow-hidden">
@@ -440,10 +441,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                                 )}
                             </div>
                         </div>
-                    </div>
+                    </div>}
                 </div>
 
-                <div className="grow ml-4 flex flex-col gap-2">
+                {!serverConsoleFailed && <div className="grow ml-4 flex flex-col gap-2">
                   <div data-cueid="code" className={
                     classNames(
                       'h-[40%] flex flex-col w-full overflow-hidden',
@@ -524,9 +525,16 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                       />
                     )}
                   </div>
-                </div>
+                </div>}
             </div>
           </div>
+          {serverConsoleFailed && (
+            <div className="grow h-full">
+              <div className="max-w-3xl mx-auto">
+                <ServerError />
+              </div>
+            </div>
+          )}
       </ThemeProvider>
     );
 };

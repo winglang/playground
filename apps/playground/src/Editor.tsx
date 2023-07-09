@@ -40,8 +40,8 @@ import { PanelHeader } from '@wing-playground/shared/src/PanelHeader';
 import { debounce } from 'lodash';
 import { DefaultTheme, ThemeProvider, useTheme } from '@wing-playground/shared/src/theme-provider';
 import { useSession } from "@wing-playground/shared/src/use-session";
-import { createConsole } from "@wing-playground/shared/src/create-console";
 import { Header } from './Header';
+import { ServerError } from "@wing-playground/shared/src/ServerError";
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
   (i) => JSON.parse(i.default)
@@ -113,6 +113,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       evaluateCode,
       editorWillMount,
       editorDidMount,
+      serverConsoleFailed,
     } = useEditor({
         editorRef,
         onLoadingStatusChange: setLoadingStatus,
@@ -195,7 +196,14 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
         )}>
           <div className='flex flex-col grow relative pl-[20px]'>
             <Header currentMode={currentMode} onToggleTheme={onToggleTheme}/>
-            <div className='flex flex-col h-full pt-4'>
+            {serverConsoleFailed && (
+              <div className="w-full">
+                <div className="max-w-3xl mx-auto">
+                  <ServerError />
+                </div>
+              </div>
+            )}
+            {!serverConsoleFailed && <div className='flex flex-col h-full pt-4'>
               <div className='flex grow gap-2'>
                 <RightResizableWidget className={
                   classNames(
@@ -260,7 +268,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                   />}
                 </div>
               </div>
-            </div>
+            </div>}
           </div>
         </div>
       </ThemeProvider>

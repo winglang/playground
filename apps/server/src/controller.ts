@@ -43,21 +43,24 @@ export async function startController() {
 
   app.listen(port, () => {
     console.log(`Controller server is listening on port ${port}`)
-  })
-
-  const deleteApps = async () => {
-    try {
-      await deleteMachines(flyAppsPrefix, appStaleLimitInSeconds, appUptimeLimitInSeconds);
-    } catch (err) {
-      console.error("deleting apps failed", err)
-    }
-    setTimeout(() => {
-      deleteApps();
-    }, 60000);
-  }
+  });
 
   deleteApps();
   fillQueue();
+  setTimeout(() => {
+    verifyMachines();
+  }, 1000 * 60 * 3);
+}
+
+const deleteApps = async () => {
+  try {
+    await deleteMachines(flyAppsPrefix, appStaleLimitInSeconds, appUptimeLimitInSeconds);
+  } catch (err) {
+    console.error("deleting apps failed", err)
+  }
+  setTimeout(() => {
+    deleteApps();
+  }, 60000);
 }
 
 async function fillQueue() {
@@ -71,4 +74,23 @@ async function fillQueue() {
       console.error("failed to enqueue machine...", err);
     });
   }
+}
+
+const verifyMachines = async () => {
+  console.log("verifying machines in queue...");
+  let i = queue.length;
+  while (i--) {
+    const machine = queue[i];
+    if (!await verifyMachine(machine)) {
+      const idx = queue.findIndex(m => m === machine);
+      if (idx > -1) {
+        queue.splice(idx, 1);
+        console.log("machine not verified, removed from queue", machine);
+      }
+    }
+  }
+  fillQueue();
+  setTimeout(() => {
+    verifyMachines();
+  }, 1000 * 60 * 3);
 }

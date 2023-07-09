@@ -54,6 +54,7 @@ export const useEditor = ({
 }: UseEditorOptions) => {
 
     const [isCompiling, setIsCompiling] = useState(false);
+    const [serverConsoleFailed, setServerConsoleFailed] = useState(false);
     const consoleRef = useRef<string>();
     const containerRef = useRef<WebContainer>();
     const monacoRef = useRef<monaco.editor.IStandaloneCodeEditor>();
@@ -67,7 +68,7 @@ export const useEditor = ({
       const { uiUrl, updateUrl } = await createConsole(layout);
       setIframeSrc(uiUrl)
       return updateUrl;
-  }
+    }
 
     const editorWillMount = (monaco: any) => {
 
@@ -113,11 +114,16 @@ export const useEditor = ({
                 void evaluateCode();
             });
         } else {
-          onLoadingStatusChange(LoadingStatus.Eval);
-          const updateUrl = await installServerConsole();
-          consoleRef.current = updateUrl;
-          startLsp({ onError: onLspError});
-          void evaluateCode();
+          try {
+            onLoadingStatusChange(LoadingStatus.Eval);
+            const updateUrl = await installServerConsole();
+            consoleRef.current = updateUrl;
+            startLsp({ onError: onLspError});
+            void evaluateCode();
+          } catch (err) {
+            console.error("installing server console", err);
+            setServerConsoleFailed(true);
+          }
         }
     };
 
@@ -169,5 +175,6 @@ export const useEditor = ({
         editorDidMount,
         evaluateCode: useDebounce(evaluateCode, 700),
         isCompiling,
+        serverConsoleFailed,
     }
 }
