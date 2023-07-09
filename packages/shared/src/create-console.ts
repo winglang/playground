@@ -2,7 +2,7 @@ import { ConsoleLayouts } from "./containers";
 import { getCurrentMode } from "./theme-provider";
 
 export const createConsole = async (consoleLayout: ConsoleLayouts) => {
-  const response = await fetch(import.meta.env.VITE_CONSOLE_CONTROLLER_URL || "https://test-play-test.fly.dev/create", {
+  const response = await fetch(import.meta.env.VITE_CONSOLE_CONTROLLER_URL || "https://winglang-playground.fly.dev/create", {
     method: "POST"
   })
   const data = await response.json() as any;

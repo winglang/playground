@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for test-play-test on 2023-07-02T14:29:49+03:00
+# fly.toml app configuration file generated for winglang-playground on 2023-07-09T14:28:42+03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "test-play-test"
+app = "winglang-playground"
 primary_region = "lhr"
 
 [build]
@@ -12,6 +12,7 @@ primary_region = "lhr"
 
 [env]
   IS_CONTROLLER = "true"
+  QUEUE_SIZE = "5"
 
 [[services]]
   protocol = "tcp"
@@ -29,5 +30,5 @@ primary_region = "lhr"
     handlers = ["tls", "http"]
 
 [metrics]
-port = 3000
-path = "/metrics"
+  port = 3000
+  path = "/metrics"

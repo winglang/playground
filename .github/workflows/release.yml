@@ -19,6 +19,19 @@ jobs:
           node-version: 18
       - name: Install dependencies
         run: npm install
+      - name: Build playground
+        run: npx turbo run tsc build
+        env:
+          GITHUB_TOKEN: ${{ secrets.PROJEN_GITHUB_TOKEN }
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: fly secrets set -a winglang-playground FLY_API_TOKEN=$FLY_API_TOKEN
+        working-directory: apps/server
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      - run: fly deploy --image-label latest --vm-memory 512
+        working-directory: apps/server
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       - name: cdk diff
         uses: youyo/aws-cdk-github-actions@v2
         with:
