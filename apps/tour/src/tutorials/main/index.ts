@@ -47,7 +47,7 @@ export const tutorialPages = [
       {
         id: "0",
         name:   "Welcome",
-        code:   code01,
+        //code:   code01,
         tutorial: tutorial00,
     },
     {
@@ -102,7 +102,7 @@ export const tutorialPages = [
       id: "7",
       name:   "Congrats",
       tutorial: tutorial07,
-      targets: ["simulator", Target.TFAWS],
+      //targets: ["simulator", Target.TFAWS],
     },
 ]
 

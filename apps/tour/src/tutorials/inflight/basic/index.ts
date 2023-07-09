@@ -194,7 +194,7 @@ export const tutorialPages: TutorialPage[] = [
         //code:   code13,
         //solution: solution13,
         tutorial: tutorial14,
-        targets: ["simulator", Target.TFAWS],
+        //targets: ["simulator", Target.TFAWS],
     },
 ]
 

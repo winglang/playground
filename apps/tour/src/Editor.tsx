@@ -316,6 +316,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       }
     }, [targets, editorRef.current?.getValue()]);
 
+    console.log("yo yo yo", !!(currentStep?.code || currentStep?.targets), currentStep?.id, currentStep?.code, currentStep?.targets)
     return (
       <ThemeProvider mode={currentMode} theme={DefaultTheme}>
           <div className={classNames(
@@ -324,7 +325,12 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
             'transition-all duration-300'
           )}>
             <div className='flex grow relative'>
-                <div className="flex flex-col w-[40%] min-w-[25rem] px-[11px]">
+                <div className={classNames(
+                        "flex flex-col",
+                        (currentStep?.code || currentStep?.targets) && "w-[50%]",
+                        (!currentStep?.code && !currentStep?.targets) && "w-[60%]",
+                        " min-w-[25rem] px-[11px]"
+                      )}>
                     <div className='flex items-center gap-2 w-full'>
                       <div className='flex items-center gap-2' style={{
                         width: "calc(100% - 35px)"
@@ -469,7 +475,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                     </div>
                 </div>
 
-                <div className="grow ml-4 flex flex-col gap-2 pt-6">
+                <div className={classNames(
+                        "grow ml-4 flex flex-col gap-2 pt-6",
+                        !currentStep?.code && !currentStep?.targets &&  "w-[0%]"
+                      )}> 
                   <div data-cueid="code" className={
                     classNames(
                       'h-[40%] flex flex-col w-full',
