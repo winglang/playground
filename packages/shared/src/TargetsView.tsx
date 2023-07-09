@@ -7,6 +7,8 @@ export interface TargetView {
   id: string;
   title: string;
   Target: FC;
+  disabled?: boolean;
+  tooltip?: string;
 }
 export interface TargetsViewProps {
   targets: TargetView[];
@@ -23,6 +25,8 @@ export const TargetsView = ({targets, setCurrentTargetId, currentTargetId}: Targ
         id: target.id,
         name: target.title,
         panel: <target.Target />,
+        isDisabled: target.disabled,
+        tooltip: target.tooltip,
       });
     });
     return tabs;
