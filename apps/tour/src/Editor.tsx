@@ -48,7 +48,7 @@ import { Button } from "@wing-playground/shared/src/Button";
 import { ThemeToggle } from "@wing-playground/shared/src/ThemeToggle";
 import { DefaultTheme, ThemeProvider, useTheme, setCurrentTheme } from "@wing-playground/shared/src/theme-provider";
 import { useTimeout } from "usehooks-ts";
-import { Alert } from "./Alert";
+import {Alert} from "@wing-playground/shared/src/Alert";
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -570,7 +570,20 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
           {tooSlow && (
             <div className="grow h-full">
               <div className="max-w-3xl mx-auto">
-                <Alert />
+                <Alert title="This is taking too long">
+                  <p>Something may have gone wrong while loading the webcontainer.</p>
+                  <p className="mt-2">
+                    Please, try again later or{" "}
+                    <a
+                      href="#"
+                      className="font-medium text-red-800 underline"
+                      onClick={() => location.reload()}
+                    >
+                      reload the page now
+                    </a>
+                    .
+                  </p>
+                </Alert>
               </div>
             </div>
           )}
