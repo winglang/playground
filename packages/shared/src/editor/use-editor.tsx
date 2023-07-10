@@ -135,7 +135,7 @@ export const useEditor = ({
       setIsCompiling(true);
 
       try {
-        let compileValue;
+        let compileValue: string;
         if (isWebContainerConsole) {
           compileValue = editorRef.current?.getValue();
           await prepareForEvaluation(containerRef.current!, compileValue, languageContext.file);
