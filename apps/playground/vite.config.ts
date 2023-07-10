@@ -2,8 +2,12 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 
+const base_path = process.env.VITE_BASE_PATH || "./";
+const out_dir = process.env.VITE_OUT_DIR;
+
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: base_path,
   resolve: {
     // preserveSymlinks: true,
     alias: {
@@ -39,6 +43,7 @@ export default defineConfig({
     },
   },
   build: {
+    outDir: out_dir,
     target: "es2022",
 
     commonjsOptions: {
