@@ -63,7 +63,7 @@ import solution11 from "./11-solution.w?raw";
 import tutorial11 from "./11-tutorial.md?raw";
 
 import tutorial14 from "./14-tutorial.md?raw";
-import {Tutorial, TutorialPage} from "../main";
+import {Tutorial, TutorialPage} from "../../main";
 
 export const tutorialPages: TutorialPage[] = [
     {
