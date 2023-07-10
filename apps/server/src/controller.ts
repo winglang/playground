@@ -1,11 +1,19 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
+import rateLimit from "express-rate-limit";
 import { createMachine } from "./create-machine";
 import { deleteMachines } from "./delete-machines";
 import { verifyMachine } from "./verify-machine";
 import { expressMetrics } from "./metrics";
-import { flyAppsPrefix, queueSize, appUptimeLimitInSeconds, appStaleLimitInSeconds } from "./config";
+import {
+  flyAppsPrefix,
+  queueSize,
+  appUptimeLimitInSeconds,
+  appStaleLimitInSeconds,
+  rateLimitWindowInSeconds,
+  rateLimitMaxRequests
+} from "./config";
 
 const queue: string[] = [];
 
@@ -13,9 +21,16 @@ export async function startController() {
   const app = express();
   app.use(bodyParser.json());
   app.use(cors());
-  const port = 3000
+  const port = 3000;
 
-  app.post("/create", async (req, res) => {
+  const limiter = rateLimit({
+    windowMs: rateLimitWindowInSeconds * 1000,
+    max: rateLimitMaxRequests,
+    standardHeaders: true,
+    legacyHeaders: false,
+  })
+
+  app.post("/create", limiter, async (req, res) => {
     try {
       if (queue.length > 0) {
         do {
