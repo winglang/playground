@@ -46,7 +46,9 @@ import { Header } from "@wing-playground/shared/src/Header";
 import { Button } from "@wing-playground/shared/src/Button";
 import { ThemeToggle } from "@wing-playground/shared/src/ThemeToggle";
 import { DefaultTheme, ThemeProvider, useTheme, setCurrentTheme } from "@wing-playground/shared/src/theme-provider";
-import { ServerError } from "@wing-playground/shared/src/ServerError";
+import { useTimeout } from "usehooks-ts";
+import { TooSlowAlert } from "@wing-playground/shared/src/alerts/TooSlow";
+import { ServerErrorAlert } from "@wing-playground/shared/src/alerts/ServerError";
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -60,6 +62,9 @@ StandaloneServices.initialize({
 buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
 const compiler = new Compiler();
+
+const TOO_SLOW_ERROR_SECONDS_THRESHOLD =
+  (import.meta.env.VITE_TOO_SLOW_ERROR_SECONDS_THRESHOLD ?? 180) * 1000;
 
 export type EditorProps = {
     defaultCode?: string;
@@ -80,6 +85,17 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
     const [editorCode, setEditorCode] = useState("");
     const [downloadInProgress, setDownloadInProgress] = useState(false);
     const { analytics } = useAnalytics({ name: `tour: ${tutorial.name}`, state: loadingStatus });
+
+    const [tooSlow, setTooSlow] = useState(false);
+    useTimeout(() => {
+      if (
+        loadingStatus === LoadingStatus.Init ||
+        loadingStatus === LoadingStatus.Install ||
+        loadingStatus === LoadingStatus.Eval
+      ) {
+        setTooSlow(true);
+      }
+    }, TOO_SLOW_ERROR_SECONDS_THRESHOLD);
 
     const { theme, mode } = useTheme();
     const [currentMode, setCurrentMode] = useState(mode ?? "dark");
@@ -312,6 +328,17 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       }
     }, [targets, editorRef.current?.getValue()]);
 
+    const getAlert = () => {
+      if (tooSlow) {
+        return TooSlowAlert;
+      } else if (serverConsoleFailed) {
+        return ServerErrorAlert;
+      } else {
+        return null;
+      }
+    };
+    const Alert = getAlert();
+
     return (
       <ThemeProvider mode={currentMode} theme={DefaultTheme}>
           <div className={classNames(
@@ -347,7 +374,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                       </div>
                       <ThemeToggle mode={currentMode} onToggle={onToggleTheme}/>
                     </div>
-                    {!serverConsoleFailed && <div className="flex-1 flex flex-col pt-[20px]">
+                    {!Alert && (<div className="flex-1 flex flex-col pt-[20px]">
                         <div data-cueid="instructions" className="grow flex flex-col">
                             <div className='grow flex flex-col'>
                                 <div className="grow relative overflow-hidden">
@@ -462,10 +489,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                                 )}
                             </div>
                         </div>
-                    </div>}
+                    </div>)}
                 </div>
 
-                {!serverConsoleFailed && <div className="grow ml-4 flex flex-col gap-2 pt-6">
+                {!Alert && (<div className="grow ml-4 flex flex-col gap-2 pt-6">
                   <div data-cueid="code" className={
                     classNames(
                       'h-[40%] flex flex-col w-full',
@@ -546,16 +573,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                       />
                     )}
                   </div>
-                </div>}
+                </div>)}
             </div>
           </div>
-          {serverConsoleFailed && (
-            <div className="grow h-full">
-              <div className="max-w-3xl mx-auto">
-                <ServerError />
-              </div>
-            </div>
-          )}
+
+          {Alert && (<Alert />)}
       </ThemeProvider>
     );
 };
