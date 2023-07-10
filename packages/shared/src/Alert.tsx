@@ -7,7 +7,7 @@ export interface AlertProps {
 
 export const Alert = (props: PropsWithChildren<AlertProps>) => {
   return (
-    <div className="rounded-md bg-red-50 p-4">
+    <div className="rounded-md bg-red-50 p-4 border-2 border-red-500/30">
       <div className="flex">
         <div className="flex-shrink-0 mt-0.5">
           <ExclamationTriangleIcon
