@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 const base_path = process.env.VITE_TOUR_BASE_PATH || "./";
@@ -9,7 +9,6 @@ const out_dir = process.env.VITE_TOUR_OUT_DIR;
 export default defineConfig({
   base: base_path,
   resolve: {
-    // preserveSymlinks: true,
     alias: {
       "wasi-js/dist/bindings/node": "wasi-js/dist/bindings/browser",
     },
@@ -18,52 +17,29 @@ export default defineConfig({
     react(),
     nodePolyfills(),
     {
-      name: 'configure-response-headers',
-      configureServer: server => {
+      name: "configure-response-headers",
+      configureServer: (server) => {
         server.middlewares.use((_req, res, next) => {
-            res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless')
-            res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
-            next();
+          res.setHeader("Cross-Origin-Embedder-Policy", "credentialless");
+          res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+          next();
         });
       },
-      configurePreviewServer: server => {
+      configurePreviewServer: (server) => {
         server.middlewares.use((_req, res, next) => {
-            res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless')
-            res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
-            next();
+          res.setHeader("Cross-Origin-Embedder-Policy", "credentialless");
+          res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+          next();
         });
-      }
-    }
+      },
+    },
   ],
   worker: {
     format: "es",
     plugins: [nodePolyfills()],
-    rollupOptions: {
-      preserveSymlinks: true,
-    },
   },
   build: {
     target: "es2022",
     outDir: out_dir,
-    commonjsOptions: {
-      // This is needed because winglang is symlinked
-      include: [
-        // /winglang/,
-        /node_modules/,
-      ],
-    },
   },
-  server: {
-    fs: {
-      allow: [".."],
-    },
-  },
-  optimizeDeps: {
-    include: ["winglang"],
-    esbuildOptions: {
-      target: "es2022",
-      preserveSymlinks: true,
-    },
-    force: true,
-  }
-})
+});

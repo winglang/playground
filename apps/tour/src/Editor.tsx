@@ -47,6 +47,8 @@ import { Header } from "@wing-playground/shared/src/Header";
 import { Button } from "@wing-playground/shared/src/Button";
 import { ThemeToggle } from "@wing-playground/shared/src/ThemeToggle";
 import { DefaultTheme, ThemeProvider, useTheme, setCurrentTheme } from "@wing-playground/shared/src/theme-provider";
+import { useTimeout } from "usehooks-ts";
+import { Alert } from "./Alert";
 
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -80,6 +82,17 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
     const [editorCode, setEditorCode] = useState("");
     const [downloadInProgress, setDownloadInProgress] = useState(false);
     const { analytics } = useAnalytics({ name: `tour: ${tutorial.name}`, state: loadingStatus });
+
+    const [tooSlow, setTooSlow] = useState(false);
+    useTimeout(() => {
+      if (
+        loadingStatus === LoadingStatus.Init ||
+        loadingStatus === LoadingStatus.Install ||
+        loadingStatus === LoadingStatus.Eval
+      ) {
+        setTooSlow(true);
+      }
+    }, 60 * 1000);
 
     const { theme, mode } = useTheme();
     const [currentMode, setCurrentMode] = useState(mode ?? "dark");
@@ -351,7 +364,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                       </div>
                       <ThemeToggle mode={currentMode} onToggle={onToggleTheme}/>
                     </div>
-                    <div className="flex-1 flex flex-col pt-[20px]">
+                    {!tooSlow && (<div className="flex-1 flex flex-col pt-[20px]">
                         <div data-cueid="instructions" className="grow flex flex-col">
                             <div className='grow flex flex-col'>
                                 <div className="grow relative overflow-hidden">
@@ -466,10 +479,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                                 )}
                             </div>
                         </div>
-                    </div>
+                    </div>)}
                 </div>
 
-                <div className="grow ml-4 flex flex-col gap-2 pt-6">
+                {!tooSlow && (<div className="grow ml-4 flex flex-col gap-2 pt-6">
                   <div data-cueid="code" className={
                     classNames(
                       'h-[40%] flex flex-col w-full',
@@ -550,9 +563,17 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                       />
                     )}
                   </div>
-                </div>
+                </div>)}
             </div>
           </div>
+
+          {tooSlow && (
+            <div className="grow h-full">
+              <div className="max-w-3xl mx-auto">
+                <Alert />
+              </div>
+            </div>
+          )}
       </ThemeProvider>
     );
 };
