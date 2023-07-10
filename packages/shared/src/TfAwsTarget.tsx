@@ -22,6 +22,16 @@ import { Loading } from "@wing-playground/shared/src/Loading";
 import { Cog8ToothIcon, DocumentIcon } from "@heroicons/react/24/outline";
 import { useTheme } from "@wing-playground/shared/src/theme-provider";
 
+import AwsIamRole from "./aws/aws_iam_role.svg";
+import AwsIamRolePolicy from "./aws/aws_iam_role_policy.svg";
+import AwsIamRolePolicyAttachment from "./aws/aws_iam_role_policy_attachment.svg";
+import AwsLambdaFunction from "./aws/aws_lambda_function.svg";
+import AwsLambdaPermission from "./aws/aws_lambda_permission.svg";
+import AwsS3Bucket from "./aws/aws_s3_bucket.svg";
+import AwsS3Object from "./aws/aws_s3_object.svg";
+import AwsSnsTopic from "./aws/aws_sns_topic.svg";
+import AwsSqsQueue from "./aws/aws_sqs_queue.svg";
+
 const getResourceName = (type: string) => {
   switch (type) {
     case "aws_sqs_queue":
@@ -55,6 +65,30 @@ const ResourceIcon = ({type, className}: {type: string, className?: string}) => 
     "aws_iam_role_policy_attachment",
     "aws_sns_topic",
   ];
+  const getSvgForType = (type: string) => {
+    switch (type) {
+      case "aws_sqs_queue":
+        return AwsSqsQueue;
+      case "aws_s3_bucket":
+        return AwsS3Bucket;
+      case "aws_s3_object":
+        return AwsS3Object;
+      case "aws_lambda_function":
+        return AwsLambdaFunction;
+      case "aws_lambda_permission":
+        return AwsLambdaPermission;
+      case "aws_iam_role":
+        return AwsIamRole;
+      case "aws_iam_role_policy":
+        return AwsIamRolePolicy;
+      case "aws_iam_role_policy_attachment":
+        return AwsIamRolePolicyAttachment;
+      case "aws_sns_topic":
+        return AwsSnsTopic;
+      default:
+        return undefined;
+    }
+  }
 
   if (type === "file") {
     return <DocumentIcon className={classNames("w-full", className)} />;
@@ -62,7 +96,7 @@ const ResourceIcon = ({type, className}: {type: string, className?: string}) => 
   if (!resources.includes(type)) {
     return <Cog8ToothIcon className={classNames("w-full", className)} />;
   }
-  return  <img className={classNames("w-full", className)} src={`learn/aws/${type}.svg`}/>
+  return  <img className={classNames("w-full", className)} src={getSvgForType(type)} loading={"lazy"}/>
 }
 
 interface Item {
@@ -185,7 +219,7 @@ const ItemsList = ({
                   </div>
                 )}
                   <FileRow
-                    key={item.id}
+                    key={selectedItem?.id}
                     title={item.name}
                     description={group ? "" : item.description}
                     icon={item.type && <ResourceIcon type={item.type}/>}
