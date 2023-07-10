@@ -38,13 +38,21 @@ import code05 from "./05-code.w?raw";
 import solution05 from "./05-solution.w?raw";
 import tutorial05 from "./05-tutorial.md?raw";
 
-import code5dot1 from "./05.1-code.w?raw";
-import solution5dot1 from "./05.1-solution.w?raw";
-import tutorial5dot1 from "./05.1-tutorial.md?raw";
+import code05dot1 from "./05.1-code.w?raw";
+import solution05dot1 from "./05.1-solution.w?raw";
+import tutorial05dot1 from "./05.1-tutorial.md?raw";
 
-import code5dot2 from "./05.2-code.w?raw";
-import solution5dot2 from "./05.2-solution.w?raw";
-import tutorial5dot2 from "./05.2-tutorial.md?raw";
+import code05dot2 from "./05.2-code.w?raw";
+// import solution05dot2 from "./05.2-solution.w?raw";
+import tutorial05dot2 from "./05.2-tutorial.md?raw";
+
+import code05dot5 from "./05.5-code.w?raw";
+import solution05dot5 from "./05.5-solution.w?raw";
+import tutorial05dot5 from "./05.5-tutorial.md?raw";
+
+import code05dot6 from "./05.6-code.w?raw";
+import solution05dot6 from "./05.6-solution.w?raw";
+import tutorial05dot6 from "./05.6-tutorial.md?raw";
 
 import code08 from "./08-code.w?raw";
 //import solution08 from "./08-solution.w?raw";
@@ -135,7 +143,7 @@ export const tutorialPages: TutorialPage[] = [
     },
     {
         id: "5",
-        name:   "Referencing preflight data from inflight code",
+        name:   "Referencing preflight data from inflight code - Example",
         code:   code05,
         solution: solution05,
         tutorial: tutorial05,
@@ -143,18 +151,33 @@ export const tutorialPages: TutorialPage[] = [
     },
     {
         id: "5.1",
-        name:   "Contract per phase - explanation",
-        code:   code5dot1,
-        //solution: solution5dot1,
-        tutorial: tutorial5dot1,
+        name:   "Referencing preflight data from inflight code - Benefits",
+        code:   code05dot1,
+        tutorial: tutorial05dot1,
         targets: ["simulator", Target.TFAWS],
     },
     {
         id: "5.2",
         name:   "Contract per phase - in practice",
-        code:   code5dot2,
-        solution: solution5dot2,
-        tutorial: tutorial5dot2,
+        code:   code05dot2,
+        //solution: solution05dot2,
+        tutorial: tutorial05dot2,
+        targets: ["simulator", Target.TFAWS],
+    },
+    {
+        id: "5.5",
+        name:   "Contract per phase - explanation",
+        code:   code05dot5,
+        //solution: solution5dot5,
+        tutorial: tutorial05dot5,
+        targets: ["simulator", Target.TFAWS],
+    },
+    {
+        id: "5.6",
+        name:   "Contract per phase - in practice",
+        code:   code05dot6,
+        solution: solution05dot6,
+        tutorial: tutorial05dot6,
         targets: ["simulator", Target.TFAWS],
     },
     {
