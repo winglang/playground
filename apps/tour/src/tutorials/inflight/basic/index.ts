@@ -101,14 +101,15 @@ export const tutorialPages: TutorialPage[] = [
         tutorial: tutorial02dot5,
         targets: [Target.TFAWS, "simulator"],
     },
-    {
-        id: "2.6",
-        name:   "Functions with specific behavior",
-        code:   code02dot6,
-        solution: solution02dot6,
-        tutorial: tutorial02dot6,
-        //targets: [Target.TFAWS, "simulator"],
-    },
+    // Removed until we can show preflight logs
+    //{
+    //    id: "2.6",
+    //    name:   "Functions with specific behavior",
+    //    code:   code02dot6,
+    //    solution: solution02dot6,
+    //    tutorial: tutorial02dot6,
+    //    //targets: [Target.TFAWS, "simulator"],
+    //},
     {
         id: "3",
         name:   "Inflight - Intro",

@@ -18,4 +18,4 @@ We've solved the private case of the counter, but there is a more general lesson
 
 Congratulation! you've covered a lot of preflight-inflight ground in this tutorial and you should now have a good understanding of the basics of the two execution phases.
 
-Click **NEXT** to finish the tutorial.
+Click **NEXT** to recap what we've covered in this tutorial and get links to further materials.

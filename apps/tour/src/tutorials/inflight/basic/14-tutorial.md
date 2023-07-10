@@ -12,9 +12,7 @@ Congrats! You now know Wing's main concept - the preflight and inflight executio
 7. Inflight code can reference data from preflight, but the data cannot be mutated.
 
 ### More advanced concepts
-You can continue to dive into more advanced concepts of preflight and inflight code in the [next tutorial](/advanced-preflight-inflight). It covers preflight, inflight and mixed phase classes, as well as how the compiler works to make everything we've covered possible.
-
-You can also read the preflight and inflight [documentation page](https://www.winglang.io/docs/concepts/inflights) which covers the concepts in this tutorial and the next one in more detail.
+You can dive into more advanced concepts of preflight and inflight code, including preflight, inflight and mixed phase classes in the preflight and inflight [documentation page](https://www.winglang.io/docs/concepts/inflights).
 
 Alternatively, you can explore other tutorials and documentation pages:
 

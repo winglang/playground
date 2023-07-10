@@ -17,7 +17,6 @@ The inflight code is pretty simple and is able to naturally access the bucket th
 This connection is visualized in the Simulator window below the editor. 
 
 But it's not just a diagram, you can click the **cloud.Function** in the simulator and invoke it, then check out the file in the **cloud.Bucket**.
-
 <br/>
 
 Referencing preflight data from inflight code allows you to easily create dynamic apps that can be configured during deployment. But it is not the only advantage of having both execution phases in the same language and under the same compiler.
