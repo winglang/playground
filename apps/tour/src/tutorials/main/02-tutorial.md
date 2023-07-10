@@ -2,7 +2,7 @@
 
 Let's start playing with our amazing cloud application with the Wing Simulator.
 
-**Click** on the green resource named **cloud.Queue**, and check out the panel on the right. This is where you can interact with resources as you select them in the map view.
+**Click** on the green resource named **cloud.Queue**, and check out the panel on the right. This is where you can interact with resources as you select them.
 
 Under the **Queue** fold, proceed to the **Push Message** section and enter some creative message.
 
