@@ -24,7 +24,7 @@ referred to as a *closure*.
 
 ### Invoking our function
 
-Next, locate the **cloud.Function** node in the simulator map view and invoke it from the
+Next, locate the **cloud.Function** node in the simulator and invoke it from the
 interaction pane (click **Invoke**).
 
 ### Inspecting logs
