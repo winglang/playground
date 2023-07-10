@@ -80,7 +80,7 @@ buildWorkerDefinition("dist", new URL("", window.location.href).href, false);
 const compiler = new Compiler();
 
 const TOO_SLOW_ERROR_SECONDS_THRESHOLD =
-  (import.meta.env.VITE_TOO_SLOW_ERROR_SECONDS_THRESHOLD ?? 60) * 1000;
+  (import.meta.env.VITE_TOO_SLOW_ERROR_SECONDS_THRESHOLD ?? 180) * 1000;
 
 export type EditorProps = {
   defaultCode?: string;
