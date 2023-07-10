@@ -63,6 +63,9 @@ buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
 const compiler = new Compiler();
 
+const TOO_SLOW_ERROR_SECONDS_THRESHOLD =
+  (import.meta.env.VITE_TOO_SLOW_ERROR_SECONDS_THRESHOLD ?? 60) * 1000;
+
 export type EditorProps = {
     defaultCode?: string;
     hostname?: string;
@@ -92,7 +95,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       ) {
         setTooSlow(true);
       }
-    }, 60 * 1000);
+    }, TOO_SLOW_ERROR_SECONDS_THRESHOLD);
 
     const { theme, mode } = useTheme();
     const [currentMode, setCurrentMode] = useState(mode ?? "dark");

@@ -79,6 +79,9 @@ buildWorkerDefinition("dist", new URL("", window.location.href).href, false);
 
 const compiler = new Compiler();
 
+const TOO_SLOW_ERROR_SECONDS_THRESHOLD =
+  (import.meta.env.VITE_TOO_SLOW_ERROR_SECONDS_THRESHOLD ?? 60) * 1000;
+
 export type EditorProps = {
   defaultCode?: string;
   hostname?: string;
@@ -114,7 +117,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
     ) {
       setTooSlow(true);
     }
-  }, 60 * 1000);
+  }, TOO_SLOW_ERROR_SECONDS_THRESHOLD);
 
   const { theme, mode } = useTheme();
   const [currentMode, setCurrentMode] = useState(mode ?? "dark");
@@ -266,7 +269,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
             <div className="w-full">
               <div className="max-w-3xl mx-auto">
                 <Alert title="This is taking too long">
-                  <p>Something may have gone wrong while loading the webcontainer.</p>
+                  <p>
+                    Something may have gone wrong while loading the
+                    webcontainer.
+                  </p>
                   <p className="mt-2">
                     Please, try again later or{" "}
                     <a
