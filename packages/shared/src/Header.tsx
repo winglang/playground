@@ -1,22 +1,41 @@
 import classNames from "classnames";
 import { WingLogo } from "./WingLogo";
 
-export const Header = () => {
+export interface HeaderProps {
+  tabs: {
+    name: string;
+    href: string;
+  }[];
+  size?: "small" | "auto";
+}
+
+export const Header = ({tabs, size = "auto"}: HeaderProps) => {
   return (
     <div className={
       classNames(
-        "py-4 flex gap-12 items-center font-sans text-slate-700 dark:text-[#BDCECC]",
-        "text-[17px] leading-[20px]"
+        "flex items-center font-sans font-normal text-[#1c1e21] dark:text-[#2bd5c1]",
+        "h-[80px] w-full",
     )}>
-      <a href="https://winglang.io/" target="_blank" rel="noreferrer" className="hover:text-slate-600 dark:hover:text-white">
-          <WingLogo className='h-6' />
+      <a href="https://winglang.io/" rel="noreferrer" className={classNames(
+        "hover:text-slate-600 dark:hover:text-white mr-[16px] decoration-0",
+        size === "auto" && "small:mr-[40px]"
+      )}>
+          <WingLogo className="h-[24px] w-[88px]"/>
       </a>
-      <a href="https://docs.winglang.io/" target="_blank" rel="noreferrer">
-        Docs
-      </a>
-      <a href="https://docs.winglang.io/blog" target="_blank" rel="noreferrer">
-        Blog
-      </a>
+
+      <div className="overflow-x-auto flex grow">
+        {tabs.map((tab, index) => (
+          <a href={tab.href} rel="noreferrer" className={
+            classNames(
+              "decoration-0",
+              "px-[12px] py-[8px]",
+              "text-[16px] leading-[20px]",
+              size === "auto" && "small:px-[24px] small:text-[17px]",
+              "dark:text-[#f1f0f1]",
+            )
+          }>{tab.name}</a>
+        ))}
+      </div>
     </div>
   );
 }

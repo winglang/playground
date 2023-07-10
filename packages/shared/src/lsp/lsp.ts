@@ -11,11 +11,10 @@ import {
   InitializeParams,
   TextDocumentSyncKind,
   InitializeResult,
-  CompletionItem,
-  DocumentSymbol,
-  Hover,
   Diagnostic,
-  Range
+  Range,
+  DidOpenTextDocumentParams,
+  DidChangeTextDocumentParams
 } from "vscode-languageserver/browser";
 
 import * as wingCompiler from "winglang/dist/wingc";
@@ -66,13 +65,17 @@ const connection = createConnection(messageReader, messageWriter);
 
 connection.onInitialize((_params: InitializeParams) => {
   const result: InitializeResult = {
-  capabilities: {
+    capabilities: {
       textDocumentSync: TextDocumentSyncKind.Full,
       completionProvider: {
         triggerCharacters: ["."],
       },
+      signatureHelpProvider: {
+        triggerCharacters: ["(", ",", ")"],
+      },
       hoverProvider: true,
       documentSymbolProvider: true,
+      definitionProvider: true,
     },
   };
   return result;
@@ -81,109 +84,51 @@ connection.onInitialize((_params: InitializeParams) => {
 let s = self
 const raw_diagnostics: wingCompiler.WingDiagnostic[] = [];
 
-connection.onDidOpenTextDocument(async (params) => {
-  const string = JSON.stringify(params);
-  raw_diagnostics.length = 0;
+const wingInvoke = async (fn: wingCompiler.WingCompilerFunction, params: any) => {
   try {
-    wingCompiler.invoke(wingc, "wingc_on_did_open_text_document", string);
+    const result = wingCompiler.invoke(
+      wingc,
+      fn,
+      JSON.stringify(params)
+    ) as string;
+    return JSON.parse(result);
+
   } catch (e) {
     s.reportError(e);
   }
+}
+
+const handleTextChange = async (fn: wingCompiler.WingCompilerFunction, params: DidOpenTextDocumentParams | DidChangeTextDocumentParams, uri: string) => {
+  raw_diagnostics.length = 0;
+  wingInvoke(fn, params);
   connection.sendDiagnostics({
     uri: params.textDocument.uri,
     diagnostics: raw_diagnostics.map((rd) => {
       return Diagnostic.create(Range.create(rd.span.start.line, rd.span.start.col, rd.span.end.line, rd.span.end.col), rd.message)
     })
   });
+}
+
+connection.onDidOpenTextDocument(async (params) => {
+  handleTextChange("wingc_on_did_open_text_document", params, params.textDocument.uri);
 });
 connection.onDidChangeTextDocument(async (params) => {
-  const string = JSON.stringify(params);
-  raw_diagnostics.length = 0;
-  try {
-    wingCompiler.invoke(wingc, "wingc_on_did_change_text_document", string);
-  } catch (e) {
-    s.reportError(e);
-  }
-  connection.sendDiagnostics({
-    uri: params.textDocument.uri,
-    diagnostics: raw_diagnostics.map((rd) => {
-      return Diagnostic.create(Range.create(rd.span.start.line, rd.span.start.col, rd.span.end.line, rd.span.end.col), rd.message)
-    })
-  });
+  handleTextChange("wingc_on_did_change_text_document", params, params.textDocument.uri);
 });
-
 connection.onCompletion(async (params) => {
-  try {
-    const result = wingCompiler.invoke(
-      wingc,
-      "wingc_on_completion",
-      JSON.stringify(params)
-    ) as string;
-    return JSON.parse(result) as CompletionItem[];
-
-  } catch (e) {
-    s.reportError(e);
-  }
+  return wingInvoke("wingc_on_completion", params);
 });
 connection.onSignatureHelp(async (params) => {
-  try {
-    const result = wingCompiler.invoke(
-      wingc,
-      "wingc_on_signature_help",
-      JSON.stringify(params)
-    ) as string;
-    return JSON.parse(result);
-
-  } catch (e) {
-    s.reportError(e);
-  }
+  return wingInvoke("wingc_on_signature_help", params);
 });
 connection.onDefinition(async (params) => {
-  try {
-    const result = wingCompiler.invoke(
-      wingc,
-      "wingc_on_goto_definition",
-      JSON.stringify(params)
-    ) as string;
-    return JSON.parse(result);
-
-  } catch (e) {
-    s.reportError(e);
-  }
+  return wingInvoke("wingc_on_goto_definition", params);
 });
 connection.onDocumentSymbol(async (params) => {
-  try {
-
-    const result = wingCompiler.invoke(
-      wingc,
-      "wingc_on_document_symbol",
-      JSON.stringify(params)
-    );
-    if (result == 0) {
-      return null;
-    } else {
-      return JSON.parse(result as string) as DocumentSymbol[];
-    }
-  } catch (e) {
-    s.reportError(e);
-  }
+  return wingInvoke("wingc_on_document_symbol", params);
 });
 connection.onHover(async (params) => {
-  try {
-
-    const result = wingCompiler.invoke(
-      wingc,
-      "wingc_on_hover",
-      JSON.stringify(params)
-    );
-    if (result == 0) {
-      return null;
-    } else {
-      return JSON.parse(result as string) as Hover;
-    }
-  } catch (e) {
-    s.reportError(e);
-  }
+  return wingInvoke("wingc_on_hover", params);
 });
 connection.listen()
 

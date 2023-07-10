@@ -4,41 +4,39 @@ import { tutorial as bucketTutorial } from './tutorials/resource/bucket';
 import { tutorial as counterTutorial } from './tutorials/resource/counter';
 import { tutorial as topicTutorial } from './tutorials/resource/topic';
 import { tutorial as queueTutorial } from './tutorials/resource/queue';
+import { tutorial as markdownPlayground } from './tutorials/markdown-playground';
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
-import { useEffect } from 'react';
 import { usePreventSave } from "@wing-playground/shared/src/use-prevent-save";
+
+const basePath = import.meta.env.VITE_BASE_PATH === '/learn' ? '/learn' : '/';
+const routePrefix = import.meta.env.VITE_BASE_PATH === '/learn' ? 'learn' : '';
 
 const tutorialRoutes = [
   {
-    path: '/',
+    path: basePath,
     tutorial: mainTutorial
   }, {
-    path: '/bucket',
+    path: `${routePrefix}/bucket`,
     tutorial: bucketTutorial
   }, {
-    path: '/counter',
+    path: `${routePrefix}/counter`,
     tutorial: counterTutorial
   }, {
-    path: '/topic',
+    path: `${routePrefix}/topic`,
     tutorial: topicTutorial
   }, {
-    path: '/queue',
+    path: `${routePrefix}/queue`,
     tutorial: queueTutorial
+  }, {
+    path: `${routePrefix}/markdown-playground`,
+    tutorial: markdownPlayground
   }
 ];
 
 function AppView({ tutorial }: { tutorial: Tutorial }) {
-
   return (
     <div className="max-h-full h-full flex flex-col">
       <ReactMonacoEditor tutorial={tutorial} />
-      {/* { isChrome() ? <ReactMonacoEditor tutorials={tutorials} /> :
-      <div className='h-full flex justify-center content-center items-center'>
-        <div className='h-24 text-xl flex flex-row justify-center content-center items-center text-[#f1f0f1]'>
-          <VscWarning className='text-amber-500'/>
-          <span>This playground uses <a href="https://webcontainers.io/" className='text-teal-500'> Web Containers </a> and only works on Google Chrome.</span>
-          </div>
-      </div> } */}
     </div>
   )
 }
@@ -52,10 +50,10 @@ function App() {
        {tutorialRoutes.map(({ path, tutorial}) =>
         <Route key={path} path={path} element={<AppView tutorial={tutorial}/>}/>
         )}
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Navigate to={basePath} />} />
       </Routes>
     </Router>
   );
 }
 
-export default App
+export default App;

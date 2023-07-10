@@ -1,5 +1,6 @@
 import { FiCommand } from "react-icons/fi";
 import classNames from "classnames";
+import WingLogo from "./wing_logo.svg";
 
 export interface LoadingProps {
   status: string;
@@ -12,7 +13,7 @@ export function Loading({ status }: LoadingProps) {
     "transition-colors duration-300",
   )}>
     <div className="mt-[20%]">
-      <img className="h-[64px] w-[136px]" src="wing_logo.svg" loading="lazy" alt="" />
+      <img className="h-[64px] w-[136px]" src={WingLogo} loading="lazy" alt="" />
     </div>
     <div className="flex items-center">
       <FiCommand className="animate-spin"/>

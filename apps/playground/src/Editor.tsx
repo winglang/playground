@@ -27,6 +27,7 @@ import { CompilationRequest } from '@wing-playground/shared/src/compiler/request
 
 import { useExamples } from '@wing-playground/shared/src/use-examples.js';
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
+import { FilePicker } from '@wing-playground/shared/src/FilePicker.js';
 import {ConsoleLayouts} from "@wing-playground/shared/src/containers";
 import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
 import {useAnalytics} from "@wing-playground/shared/src/analytics/use-analytics";
@@ -67,8 +68,8 @@ export type EditorProps = {
 export const ReactMonacoEditor: React.FC<EditorProps> = ({
 }) => {
     const { examples,
-      currentExample,
-      languageContext,
+      currentExample, setCurrentExample,
+      languageContext, setLanguageContext,
     } = useExamples();
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
     const ref = createRef<HTMLDivElement>();
@@ -182,19 +183,35 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       }
     }, [isCompiling, compilationItems]);
 
+    const tfGcpTarget: TargetView = {
+        id: Target.TFGCP,
+        title: "GCP/TERRAFORM",
+        Target: () => <></>,
+        disabled: true,
+        tooltip: "Coming soon",
+    }
+
+    const tfAzureTarget: TargetView = {
+        id: Target.TFAzure,
+        title: "AZURE/TERRAFORM",
+        Target: () => <></>,
+        disabled: true,
+        tooltip: "Coming soon",
+    }
+
     const targetViews: TargetView[] = useMemo(() => {
-      return [simulatorTarget, tfAwsTarget];
-    }, [simulatorTarget, tfAwsTarget]);
+      return [simulatorTarget, tfAwsTarget, tfGcpTarget, tfAzureTarget];
+    }, [simulatorTarget, tfAwsTarget, tfGcpTarget, tfAzureTarget]);
 
     return (
       <ThemeProvider mode={currentMode} theme={DefaultTheme}>
         <div className={classNames(
-          'w-full flex flex-col grow p-6',
+          'w-full flex flex-col grow px-[32px] pb-[32px]',
           theme.bg4,
           'transition-colors duration-300',
-          'min-w-[43rem]',
+          'min-w-[1024px]',
         )}>
-          <div className='flex flex-col grow relative pl-[20px]'>
+          <div className='flex flex-col grow relative'>
             <Header currentMode={currentMode} onToggleTheme={onToggleTheme}/>
             {serverConsoleFailed && (
               <div className="w-full">
@@ -203,7 +220,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                 </div>
               </div>
             )}
-            {!serverConsoleFailed && <div className='flex flex-col h-full pt-4'>
+            {!serverConsoleFailed && <div className='flex flex-col h-full'>
               <div className='flex grow gap-2'>
                 <RightResizableWidget className={
                   classNames(
@@ -220,7 +237,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
                 }>
                   <PanelHeader>
                     <div className="flex">
-                      <span>EDITOR</span>
+                      <div className="bg-transparent h-7 px-2 text-xs cursor-pointer focus:outline-none" style={{marginTop:"-2px"}}>
+                        <FilePicker examples={examples} currentExample={currentExample} setCurrentExample={setCurrentExample} setLanguageContext={setLanguageContext} />
+                      </div>
                       <div className="grow"/>
                       <select
                         className="bg-transparent h-7 px-2 text-xs cursor-pointer focus:outline-none"
