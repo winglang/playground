@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@wingconsole/server": "^0.24.2",
+    "@wingconsole/server": "^0.24.3",
     "express": "^4.18.2"
   }
 }
