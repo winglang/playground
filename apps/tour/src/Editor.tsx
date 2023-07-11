@@ -386,11 +386,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                                           'prose-pre:bg-slate-200 dark:prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-prose-p:text-slate-700 dark:prose-ol:my-prose-p:text-[#BDCECC]',
                                           'prose-pre:overflow-auto',
                                           'prose-a:text-sky-700 dark:prose-a:text-sky-300',
-                                          'prose-h3:text-xl prose-h3:pb-4 prose-h3:pt-4 prose-headings:font-sans prose-h3:font-bold',
+                                          'prose-h1:p-0 prose-h1:mb-[25px] prose-h1:text-3xl prose-h1:transition-colors prose-h1:duration-300',
+                                          'prose-h3:text-xl prose-h3:p-0 prose-h3:mt-[40px] prose-h3:mb-[20px] prose-headings:font-sans prose-h3:font-bold',
                                           'prose-h4:text-xl prose-h4:pb-4 prose-h4:pt-0 prose-headings:font-sans prose-h4:font-bold',
-                                          'prose-h1:text-3xl prose-headings:pb-8 prose-headings:text-slate-700 dark:prose-headings:text-[#BDCECC] prose-h1:font-bold',
+                                          'prose-headings:pb-8 prose-headings:text-slate-700 dark:prose-headings:text-[#BDCECC] prose-h1:font-bold',
                                           '[&>*]:transition-colors [&>*]:duration-300',
-                                          'prose-h1:transition-colors prose-h1:duration-300',
                                           'prose-p:font-[400] prose-p:text-[16px] prose-p:leading-[26.4px]',
                                           )}>
                                             <MarkdownRender
