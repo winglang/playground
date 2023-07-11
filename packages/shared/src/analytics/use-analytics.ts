@@ -5,9 +5,12 @@ import segmentPlugin from '@analytics/segment';
 import { LoadingStatus } from '../loading-status';
 
 export interface AnalyticsProps {
-  name: string;
+  platform: "learn" | "play";
+  tutorial?: string;
   state: LoadingStatus;
 }
+
+const MAX_ANALYTICS_STRING_LENGTH = 1024;
 
 const instance = Analytics({
   app: 'wing-playground',
@@ -16,34 +19,106 @@ const instance = Analytics({
       writeKey: 'MvkxDOKWzcs7MFrWu1UNaO2bGn1S2RvA'
     })
   ]
-})
+});
+
+console.log("instance", instance);
+
+const sessionId = Date.now();
 
 instance.page()
 
-export function useAnalytics({name, state}: AnalyticsProps) {
-  useEffect(() => {
-    instance.track(`${name}: state: ${state}`, { state });
-  }, [state]);
+export function useAnalytics({platform, tutorial, state}: AnalyticsProps) {
 
-  window.addEventListener('message', function(event: any) {
-    if (event && event.data && event.data.trace) {
-      const trace = event.data.trace
-      if (trace.type !== 'resource') {
-        return;
-      }
-  
-      const resourceName = trace.sourceType.replace("wingsdk.cloud.", "");
-      if (trace.data.message.indexOf("(") === -1) {
-        return;
-      }
-  
-      const action = trace.data.message.substr(0, trace.data.message.indexOf("("));
-      instance.track(`${name}: simulator: ${resourceName}: ${action}`, Object.assign({}, trace, trace.data));
+  const track = (event: string, properties?: Record<string, any>) => {
+    instance.track(
+      event,
+      {
+        ...(properties || {}),
+        integrations: {
+          "Actions Amplitude": {
+            "session_id": sessionId
+          },
+        }
+      },
+    );
+  }
+
+  // handle state change events
+  useEffect(() => {
+    switch (state) {
+      case LoadingStatus.Init:
+        track(`${platform}_containers_init`);
+        break;
+      case LoadingStatus.Install:
+        track(`${platform}_dependency_install`);
+        break;
+      case LoadingStatus.Eval:
+        track(`${platform}_console_init`);
+        break;
+      case LoadingStatus.Completed:
+        track(`${platform}_startup_ready`);
+        break;
     }
-  });
+  }, [state, platform]);
+
+  useEffect(() => {
+
+    const listener = (event: any) => {
+      if (event && event.data && event.data.trace) {
+        const trace = event.data.trace
+        if (trace.type !== 'resource') {
+          return;
+        }
+
+        const resourceName = trace.sourceType.replace("wingsdk.cloud.", "");
+        if (!trace.data.message.includes("(")) {
+          return;
+        }
+
+        // extracting the action name.
+        // trace message for resources looks like this:
+        // 'Invoke (payload="{\\"messages\\":[\\"dfd\\"]}").'
+        const action = trace.data.message.slice(
+            0,
+            Math.max(0, trace.data.message.indexOf("(")),
+        );
+
+        const properties = {
+          message: trace?.data?.message.substring(0, MAX_ANALYTICS_STRING_LENGTH) || '',
+          status: trace?.data?.status.substring(0, MAX_ANALYTICS_STRING_LENGTH) || 'unknown',
+          result: trace?.data?.result.substring(0, MAX_ANALYTICS_STRING_LENGTH) || 'unknown',
+        }
+
+        // general interaction event
+        const eventName = tutorial ? `${platform}:${tutorial}_resource_interact` : `${platform}_resource_interact`;
+        track(
+            eventName,
+            {
+              resource: resourceName,
+              action,
+              ...properties
+            }
+        );
+        // resource specific event
+        const resourceEventName = tutorial ? `${platform}:${tutorial}_${resourceName}_${action}` : `${platform}_${resourceName}_${action}`;
+        track(
+            resourceEventName,
+            properties
+        );
+
+      }
+    }
+
+    window.addEventListener('message', listener);
+
+    return () => {
+      window.removeEventListener('message', listener);
+    }
+
+  }, [tutorial]);
 
   return {
-    analytics: instance
+    track
   };
 }
 
