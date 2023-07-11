@@ -5,10 +5,17 @@ import "./index.css"
 
 const query = new URLSearchParams(location.search);
 
-fetch(`/heartbeat`, {cache: "no-store"});
+const heartbeat = async () => {
+  try {
+    await fetch(`/heartbeat`, {cache: "no-store"});
+  } catch {
+    window.parent.postMessage({ heartbeat: false }, "*");  
+  }
+};
+heartbeat();
 setInterval(async () => {
-  await fetch(`/heartbeat`, {cache: "no-store"});
-}, 30000);
+  await heartbeat();
+}, 10000);
 
 ReactDOM.createRoot(document.querySelector("#root")!).render(
   <React.StrictMode>

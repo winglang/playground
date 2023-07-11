@@ -170,6 +170,12 @@ export const useEditor = ({
       }
     }, [containerRef, consoleRef, isCompiling, languageContext, targets, compiler]);
 
+    window.addEventListener('message', function(event: any) {
+      if (event && event.data && event.data.heartbeat === false) {
+        setServerConsoleFailed(true);
+      }
+    });
+
     return {
         editorWillMount,
         editorDidMount,
