@@ -47,7 +47,11 @@ export const maybeRedirect = async (options: MaybeRedirectOptions) => {
   const subdomainSiteURL = new URL(options.subdomainSite);
 
   const isMainSite = location.hostname === mainSiteURL.hostname;
-  const isSubdomainSite = location.hostname === subdomainSiteURL.hostname;
+  const isSubdomainSite = new RegExp(
+    `^${subdomainSiteURL.hostname
+      .replaceAll(".", "\\.")
+      .replace("xxx", "(.+?)")}$`,
+  ).test(location.hostname);
 
   const redirectToMainSite = () => {
     const newURL = `${mainSiteURL.toString()}${location.search}`;
