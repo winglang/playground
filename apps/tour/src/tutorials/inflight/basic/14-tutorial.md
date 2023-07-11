@@ -37,4 +37,4 @@ Alternatively, you can explore other tutorials and documentation pages:
 
 ### Playground
 
-Put your skills to the test using the [playground](https://docs.winglang.io/getting-started).
+Put your skills to the test using the [playground](https://www.winglang.io/play/).
