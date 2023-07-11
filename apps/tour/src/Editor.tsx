@@ -382,7 +382,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                                           <div
                                           className={classNames(
                                           'font-sans',
-                                          'prose-lg prose-invert prose-p:leading-6 text-slate-700 dark:text-[#BDCECC] prose-ol:list-decimal',
+                                          'prose-lg prose-invert text-slate-700 dark:text-[#BDCECC] prose-ol:list-decimal',
                                           'prose-pre:bg-slate-200 dark:prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-prose-p:text-slate-700 dark:prose-ol:my-prose-p:text-[#BDCECC]',
                                           'prose-pre:overflow-auto',
                                           'prose-a:text-sky-700 dark:prose-a:text-sky-300',
@@ -391,6 +391,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                                           'prose-h1:text-3xl prose-headings:pb-8 prose-headings:text-slate-700 dark:prose-headings:text-[#BDCECC] prose-h1:font-bold',
                                           '[&>*]:transition-colors [&>*]:duration-300',
                                           'prose-h1:transition-colors prose-h1:duration-300',
+                                          'prose-p:font-[400] prose-p:text-[16px] prose-p:leading-[26.4px]',
                                           )}>
                                             <MarkdownRender
                                               markdown={step.tutorial ?? ""}
