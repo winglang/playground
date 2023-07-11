@@ -1,4 +1,4 @@
-# Multiple subscribers
+## Multiple subscribers
 
 A topic can have multiple subscribers.
 

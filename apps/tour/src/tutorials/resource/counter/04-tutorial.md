@@ -1,4 +1,4 @@
-# Demonstrate the atomicity of the Counter
+## Demonstrate the atomicity of the Counter
 
 Notice the following code which pushes 99 messages to a topic with two subscribers.
 Each one increases the counter value and puts it in a file in the bucket.

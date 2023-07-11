@@ -1,4 +1,4 @@
-# Pushing a message to the our queue
+## Pushing a message to the our queue
 
 Now that we have a function in our application, let's modify its code to send a message to the queue
 (instead of printing these logs)..
