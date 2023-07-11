@@ -1,4 +1,4 @@
-# Publish to a topic
+## Publish to a topic
 
 We can publish to a topic by calling the inflight `publish` method on it.
 

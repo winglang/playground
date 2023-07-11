@@ -1,4 +1,4 @@
-# Subscribe to a topic
+## Subscribe to a topic
 
 1. The preflight API of cloud.Topic allows you to subscribe to its notifications.
 2. Notice how the code prints the message from the topic to the log.
