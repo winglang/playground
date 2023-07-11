@@ -1,10 +1,18 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  // Time in seconds to wait before showing a warning for slowness.
+  /**
+   * Time in seconds to wait before showing a warning for slowness.
+   */
   readonly VITE_TOO_SLOW_ERROR_SECONDS_THRESHOLD?: number;
-  readonly VITE_REDIRECT_TO?: string | undefined;
-  readonly VITE_REDIRECT_PATTERN?: string | undefined;
+  /**
+   * The URL of the main site.
+   */
+  readonly VITE_MAIN_SITE_URL?: string | undefined;
+  /**
+   * The URL of the subdomain site.
+   */
+  readonly VITE_SUBDOMAIN_SITE_URL?: string | undefined;
 }
 
 interface ImportMeta {

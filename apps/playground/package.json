@@ -54,7 +54,6 @@
     "@vercel/ncc": "^0.36.1",
     "@vitejs/plugin-react": "^3.1.0",
     "@wing-playground/container-files": "*",
-    "@wing-playground/cookie": "*",
     "@wing-playground/shared": "*",
     "autoprefixer": "^10.4.14",
     "glob": "^9.3.2",
