@@ -84,7 +84,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
     const [loadingStatus, setLoadingStatus] = useState(LoadingStatus.Init);
     const [editorCode, setEditorCode] = useState("");
     const [downloadInProgress, setDownloadInProgress] = useState(false);
-    const { track } = useAnalytics({ platform: `learn`, state: loadingStatus });
+    const { track } = useAnalytics({ platform: `learn`, tutorial: tutorial.name, state: loadingStatus });
 
     const [tooSlow, setTooSlow] = useState(false);
     useTimeout(() => {
