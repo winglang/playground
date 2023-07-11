@@ -21,8 +21,6 @@ const instance = Analytics({
   ]
 });
 
-console.log("instance", instance);
-
 const sessionId = Date.now();
 
 instance.page()
