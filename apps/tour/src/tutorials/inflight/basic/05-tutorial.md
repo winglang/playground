@@ -1,4 +1,4 @@
-# Referencing preflight data from inflight code - Example
+## Referencing preflight data from inflight code - Example
 
 One of the main reasons for having both execution phases (preflight and inflight) in the same language and under the same compiler is to allow easy access to preflight data from inflight code.
 

@@ -1,4 +1,4 @@
-# Inflight - Intro
+## Inflight - Intro
 
 Inflight code is the runtime that handles our application logic. E.g., handles API requests, processes queue messages, etc.
 
@@ -10,6 +10,6 @@ Look at the the editor, it contains simple inflight code that prints "Hello Worl
 
 Notice the `inflight` phase modifier used in line 3.
 
-> ***We use the `inflight` phase modifier to mark inflight code that runs later on other machines.***
+> **We use the `inflight` phase modifier to mark inflight code that runs later on other machines.**
 
 Click **NEXT** to run this code.

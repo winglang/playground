@@ -1,4 +1,4 @@
-# Defining a Queue
+## Defining a Queue
 
 The cloud.Queue class represents a data structure that holds a list of items. Using a queue, you can send, store, and receive messages between software components at any volume, without losing messages or requiring other services to be available.
 

@@ -1,4 +1,4 @@
-# Defining a counter
+## Defining a counter
 
 The cloud.Counter resource represents an integer value that can be *atomically* incremented or decremented.
 In the following code below we instantiate a cloud counter.

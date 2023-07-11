@@ -1,4 +1,4 @@
-# Preflight - Wing's default execution phase
+## Preflight - Wing's default execution phase
 
 Let's begin with preflight code.
 
@@ -6,7 +6,7 @@ Let's begin with preflight code.
 
 Look at the editor to the right. It contains preflight code that sets up a storage bucket (file system in the cloud in which you can store files) for us to play with.
 
-> ***We don't need any special annotation to define that this is preflight code because preflight is Wing's default execution phase.***
+> **We don't need any special annotation to define that this is preflight code because preflight is Wing's default execution phase.**
 
 When the code is compiled to a specific cloud provider the `cloud.Bucket` resource is substituted by an implementation for that cloud. E.g., an S3 Bucket when compiling to AWS.
 

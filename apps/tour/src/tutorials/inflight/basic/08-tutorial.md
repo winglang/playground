@@ -1,4 +1,4 @@
-# Mutability - a question
+## Mutability - a question
 
 As we've seen in the previous steps, the Wing compiler does the necessary work behind the scenes to allow us to write inflight code that references preflight data.
 

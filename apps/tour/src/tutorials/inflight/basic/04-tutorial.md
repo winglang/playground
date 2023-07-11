@@ -1,4 +1,4 @@
-# Inflight - Run hello world
+## Inflight - Run hello world
 
 Let's execute our `helloWorld` inflight code inside a `cloud.Function`, which is Wing's ephemeral (short lived) compute resource (i.e. AWS Lambda).
 

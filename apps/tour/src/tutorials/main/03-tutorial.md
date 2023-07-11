@@ -1,4 +1,4 @@
-# Invoking function and exploring logs
+## Invoking function and exploring logs
 
 Our next step is to create a `cloud.Function` resource. We will use our function to push a message
 into the queue for testing.

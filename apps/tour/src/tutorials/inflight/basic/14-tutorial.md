@@ -1,4 +1,4 @@
-# Conclusion
+## Conclusion
 
 Congrats! You now know Wing's main concept - the preflight and inflight execution phases 🎉
 

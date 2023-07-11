@@ -1,4 +1,4 @@
-# Defining a topic
+## Defining a topic
 
 The cloud.Topic class represents a subject of data that is open for subscription.
 
