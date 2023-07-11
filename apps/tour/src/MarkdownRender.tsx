@@ -59,9 +59,6 @@ const MarkdownRender = ({ markdown = "", theme = 'light' }) => {
         </code>
       )
     },
-    blockquote: ({ children }: { children: any }) => {
-      return <blockquote style={{color: '#6a737d', borderLeft: '4px solid #dfe2e5', padding: '0 1em'}}>{children}</blockquote>
-    }
     // ...other components...
   }
 

@@ -397,6 +397,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                                           // p tag
                                           'prose-p:font-[400] prose-p:text-[16px] prose-p:leading-[26.4px]',
                                           '[&>*]:transition-colors [&>*]:duration-300',
+
+                                          // blockquote
+                                          'prose-blockquote:text-[16px] prose-blockquote:p-[16px] prose-blockquote:mb-[16px] prose-blockquote:border-l-[5px] prose-blockquote:rounded-[8.6px]',
+                                          'prose-blockquote:font-[400]',
+                                          'prose-blockquote:text-[#fdfdfe] prose-blockquote:bg-[#474748]',
                                           )}>
                                             <MarkdownRender
                                               markdown={step.tutorial ?? ""}
