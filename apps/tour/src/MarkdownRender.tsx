@@ -4,7 +4,6 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import MonacoWrapper from './MonacoWrapper';
-import { Button } from "@wing-playground/shared/src/Button";
 import classNames from 'classnames';
 
 const MarkdownRender = ({ markdown = "", theme = 'light' }) => {
