@@ -1,4 +1,4 @@
-# Congrats! You’re one of us now 🎉
+## Congrats! You’re one of us now 🎉
 
 You can continue learning Wing using one of these resources.
 #### Interactive Tutorials 
