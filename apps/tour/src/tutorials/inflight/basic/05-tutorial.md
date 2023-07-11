@@ -4,7 +4,7 @@ One of the main reasons for having both execution phases (preflight and inflight
 
 We'll start with a simple example, and then uncover the benefits of this approach though it.
 
-The editor contains preflight code that adds a storage bucket and a cloud function to our app. It also contains empty inflight code that runs whenever the function is invoked. 
+The editor contains preflight code that adds a `cloud.Bucket` and a `cloud.Function` to our app. It also contains empty inflight code that runs whenever the function is invoked. 
 
 Let's modify it to put a file in the bucket by pasting this code to line 8:
 ```wing

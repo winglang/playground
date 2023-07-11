@@ -22,7 +22,7 @@ let helloWorld = inflight () => {
 new cloud.Function(helloWorld);
 ```
 
-The preflight part creates a function and a counter to count the number of times the function was invoked. The inflight part increments the counter when the function is invoked and prints a message with its value.
+The preflight part creates a function and an integer (`numInvocations`) to count to count its invocations. The inflight part increments `numInvocations` when the function is invoked and prints a message with its value.
 
 What do you think will happen if this code was allowed to run?
 

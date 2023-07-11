@@ -4,9 +4,9 @@ Let's begin with preflight code.
 
 **Reminder:** This is code that runs once, at compile time, to generate the infrastructure configuration of the app in the cloud.
 
-If you look at the editor to the right, you can see that we have preflight code there. It sets up a storage bucket (file system in the cloud in which you can store files) for us to play with.
+Look at the editor to the right. It contains preflight code that sets up a storage bucket (file system in the cloud in which you can store files) for us to play with.
 
-> ***Note: We don't need any special annotation to define that this is preflight code because preflight is Wing's default execution phase.***
+> ***We don't need any special annotation to define that this is preflight code because preflight is Wing's default execution phase.***
 
 When the code is compiled to a specific cloud provider the `cloud.Bucket` resource is substituted by an implementation for that cloud. E.g., an S3 Bucket when compiling to AWS.
 
