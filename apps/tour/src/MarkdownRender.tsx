@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import MonacoWrapper from './MonacoWrapper';
 import { Button } from "@wing-playground/shared/src/Button";
+import classNames from 'classnames';
 
 const MarkdownRender = ({ markdown = "", theme = 'light' }) => {
 
@@ -30,8 +31,13 @@ const MarkdownRender = ({ markdown = "", theme = 'light' }) => {
                 right: 0,
                 zIndex: 1  // Add a z-index to ensure button appears on top
               }}
+              className='opacity-0 group-hover:opacity-100 transition-all'
             >
-              <button className='opacity-0 group-hover:opacity-100 border border-gray-400 hover:border-gray-200 rounded-lg p-1.5 bg-[#334155] mr-2 mt-2 text-gray-400 hover:text-gray-200 transition-all'>
+              <button className={classNames(
+                "opacity-40 hover:opacity-100 border rounded-lg p-1.5 mr-2 mt-2 transition-all",
+                "bg-white border-[#DADDE1] text-[#393A34]",
+                "dark:bg-[#334155] dark:border-[#606770] dark:text-[#F8F8F2]",
+              )}>
                 {copied &&
                   <svg viewBox="0 0 24 24" height="18px">
                     <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" fill="#84cc16"></path>
