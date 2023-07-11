@@ -401,7 +401,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                                           // blockquote
                                           'prose-blockquote:text-[16px] prose-blockquote:p-[16px] prose-blockquote:mb-[16px] prose-blockquote:border-l-[5px] prose-blockquote:rounded-[8.6px]',
                                           'prose-blockquote:font-[400]',
-                                          'prose-blockquote:text-[#fdfdfe] prose-blockquote:bg-[#474748]',
+                                          'dark:prose-blockquote:text-[#fdfdfe] dark:prose-blockquote:bg-[#474748] dark:prose-blockquote:border-[#d4d5d8]',
+                                          'prose-blockquote:text-[#474748] prose-blockquote:bg-[#fdfdfe] prose-blockquote:border-[#d4d5d8]',
                                           )}>
                                             <MarkdownRender
                                               markdown={step.tutorial ?? ""}
