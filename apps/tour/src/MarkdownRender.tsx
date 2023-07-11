@@ -34,7 +34,7 @@ const MarkdownRender = ({ markdown = "", theme = 'light' }) => {
               <button className='opacity-0 group-hover:opacity-100 border border-gray-400 hover:border-gray-200 rounded-lg p-1.5 bg-[#334155] mr-2 mt-2 text-gray-400 hover:text-gray-200 transition-all'>
                 {copied &&
                   <svg viewBox="0 0 24 24" height="18px">
-                    <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" fill="currentColor"></path>
+                    <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" fill="#84cc16"></path>
                   </svg>
                 }
                 {!copied &&
