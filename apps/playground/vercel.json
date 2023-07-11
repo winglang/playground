@@ -1,7 +1,7 @@
 {
   "headers": [
     {
-      "source": "/",
+      "source": "/(.*)",
       "headers": [
         {
           "key": "Cross-Origin-Embedder-Policy",
@@ -34,5 +34,9 @@
         }
       ]
     }
+  ],
+  "rewrites":  [
+    {"source": "/play/(.*)", "destination": "/play"},
+    {"source": "/", "destination": "/play"}
   ]
 }

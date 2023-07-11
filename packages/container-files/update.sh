@@ -1,6 +1,11 @@
 #!/bin/sh
 
-cd lib
+dir="$( cd "$( dirname "$0" )" && pwd )"
+
+cd "${dir}/lib"
 rm -rf node_modules pnpm-lock.yaml
 pnpm --version
-pnpm update -L @wingconsole/app
+pnpm update -L @wingconsole/server
+
+cd "${dir}/app"
+npm update @wingconsole/ui
