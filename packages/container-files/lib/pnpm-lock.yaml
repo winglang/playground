@@ -2,19 +2,19 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@wingconsole/server':
-    specifier: ^0.24.2
-    version: 0.24.2(constructs@10.1.314)
+    specifier: ^0.24.3
+    version: 0.24.3(constructs@10.1.314)
   express:
     specifier: ^4.18.2
     version: 4.18.2
 
 packages:
 
-  /@wingconsole/server@0.24.2(constructs@10.1.314):
-    resolution: {integrity: sha512-BcrD1tT4G+Wx/pkzNLE9mwh4pe1AXHYXTHmT86ghYcUGaJPYOlUg61HnDzJNSlum97QHUDlEt7QXC4OPoc0sMQ==}
+  /@wingconsole/server@0.24.3(constructs@10.1.314):
+    resolution: {integrity: sha512-AYTNbjGZ5NhtzBeiK0d72SgsrpdTYTLM4IKWBbLnbNNY1ytkawivSG3vxMse4usRNQiVf1RiT5RZFnXcrYqvFA==}
     dependencies:
-      '@winglang/compiler': 0.24.2(constructs@10.1.314)
-      '@winglang/sdk': 0.24.2(constructs@10.1.314)
+      '@winglang/compiler': 0.24.3(constructs@10.1.314)
+      '@winglang/sdk': 0.24.3(constructs@10.1.314)
       codespan-wasm: 0.4.0
       debug: 4.3.4
       ms: 2.1.3
@@ -23,19 +23,19 @@ packages:
       - supports-color
     dev: false
 
-  /@winglang/compiler@0.24.2(constructs@10.1.314):
-    resolution: {integrity: sha512-h5EZnuuoN0Jh4lUL0Z6uULI1OGELPw7xCQOhJtikXAsWnndCLRoW6KAIAziXCCY1kDdYP45VnJhT10ZAWEjGgQ==}
+  /@winglang/compiler@0.24.3(constructs@10.1.314):
+    resolution: {integrity: sha512-vd6WB/GOjXEY1KhCy/EB+dVWi7xvXPusCXI15xMrUmZ71ek5S13flNUvmoP/c3JUxDFRSzwJWKqdtwjd8xsnCw==}
     engines: {node: '>=v18.0.0'}
     dependencies:
-      '@winglang/sdk': 0.24.2(constructs@10.1.314)
+      '@winglang/sdk': 0.24.3(constructs@10.1.314)
     transitivePeerDependencies:
       - constructs
     dev: false
     bundledDependencies:
       - wasi-js
 
-  /@winglang/sdk@0.24.2(constructs@10.1.314):
-    resolution: {integrity: sha512-4VuPYrvDhC4eqNwcjOn5UilSMHvIC/Y5iYujbBfvmbykX90gI6+SunktSNw6Hs/Qtrruq1VgbcgIINgGVP/saQ==}
+  /@winglang/sdk@0.24.3(constructs@10.1.314):
+    resolution: {integrity: sha512-D/kKcc++eiS5jsrFAgdQPGYq9xCfOx6AEEFNY4tZFAh2T/paHCQEY5IvY3zreHSEpMV4pwoYdaRZUnQRDy3pWg==}
     engines: {node: '>= 18.13.0'}
     peerDependencies:
       constructs: ~10.1.314
