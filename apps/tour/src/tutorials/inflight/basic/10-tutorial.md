@@ -1,4 +1,4 @@
-# Mutability protections
+## Mutability protections
 ### Default immutability
 
 The first protection Wing offers us against scenarios like the one in the previous steps is default immutability.

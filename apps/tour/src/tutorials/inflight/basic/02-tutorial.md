@@ -1,4 +1,4 @@
-# Preflight - Changing resource configuration
+## Preflight - Changing resource configuration
 
 Preflight code can be used for much more than simple resource creation. We can use it to configure services, set up event listers on them, run logic to compose them into more complex resources, etc.
 
