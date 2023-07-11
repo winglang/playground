@@ -367,7 +367,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                       </div>
                       <ThemeToggle mode={currentMode} onToggle={onToggleTheme}/>
                     </div>
-                    {!tooSlow && (<div className="flex-1 flex flex-col pt-[20px]">
+                    {!tooSlow && (<div className="flex-1 flex flex-col">
                         <div data-cueid="instructions" className="grow flex flex-col">
                             <div className='grow flex flex-col'>
                                 <div className="grow relative overflow-hidden">
