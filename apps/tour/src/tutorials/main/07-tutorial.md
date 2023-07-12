@@ -20,7 +20,7 @@ If you prefer to play with Wing online, check out the [Wing Playground](https://
 
 Here are some pointers to interesting topics in our [docs](https://winglang.io/docs):
 
-* More tutorials: [Bucket](/bucket), [Counter](/counter), [Queue](/queue), [Topic](/topic)
+* More tutorials: [Bucket](/learn/bucket), [Counter](/learn/counter), [Queue](/learn/queue), [Topic](/learn/topic)
 * [Language Reference](https://www.winglang.io/docs/language-reference)
 * [Library Reference](https://www.winglang.io/docs/category/standard-library)
 * [Inflight and Preflight](https://www.winglang.io/docs/concepts/inflights)
