@@ -14,6 +14,7 @@ started](https://www.winglang.io/docs/) guide in our docs for detailed instructi
 install the [CLI](https://www.winglang.io/docs/start-here/installation#wing-cli) and [VSCode
 extension](https://www.winglang.io/docs/start-here/installation#wing-ide-extension).
 
+
 If you prefer to play with Wing online, check out the [Wing Playground](https://winglang.io/play).
 
 ### Learn More
