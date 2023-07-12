@@ -36,7 +36,7 @@ export function getBrowser() : Browser {
 }
 
 export function isChrome() {
-  return getBrowser() === "chrome";
+  return false;
 }
 
 export const Base64Binary = {
