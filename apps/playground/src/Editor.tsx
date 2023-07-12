@@ -129,11 +129,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
   }, [currentMode, iframSrc]);
 
   const onSendFeedback = useCallback((url: URL) => {
-    url.searchParams.set("title", "Playground bug report");
     url.searchParams.set(
-      "i-tried-this",
+      "body",
       "\n\n" +
-      "// Wing code from the playground:\n" +
+      "// Wing code snippet:\n" +
       "```\n" +
       `${editorRef.current?.getValue() ?? ""}\n` +
       "```"

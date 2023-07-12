@@ -14,8 +14,6 @@ export const SendFeedbackButton = ({ onClick, className } : SendFeedbackButtonPr
 
   const handleClick = useCallback(() => {
     const url = new URL("https://github.com/winglang/wing/issues/new");
-    url.searchParams.set("labels", "🐛 bug");
-    url.searchParams.set("template", "bug.yml");
     onClick(url);
   }, [onClick]);
 
