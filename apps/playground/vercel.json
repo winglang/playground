@@ -18,19 +18,6 @@
       ]
     },
     {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Cross-Origin-Resource-Policy",
-          "value": "cross-origin"
-        }
-      ]
-    },
-    {
       "source": "(.*)lsp(.*)",
       "headers": [
         {
@@ -48,8 +35,8 @@
       ]
     }
   ],
-  "rewrites":  [
-    {"source": "/play/(.*)", "destination": "/play"},
-    {"source": "/", "destination": "/play"}
+  "rewrites": [
+    { "source": "/play/(.*)", "destination": "/play" },
+    { "source": "/", "destination": "/play" }
   ]
 }
