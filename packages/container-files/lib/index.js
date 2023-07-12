@@ -1,3 +1,5 @@
+process.env["ESBUILD_WORKER_THREADS"] = "0";
+
 const { createConsoleServer } = require("@wingconsole/server");
 const express = require("express");
 
