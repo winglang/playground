@@ -26,7 +26,7 @@ referred to as a *closure*.
 > You will notice the `inflight` modifier before the closure definition. This modifier indicates
 > that this code is executed after the system is deployed. This concept of preflight and inflight is
 > one of the unique concepts of the Wing language. You can read more about it in the [Wing
-> documentation](https://www.winglang.io/docs/concepts/inflights).
+> documentation](https://www.winglang.io/docs/concepts/inflights){:target="_blank"}.
 
 ### Invoking our function
 
