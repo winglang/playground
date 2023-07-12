@@ -36,6 +36,7 @@ export function getBrowser() : Browser {
 }
 
 export function isWorkingWithWebContainer() {
+	return true;
 	const browser = getBrowser();
 	return browser === "chrome" || browser === "safari";
 }
