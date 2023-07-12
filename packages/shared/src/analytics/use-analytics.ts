@@ -29,7 +29,7 @@ export function useAnalytics({platform, tutorial, state}: AnalyticsProps) {
 
   const track = (event: string, properties?: Record<string, any>) => {
     instance.track(
-      event,
+      event.toLowerCase(),
       {
         ...(properties || {}),
         integrations: {
@@ -91,7 +91,7 @@ export function useAnalytics({platform, tutorial, state}: AnalyticsProps) {
         // general interaction event
         const eventName = tutorial ? `${platform}:${tutorial}_resource_interact` : `${platform}_resource_interact`;
         track(
-            eventName.toLowerCase(),
+            eventName,
             {
               resource: resourceName,
               action,
@@ -101,7 +101,7 @@ export function useAnalytics({platform, tutorial, state}: AnalyticsProps) {
         // resource specific event
         const resourceEventName = tutorial ? `${platform}:${tutorial}_${resourceName}_${action}` : `${platform}_${resourceName}_${action}`;
         track(
-            resourceEventName.toLowerCase(),
+            resourceEventName,
             properties
         );
 
