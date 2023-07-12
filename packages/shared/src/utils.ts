@@ -35,8 +35,9 @@ export function getBrowser() : Browser {
   return "unknown";
 }
 
-export function isChrome() {
-	return true;
+export function isWorkingWithWebContainer() {
+	const browser = getBrowser();
+	return browser === "chrome" || browser === "safari";
 }
 
 export const Base64Binary = {
