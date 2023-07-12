@@ -3,15 +3,15 @@
 You can continue learning Wing using one of these resources.
 #### Interactive Tutorials 
 
-[Preflight and Inflight](/preflight-inflight)
+[Preflight and Inflight](/learn/preflight-inflight)
 
-[Learn about Bucket](/bucket)
+[Learn about Bucket](/learn/bucket)
 
-[Introduction to Counter](/counter)
+[Introduction to Counter](/learn/counter)
 
-[Working with Queue](/queue)
+[Working with Queue](/learn/queue)
 
-[The Topic Resource](/topic)
+[The Topic Resource](/learn/topic)
 
 ### Documentation
 

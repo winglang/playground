@@ -18,13 +18,13 @@ Alternatively, you can explore other tutorials and documentation pages:
 
 #### Interactive Tutorials 
 
-[Learn about Bucket](/bucket)
+[Learn about Bucket](/learn/bucket)
 
-[Introduction to Counter](/counter)
+[Introduction to Counter](/learn/counter)
 
-[Working with Queue](/queue)
+[Working with Queue](/learn/queue)
 
-[The Topic Resource](/topic)
+[The Topic Resource](/learn/topic)
 
 ### Documentation
 
