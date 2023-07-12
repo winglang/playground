@@ -335,6 +335,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
     const onSendFeedback = useCallback((url: URL) => {
       url.searchParams.append("body",
         "\n\n" +
+        `// **wing version:** ${wingPackageJson.version} \n` +
         "// **tutorial name:** " + tutorial.name + "\n"
       );
       window.open(url.href, "_blank");

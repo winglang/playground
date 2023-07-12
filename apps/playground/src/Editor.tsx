@@ -132,7 +132,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
     url.searchParams.set(
       "body",
       "\n\n" +
-      "// Wing code snippet:\n" +
+      `// **wing version:** ${wingPackageJson.version} \n` +
+      "// **wing code snippet:**\n" +
       "```\n" +
       `${editorRef.current?.getValue() ?? ""}\n` +
       "```"
