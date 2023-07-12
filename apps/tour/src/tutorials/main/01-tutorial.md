@@ -1,15 +1,15 @@
 # Defining your first cloud resource
 
-See the code editor on the right? It has an initial empty Wing program.
+See the code editor on the top right? It has an initial, empty, Wing program.
 
-Your first task is to go and **remove the comment from line 3**.
+Your first task is to **remove the comment from line 3**.
 
-Like in many object-oriented languages, the `new` keyword defines new objects. In this case we are
-creating a new object of type `cloud.Queue`.
+Like in many object-oriented languages, the `new` keyword in Wing defines new objects. In this case
+we are creating an object of type `cloud.Queue`.
 
-Now, if you take a look at the Wing Simulator on the bottom, you can see a new node in your app that
-says **cloud.Queue**. This is where you can interact with your cloud application as you are building
-it.
+Now, let's take a look at the Wing Simulator on the bottom right of the screen. This is where you
+can interact with your cloud application as you are building it. See this node in the middle which
+says **cloud.Queue**? This is the queue we've just defined.
 
 *Congratulations! You've created your first cloud application with Wing! (it just has a queue...).*
 
