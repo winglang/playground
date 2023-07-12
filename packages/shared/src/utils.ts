@@ -36,9 +36,12 @@ export function getBrowser() : Browser {
 }
 
 export function isWorkingWithWebContainer() {
-	return true;
-	const browser = getBrowser();
-	return browser === "chrome" || browser === "safari";
+	try {
+		new SharedArrayBuffer(0);
+		return true;
+	} catch {
+		return false;
+	}
 }
 
 export const Base64Binary = {

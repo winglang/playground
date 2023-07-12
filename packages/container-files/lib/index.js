@@ -1,3 +1,4 @@
+// esbuild hangs on firefox when worker threads are enabled 
 process.env["ESBUILD_WORKER_THREADS"] = "0";
 
 const { createConsoleServer } = require("@wingconsole/server");
