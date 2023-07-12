@@ -82,9 +82,9 @@ export function useAnalytics({platform, tutorial, state}: AnalyticsProps) {
         );
 
         const properties = {
-          message: trace?.data?.message.substring(0, MAX_ANALYTICS_STRING_LENGTH) || '',
-          status: trace?.data?.status.substring(0, MAX_ANALYTICS_STRING_LENGTH) || 'unknown',
-          result: trace?.data?.result.substring(0, MAX_ANALYTICS_STRING_LENGTH) || 'unknown',
+          message: trace?.data?.message?.substring(0, MAX_ANALYTICS_STRING_LENGTH) || '',
+          status: trace?.data?.status?.substring(0, MAX_ANALYTICS_STRING_LENGTH) || 'unknown',
+          result: trace?.data?.result?.substring(0, MAX_ANALYTICS_STRING_LENGTH) || 'unknown',
         }
 
         // general interaction event
