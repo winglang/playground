@@ -43,21 +43,22 @@ export function useAnalytics({platform, tutorial, state}: AnalyticsProps) {
 
   // handle state change events
   useEffect(() => {
+    const eventNamePrefix = tutorial ? `${platform}:${tutorial}` : `${platform}`;
     switch (state) {
       case LoadingStatus.Init:
-        track(`${platform}_containers_init`);
+        track(`${eventNamePrefix}_containers_init`);
         break;
       case LoadingStatus.Install:
-        track(`${platform}_dependency_install`);
+        track(`${eventNamePrefix}_dependency_install`);
         break;
       case LoadingStatus.Eval:
-        track(`${platform}_console_init`);
+        track(`${eventNamePrefix}_console_init`);
         break;
       case LoadingStatus.Completed:
-        track(`${platform}_startup_ready`);
+        track(`${eventNamePrefix}_startup_ready`);
         break;
     }
-  }, [state, platform]);
+  }, [state, platform, tutorial]);
 
   useEffect(() => {
 
@@ -90,7 +91,7 @@ export function useAnalytics({platform, tutorial, state}: AnalyticsProps) {
         // general interaction event
         const eventName = tutorial ? `${platform}:${tutorial}_resource_interact` : `${platform}_resource_interact`;
         track(
-            eventName,
+            eventName.toLowerCase(),
             {
               resource: resourceName,
               action,
@@ -100,7 +101,7 @@ export function useAnalytics({platform, tutorial, state}: AnalyticsProps) {
         // resource specific event
         const resourceEventName = tutorial ? `${platform}:${tutorial}_${resourceName}_${action}` : `${platform}_${resourceName}_${action}`;
         track(
-            resourceEventName,
+            resourceEventName.toLowerCase(),
             properties
         );
 
