@@ -3,6 +3,8 @@
 You can continue learning Wing using one of these resources.
 #### Interactive Tutorials 
 
+[Preflight and Inflight](/preflight-inflight)
+
 [Learn about Bucket](/bucket)
 
 [Introduction to Counter](/counter)
@@ -14,6 +16,8 @@ You can continue learning Wing using one of these resources.
 ### Documentation
 
 [Get started](https://docs.winglang.io/) on a new project or brush up for your existing Wing code.
+
+[Learn about Wing's core concepts](https://www.winglang.io/docs/category/core-concepts).
 
 ### Playground
 

@@ -227,7 +227,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       // step change analytics
       track(`learn:${tutorial.name}_step:${currentStepId}_init`)
       setCurrentTargetId(targetViews[0]?.title);
-      setTargets(currentStep.targets ?? ["simulator"]);
+      setTargets(currentStep.targets ?? []);
     }, [currentStep]);
 
     const downloadCompiledCode = async (target: Target) => {
@@ -302,7 +302,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       const views: TargetView[] = [];
 
       if (!targets || targets.length === 0) {
-        return [simulatorTarget];
+        return views;
       }
 
       targets.forEach(target => {
@@ -330,6 +330,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       }
     }, [targets, editorRef.current?.getValue()]);
 
+    console.log("yo yo yo", !!(currentStep?.code || currentStep?.targets), currentStep?.id, currentStep?.code, currentStep?.targets)
     return (
       <ThemeProvider mode={currentMode} theme={DefaultTheme}>
           <div className={classNames(
@@ -338,7 +339,12 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
             'transition-all duration-300'
           )}>
             <div className='flex grow relative'>
-                <div className="flex flex-col w-[40%] min-w-[25rem] px-[11px]">
+                <div className={classNames(
+                        "flex flex-col",
+                        (currentStep?.code || currentStep?.targets) && "w-[50%]",
+                        (!currentStep?.code && !currentStep?.targets) && "w-[50%]",
+                        " min-w-[25rem] px-[11px]"
+                      )}>
                     <div className='flex items-center gap-2 w-full'>
                       <div className='flex items-center gap-2' style={{
                         width: "calc(100% - 35px)"
@@ -498,7 +504,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                     </div>)}
                 </div>
 
-                {!tooSlow && (<div className="grow ml-4 flex flex-col gap-2 pt-6">
+                {!tooSlow && <div className={classNames(
+                        "grow ml-4 flex flex-col gap-2 pt-6",
+                        !currentStep?.code && !currentStep?.targets &&  "w-[0%]"
+                      )}> 
                   <div data-cueid="code" className={
                     classNames(
                       'h-[40%] flex flex-col w-full',
@@ -510,7 +519,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                   >
                     <div className={
                       classNames(
-                        showWelcome && "opacity-0",
+                        (showWelcome || !currentStep?.code) && "opacity-0",
                         "flex flex-col w-full grow",
                       )}>
                       <PanelHeader>
@@ -571,7 +580,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                     'transition-colors duration-300',
                     'bg-slate-200/40 dark:bg-slate-700/40'
                   )}>
-                    {!showWelcome && loadingStatus === LoadingStatus.Completed && (
+                    {!showWelcome && targetViews.length > 0 && loadingStatus === LoadingStatus.Completed && (
                       <TargetsView
                         targets={targetViews}
                         currentTargetId={currentTargetId}
@@ -579,7 +588,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                       />
                     )}
                   </div>
-                </div>)}
+                </div>}
             </div>
           </div>
 
