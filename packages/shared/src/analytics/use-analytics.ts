@@ -29,7 +29,7 @@ export function useAnalytics({platform, tutorial, state}: AnalyticsProps) {
 
   const track = (event: string, properties?: Record<string, any>) => {
     instance.track(
-      event,
+      event.toLowerCase(),
       {
         ...(properties || {}),
         integrations: {
@@ -43,21 +43,22 @@ export function useAnalytics({platform, tutorial, state}: AnalyticsProps) {
 
   // handle state change events
   useEffect(() => {
+    const eventNamePrefix = tutorial ? `${platform}:${tutorial}` : `${platform}`;
     switch (state) {
       case LoadingStatus.Init:
-        track(`${platform}_containers_init`);
+        track(`${eventNamePrefix}_containers_init`);
         break;
       case LoadingStatus.Install:
-        track(`${platform}_dependency_install`);
+        track(`${eventNamePrefix}_dependency_install`);
         break;
       case LoadingStatus.Eval:
-        track(`${platform}_console_init`);
+        track(`${eventNamePrefix}_console_init`);
         break;
       case LoadingStatus.Completed:
-        track(`${platform}_startup_ready`);
+        track(`${eventNamePrefix}_startup_ready`);
         break;
     }
-  }, [state, platform]);
+  }, [state, platform, tutorial]);
 
   useEffect(() => {
 

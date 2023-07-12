@@ -123,7 +123,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
         tabSize: 2,
     }
     const onLspError = () => {
-        track('learn_lsp_crash', {
+        track(`learn:${tutorial.name}_lsp_crash`, {
             code: editorRef.current?.getValue(),
             version: wingPackageJson.version
         });

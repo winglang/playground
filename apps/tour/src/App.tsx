@@ -41,7 +41,7 @@ function AppView({ tutorial }: { tutorial: Tutorial }) {
   const chrome = isChrome();
   if (!chrome) {
     const { track } = useAnalytics({ platform: `learn`, tutorial: tutorial.name ,state: LoadingStatus.Completed });
-    track(`learn_page_block`, {
+    track(`learn:${tutorial.name}_page_block`, {
       device: getBrowser()
     });
   }
