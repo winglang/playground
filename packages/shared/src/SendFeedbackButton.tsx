@@ -6,9 +6,10 @@ import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/outline";
 
 export interface SendFeedbackButtonProps {
   onClick: (url: URL) => void;
+  className?: string;
 }
 
-export const SendFeedbackButton = ({ onClick } : SendFeedbackButtonProps) => {
+export const SendFeedbackButton = ({ onClick, className } : SendFeedbackButtonProps) => {
   const { theme } = useTheme();
 
   const handleClick = useCallback(() => {
@@ -23,6 +24,7 @@ export const SendFeedbackButton = ({ onClick } : SendFeedbackButtonProps) => {
       className={classNames(
         "flex items-center justify-center h-[26px] pb-[2px] cursor-pointer",
         theme.textInput,
+        className,
       )}
       onClick={handleClick}
       title="Send Feedback"

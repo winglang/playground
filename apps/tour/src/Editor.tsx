@@ -376,7 +376,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                       ]}/>
                       </div>
 
-                      <SendFeedbackButton onClick={onSendFeedback}/>
+                      <SendFeedbackButton onClick={onSendFeedback} className="mr-2"/>
                       <ThemeToggle mode={currentMode} onToggle={onToggleTheme}/>
                     </div>
                     {!tooSlow && (<div className="flex-1 flex flex-col">
