@@ -1,8 +1,8 @@
-import Analytics from 'analytics';
 import { useEffect } from "react";
-// @ts-ignore
-import segmentPlugin from '@analytics/segment';
 import { LoadingStatus } from '../loading-status';
+import { AnalyticsBrowser } from '@segment/analytics-next'
+
+const instance = AnalyticsBrowser.load({ writeKey: 'MvkxDOKWzcs7MFrWu1UNaO2bGn1S2RvA' })
 
 export interface AnalyticsProps {
   platform: "learn" | "play";
@@ -11,15 +11,6 @@ export interface AnalyticsProps {
 }
 
 const MAX_ANALYTICS_STRING_LENGTH = 1024;
-
-const instance = Analytics({
-  app: 'wing-playground',
-  plugins: [
-    segmentPlugin({
-      writeKey: 'MvkxDOKWzcs7MFrWu1UNaO2bGn1S2RvA'
-    })
-  ]
-});
 
 const sessionId = Date.now();
 

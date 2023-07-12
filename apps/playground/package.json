@@ -17,6 +17,7 @@
     "@monaco-editor/react": "^4.4.6",
     "@octokit/request": "^6.2.3",
     "@radix-ui/colors": "^0.1.8",
+    "@segment/analytics-next": "^1.53.0",
     "@webcontainer/api": "^1.1.0",
     "@winglang/sdk": "latest",
     "adm-zip": "^0.5.10",
