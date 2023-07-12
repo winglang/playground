@@ -103,8 +103,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
   const refIframe = useRef(null);
   const [iframSrc, setIframeSrc] = useState("");
   const [loadingStatus, setLoadingStatus] = useState(LoadingStatus.Init);
-  const { analytics } = useAnalytics({
-    name: "playground",
+  const { track } = useAnalytics({
+    platform: "play",
     state: loadingStatus,
   });
 
@@ -150,7 +150,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
     }, [fontSize]);
 
   const onLspError = () => {
-    analytics.track("lsp crash", {
+    track("play_lsp_crash", {
       code: editorRef.current?.getValue(),
       version: wingPackageJson.version,
     });

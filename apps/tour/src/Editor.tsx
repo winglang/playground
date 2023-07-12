@@ -84,7 +84,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
     const [loadingStatus, setLoadingStatus] = useState(LoadingStatus.Init);
     const [editorCode, setEditorCode] = useState("");
     const [downloadInProgress, setDownloadInProgress] = useState(false);
-    const { analytics } = useAnalytics({ name: `tour: ${tutorial.name}`, state: loadingStatus });
+    const { track } = useAnalytics({ platform: `learn`, tutorial: tutorial.name, state: loadingStatus });
 
     const [tooSlow, setTooSlow] = useState(false);
     useTimeout(() => {
@@ -123,7 +123,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
         tabSize: 2,
     }
     const onLspError = () => {
-        analytics.track('lsp crash', {
+        track('learn_lsp_crash', {
             code: editorRef.current?.getValue(),
             version: wingPackageJson.version
         });
@@ -224,10 +224,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       if (currentStep.code) {
         editorRef.current?.setValue(currentStep.code);
       }
-
-      analytics.track(`tour: ${tutorial.name}: step: ${currentStepId}: changed`, {
-          step: currentStep
-      })
+      // step change analytics
+      track(`learn:${tutorial.name}_step:${currentStepId}_init`)
       setCurrentTargetId(targetViews[0]?.title);
       setTargets(currentStep.targets ?? ["simulator"]);
     }, [currentStep]);
