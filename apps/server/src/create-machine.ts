@@ -25,7 +25,7 @@ export async function createMachine(region?: string) {
   let fetchCount = 0;
   console.log('fetching machine...', hostname, Date.now());
   while (true) {
-    if (fetchCount++ > 300) {
+    if (fetchCount++ > 50) {
       throw new Error("failed to fetch machine: " + hostname);
     }
     try {
@@ -36,9 +36,6 @@ export async function createMachine(region?: string) {
         throw new Error(`url doesnt yet exists, sleeping...', ${hostname}`);
       }
     } catch (err) {
-      if (fetchCount % 50 === 0) {
-        console.log(err, hostname)
-      }
       await sleep(200);
     }
   }

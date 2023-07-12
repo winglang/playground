@@ -16,6 +16,7 @@ import {
 } from "./config";
 
 const queue: string[] = [];
+let queueToFillSize = 0;
 
 export async function startController() {
   const app = express();
@@ -35,6 +36,7 @@ export async function startController() {
       if (queue.length > 0) {
         do {
           const machine = queue.pop();
+          queueToFillSize--;
           if (machine && await verifyMachine(machine)) {
             console.log("serving machine...", machine)
             res.json({ machine });
@@ -79,13 +81,15 @@ const deleteApps = async () => {
 }
 
 async function fillQueue() {
-  const numToFill = queueSize - queue.length;
+  const numToFill = queueSize - queueToFillSize;
   console.log("filling queue...", numToFill);
   for (let i = 0; i < numToFill; i++) {
+    queueToFillSize++;
     createMachine().then((machine) => {
       queue.push(machine);
       console.log("enqueued machine...", machine);
     }).catch((err) => {
+      queueToFillSize--;
       console.error("failed to enqueue machine...", err);
     });
   }
@@ -100,6 +104,7 @@ const verifyMachines = async () => {
       const idx = queue.findIndex(m => m === machine);
       if (idx > -1) {
         queue.splice(idx, 1);
+        queueToFillSize--;
         console.log("machine not verified, removed from queue", machine);
       }
     }

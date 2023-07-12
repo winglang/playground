@@ -21,7 +21,7 @@ const appStaleLimitInSeconds = envToNumber("APP_STALE_LIMIT_IN_SECONDS", 60);
 // max idle time for a machine (heartbeat not recieved)
 const machineIdleLimitInSeconds = envToNumber("MACHINE_IDLE_LIMIT_IN_SECONDS", 60 * 5);
 // rate limit window size in seconds
-const rateLimitWindowInSeconds = envToNumber("RATE_LIMIT_WINDOW_IN_SECONDS", 60 * 60);
+const rateLimitWindowInSeconds = envToNumber("RATE_LIMIT_WINDOW_IN_SECONDS", 60 * 15);
 // rate limit max requests
 const rateLimitMaxRequests = envToNumber("RATE_LIMIT_MAX_REQUESTS", 15);
 

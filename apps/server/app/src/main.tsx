@@ -7,8 +7,12 @@ const query = new URLSearchParams(location.search);
 
 const heartbeat = async () => {
   try {
-    await fetch(`/heartbeat`, {cache: "no-store"});
-  } catch {
+    const res = await fetch(`/heartbeat`, {cache: "no-store"});
+    if (!res.ok) {
+      throw new Error("failed to send heartbeat");
+    }
+  } catch (err) {
+    console.log("heartbeat error", err)
     window.parent.postMessage({ heartbeat: false }, "*");  
   }
 };
