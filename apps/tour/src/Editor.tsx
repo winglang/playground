@@ -50,6 +50,8 @@ import { DefaultTheme, ThemeProvider, useTheme, setCurrentTheme } from "@wing-pl
 import { useTimeout } from "usehooks-ts";
 import {Alert} from "@wing-playground/shared/src/Alert";
 
+import { SendFeedbackButton } from "@wing-playground/shared/src/SendFeedbackButton";
+
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
 );
@@ -330,7 +332,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       }
     }, [targets, editorRef.current?.getValue()]);
 
-    console.log("yo yo yo", !!(currentStep?.code || currentStep?.targets), currentStep?.id, currentStep?.code, currentStep?.targets)
+    const onSendFeedback = useCallback((url: URL) => {
+      url.searchParams.set("title", "Learn bug report");
+      window.open(url.href, "_blank");
+    }, [editorRef.current?.getValue()]);
+
     return (
       <ThemeProvider mode={currentMode} theme={DefaultTheme}>
           <div className={classNames(
@@ -369,6 +375,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
 
                       ]}/>
                       </div>
+
+                      <SendFeedbackButton onClick={onSendFeedback}/>
                       <ThemeToggle mode={currentMode} onToggle={onToggleTheme}/>
                     </div>
                     {!tooSlow && (<div className="flex-1 flex flex-col">
@@ -507,7 +515,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                 {!tooSlow && <div className={classNames(
                         "grow ml-4 flex flex-col gap-2 pt-6",
                         !currentStep?.code && !currentStep?.targets &&  "w-[0%]"
-                      )}> 
+                      )}>
                   <div data-cueid="code" className={
                     classNames(
                       'h-[40%] flex flex-col w-full',

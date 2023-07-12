@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import { Header as GlobalHeader } from "@wing-playground/shared/src/Header";
 import { ThemeToggle } from "@wing-playground/shared/src/ThemeToggle";
 import { Mode } from "@wing-playground/shared/src/theme-provider";
-import { useTheme } from "@wing-playground/shared/src/theme-provider";
 import classNames from "classnames";
+import { SendFeedbackButton } from "@wing-playground/shared/src/SendFeedbackButton";
 
 export interface HeaderProps {
   currentMode: Mode;
   onToggleTheme: () => void;
+  onSendFeedback: (url: URL) => void;
 }
 
-export function Header({ currentMode, onToggleTheme }: HeaderProps) {
-  const { theme } = useTheme();
+export function Header({ currentMode, onToggleTheme, onSendFeedback }: HeaderProps) {
 
   const [stars, setStars] = useState('0');
   const [watchersCount, setWatchersCount] = useState(0);
@@ -71,6 +71,8 @@ export function Header({ currentMode, onToggleTheme }: HeaderProps) {
         "gap-x-[8px] xl:gap-x-[16px]",
         "leading-[20px]",
       )}>
+
+        <SendFeedbackButton onClick={onSendFeedback} />
 
         <a href="https://t.winglang.io/slack" className="flex items-center justify-center h-[26px] pb-[2px]">
           <div className="h-[24px] w-[24px] leading-[20px]">

@@ -128,6 +128,19 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
     setCurrentMode(newMode);
   }, [currentMode, iframSrc]);
 
+  const onSendFeedback = useCallback((url: URL) => {
+    url.searchParams.set("title", "Playground bug report");
+    url.searchParams.set(
+      "i-tried-this",
+      "\n\n" +
+      "// Wing code from the playground:\n" +
+      "```\n" +
+      `${editorRef.current?.getValue() ?? ""}\n` +
+      "```"
+    );
+    window.open(url.href, "_blank");
+  }, [editorRef.current?.getValue()]);
+
   const installConsole = async (
     containerRef: React.MutableRefObject<WebContainer>,
   ) => {
@@ -264,7 +277,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
         )}
       >
         <div className="flex flex-col grow relative">
-          <Header currentMode={currentMode} onToggleTheme={onToggleTheme} />
+          <Header
+            currentMode={currentMode}
+            onToggleTheme={onToggleTheme}
+            onSendFeedback={onSendFeedback}
+          />
           {tooSlow && (
             <div className="w-full">
               <div className="max-w-3xl mx-auto">
