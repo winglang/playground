@@ -35,8 +35,8 @@
       ]
     }
   ],
-  "rewrites":  [
-    {"source": "/play/(.*)", "destination": "/play"},
-    {"source": "/", "destination": "/play"}
+  "rewrites": [
+    { "source": "/play/(.*)", "destination": "/play" },
+    { "source": "/", "destination": "/play" }
   ]
 }

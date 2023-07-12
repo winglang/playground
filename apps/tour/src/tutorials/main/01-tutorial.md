@@ -1,4 +1,4 @@
-# Defining your first cloud resource
+## Defining your first cloud resource
 
 See the code editor on the top right? It has an initial, empty, Wing program.
 

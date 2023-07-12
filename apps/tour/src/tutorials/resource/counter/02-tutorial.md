@@ -1,4 +1,4 @@
-# Using a Counter inflight
+## Using a Counter inflight
 
 1. The inflight API of cloud.Counter allows you to increment, decrement, reset or peek its value.
 2. Notice the following code that uses `inc`, `dec`, `reset`, and `peek` calls.

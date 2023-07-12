@@ -10,8 +10,8 @@ function App() {
 
   const chrome = isChrome();
   if (!chrome) {
-    const { analytics } = useAnalytics({ name: "playground", state: LoadingStatus.Completed });
-    analytics.track("playground: blocked for device", {
+    const { track } = useAnalytics({ platform: "play", state: LoadingStatus.Completed });
+    track("play_page_block", {
       device: getBrowser()
     });
   }

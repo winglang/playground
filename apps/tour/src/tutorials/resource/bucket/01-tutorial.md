@@ -1,4 +1,4 @@
-# Defining a bucket
+## Defining a bucket
 
 The cloud.Bucket resource represents a container for storing data in the cloud.
 In the code in the editor below instantiates 2 cloud buckets.

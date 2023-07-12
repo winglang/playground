@@ -1,4 +1,4 @@
-# Welcome to Winglang!
+## Welcome to Winglang!
 
 This is a step-by-step introductory guide to the Winglang cloud programming language. It is designed
 to walk you through some of the unique aspects of Wing as a cloud programming language and give you

@@ -5,6 +5,7 @@
   "type": "module",
   "devDependencies": {
     "@wing-playground/container-files": "file:../container-files",
+    "nanoid": "^4.0.2",
     "typescript": "^5.0.2"
   }
 }

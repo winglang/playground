@@ -1,4 +1,4 @@
-# Run code on bucket events
+## Run code on bucket events
 
 Notice the following code which implement the `onCreate` and `onDelete` handler.
 

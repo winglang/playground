@@ -1,4 +1,4 @@
-# Pushing a message to the our queue
+## Pushing a message to the our queue
 
 Let's modify our function's code to send a message to the queue instead of printing logs.
 

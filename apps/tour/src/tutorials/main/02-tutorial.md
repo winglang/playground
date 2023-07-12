@@ -1,4 +1,4 @@
-# Pushing a message to our queue
+## Pushing a message to our queue
 
 Let's start playing with our amazing cloud application with the Wing Simulator.
 
