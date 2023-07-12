@@ -1,4 +1,4 @@
-# Storing the latest message in a bucket
+## Storing the latest message in a bucket
 
 In the next (and almost final) step of our little tutorial we will
 use the `queue.setConsumer()` method to add a handler to the queue

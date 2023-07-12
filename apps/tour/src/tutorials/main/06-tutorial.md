@@ -1,4 +1,4 @@
-# Compile for AWS
+## Compile for AWS
 
 Congratulations! We've finished building and testing our application locally 🥳
 

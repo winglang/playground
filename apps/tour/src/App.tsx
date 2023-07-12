@@ -40,8 +40,8 @@ function AppView({ tutorial }: { tutorial: Tutorial }) {
 
   const chrome = isChrome();
   if (!chrome) {
-    const { analytics } = useAnalytics({ name: `tour: ${tutorial.name}`, state: LoadingStatus.Completed });
-    analytics.track(`tour: ${tutorial.name}: blocked for device`, {
+    const { track } = useAnalytics({ platform: `learn`, tutorial: tutorial.name ,state: LoadingStatus.Completed });
+    track(`learn_page_block`, {
       device: getBrowser()
     });
   }
