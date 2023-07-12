@@ -2,7 +2,7 @@ import { useTheme } from './theme-provider';
 import classNames from 'classnames';
 
 import { useCallback } from 'react';
-import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/outline";
+import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
 
 export interface SendFeedbackButtonProps {
   onClick: (url: URL) => void;
@@ -28,7 +28,7 @@ export const SendFeedbackButton = ({ onClick, className } : SendFeedbackButtonPr
       title="Send Feedback"
     >
       <div className="h-[24px] w-[24px] leading-[20px]">
-        <ChatBubbleBottomCenterTextIcon className="w-[24px] h-[24px]" />
+        <ChatBubbleLeftRightIcon className="w-[24px] h-[24px]" />
       </div>
     </button>
   );
