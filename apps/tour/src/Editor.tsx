@@ -344,7 +344,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                 <div className={classNames(
                         "flex flex-col",
                         (currentStep?.code || currentStep?.targets) && "w-[50%]",
-                        (!currentStep?.code && !currentStep?.targets) && "w-[60%]",
+                        (!currentStep?.code && !currentStep?.targets) && "w-[50%]",
                         " min-w-[25rem] px-[11px]"
                       )}>
                     <div className='flex items-center gap-2 w-full'>
