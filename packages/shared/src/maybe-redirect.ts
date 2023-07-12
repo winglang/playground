@@ -56,12 +56,14 @@ export const maybeRedirect = async (options: MaybeRedirectOptions) => {
   const redirectToMainSite = () => {
     const newURL = `${mainSiteURL.toString()}${location.search}`;
     console.info("redirecting to main site", newURL);
+    location.replace(newURL);
   };
   const redirectToSubdomainSite = () => {
     const newURL = `${subdomainSiteURL.toString().replace("xxx", nanoid())}${
       location.search
     }`;
     console.info("redirecting to subdomain site", newURL);
+    location.replace(newURL);
   };
 
   if (samesiteTabs <= maxTabs) {
@@ -78,6 +80,6 @@ export const maybeRedirect = async (options: MaybeRedirectOptions) => {
     return true;
   }
 
-  console.info("neither main site nor subdomain site");
+  console.info("skipping redirect. neither main site nor subdomain site");
   return false;
 };
