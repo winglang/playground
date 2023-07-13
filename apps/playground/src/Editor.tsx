@@ -66,7 +66,7 @@ import { Header } from "./Header";
 import { useTimeout } from "usehooks-ts";
 import { Alert } from "@wing-playground/shared/src/Alert";
 
-const wingPackageJson = await import("winglang/package.json?raw").then((i) =>
+const wingPackageJson = await import("@winglang/compiler/package.json?raw").then((i) =>
   JSON.parse(i.default),
 );
 
