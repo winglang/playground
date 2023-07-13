@@ -1,42 +1,31 @@
 import { Buffer } from 'node:buffer'
+import { detect } from "detect-browser";
 
-export type Browser = "chrome" | "opera" | "safari" | "edge" | "unknown"
+const browserInfo = detect();
 
-export function getBrowser() : Browser {
-
-  const windw: any = window;
-  var isChromium = windw.chrome;
-  var winNav = windw.navigator;
-  var vendorName = winNav.vendor;
-
-  var isOpera = typeof windw.opr !== "undefined";
-  var isIEedge = winNav.userAgent.indexOf("Edg") > -1;
-  var isIOSChrome = winNav.userAgent.match("CriOS");
-
-  if (
-    isIOSChrome ||
-    isChromium !== null &&
-    typeof isChromium !== "undefined" &&
-    vendorName === "Google Inc." &&
-    isOpera === false &&
-    isIEedge === false
-  ) {
-    return "chrome";
-  }
-  if (isOpera) {
-    return "opera";
-  }
-  if (isIEedge) {
-    return "edge";
-  }
-  if (navigator.userAgent.indexOf("Safari") > -1) {
-    return "safari";
-  }
-  return "unknown";
+export function getBrowser() {
+	return browserInfo?.name ?? "unknown";
 }
 
-export function isChrome() {
-  return getBrowser() === "chrome";
+export function isWorkingWithWebContainer() {
+	try {
+		new SharedArrayBuffer(0);
+
+		if (!browserInfo) {
+			return false;
+		}
+
+		if (browserInfo.name === "safari") {
+			const version = parseFloat(browserInfo.version);
+			if (version < 16.4) {
+				return false;
+			}
+		}
+
+		return true;
+	} catch {
+		return false;
+	}
 }
 
 export const Base64Binary = {
