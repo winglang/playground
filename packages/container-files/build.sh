@@ -6,9 +6,13 @@ pushd "${dir}/lib"
 pnpm --version
 rm -rf node_modules pnpm-lock.yaml
 pnpm install
-patch_function_file=$(find . -type f -iname function.js -path "*/shared-aws/*")
-patch $patch_function_file patches/@winglang__sdk.patch
 rm -rf .//node_modules/.pnpm/*/node_modules/@winglang/sdk/node_modules/@aws-sdk .//node_modules/.pnpm/*/node_modules/@winglang/sdk/node_modules/@azure .//node_modules/.pnpm/*/node_modules/@winglang/sdk/node_modules/cdktf
+
+wing_sdk_package_json=$(find . -type f  -path "*/@winglang/sdk/package.json")
+wing_sdk_dir=$(dirname "$wing_sdk_package_json")
+pushd $wing_sdk_dir
+node "$dir/patch.js"
+popd
 
 pushd "${dir}/app"
 npm install
