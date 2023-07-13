@@ -9,7 +9,7 @@ Congrats! You now know Wing's main concept - the preflight and inflight executio
 4. Objects in Wing have different contracts in preflight and inflight.
 5. The IDE will display the contract that is relevant to the current execution phase.
 6. Inflight methods can only be called in inflight contexts, and preflight methods from preflight contexts.
-7. Inflight code can reference data from preflight, but the data cannot be mutated.
+7. Inflight code can reference data from preflight, but the data cannot be mutated. ?? reassign
 8. The Wing compiler takes care of IAM policies and other cloud mechanics for us.
 
 ### More advanced concepts

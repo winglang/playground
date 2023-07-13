@@ -1,6 +1,8 @@
 ## Mutability - a question
 
-As we've seen in the previous steps, the Wing compiler does the necessary work behind the scenes to allow us to write inflight code that references preflight data.
+As we've seen in the previous steps, the Wing compiler does the necessary work behind the scenes to allow us to write inflight code that references preflight objects.
+
+?? pointer => reference
 
 The preflight code runs on one machine at compile time and the inflight code runs on different machines at a later time. Therefore, the inflight code can't simply get a pointer to the preflight data when it runs. That data was stored in the memory of the machine that ran the preflight code in the past (and may not even be turned on anymore). So a pointer, or even a data transfer, would be meaningless. 
 
@@ -9,6 +11,7 @@ Instead, the compiler needs to serialize the preflight data and transfer it to t
 This serialization approach can generate unexpected behavior when attempting to mutate data that crosses machine and time boundaries. 
 
 For example, take a look at the code below:
+
 ```wing
 bring cloud;
 

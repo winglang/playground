@@ -1,19 +1,21 @@
-## Inflight - Run hello world
+## Executing Inflight Closures
 
-Let's execute our `helloWorld` inflight code inside a `cloud.Function`, which is Wing's ephemeral (short lived) compute resource (i.e. AWS Lambda).
+Let's execute our `helloWorld` inflight closure. To do that we will need a cloud resource that can execute code. One of these resources is a `cloud.Function`, which is Wing's abstraction for an ephemeral (short lived) compute resource (i.e. AWS Lambda).
 
-To do that, copy this code to the editor in line 10:
+To do that, write this code in line 10:
 
 ```wing
 new cloud.Function(helloWorld);
 ```
 
-It is preflight code that creates a `cloud.Function` and gives it our inflight method (`helloWorld`) as a parameter. 
+This is preflight code which creates a `cloud.Function`. It accepts an inflight closure as an argument. In this case we pass in our `helloWorld` closure.
 
-As a result, our inflight code will run and print "Hello, World! with .." to the log whenever the `cloud.Function` is invoked.
+As a result, when this `cloud.Function` is invoked, the text `Hello, World! with ..` will be emitted to the log.
 
-You can test it out in the simulator. Click the **cloud.Function** in the Simulator window (below the Editor) and invoke it (in the right hand panel) to see the logs being generated (at the bottom of the Simulator window).
+Let's test it out in the simulator. Click the **cloud.Function** node in the **Simulator** window and invoke it through the right-hand panel to see the logs being generated.
 
-When inflight code is compiled, it is converted into JavaScript code that is ready to be executed in various compute platforms.
+> You can find the logs at the bottom of the Simulator window.
+
+When inflight closures are compiled, they are converted into JavaScript code.
 
 Click **NEXT** to see the compilation artifacts generated from this step's code.

@@ -1,4 +1,4 @@
-# Compile for Terraform
+## Compile to Terraform
 
 Once we finished building and testing our application in the Wing Simulator, we can compile it to
 one of the supported targets so it can be deployed to the cloud.
