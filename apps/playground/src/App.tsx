@@ -5,6 +5,7 @@ import { getBrowser, isChrome } from '@wing-playground/shared/src/utils';
 import { LoadingStatus } from '@wing-playground/shared/src/loading-status';
 
 
+console.log("shared array buffer", new SharedArrayBuffer(0));
 function App() {
   usePreventSave({enable: true});
 
