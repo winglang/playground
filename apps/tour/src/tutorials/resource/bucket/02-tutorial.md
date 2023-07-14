@@ -1,34 +1,37 @@
-## Using a bucket inflight
+## Bucket Inflight API
 
-The inflight API of cloud.Bucket allows you to create,list and delete objects.
+The inflight API of `cloud.Bucket` allows you to create, list, and delete
+objects on the go.
 
-### Executing `exampleCode`
+### Running `exampleCode`
 
-The code in the editor, instantiate a `cloud.Function` that runs `exampleCode`. Once you 
-click on the simulator (bottom right) `Example Code` resource, a right panel will appear.
-Find the invoke button and invoke the function, this will trigger `exampleCode` execution. 
+In the editor, you'll see a `cloud.Function` that runs `exampleCode`. When you
+click on the `Example Code` resource in the simulator (located at the bottom
+right), a right panel will appear. Seek out the 'Invoke' button and click it to
+trigger the execution of `exampleCode`.
 
-Once it is executute, you should be able to see the log statements on the bottom logs view. 
+Once the code has run its course, you'll see log statements appearing in the logs
+view at the bottom of the screen.
 
-Now that you know how to execute the code, lets quickly go over on usinge
-`put`, `putJson`, `get`, `getJson` and `list` methods in order to interact with the bucket.
+Now that we're familiar with running the code, let's explore the `put`, `putJson`,
+`get`, `getJson`, `list` and `delete   methods, which we'll use to interact with the bucket.
 
-### Creating files
+### Creating Files
 
-There are two api for creating files: `put` and `putJson`. 
-Paste the following code in line 7 to create a text file and a json file
+You have two APIs at your disposal for creating files: `put` and `putJson`. Insert
+the following code at line 7 to create a text file and a JSON file:
 
 ```wing
 bucket.put("file.txt", "Hello, world!");
-bucket.putJson("file.json", Json { name: "Alice" });
+bucket.putJson("file.json", { "name": "Alice" });
 ```
 
-After executing the code you can click on the `cloud.Bucket` in the simulator and explore 
-the files created (right panel) 
+After running the code, click on cloud.Bucket in the simulator and check out the
+files you've just created in the right panel.
 
 ### Reading files
 
-The following code gets the content of the files that where created above:
+To read the content of the files you've just created, use the following code:
 
 ```wing
 let s = bucket.get("file.txt");
@@ -38,13 +41,12 @@ let j = bucket.getJson("file.json");
 log("name is '${j.get("name")}'");
 ```
 
-Paste it right after the `putJson` call and execute `exampleCode` again, 
-you should be seeing the file content in the logs.
-
+Insert the code in the "Reading files" TODO section and run exampleCode once again.
+The content of the files should now be visible in the logs.
 
 ### Listing files
 
-We use the `list` API in order to get the list of files from a bucket, check out the following code:
+To see a list of the files in a bucket, use the list API as follows:
 
 ```wing
 let keys = bucket.list();
@@ -53,19 +55,21 @@ for f in keys {
 }
 ```
 
-Once you add this code to `exampleCode` and execute it, you should see the two files presented
-in the logs.
+Add this code to exampleCode and execute it. The names of your two files should
+now be displayed in the logs.
+
 
 ### Deleting files
 
-After running the above code the bucket should contain 2 files `file.txt` and `file.json`.
-Make sure that this is the case, by clicking on the simulator `cloud.Bucket` resource and seeing the files.
+After executing the previous code, your bucket should contain two files: `file.txt`
+and `file.json`. You can confirm this by clicking on the `cloud.Bucket` resource in
+the simulator and checking the files in the right panel.
 
-
-The following code deletes `file.txt`, add it to the relevant TODO in the editor:
+To delete file.txt, add the following code to the corresponding TODO in the editor:
 
 ```wing
 bucket.delete("file.txt");
 ```
 
-Run the code and examine `cloud.Bucket` again in the simulator, you should only see `file.json`.
+After running the code, check `cloud.Bucket` again in the simulator. You should now
+only see `file.json`.
