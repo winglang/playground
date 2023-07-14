@@ -1,25 +1,42 @@
 ## Defining a Bucket
 
-A cloud.Bucket resource is essentially a container used for storing data in the cloud. 
-The following section of code will show you how to instantiate two cloud buckets.
+Think of a `cloud.Bucket` as a handy container where you can stash your data up in the cloud. 
+In this part of our adventure, I'll be your guide as we create two cloud buckets: one public and one private.
 
-### Exploring the simulator
+```wing 
+bring cloud;
 
-Begin by examining the Wing Simulator compilation target window located on the bottomright-hand side of your screen. 
-Here, you'll find two Buckets. 
+let b1 = new cloud.Bucket() as "a private bucket";
+let b2 = new cloud.Bucket(
+  public: true // optional, defaults to `false`
+) as "a public bucket";
+```
 
-Notice the `public` property in the right panel and the different between the two
+Go ahead, give it a shot! Copy and paste this code into the editor on your right.
 
-### AWS compilation output
+### Exploring the Simulator
 
-Now, switch your view to the AWS/Terraform compilation target. This is the tab adjacent to the Wing Simulator. 
-Each time a cloud.Bucket is instantiated, it translates into Terraform resources.
-You can notice that the private bucket is represented by three Terraform resource, 
-while the public one is represented by four resource. The added resource is `s3 bucket policy` which 
-defines the permissions of that bucket. 
+See that simulator below the editor?  
+As soon as you change the code, it will show you the cloud application that's 
+been created, including our two new buckets.
 
-Another interesting point to note is the variation in the `s3 public access block` between the two buckets. 
-Can you spot the difference?
+To get to know your buckets, click on each one and check out the public property in the right panel. 
+Can you spot the differences between them?
 
-In the next section, we will delve into how to utilize the Bucket during inflight operations.
+### AWS Compilation Output
 
+Now, let's take a peek at the AWS/Terraform compilation target. 
+It's sitting right next to the Wing Simulator. 
+Each time a `cloud.Bucket` is created, it compiles to several Terraform resources.
+
+
+You may observe that the private bucket is represented by three Terraform
+resources, whereas the public one is represented by four. The `s3 bucket policy`,
+which determines the permissions for that bucket, is the extra resource for the
+public bucket.
+
+Another point of interest is the difference in the s3 public access block
+between the two buckets. Are you able to spot this difference?
+
+In the following section, we will explore how to utilize the Bucket in inflight
+operations.
