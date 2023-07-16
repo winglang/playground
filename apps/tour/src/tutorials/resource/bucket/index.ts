@@ -47,6 +47,7 @@ export const tutorialPages: TutorialPage[] = [
     },
     {
       id: "5",
+      code:   code01,
       name:   "Congrats",
       tutorial: tutorial05,
       targets: ["simulator", Target.TFAWS],
