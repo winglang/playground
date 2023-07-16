@@ -1,7 +1,7 @@
-diff --git a/lib/shared-aws/function.js b/lib/shared-aws/function.js
-index 430bf1b049a067c6987750c5803985a060f4dc99..378a899fb07c870e73a224a11b4afaebbac45335 100644
---- a/lib/shared-aws/function.js
-+++ b/lib/shared-aws/function.js
+diff --git a/node_modules/@winglang/sdk/lib/shared-aws/function.js b/node_modules/@winglang/sdk/lib/shared-aws/function.js
+index 430bf1b..378a899 100644
+--- a/node_modules/@winglang/sdk/lib/shared-aws/function.js
++++ b/node_modules/@winglang/sdk/lib/shared-aws/function.js
 @@ -3,7 +3,7 @@ var _a;
  Object.defineProperty(exports, "__esModule", { value: true });
  exports.Function = void 0;

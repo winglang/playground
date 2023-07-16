@@ -1,6 +1,9 @@
 {
   "dependencies": {
-    "@wingconsole/server": "^0.24.22",
+    "@wingconsole/server": "latest",
     "express": "^4.18.2"
+  },
+  "scripts": {
+    "postinstall": "patch-package"
   }
 }
