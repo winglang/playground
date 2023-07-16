@@ -355,7 +355,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                         (!currentStep?.code && !currentStep?.targets) && "w-[50%]",
                         " min-w-[25rem] px-[11px]"
                       )}>
-                    <div className='flex items-center gap-2 w-full'>
+                    <div className='flex items-center gap-2 w-full shadow-[0_3px_2px_-2px_rgba(0,0,0,0.1)]'>
                       <div className='flex items-center gap-2' style={{
                         width: "calc(100% - 35px)"
                       }}>
@@ -434,7 +434,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                                 </div>
                             </div>
 
-                            <div className="w-full relative my-6">
+                            <div className="w-full relative">
                               <div className={classNames(
                                 "absolute top-0 left-0 w-full h-[1.5px] -translate-y-1/2",
                                 "bg-gray-200 dark:bg-gray-650",
