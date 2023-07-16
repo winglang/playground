@@ -1,18 +1,21 @@
 ## Create a backup bucket
 
-Lets use what we've learned to create a simple mechanism that copies files from 
-one bucket to another, excluding logs files based on their `.log` prefix. 
+Let's use what we've learned to create a simple mechanism that copies files 
+from one bucket to another, excluding log files based on their `.log` prefix.
 
 Note:
-> There are built in mechanism for backing up bucket which should be used for production app, 
-don't take this code so seriously 😉, it is just a simple example.
+> There are built-in mechanisms for backing up buckets which should be used 
+> for production apps. Don't take this code too seriously 😉, it's just a 
+> simple example.
 
-Lets first create a `cloud.Function` that will simulate uploading files to `origin` Bucket
+First, let's create a `cloud.Function` that will simulate uploading files to 
+the `origin` bucket.
 
-### Upload files `origin`
+### Upload files to `origin`
 
-The following code uploads 3 different files to `origin`, two  of them are `txt` files that
-should be copies to `backup` and one of them is a `log` file that should be excluded
+The following code uploads three different files to `origin`. Two of them are 
+`txt` files that should be copied to `backup` and one of them is a `log` file 
+that should be excluded.
 
 ```wing
 new cloud.Function(inflight () => {
@@ -22,11 +25,11 @@ new cloud.Function(inflight () => {
 }) as "Upload Files";
 ```
 
-After pasting this code, the simulator should show "Upload Files" function. Click on the funcition, 
-the right side panel should be showing, click  invoke and go to the "origin" bucket to see the three files 
+After pasting this code, the simulator should show the "Upload Files" 
+function. Click on the function, and the right-side panel should appear. Click 
+invoke, and go to the "origin" bucket to see the three files.
 
-
-### Copy files on creationg
+### Copy files on creation
 
 Use the following code to react to any file creation:
 
@@ -42,13 +45,16 @@ origin.onCreate(inflight (file: str) => {
 });
 ```
 
-The above copy files from `origin` to `backup`, excluding log file. You can invoke "Upload Files" again and examin the result in `backup` Bucket
+The code above copies files from `origin` to `backup`, excluding log files. 
+You can invoke "Upload Files" again and examine the result in the `backup` 
+bucket.
 
-Notice that if you remove a file from `origin` they are not deleted from `backup`, lets fix this.
+Notice that if you remove a file from `origin`, it is not deleted from 
+`backup`. Let's fix this.
 
 ### Using `onDelete`
 
-Lets add `onDelete` hook to react to files being deleted on `origin`
+Let's add the `onDelete` hook to react to files being deleted from `origin`.
 
 ```wing
 origin.onDelete(inflight (file: str) => {
@@ -57,4 +63,4 @@ origin.onDelete(inflight (file: str) => {
 });
 ```
 
-Now, when a file is deleted from `origin`, it is also deleted from `backup`
+Now, when a file is deleted from `origin`, it is also deleted from `backup`.
