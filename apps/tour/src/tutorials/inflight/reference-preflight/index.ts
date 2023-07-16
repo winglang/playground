@@ -34,6 +34,18 @@ import code04dot5 from "./04.5-code.w?raw";
 import solution04dot5 from "./04.5-solution.w?raw";
 import tutorial04dot5 from "./04.5-tutorial.md?raw";
 
+import code05 from "./05-code.w?raw";
+import solution05 from "./05-solution.w?raw";
+import tutorial05 from "./05-tutorial.md?raw";
+
+import code05dot1 from "./05.1-code.w?raw";
+import solution05dot1 from "./05.1-solution.w?raw";
+import tutorial05dot1 from "./05.1-tutorial.md?raw";
+
+import code05dot2 from "./05.2-code.w?raw";
+// import solution05dot2 from "./05.2-solution.w?raw";
+import tutorial05dot2 from "./05.2-tutorial.md?raw";
+
 import code05dot5 from "./05.5-code.w?raw";
 import solution05dot5 from "./05.5-solution.w?raw";
 import tutorial05dot5 from "./05.5-tutorial.md?raw";
@@ -41,6 +53,22 @@ import tutorial05dot5 from "./05.5-tutorial.md?raw";
 import code05dot6 from "./05.6-code.w?raw";
 import solution05dot6 from "./05.6-solution.w?raw";
 import tutorial05dot6 from "./05.6-tutorial.md?raw";
+
+import code08 from "./08-code.w?raw";
+//import solution08 from "./08-solution.w?raw";
+import tutorial08 from "./08-tutorial.md?raw";
+
+import code09 from "./09-code.w?raw";
+//import solution09 from "./09-solution.w?raw";
+import tutorial09 from "./09-tutorial.md?raw";
+
+import code10 from "./10-code.w?raw";
+import solution10 from "./10-solution.w?raw";
+import tutorial10 from "./10-tutorial.md?raw";
+
+import code11 from "./11-code.w?raw";
+import solution11 from "./11-solution.w?raw";
+import tutorial11 from "./11-tutorial.md?raw";
 
 import tutorial14 from "./14-tutorial.md?raw";
 import {Tutorial, TutorialPage} from "../../main";
@@ -114,6 +142,29 @@ export const tutorialPages: TutorialPage[] = [
         targets: [Target.TFAWS],
     },
     {
+        id: "5",
+        name:   "Referencing preflight data from inflight code - Example",
+        code:   code05,
+        solution: solution05,
+        tutorial: tutorial05,
+        targets: ["simulator", Target.TFAWS],
+    },
+    {
+        id: "5.1",
+        name:   "Referencing preflight data from inflight code - Benefits",
+        code:   code05dot1,
+        tutorial: tutorial05dot1,
+        targets: ["simulator", Target.TFAWS],
+    },
+    {
+        id: "5.2",
+        name:   "Contract per phase - in practice",
+        code:   code05dot2,
+        //solution: solution05dot2,
+        tutorial: tutorial05dot2,
+        targets: [Target.TFAWS, "simulator"],
+    },
+    {
         id: "5.5",
         name:   "Contract per phase - explanation",
         code:   code05dot5,
@@ -127,6 +178,38 @@ export const tutorialPages: TutorialPage[] = [
         code:   code05dot6,
         solution: solution05dot6,
         tutorial: tutorial05dot6,
+        targets: ["simulator", Target.TFAWS],
+    },
+    {
+        id: "8",
+        name:   "Mutability - a question",
+        //code:   code08,
+        //solution: solution08,
+        tutorial: tutorial08,
+        //targets: [Target.TFAWS, "simulator"],
+    },
+    {
+        id: "9",
+        name:   "Mutability - answer to the question",
+        //code:   code09,
+        //solution: solution09,
+        tutorial: tutorial09,
+        //targets: ["simulator", Target.TFAWS],
+    },
+    {
+        id: "10",
+        name:   "Mutability protections",
+        code:   code10,
+        solution: solution10,
+        tutorial: tutorial10,
+        targets: ["simulator", Target.TFAWS],
+    },
+    {
+        id: "11",
+        name:   "Mutability - how to create a counter",
+        code:   code11,
+        solution: solution11,
+        tutorial: tutorial11,
         targets: ["simulator", Target.TFAWS],
     },
     {
