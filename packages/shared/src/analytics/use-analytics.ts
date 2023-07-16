@@ -20,7 +20,7 @@ export function useAnalytics({platform, tutorial, state}: AnalyticsProps) {
 
   const track = (event: string, properties?: Record<string, any>) => {
     instance.track(
-      event.toLowerCase(),
+      event.toLowerCase().replace(/\s/g, ''),
       {
         ...(properties || {}),
         integrations: {
