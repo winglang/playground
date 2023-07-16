@@ -14,7 +14,7 @@ Once the code has run its course, you'll see log statements appearing in the log
 view at the bottom of the screen.
 
 Now that we're familiar with running the code, let's explore the `put`, `putJson`,
-`get`, `getJson`, `list` and `delete   methods, which we'll use to interact with the bucket.
+`get`, `getJson`, `list` and `delete`  methods, which we'll use to interact with the bucket.
 
 ### Creating Files
 
@@ -26,7 +26,7 @@ bucket.put("file.txt", "Hello, world!");
 bucket.putJson("file.json", { "name": "Alice" });
 ```
 
-After running the code, click on cloud.Bucket in the simulator and check out the
+After running `exampleCode` (by clicking invoke on "Example Code"), click on cloud.Bucket in the simulator and check out the
 files you've just created in the right panel.
 
 ### Reading files
