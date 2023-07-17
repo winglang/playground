@@ -17,7 +17,7 @@ const maxFlyApps = envToNumber("MAX_FLY_APPS", 1000);
 // max seconds allowed since app was created
 const appUptimeLimitInSeconds = envToNumber("APP_UPTIME_LIMIT_IN_SECONDS", 60 * 60 * 3);
 // max seconds allowed since app was created and has no more availble machines
-const appStaleLimitInSeconds = envToNumber("APP_STALE_LIMIT_IN_SECONDS", 60);
+const appStaleLimitInSeconds = envToNumber("APP_STALE_LIMIT_IN_SECONDS", 60 * 2);
 // max idle time for a machine (heartbeat not recieved)
 const machineIdleLimitInSeconds = envToNumber("MACHINE_IDLE_LIMIT_IN_SECONDS", 60 * 5);
 // rate limit window size in seconds

@@ -1,16 +1,18 @@
+export interface App {
+  id: string;
+  createdAt: string;
+  machines: {
+    nodes: [{
+      state: string;
+    }]
+    totalCount: number;
+  }
+};
+
 interface GetAppsResult {
   data: {
     apps: {
-      nodes: [{
-        id: string;
-        createdAt: string;
-        machines: {
-          nodes: [{
-            state: string;
-          }]
-          totalCount: number;
-        }
-      }]
+      nodes: [App]
       totalCount: number;
     }
   }
