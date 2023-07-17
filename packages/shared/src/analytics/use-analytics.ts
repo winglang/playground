@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { LoadingStatus } from '../loading-status';
 import { AnalyticsBrowser } from '@segment/analytics-next'
+import { isWorkingWithWebContainer } from "../utils";
+
+const isWebContainerConsole = isWorkingWithWebContainer();
 
 const instance = AnalyticsBrowser.load({ writeKey: 'MvkxDOKWzcs7MFrWu1UNaO2bGn1S2RvA' })
 
@@ -37,7 +40,7 @@ export function useAnalytics({platform, tutorial, state}: AnalyticsProps) {
     const eventNamePrefix = tutorial ? `${platform}:${tutorial}` : `${platform}`;
     switch (state) {
       case LoadingStatus.Init:
-        track(`${eventNamePrefix}_containers_init`);
+        track(`${eventNamePrefix}_${isWebContainerConsole ? "containers" : "backend" }_init`);
         break;
       case LoadingStatus.Install:
         track(`${eventNamePrefix}_dependency_install`);

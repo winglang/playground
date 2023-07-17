@@ -21,7 +21,6 @@ import Editor, { loader } from "@monaco-editor/react";
 import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
 import React, {createRef, useEffect, useState, useRef, useCallback, useMemo, FC, PropsWithChildren} from 'react';
-import { WebContainer } from '@webcontainer/api';
 import MarkdownRender from './MarkdownRender';
 
 import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
@@ -32,7 +31,7 @@ import classNames from 'classnames';
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
 import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
 import {useAnalytics} from "@wing-playground/shared/src/analytics/use-analytics";
-import {installDependencies, ConsoleLayouts} from "@wing-playground/shared/src/containers";
+import {ConsoleLayouts} from "@wing-playground/shared/src/containers";
 
 import { SimulatorTarget } from "@wing-playground/shared/src/SimulatorTarget";
 import { TfAwsTarget } from '@wing-playground/shared/src/TfAwsTarget.js';
@@ -48,7 +47,8 @@ import { Button } from "@wing-playground/shared/src/Button";
 import { ThemeToggle } from "@wing-playground/shared/src/ThemeToggle";
 import { DefaultTheme, ThemeProvider, useTheme, setCurrentTheme } from "@wing-playground/shared/src/theme-provider";
 import { useTimeout } from "usehooks-ts";
-import {Alert} from "@wing-playground/shared/src/Alert";
+import { TooSlowAlert } from "@wing-playground/shared/src/alerts/TooSlow";
+import { ServerErrorAlert } from "@wing-playground/shared/src/alerts/ServerError";
 
 import { SendFeedbackButton } from "@wing-playground/shared/src/SendFeedbackButton";
 
@@ -114,11 +114,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
 
     }, [currentMode, iframSrc]);
 
-    const installConsole = async (containerRef: React.MutableRefObject<WebContainer>) => {
-        const consoleUrl = await installDependencies(containerRef.current, ConsoleLayouts.Tour);
-        console.log("consoleUrl", consoleUrl);
-        setIframeSrc(consoleUrl)
-    }
     const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
         minimap: { enabled: false },
         fontSize: 14,
@@ -142,17 +137,18 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       evaluateCode,
       editorWillMount,
       editorDidMount,
+      serverConsoleFailed,
     } = useEditor({
         editorRef,
         onLoadingStatusChange: setLoadingStatus,
         onLspError,
-        installConsole,
         editorTheme: currentMode,
         languageContext,
         code: tutorial.pages[0].code ?? "",
         compiler,
         targets: compilerTargets,
-        shouldInitContainer: true,
+        layout: ConsoleLayouts.Tour,
+        setIframeSrc,
     });
 
     const [isCompiling, setIsCompiling] = useState(false);
@@ -341,6 +337,17 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       window.open(url.href, "_blank");
     }, [editorRef.current?.getValue()]);
 
+    const getAlert = () => {
+      if (tooSlow) {
+        return TooSlowAlert;
+      } else if (serverConsoleFailed) {
+        return ServerErrorAlert;
+      } else {
+        return null;
+      }
+    };
+    const Alert = getAlert();
+
     return (
       <ThemeProvider mode={currentMode} theme={DefaultTheme}>
           <div className={classNames(
@@ -383,7 +390,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                       <SendFeedbackButton onClick={onSendFeedback} className="mr-2"/>
                       <ThemeToggle mode={currentMode} onToggle={onToggleTheme}/>
                     </div>
-                    {!tooSlow && (<div className="flex-1 flex flex-col">
+                    {!Alert && (<div className="flex-1 flex flex-col">
                         <div data-cueid="instructions" className="grow flex flex-col">
                             <div className='grow flex flex-col'>
                                 <div className="grow relative overflow-hidden">
@@ -509,7 +516,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                     </div>)}
                 </div>
 
-                {!tooSlow && <div className={classNames(
+                {!Alert && <div className={classNames(
                         "grow ml-4 flex flex-col gap-2 pt-6",
                         !currentStep?.code && !currentStep?.targets &&  "w-[0%]"
                       )}>
@@ -597,26 +604,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
             </div>
           </div>
 
-          {tooSlow && (
-            <div className="grow h-full">
-              <div className="max-w-3xl mx-auto">
-                <Alert title="This is taking too long">
-                  <p>Something may have gone wrong while loading the webcontainer.</p>
-                  <p className="mt-2">
-                    Please, try again later or{" "}
-                    <a
-                      href="#"
-                      className="font-medium text-red-800 underline"
-                      onClick={() => location.reload()}
-                    >
-                      reload the page now
-                    </a>
-                    .
-                  </p>
-                </Alert>
-              </div>
-            </div>
-          )}
+          {Alert && (<Alert />)}
       </ThemeProvider>
     );
 };

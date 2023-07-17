@@ -1,5 +1,5 @@
 import {wireGrammers} from "../grammers/utils";
-import {initContainer, prepareForEvaluation} from "../containers";
+import {ConsoleLayouts, initContainer, prepareForEvaluation, installDependencies} from "../containers";
 import {startLsp} from "../lsp/lspClient";
 import {WebContainer} from "@webcontainer/api";
 import wingLanguageConfiguration from '../language-configurations/wing-configration.json';
@@ -11,9 +11,13 @@ import {LoadingStatus} from "../loading-status";
 import {LanguageContext} from "../use-examples";
 import {CompilationRequest} from "../compiler/request";
 import {CompilationItem, Compiler, Target} from "../compiler/compiler";
-import {useRef, useState, MutableRefObject, useEffect, useCallback} from "react";
+import {useRef, useState, MutableRefObject, useCallback} from "react";
 import * as monaco from 'monaco-editor';
 import { useDebounce } from "../use-debounce";
+import { createConsole } from "../create-console";
+import { isWorkingWithWebContainer } from "../utils";
+
+const isWebContainerConsole = isWorkingWithWebContainer();
 
 export interface UseEditorOptions {
     editorRef: MutableRefObject<any>;
@@ -23,9 +27,9 @@ export interface UseEditorOptions {
     languageContext: LanguageContext;
     compiler: Compiler;
     targets?: Target[];
-    installConsole?: (containerRef: MutableRefObject<WebContainer>) => Promise<void>;
     editorTheme?: 'dark' | 'light';
-    shouldInitContainer: boolean;
+    layout: ConsoleLayouts,
+    setIframeSrc: (src: string) => void;
 }
 
 export type CompilerOutput = {
@@ -44,14 +48,27 @@ export const useEditor = ({
   languageContext,
   compiler,
   targets = [],
-  installConsole,
   editorTheme = 'dark',
-  shouldInitContainer
+  layout,
+  setIframeSrc
 }: UseEditorOptions) => {
 
     const [isCompiling, setIsCompiling] = useState(false);
+    const [serverConsoleFailed, setServerConsoleFailed] = useState(false);
+    const consoleRef = useRef<string>();
     const containerRef = useRef<WebContainer>();
     const monacoRef = useRef<monaco.editor.IStandaloneCodeEditor>();
+
+    const installWebContainerConsole = async () => {
+      const consoleUrl = await installDependencies(containerRef.current!, layout);
+      setIframeSrc(consoleUrl);
+    }
+
+    const installServerConsole = async (): Promise<string> => {
+      const { uiUrl, updateUrl } = await createConsole(layout);
+      setIframeSrc(uiUrl)
+      return updateUrl;
+    }
 
     const editorWillMount = (monaco: any) => {
 
@@ -86,32 +103,54 @@ export const useEditor = ({
         await wireGrammers(monaco);
         editorRef.current?.setValue(code);
 
-        if(shouldInitContainer) {
+        if(isWebContainerConsole) {
             // do not wait for webcontainers
             initContainer().then(async instance => {
                 containerRef.current = instance;
                 onLoadingStatusChange(LoadingStatus.Install);
-                if (installConsole) {
-                    // @ts-ignore
-                    await installConsole(containerRef);
-                }
-                startLsp({ onError: onLspError});
+                await installWebContainerConsole();
                 onLoadingStatusChange(LoadingStatus.Eval)
+                startLsp({ onError: onLspError});
                 void evaluateCode();
             });
+        } else {
+          try {
+            onLoadingStatusChange(LoadingStatus.Eval);
+            const updateUrl = await installServerConsole();
+            consoleRef.current = updateUrl;
+            startLsp({ onError: onLspError});
+            void evaluateCode();
+          } catch (err) {
+            console.error("installing server console", err);
+            setServerConsoleFailed(true);
+          }
         }
     };
 
     const evaluateCode = useCallback(async () => {
-      if (!containerRef.current || isCompiling) {
+      if ((!consoleRef.current && !containerRef.current) || isCompiling) {
           return;
       }
       console.log('evaluating...', languageContext)
       setIsCompiling(true);
 
       try {
-        const compileValue = editorRef.current?.getValue();
-        await prepareForEvaluation(containerRef.current, compileValue, languageContext.file)
+        let compileValue: string;
+        if (isWebContainerConsole) {
+          compileValue = editorRef.current?.getValue();
+          await prepareForEvaluation(containerRef.current!, compileValue, languageContext.file);
+        } else {
+          do {
+            compileValue = editorRef.current?.getValue();
+            await fetch(consoleRef.current!, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ code: compileValue })
+            })
+          } while (compileValue !== editorRef.current?.getValue());
+        }
 
         targets.forEach(async (target, index) => {
           compiler.submit(new CompilationRequest(compileValue!, target));
@@ -129,12 +168,19 @@ export const useEditor = ({
         onLoadingStatusChange(LoadingStatus.CompileError)
         setIsCompiling(false)
       }
-    }, [containerRef, isCompiling, languageContext, targets, compiler]);
+    }, [containerRef, consoleRef, isCompiling, languageContext, targets, compiler]);
+
+    window.addEventListener('message', function(event: any) {
+      if (event && event.data && event.data.heartbeat === false) {
+        setServerConsoleFailed(true);
+      }
+    });
 
     return {
         editorWillMount,
         editorDidMount,
         evaluateCode: useDebounce(evaluateCode, 700),
         isCompiling,
+        serverConsoleFailed,
     }
 }

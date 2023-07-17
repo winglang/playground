@@ -27,7 +27,6 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { WebContainer } from "@webcontainer/api";
 import { Loading } from "@wing-playground/shared/src/Loading";
 import {
   Compiler,
@@ -40,7 +39,6 @@ import { useExamples } from "@wing-playground/shared/src/use-examples.js";
 import { LoadingStatus } from "@wing-playground/shared/src/loading-status";
 import { FilePicker } from "@wing-playground/shared/src/FilePicker.js";
 import {
-  installDependencies,
   ConsoleLayouts,
 } from "@wing-playground/shared/src/containers";
 import { useEditor } from "@wing-playground/shared/src/editor/use-editor";
@@ -64,7 +62,8 @@ import {
 import { useSession } from "@wing-playground/shared/src/use-session";
 import { Header } from "./Header";
 import { useTimeout } from "usehooks-ts";
-import { Alert } from "@wing-playground/shared/src/Alert";
+import { TooSlowAlert } from "@wing-playground/shared/src/alerts/TooSlow";
+import { ServerErrorAlert } from "@wing-playground/shared/src/alerts/ServerError";
 
 const wingPackageJson = await import("winglang/package.json?raw").then((i) =>
   JSON.parse(i.default),
@@ -141,15 +140,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
     window.open(url.href, "_blank");
   }, [editorRef.current?.getValue()]);
 
-  const installConsole = async (
-    containerRef: React.MutableRefObject<WebContainer>,
-  ) => {
-    const consoleUrl = await installDependencies(
-      containerRef.current,
-      ConsoleLayouts.Playground,
-    );
-    setIframeSrc(consoleUrl);
-  };
   const [fontSize, setFontSize] = useState(14);
   const fontSizes = [12, 14, 16];
 
@@ -171,17 +161,17 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
 
   const { getSession, setSession } = useSession("code");
 
-  const { evaluateCode, editorWillMount, editorDidMount } = useEditor({
+  const { evaluateCode, editorWillMount, editorDidMount, serverConsoleFailed } = useEditor({
     editorRef,
     onLoadingStatusChange: setLoadingStatus,
     onLspError,
-    installConsole,
     editorTheme: currentMode,
     languageContext,
     code: getSession() || currentExample.value,
     compiler,
     targets: [Target.TFAWS],
-    shouldInitContainer: true,
+    layout: ConsoleLayouts.Playground,
+    setIframeSrc,
   });
 
   const [isCompiling, setIsCompiling] = useState(true);
@@ -266,6 +256,17 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
     return [simulatorTarget, tfAwsTarget, tfGcpTarget, tfAzureTarget];
   }, [simulatorTarget, tfAwsTarget, tfGcpTarget, tfAzureTarget]);
 
+  const getAlert = () => {
+    if (tooSlow) {
+      return TooSlowAlert;
+    } else if (serverConsoleFailed) {
+      return ServerErrorAlert;
+    } else {
+      return null;
+    }
+  };
+  const Alert = getAlert();
+
   return (
     <ThemeProvider mode={currentMode} theme={DefaultTheme}>
       <div
@@ -282,30 +283,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
             onToggleTheme={onToggleTheme}
             onSendFeedback={onSendFeedback}
           />
-          {tooSlow && (
-            <div className="w-full">
-              <div className="max-w-3xl mx-auto">
-                <Alert title="This is taking too long">
-                  <p>
-                    Something may have gone wrong while loading the
-                    webcontainer.
-                  </p>
-                  <p className="mt-2">
-                    Please, try again later or{" "}
-                    <a
-                      href="#"
-                      className="font-medium text-red-800 underline"
-                      onClick={() => location.reload()}
-                    >
-                      reload the page now
-                    </a>
-                    .
-                  </p>
-                </Alert>
-              </div>
-            </div>
-          )}
-          {!tooSlow && (
+          {Alert && (<Alert />)}
+          {!Alert && (
             <div className="flex flex-col h-full">
               <div className="flex grow gap-2">
                 <RightResizableWidget
