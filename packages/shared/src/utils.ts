@@ -8,31 +8,7 @@ export function getBrowser() {
 }
 
 export function isWorkingWithWebContainer() {
-  try {
-    new SharedArrayBuffer(0);
-    console.error(
-      "isWorkingWithWebContainer",
-      "SharedArrayBuffer is supported",
-    );
-
-    if (!browserInfo) {
-      console.error("isWorkingWithWebContainer", "no browser info");
-      return false;
-    }
-
-    if (browserInfo.name === "safari") {
-      const version = parseFloat(browserInfo.version);
-      if (version < 16.4) {
-        console.error("isWorkingWithWebContainer", "safari < 16.4");
-        return false;
-      }
-    }
-
-    return true;
-  } catch (error) {
-    console.error("isWorkingWithWebContainer", error);
-    return false;
-  }
+  return crossOriginIsolated ?? false;
 }
 
 export const Base64Binary = {
