@@ -16,7 +16,7 @@ export async function deleteMachines(prefix: string, staleTimeout: number, uptim
   for (const node of apps.data.apps.nodes) {
     if (
       node.id.startsWith(prefix) &&
-      (isUptimeTimeout(node, uptimeTimeout) || isStaleTimeout(node, uptimeTimeout))) {
+      (isUptimeTimeout(node, uptimeTimeout) || isStaleTimeout(node, staleTimeout))) {
       console.log("deleting app...", JSON.stringify(node));
       await client.deleteApp(node.id);
     }
