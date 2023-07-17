@@ -427,7 +427,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                                 </div>
                             </div>
 
-                            <div className="w-[80%] relative self-center">
+                            <div className="w-full relative mt-[20px]">
                               <div className={classNames(
                                 "absolute top-0 left-0 w-full h-[1.5px] -translate-y-1/2",
                                 "bg-gray-200 dark:bg-gray-650",
