@@ -387,50 +387,43 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                         <div data-cueid="instructions" className="grow flex flex-col">
                             <div className='grow flex flex-col'>
                                 <div className="grow relative overflow-hidden">
-                                {steps.map((step, index) => {
-                                    return (
-                                      <div className={classNames(
-                                        "absolute w-full h-full overflow-auto py-4 pr-2",
-                                        index === currentStepIndex && "translate-x-0",
-                                        index < currentStepIndex && "-translate-x-full",
-                                        index > currentStepIndex && "translate-x-full",
-                                      )}>
-                                          <div
-                                          className={classNames(
-                                          'font-sans prose-headings:font-sans',
-                                          'prose-lg prose-invert text-slate-700 dark:text-[#BDCECC] prose-ol:list-decimal',
-                                          'prose-pre:bg-slate-200 dark:prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-prose-p:text-slate-700 dark:prose-ol:my-prose-p:text-[#BDCECC]',
-                                          'prose-pre:overflow-auto',
-                                          'prose-a:text-sky-700 dark:prose-a:text-sky-300',
+                                    <div className={classNames(
+                                        "absolute w-full h-full overflow-auto py-4 pr-2 translate-x-0",
+                                    )}>
+                                        <div
+                                            className={classNames(
+                                                'font-sans prose-headings:font-sans',
+                                                'prose-lg prose-invert text-slate-700 dark:text-[#BDCECC] prose-ol:list-decimal',
+                                                'prose-pre:bg-slate-200 dark:prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-prose-p:text-slate-700 dark:prose-ol:my-prose-p:text-[#BDCECC]',
+                                                'prose-pre:overflow-auto',
+                                                'prose-a:text-sky-700 dark:prose-a:text-sky-300',
 
-                                          // header tag
-                                          'prose-headings:font-[600] prose-headings:transition-colors prose-hheadings1:duration-300',
-                                          'prose-h1:text-[48px]    prose-h1:leading-[60px] prose-h1:p-0 prose-h1:mt-[0px]  prose-h1:mb-[25px]',
-                                          'prose-h2:text-[32px]    prose-h2:leading-[40px] prose-h2:p-0 prose-h2:mt-[40px] prose-h2:mb-[20px]',
-                                          'prose-h3:text-[24px]    prose-h3:leading-[30px] prose-h3:p-0 prose-h3:mt-[30px] prose-h3:mb-[20px]',
-                                          'prose-h4:text-[17.92px] prose-h4:leading-[25px] prose-h4:p-0 prose-h4:mt-[25px] prose-h4:mb-[20px]',
+                                                // header tag
+                                                'prose-headings:font-[600] prose-headings:transition-colors prose-hheadings1:duration-300',
+                                                'prose-h1:text-[48px]    prose-h1:leading-[60px] prose-h1:p-0 prose-h1:mt-[0px]  prose-h1:mb-[25px]',
+                                                'prose-h2:text-[32px]    prose-h2:leading-[40px] prose-h2:p-0 prose-h2:mt-[40px] prose-h2:mb-[20px]',
+                                                'prose-h3:text-[24px]    prose-h3:leading-[30px] prose-h3:p-0 prose-h3:mt-[30px] prose-h3:mb-[20px]',
+                                                'prose-h4:text-[17.92px] prose-h4:leading-[25px] prose-h4:p-0 prose-h4:mt-[25px] prose-h4:mb-[20px]',
 
-                                          // p tag
-                                          'prose-p:font-[400] prose-p:text-[16px] prose-p:leading-[26.4px]',
-                                          '[&>*]:transition-colors [&>*]:duration-300',
+                                                // p tag
+                                                'prose-p:font-[400] prose-p:text-[16px] prose-p:leading-[26.4px]',
+                                                '[&>*]:transition-colors [&>*]:duration-300',
 
-                                          // blockquote
-                                          'prose-blockquote:text-[16px] prose-blockquote:p-[16px] prose-blockquote:mb-[16px] prose-blockquote:border-l-[5px] prose-blockquote:rounded-[5.25px]',
-                                          'prose-blockquote:font-[400]',
-                                          'dark:prose-blockquote:text-[#fdfdfe] dark:prose-blockquote:bg-[#334155] dark:prose-blockquote:border-[#d4d5d8]',
-                                          'prose-blockquote:text-[#474748] prose-blockquote:bg-[#fdfdfe] prose-blockquote:border-[#d4d5d8]',
+                                                // blockquote
+                                                'prose-blockquote:text-[16px] prose-blockquote:p-[16px] prose-blockquote:mb-[16px] prose-blockquote:border-l-[5px] prose-blockquote:rounded-[5.25px]',
+                                                'prose-blockquote:font-[400]',
+                                                'dark:prose-blockquote:text-[#fdfdfe] dark:prose-blockquote:bg-[#334155] dark:prose-blockquote:border-[#d4d5d8]',
+                                                'prose-blockquote:text-[#474748] prose-blockquote:bg-[#fdfdfe] prose-blockquote:border-[#d4d5d8]',
 
-                                          // ul
-                                          'prose-ul:list-[disc] prose-ul:m-0 prose-li:my-[10.667px]'
-                                          )}>
+                                                // ul
+                                                'prose-ul:list-[disc] prose-ul:m-0 prose-li:my-[10.667px]'
+                                            )}>
                                             <MarkdownRender
-                                              markdown={step.tutorial ?? ""}
-                                              theme={currentMode}
+                                                markdown={steps[currentStepIndex].tutorial ?? ""}
+                                                theme={currentMode}
                                             />
                                         </div>
-                                      </div>
-                                    )
-                                  })}
+                                    </div>
                                 </div>
                             </div>
 
