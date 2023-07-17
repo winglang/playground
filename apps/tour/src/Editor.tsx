@@ -427,7 +427,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                                 </div>
                             </div>
 
-                            <div className="w-full relative">
+                            <div className="w-[80%] relative self-center">
                               <div className={classNames(
                                 "absolute top-0 left-0 w-full h-[1.5px] -translate-y-1/2",
                                 "bg-gray-200 dark:bg-gray-650",
@@ -446,7 +446,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                               />
                             </div>
 
-                            <div className='text-white flex gap-4 items-center pb-2 overflow-auto'>
+                            <div className='text-white flex gap-4 items-center pt-4 overflow-auto'>
                                 <Button
                                   invisible={isFirstStep}
                                   onClick={() => goToPreviousTutorial()}
