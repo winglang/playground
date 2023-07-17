@@ -1,10 +1,66 @@
-# Run code on bucket events
+## Create a backup bucket
 
-Notice the following code which implement the `onCreate` and `onDelete` handler.
+Let's use what we've learned to create a simple mechanism that copies files 
+from one bucket to another, excluding log files based on their `.log` prefix.
 
-1. In the Wing Simulator, invoke the "Upload Files" Function.
-2. This function uploads three files `file1.txt` `file2.txt` and `some.log`.
-3. Notice the logs on the bottom panel.
-4. Click on the Backup bucket in the simulator, you should see both `.txt` files.
-5. Delete a file from the Origin bucket.
-6. Can you see it was deleted on the Backup bucket.
+Note:
+> There are built-in mechanisms for backing up buckets which should be used 
+> for production apps. Don't take this code too seriously 😉, it's just a 
+> simple example.
+
+First, let's create a `cloud.Function` that will simulate uploading files to 
+the `origin` bucket.
+
+### Upload files to `origin`
+
+The following code uploads three different files to `origin`. Two of them are 
+`txt` files that should be copied to `backup` and one of them is a `log` file 
+that should be excluded.
+
+```wing
+new cloud.Function(inflight () => {
+  origin.put("file1.txt", "This should be copied");
+  origin.put("file2.txt", "This should be copied");
+  origin.put("some.log", "This should not be copied");
+}) as "Upload Files";
+```
+
+After pasting this code, the simulator should show the "Upload Files" 
+function. Click on the function, and the right-side panel should appear. Click 
+invoke, and go to the "origin" bucket to see the three files.
+
+### Copy files on creation
+
+Use the following code to react to any file creation:
+
+```wing
+origin.onCreate(inflight (file: str) => {
+  if !file.endsWith(".log") {
+    let data = origin.get(file);
+    backup.put(file, data);
+    log("adding ${file} into copies");
+  } else {
+    log("skipping log file:${file}");
+  }
+});
+```
+
+The code above copies files from `origin` to `backup`, excluding log files. 
+You can invoke "Upload Files" again and examine the result in the `backup` 
+bucket.
+
+Notice that if you remove a file from `origin`, it is not deleted from 
+`backup`. Let's fix this.
+
+### Using `onDelete`
+
+Let's add the `onDelete` hook to react to files being deleted from `origin`.
+
+```wing
+origin.onDelete(inflight (file: str) => {
+  backup.delete(file);
+  log("Deleted ${file}");
+});
+```
+
+Now, when a file is deleted from `origin`, it is also deleted from `backup`.

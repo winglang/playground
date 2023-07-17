@@ -2,19 +2,19 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@wingconsole/server':
-    specifier: ^0.23.37
-    version: 0.23.37(constructs@10.1.314)
+    specifier: ^0.24.11
+    version: 0.24.11(constructs@10.1.314)
   express:
     specifier: ^4.18.2
     version: 4.18.2
 
 packages:
 
-  /@wingconsole/server@0.23.37(constructs@10.1.314):
-    resolution: {integrity: sha512-WFzEdi4mnYmH8KIxS4oVDpbbshQrO9zeEKXQL7LtZbNGl+3XXntAQS6sypjtaEcPc4xE+aWU50tJZuaRqecAFw==}
+  /@wingconsole/server@0.24.11(constructs@10.1.314):
+    resolution: {integrity: sha512-eB5bGDM7l57PBW1jJ3FJn1sS5aZVK+eea5AKN3UXaurxTbN2MgbjC0rJXi0Kcnm2hnqM1hyxfKOrOlRKXN1Jaw==}
     dependencies:
-      '@winglang/compiler': 0.23.37(constructs@10.1.314)
-      '@winglang/sdk': 0.23.37(constructs@10.1.314)
+      '@winglang/compiler': 0.24.11(constructs@10.1.314)
+      '@winglang/sdk': 0.24.11(constructs@10.1.314)
       codespan-wasm: 0.4.0
       debug: 4.3.4
       ms: 2.1.3
@@ -23,19 +23,19 @@ packages:
       - supports-color
     dev: false
 
-  /@winglang/compiler@0.23.37(constructs@10.1.314):
-    resolution: {integrity: sha512-VMwpSPWFHsXK69sExbIa4gLUHc7qSZ4WY+lH+qL/IeMk0h3zakIK2Y6NkWbWwEHAeey2IKPAD3erECbKWaO4xA==}
+  /@winglang/compiler@0.24.11(constructs@10.1.314):
+    resolution: {integrity: sha512-1/QHXKzUKZgmF1ZJPXc9y2JxXRHwHcVUsDtuCvHDm600edF/1ekshDYXu8avSv9AWZEHg1B+8DMrbvuNB4/0UQ==}
     engines: {node: '>=v18.0.0'}
     dependencies:
-      '@winglang/sdk': 0.23.37(constructs@10.1.314)
+      '@winglang/sdk': 0.24.11(constructs@10.1.314)
     transitivePeerDependencies:
       - constructs
     dev: false
     bundledDependencies:
       - wasi-js
 
-  /@winglang/sdk@0.23.37(constructs@10.1.314):
-    resolution: {integrity: sha512-nBehfcVv1F3+OvO3sqBFcD3VONS3pump36m1oUFlmUSaJjdxhA5svZ/IcIiaMUDpIrLu/EjlPD1CUtwabV9vYw==}
+  /@winglang/sdk@0.24.11(constructs@10.1.314):
+    resolution: {integrity: sha512-23/gBgnQ0CKlKFsMYMrXZ+6cOAhxEreajp9fndyw/2KE98oo+jUjaBl0X3jujDO5oPfyuoDHulLwtUwQq3Smvw==}
     engines: {node: '>= 18.13.0'}
     peerDependencies:
       constructs: ~10.1.314

@@ -1,4 +1,4 @@
-# Subscribe to a topic
+## Subscribe to a topic
 
 1. The preflight API of cloud.Queue allows you to add a consumer to the queue
 3. In the Wing Simulator (on the right) click on the "cloud.Queue" resource.

@@ -7,8 +7,8 @@ let exampleCode = inflight () => {
   counter.inc();
   log("value of the counter before next increment is ${counter.inc()}");
   log("value of the counter after last increment is ${counter.peek()}");
-  counter.reset();
-  log("value of the counter after reset is ${counter.peek()}");
+  counter.set(12);
+  log("value of the counter after setting to 12 is ${counter.peek()}");
   counter.dec();
   log("value of the counter after decrement is ${counter.peek()}");
 };

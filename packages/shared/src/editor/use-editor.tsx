@@ -11,13 +11,13 @@ import {LoadingStatus} from "../loading-status";
 import {LanguageContext} from "../use-examples";
 import {CompilationRequest} from "../compiler/request";
 import {CompilationItem, Compiler, Target} from "../compiler/compiler";
-import {useRef, useState, MutableRefObject, useEffect, useCallback} from "react";
+import {useRef, useState, MutableRefObject, useCallback} from "react";
 import * as monaco from 'monaco-editor';
 import { useDebounce } from "../use-debounce";
 import { createConsole } from "../create-console";
-import { isChrome } from "../utils";
+import { isWorkingWithWebContainer } from "../utils";
 
-const isWebContainerConsole = isChrome();
+const isWebContainerConsole = isWorkingWithWebContainer();
 
 export interface UseEditorOptions {
     editorRef: MutableRefObject<any>;

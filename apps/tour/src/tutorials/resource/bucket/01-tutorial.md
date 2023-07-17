@@ -1,12 +1,42 @@
-# Defining a bucket
+## Defining a Bucket
 
-The cloud.Bucket resource represents a container for storing data in the cloud.
-In the code in the editor below instantiates 2 cloud buckets.
+Think of a `cloud.Bucket` as a handy container where you can stash your data up in the cloud. 
+In this part of our adventure, I'll be your guide as we create two cloud buckets: one public and one private.
 
-1. Check out the Wing Simulator compilation target window on the right.
-2. Click on the two Buckets, can you spot the `public` property on the right panel?
-3. Click on the AWS/Terraform compilation target (tab next to Wing Simulator).
-4. Each instantiation of a cloud.Bucket is translated into three terraform resources. 
-5. The `s3 public access block` is different between the two, can you see it?
+```wing 
+bring cloud;
 
-Click Next to learn how to use the Bucket in inflight
+let b1 = new cloud.Bucket() as "a private bucket";
+let b2 = new cloud.Bucket(
+  public: true // optional, defaults to `false`
+) as "a public bucket";
+```
+
+Go ahead, give it a shot! Copy and paste this code into the editor on your right.
+
+### Exploring the Simulator
+
+See that simulator below the editor?  
+As soon as you change the code, it will show you the cloud application that's 
+been created, including our two new buckets.
+
+To get to know your buckets, click on each one and check out the public property in the right panel. 
+Can you spot the differences between them?
+
+### AWS Compilation Output
+
+Now, let's take a peek at the AWS/Terraform compilation target. 
+It's sitting right next to the Wing Simulator. 
+Each time a `cloud.Bucket` is created, it compiles to several Terraform resources.
+
+
+You may observe that the private bucket is represented by three Terraform
+resources, whereas the public one is represented by four. The `s3 bucket policy`,
+which determines the permissions for that bucket, is the extra resource for the
+public bucket.
+
+Another point of interest is the difference in the s3 public access block
+between the two buckets. Are you able to spot this difference?
+
+In the following section, we will explore how to utilize the Bucket in inflight
+operations.

@@ -50,6 +50,8 @@ import { useTimeout } from "usehooks-ts";
 import { TooSlowAlert } from "@wing-playground/shared/src/alerts/TooSlow";
 import { ServerErrorAlert } from "@wing-playground/shared/src/alerts/ServerError";
 
+import { SendFeedbackButton } from "@wing-playground/shared/src/SendFeedbackButton";
+
 const wingPackageJson = await import("winglang/package.json?raw").then(
     (i) => JSON.parse(i.default)
 );
@@ -84,7 +86,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
     const [loadingStatus, setLoadingStatus] = useState(LoadingStatus.Init);
     const [editorCode, setEditorCode] = useState("");
     const [downloadInProgress, setDownloadInProgress] = useState(false);
-    const { analytics } = useAnalytics({ name: `tour: ${tutorial.name}`, state: loadingStatus });
+    const { track } = useAnalytics({ platform: `learn`, tutorial: tutorial.name, state: loadingStatus });
 
     const [tooSlow, setTooSlow] = useState(false);
     useTimeout(() => {
@@ -118,7 +120,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
         tabSize: 2,
     }
     const onLspError = () => {
-        analytics.track('lsp crash', {
+        track(`learn:${tutorial.name}_lsp_crash`, {
             code: editorRef.current?.getValue(),
             version: wingPackageJson.version
         });
@@ -220,12 +222,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       if (currentStep.code) {
         editorRef.current?.setValue(currentStep.code);
       }
-
-      analytics.track(`tour: ${tutorial.name}: step: ${currentStepId}: changed`, {
-          step: currentStep
-      })
+      // step change analytics
+      track(`learn:${tutorial.name}_step:${currentStepId}_init`)
       setCurrentTargetId(targetViews[0]?.title);
-      setTargets(currentStep.targets ?? ["simulator"]);
+      setTargets(currentStep.targets ?? []);
     }, [currentStep]);
 
     const downloadCompiledCode = async (target: Target) => {
@@ -300,7 +300,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       const views: TargetView[] = [];
 
       if (!targets || targets.length === 0) {
-        return [simulatorTarget];
+        return views;
       }
 
       targets.forEach(target => {
@@ -328,6 +328,15 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       }
     }, [targets, editorRef.current?.getValue()]);
 
+    const onSendFeedback = useCallback((url: URL) => {
+      url.searchParams.append("body",
+        "\n\n" +
+        `// **wing version:** ${wingPackageJson.version} \n` +
+        "// **tutorial name:** " + tutorial.name + "\n"
+      );
+      window.open(url.href, "_blank");
+    }, [editorRef.current?.getValue()]);
+
     const getAlert = () => {
       if (tooSlow) {
         return TooSlowAlert;
@@ -347,8 +356,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
             'transition-all duration-300'
           )}>
             <div className='flex grow relative'>
-                <div className="flex flex-col w-[40%] min-w-[25rem] px-[11px]">
-                    <div className='flex items-center gap-2 w-full'>
+                <div className={classNames(
+                        "flex flex-col",
+                        (currentStep?.code || currentStep?.targets) && "w-[50%]",
+                        (!currentStep?.code && !currentStep?.targets) && "w-[50%]",
+                        " min-w-[25rem] px-[11px]"
+                      )}>
+                    <div className='flex items-center gap-2 w-full shadow-[0_3px_2px_-2px_rgba(0,0,0,0.1)]'>
                       <div className='flex items-center gap-2' style={{
                         width: "calc(100% - 35px)"
                       }}>
@@ -372,45 +386,55 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
 
                       ]}/>
                       </div>
+
+                      <SendFeedbackButton onClick={onSendFeedback} className="mr-2"/>
                       <ThemeToggle mode={currentMode} onToggle={onToggleTheme}/>
                     </div>
-                    {!Alert && (<div className="flex-1 flex flex-col pt-[20px]">
+                    {!Alert && (<div className="flex-1 flex flex-col">
                         <div data-cueid="instructions" className="grow flex flex-col">
                             <div className='grow flex flex-col'>
                                 <div className="grow relative overflow-hidden">
-                                {steps.map((step, index) => {
-                                    return (
-                                      <div className={classNames(
-                                        "absolute w-full h-full overflow-auto py-4 pr-2",
-                                        index === currentStepIndex && "translate-x-0",
-                                        index < currentStepIndex && "-translate-x-full",
-                                        index > currentStepIndex && "translate-x-full",
-                                      )}>
-                                          <div
-                                          className={classNames(
-                                          'font-sans',
-                                          'prose-lg prose-invert prose-p:leading-6 text-slate-700 dark:text-[#BDCECC] prose-ol:list-decimal',
-                                          'prose-pre:bg-slate-200 dark:prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-prose-p:text-slate-700 dark:prose-ol:my-prose-p:text-[#BDCECC]',
-                                          'prose-pre:overflow-auto',
-                                          'prose-a:text-sky-700 dark:prose-a:text-sky-300',
-                                          'prose-h3:text-xl prose-h3:pb-4 prose-h3:pt-4 prose-headings:font-sans prose-h3:font-bold',
-                                          'prose-h4:text-xl prose-h4:pb-4 prose-h4:pt-0 prose-headings:font-sans prose-h4:font-bold',
-                                          'prose-h1:text-3xl prose-headings:pb-8 prose-headings:text-slate-700 dark:prose-headings:text-[#BDCECC] prose-h1:font-bold',
-                                          '[&>*]:transition-colors [&>*]:duration-300',
-                                          'prose-h1:transition-colors prose-h1:duration-300',
-                                          )}>
+                                    <div className={classNames(
+                                        "absolute w-full h-full overflow-auto py-4 pr-2 translate-x-0",
+                                    )}>
+                                        <div
+                                            className={classNames(
+                                                'font-sans prose-headings:font-sans',
+                                                'prose-lg prose-invert text-slate-700 dark:text-[#BDCECC] prose-ol:list-decimal',
+                                                'prose-pre:bg-slate-200 dark:prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-prose-p:text-slate-700 dark:prose-ol:my-prose-p:text-[#BDCECC]',
+                                                'prose-pre:overflow-auto',
+                                                'prose-a:text-sky-700 dark:prose-a:text-sky-300',
+
+                                                // header tag
+                                                'prose-headings:font-[600] prose-headings:transition-colors prose-hheadings1:duration-300',
+                                                'prose-h1:text-[48px]    prose-h1:leading-[60px] prose-h1:p-0 prose-h1:mt-[0px]  prose-h1:mb-[25px]',
+                                                'prose-h2:text-[32px]    prose-h2:leading-[40px] prose-h2:p-0 prose-h2:mt-[40px] prose-h2:mb-[20px]',
+                                                'prose-h3:text-[24px]    prose-h3:leading-[30px] prose-h3:p-0 prose-h3:mt-[30px] prose-h3:mb-[20px]',
+                                                'prose-h4:text-[17.92px] prose-h4:leading-[25px] prose-h4:p-0 prose-h4:mt-[25px] prose-h4:mb-[20px]',
+
+                                                // p tag
+                                                'prose-p:font-[400] prose-p:text-[16px] prose-p:leading-[26.4px]',
+                                                '[&>*]:transition-colors [&>*]:duration-300',
+
+                                                // blockquote
+                                                'prose-blockquote:text-[16px] prose-blockquote:p-[16px] prose-blockquote:mb-[16px] prose-blockquote:border-l-[5px] prose-blockquote:rounded-[5.25px]',
+                                                'prose-blockquote:font-[400]',
+                                                'dark:prose-blockquote:text-[#fdfdfe] dark:prose-blockquote:bg-[#334155] dark:prose-blockquote:border-[#d4d5d8]',
+                                                'prose-blockquote:text-[#474748] prose-blockquote:bg-[#fdfdfe] prose-blockquote:border-[#d4d5d8]',
+
+                                                // ul
+                                                'prose-ul:list-[disc] prose-ul:m-0 prose-li:my-[10.667px]'
+                                            )}>
                                             <MarkdownRender
-                                              markdown={step.tutorial ?? ""}
-                                              theme={currentMode}
+                                                markdown={steps[currentStepIndex].tutorial ?? ""}
+                                                theme={currentMode}
                                             />
                                         </div>
-                                      </div>
-                                    )
-                                  })}
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="w-full relative my-6">
+                            <div className="w-full relative">
                               <div className={classNames(
                                 "absolute top-0 left-0 w-full h-[1.5px] -translate-y-1/2",
                                 "bg-gray-200 dark:bg-gray-650",
@@ -492,7 +516,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                     </div>)}
                 </div>
 
-                {!Alert && (<div className="grow ml-4 flex flex-col gap-2 pt-6">
+                {!Alert && <div className={classNames(
+                        "grow ml-4 flex flex-col gap-2 pt-6",
+                        !currentStep?.code && !currentStep?.targets &&  "w-[0%]"
+                      )}>
                   <div data-cueid="code" className={
                     classNames(
                       'h-[40%] flex flex-col w-full',
@@ -504,7 +531,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                   >
                     <div className={
                       classNames(
-                        showWelcome && "opacity-0",
+                        (showWelcome || !currentStep?.code) && "opacity-0",
                         "flex flex-col w-full grow",
                       )}>
                       <PanelHeader>
@@ -565,7 +592,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                     'transition-colors duration-300',
                     'bg-slate-200/40 dark:bg-slate-700/40'
                   )}>
-                    {!showWelcome && loadingStatus === LoadingStatus.Completed && (
+                    {!showWelcome && targetViews.length > 0 && loadingStatus === LoadingStatus.Completed && (
                       <TargetsView
                         targets={targetViews}
                         currentTargetId={currentTargetId}
@@ -573,7 +600,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                       />
                     )}
                   </div>
-                </div>)}
+                </div>}
             </div>
           </div>
 

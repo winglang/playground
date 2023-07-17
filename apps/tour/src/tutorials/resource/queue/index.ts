@@ -8,7 +8,7 @@ import tutorial02 from "./02-tutorial.md?raw";
 import code03 from "./03-code.w?raw";
 import tutorial03 from "./03-tutorial.md?raw";
 
-import tutorial04 from "./04-tutorial.md?raw";
+import tutorial04 from "../../main/07-tutorial.md?raw";
 
 import { Tutorial, TutorialPage } from "../../main";
 

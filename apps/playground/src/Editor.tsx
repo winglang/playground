@@ -102,8 +102,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
   const refIframe = useRef(null);
   const [iframSrc, setIframeSrc] = useState("");
   const [loadingStatus, setLoadingStatus] = useState(LoadingStatus.Init);
-  const { analytics } = useAnalytics({
-    name: "playground",
+  const { track } = useAnalytics({
+    platform: "play",
     state: loadingStatus,
   });
 
@@ -127,6 +127,19 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
     setCurrentMode(newMode);
   }, [currentMode, iframSrc]);
 
+  const onSendFeedback = useCallback((url: URL) => {
+    url.searchParams.set(
+      "body",
+      "\n\n" +
+      `// **wing version:** ${wingPackageJson.version} \n` +
+      "// **wing code snippet:**\n" +
+      "```\n" +
+      `${editorRef.current?.getValue() ?? ""}\n` +
+      "```"
+    );
+    window.open(url.href, "_blank");
+  }, [editorRef.current?.getValue()]);
+
   const [fontSize, setFontSize] = useState(14);
   const fontSizes = [12, 14, 16];
 
@@ -140,7 +153,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
     }, [fontSize]);
 
   const onLspError = () => {
-    analytics.track("lsp crash", {
+    track("play_lsp_crash", {
       code: editorRef.current?.getValue(),
       version: wingPackageJson.version,
     });
@@ -265,7 +278,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
         )}
       >
         <div className="flex flex-col grow relative">
-          <Header currentMode={currentMode} onToggleTheme={onToggleTheme} />
+          <Header
+            currentMode={currentMode}
+            onToggleTheme={onToggleTheme}
+            onSendFeedback={onSendFeedback}
+          />
           {Alert && (<Alert />)}
           {!Alert && (
             <div className="flex flex-col h-full">

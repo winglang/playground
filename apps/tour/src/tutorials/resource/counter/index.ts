@@ -11,7 +11,7 @@ import tutorial03 from "./03-tutorial.md?raw";
 import code04 from "./04-code.w?raw";
 import tutorial04 from "./04-tutorial.md?raw";
 
-import tutorial05 from "./05-tutorial.md?raw";
+import tutorial05 from "../../main/07-tutorial.md?raw";
 
 import { Tutorial, TutorialPage } from "../../main";
 
