@@ -1,0 +1,13 @@
+diff --git a/node_modules/@segment/analytics-next/dist/pkg/lib/load-script.js b/node_modules/@segment/analytics-next/dist/pkg/lib/load-script.js
+index c3db17c..c029f25 100644
+--- a/node_modules/@segment/analytics-next/dist/pkg/lib/load-script.js
++++ b/node_modules/@segment/analytics-next/dist/pkg/lib/load-script.js
+@@ -38,6 +38,7 @@ export function loadScript(src, attributes) {
+             reject(new Error("Failed to load ".concat(src)));
+         };
+         var tag = window.document.getElementsByTagName('script')[0];
++        // Allow segment scripts to work in environments that use strict Cross-Origin-Embedder-Policy policies.
++        tag.crossOrigin = 'anonymous';
+         (_a = tag.parentElement) === null || _a === void 0 ? void 0 : _a.insertBefore(script, tag);
+     });
+ }

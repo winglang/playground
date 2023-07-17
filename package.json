@@ -5,11 +5,13 @@
     "packages/*"
   ],
   "scripts": {
+    "postinstall": "patch-package",
     "build": "turbo run build",
     "update": "turbo run update",
     "tsc": "turbo run tsc"
   },
   "devDependencies": {
+    "patch-package": "^7.0.2",
     "prettier": "^2.8.8",
     "turbo": "^1.10.3"
   }
