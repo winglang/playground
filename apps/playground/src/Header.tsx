@@ -24,7 +24,6 @@ export function Header({
       const res = await fetch("https://api.github.com/repos/winglang/wing");
       const data = await res.json();
 
-      console.log(data);
       if (!data.watchers_count) {
         return;
       }
