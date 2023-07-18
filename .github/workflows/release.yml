@@ -24,11 +24,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PROJEN_GITHUB_TOKEN }}
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: fly secrets set -a winglang-playground FLY_API_TOKEN=$FLY_API_TOKEN
+      - run: flyctl secrets set -a winglang-playground FLY_API_TOKEN=$FLY_API_TOKEN
         working-directory: apps/server
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-      - run: fly deploy --image-label latest --vm-memory 512
+      - run: flyctl deploy --image-label latest --vm-memory 512
         working-directory: apps/server
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
