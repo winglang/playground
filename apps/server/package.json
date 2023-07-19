@@ -22,7 +22,7 @@
     "vitest-mock-express": "^2.0.3"
   },
   "dependencies": {
-    "@wingconsole/server": "^0.23.24",
+    "@wingconsole/server": "latest",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",

@@ -12,7 +12,7 @@ primary_region = "lhr"
 
 [env]
   IS_CONTROLLER = "true"
-  QUEUE_SIZE = "15"
+  QUEUE_SIZE = "30"
 
 [[services]]
   protocol = "tcp"
