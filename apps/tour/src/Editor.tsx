@@ -52,7 +52,7 @@ import { ServerErrorAlert } from "@wing-playground/shared/src/alerts/ServerError
 
 import { SendFeedbackButton } from "@wing-playground/shared/src/SendFeedbackButton";
 
-const wingPackageJson = await import("winglang/package.json?raw").then(
+const wingPackageJson = await import("@winglang/compiler/package.json?raw").then(
     (i) => JSON.parse(i.default)
 );
 

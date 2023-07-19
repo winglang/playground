@@ -1,4 +1,3 @@
-import { load, invoke } from "winglang";
 import { createFsFromVolume } from "@cowasm/memfs";
 import wingcURL from "@winglang/compiler/wingc.wasm?url";
 import { Volume } from "@cowasm/memfs";
@@ -17,7 +16,7 @@ import {
   DidChangeTextDocumentParams
 } from "vscode-languageserver/browser";
 
-import * as wingCompiler from "winglang/dist/wingc";
+import * as wingCompiler from "@winglang/compiler";
 
 const wingsdkJSIIContent = await import("@winglang/sdk/.jsii?raw").then(
   (i) => i.default
@@ -45,7 +44,7 @@ const fs = createFsFromVolume(
 let wasmFetchData = await fetch(wingcURL).then((d) => d.arrayBuffer());
 const wingcWASMData = new Uint8Array(wasmFetchData);
 
-const wingc = await load({
+const wingc = await wingCompiler.load({
   env: {
     RUST_BACKTRACE: "full",
   },
@@ -104,7 +103,12 @@ const handleTextChange = async (fn: wingCompiler.WingCompilerFunction, params: D
   connection.sendDiagnostics({
     uri: params.textDocument.uri,
     diagnostics: raw_diagnostics.map((rd) => {
-      return Diagnostic.create(Range.create(rd.span.start.line, rd.span.start.col, rd.span.end.line, rd.span.end.col), rd.message)
+      if (rd.span) {
+        return Diagnostic.create(Range.create(rd.span.start.line, rd.span.start.col, rd.span.end.line, rd.span.end.col), rd.message);
+      } else {
+        console.log(11123232)
+        return Diagnostic.create(Range.create(0, 0, 0, 0), rd.message);
+      }
     })
   });
 }

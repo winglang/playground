@@ -19,6 +19,7 @@
     "@radix-ui/colors": "^0.1.8",
     "@segment/analytics-next": "^1.53.0",
     "@webcontainer/api": "^1.1.0",
+    "@winglang/compiler": "latest",
     "@winglang/sdk": "latest",
     "adm-zip": "^0.5.10",
     "buffer": "^6.0.3",
@@ -42,8 +43,7 @@
     "vite-plugin-externals": "^0.6.2",
     "vite-plugin-node-polyfills": "^0.7.0",
     "vscode-json-languageservice": "^5.3.2",
-    "vscode-ws-jsonrpc": "^2.0.2",
-    "winglang": "latest"
+    "vscode-ws-jsonrpc": "^2.0.2"
   },
   "devDependencies": {
     "@playwright/test": "^1.32.3",

@@ -24,10 +24,10 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Update playground wing version
-        run: npm update winglang @winglang/sdk
+        run: npm update @winglang/compiler @winglang/sdk
         working-directory: apps/playground
       - name: Update tour wing version
-        run: npm update winglang @winglang/sdk
+        run: npm update @winglang/compiler @winglang/sdk
         working-directory: apps/tour
       - name: Update compiler wing version
         run: npm update winglang @winglang/sdk @winglang/compiler
