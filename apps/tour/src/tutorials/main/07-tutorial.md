@@ -14,20 +14,10 @@ started](https://www.winglang.io/docs/) guide in our docs for detailed instructi
 install the [CLI](https://www.winglang.io/docs/start-here/installation#wing-cli) and [VSCode
 extension](https://www.winglang.io/docs/start-here/installation#wing-ide-extension).
 
+### Play with Wing online
 
-If you prefer to play with Wing online, check out the [Wing Playground](https://winglang.io/play).
-
-### Learn More
-
-Here are some pointers to interesting topics in our [docs](https://winglang.io/docs):
-
-* More tutorials: [Bucket](/learn/bucket), [Counter](/learn/counter), [Queue](/learn/queue), [Topic](/learn/topic)
-* [Language Reference](https://www.winglang.io/docs/language-reference)
-* [Library Reference](https://www.winglang.io/docs/category/standard-library)
-* [Inflight and Preflight](https://www.winglang.io/docs/concepts/inflights)
-* [Cloud Testing](https://www.winglang.io/docs/concepts/tests)
-* [Cloud Library Compatibility Matrix](https://www.winglang.io/docs/standard-library/compatibility-matrix)
-* [Examples](https://www.winglang.io/docs/category/examples)
+If you prefer to play with Wing online, check out the [Wing Playground](https://winglang.io/play)
+or jump into [the Bucket tutorial](/learn/bucket).
 
 ### We'd love to hear from you!
 

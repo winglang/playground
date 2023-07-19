@@ -3,20 +3,14 @@ bring cloud;
 let bucket = new cloud.Bucket();
 
 let exampleCode = inflight () => {
-  bucket.put("file.txt", "Hello, world!");
-  bucket.putJson("file.json", Json { name: "Alice" });
-
-  let fileData = bucket.get("file.txt");
-  log("fileData is '${fileData}'");
-
-  let jsonData = bucket.getJson("file.json");
-  log("jsonData.get(\"name\") is '${str.fromJson(jsonData.get("name"))}'");
-
-  let keys = bucket.list();
-  log("keys.at(0) is '${keys.at(0)}'");
-  log("keys.at(1) is '${keys.at(1)}'");
-
-  bucket.delete("file.txt");
+  log("Creating files");
+  // TODO - Add code from "Creating file" section
+  log("Reading files");
+  // TODO - Add code from "Reading file" section
+  log("Listing files");
+  // TODO - Add code from "Listing file" section
+  log("Deleting files");
+  // TODO - Add code from "Deleting file" section
 };
 
 new cloud.Function(exampleCode) as "Example Code";

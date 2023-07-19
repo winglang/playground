@@ -21,7 +21,6 @@ import Editor, { loader } from "@monaco-editor/react";
 import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
 import React, {createRef, useEffect, useState, useRef, useCallback, useMemo, FC, PropsWithChildren} from 'react';
-import { WebContainer } from '@webcontainer/api';
 import MarkdownRender from './MarkdownRender';
 
 import { Compiler, Target, CompilationItem } from '@wing-playground/shared/src/compiler/compiler';
@@ -32,7 +31,7 @@ import classNames from 'classnames';
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
 import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
 import {useAnalytics} from "@wing-playground/shared/src/analytics/use-analytics";
-import {installDependencies, ConsoleLayouts} from "@wing-playground/shared/src/containers";
+import {ConsoleLayouts} from "@wing-playground/shared/src/containers";
 
 import { SimulatorTarget } from "@wing-playground/shared/src/SimulatorTarget";
 import { TfAwsTarget } from '@wing-playground/shared/src/TfAwsTarget.js';
@@ -48,7 +47,8 @@ import { Button } from "@wing-playground/shared/src/Button";
 import { ThemeToggle } from "@wing-playground/shared/src/ThemeToggle";
 import { DefaultTheme, ThemeProvider, useTheme, setCurrentTheme } from "@wing-playground/shared/src/theme-provider";
 import { useTimeout } from "usehooks-ts";
-import {Alert} from "@wing-playground/shared/src/Alert";
+import { TooSlowAlert } from "@wing-playground/shared/src/alerts/TooSlow";
+import { ServerErrorAlert } from "@wing-playground/shared/src/alerts/ServerError";
 
 import { SendFeedbackButton } from "@wing-playground/shared/src/SendFeedbackButton";
 
@@ -114,11 +114,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
 
     }, [currentMode, iframSrc]);
 
-    const installConsole = async (containerRef: React.MutableRefObject<WebContainer>) => {
-        const consoleUrl = await installDependencies(containerRef.current, ConsoleLayouts.Tour);
-        console.log("consoleUrl", consoleUrl);
-        setIframeSrc(consoleUrl)
-    }
     const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
         minimap: { enabled: false },
         fontSize: 14,
@@ -142,17 +137,18 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       evaluateCode,
       editorWillMount,
       editorDidMount,
+      serverConsoleFailed,
     } = useEditor({
         editorRef,
         onLoadingStatusChange: setLoadingStatus,
         onLspError,
-        installConsole,
         editorTheme: currentMode,
         languageContext,
         code: tutorial.pages[0].code ?? "",
         compiler,
         targets: compilerTargets,
-        shouldInitContainer: true,
+        layout: ConsoleLayouts.Tour,
+        setIframeSrc,
     });
 
     const [isCompiling, setIsCompiling] = useState(false);
@@ -341,6 +337,17 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       window.open(url.href, "_blank");
     }, [editorRef.current?.getValue()]);
 
+    const getAlert = () => {
+      if (tooSlow) {
+        return TooSlowAlert;
+      } else if (serverConsoleFailed) {
+        return ServerErrorAlert;
+      } else {
+        return null;
+      }
+    };
+    const Alert = getAlert();
+
     return (
       <ThemeProvider mode={currentMode} theme={DefaultTheme}>
           <div className={classNames(
@@ -355,7 +362,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                         (!currentStep?.code && !currentStep?.targets) && "w-[50%]",
                         " min-w-[25rem] px-[11px]"
                       )}>
-                    <div className='flex items-center gap-2 w-full'>
+                    <div className='flex items-center gap-2 w-full shadow-[0_3px_2px_-2px_rgba(0,0,0,0.1)]'>
                       <div className='flex items-center gap-2' style={{
                         width: "calc(100% - 35px)"
                       }}>
@@ -383,58 +390,51 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                       <SendFeedbackButton onClick={onSendFeedback} className="mr-2"/>
                       <ThemeToggle mode={currentMode} onToggle={onToggleTheme}/>
                     </div>
-                    {!tooSlow && (<div className="flex-1 flex flex-col">
+                    {!Alert && (<div className="flex-1 flex flex-col">
                         <div data-cueid="instructions" className="grow flex flex-col">
                             <div className='grow flex flex-col'>
                                 <div className="grow relative overflow-hidden">
-                                {steps.map((step, index) => {
-                                    return (
-                                      <div className={classNames(
-                                        "absolute w-full h-full overflow-auto py-4 pr-2",
-                                        index === currentStepIndex && "translate-x-0",
-                                        index < currentStepIndex && "-translate-x-full",
-                                        index > currentStepIndex && "translate-x-full",
-                                      )}>
-                                          <div
-                                          className={classNames(
-                                          'font-sans prose-headings:font-sans',
-                                          'prose-lg prose-invert text-slate-700 dark:text-[#BDCECC] prose-ol:list-decimal',
-                                          'prose-pre:bg-slate-200 dark:prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-prose-p:text-slate-700 dark:prose-ol:my-prose-p:text-[#BDCECC]',
-                                          'prose-pre:overflow-auto',
-                                          'prose-a:text-sky-700 dark:prose-a:text-sky-300',
+                                    <div className={classNames(
+                                        "absolute w-full h-full overflow-auto py-4 pr-2 translate-x-0",
+                                    )}>
+                                        <div
+                                            className={classNames(
+                                                'font-sans prose-headings:font-sans',
+                                                'prose-lg prose-invert text-slate-700 dark:text-[#BDCECC] prose-ol:list-decimal',
+                                                'prose-pre:bg-slate-200 dark:prose-pre:bg-slate-800 prose-pre:my-3 prose-ol:my-prose-p:text-slate-700 dark:prose-ol:my-prose-p:text-[#BDCECC]',
+                                                'prose-pre:overflow-auto',
+                                                'prose-a:text-sky-700 dark:prose-a:text-sky-300',
 
-                                          // header tag
-                                          'prose-headings:font-[600] prose-headings:transition-colors prose-hheadings1:duration-300',
-                                          'prose-h1:text-[48px]    prose-h1:leading-[60px] prose-h1:p-0 prose-h1:mt-[0px]  prose-h1:mb-[25px]',
-                                          'prose-h2:text-[32px]    prose-h2:leading-[40px] prose-h2:p-0 prose-h2:mt-[40px] prose-h2:mb-[20px]',
-                                          'prose-h3:text-[24px]    prose-h3:leading-[30px] prose-h3:p-0 prose-h3:mt-[30px] prose-h3:mb-[20px]',
-                                          'prose-h4:text-[17.92px] prose-h4:leading-[25px] prose-h4:p-0 prose-h4:mt-[25px] prose-h4:mb-[20px]',
+                                                // header tag
+                                                'prose-headings:font-[600] prose-headings:transition-colors prose-hheadings1:duration-300',
+                                                'prose-h1:text-[48px]    prose-h1:leading-[60px] prose-h1:p-0 prose-h1:mt-[0px]  prose-h1:mb-[25px]',
+                                                'prose-h2:text-[32px]    prose-h2:leading-[40px] prose-h2:p-0 prose-h2:mt-[40px] prose-h2:mb-[20px]',
+                                                'prose-h3:text-[24px]    prose-h3:leading-[30px] prose-h3:p-0 prose-h3:mt-[30px] prose-h3:mb-[20px]',
+                                                'prose-h4:text-[17.92px] prose-h4:leading-[25px] prose-h4:p-0 prose-h4:mt-[25px] prose-h4:mb-[20px]',
 
-                                          // p tag
-                                          'prose-p:font-[400] prose-p:text-[16px] prose-p:leading-[26.4px]',
-                                          '[&>*]:transition-colors [&>*]:duration-300',
+                                                // p tag
+                                                'prose-p:font-[400] prose-p:text-[16px] prose-p:leading-[26.4px]',
+                                                '[&>*]:transition-colors [&>*]:duration-300',
 
-                                          // blockquote
-                                          'prose-blockquote:text-[16px] prose-blockquote:p-[16px] prose-blockquote:mb-[16px] prose-blockquote:border-l-[5px] prose-blockquote:rounded-[5.25px]',
-                                          'prose-blockquote:font-[400]',
-                                          'dark:prose-blockquote:text-[#fdfdfe] dark:prose-blockquote:bg-[#334155] dark:prose-blockquote:border-[#d4d5d8]',
-                                          'prose-blockquote:text-[#474748] prose-blockquote:bg-[#fdfdfe] prose-blockquote:border-[#d4d5d8]',
+                                                // blockquote
+                                                'prose-blockquote:text-[16px] prose-blockquote:p-[16px] prose-blockquote:mb-[16px] prose-blockquote:border-l-[5px] prose-blockquote:rounded-[5.25px]',
+                                                'prose-blockquote:font-[400]',
+                                                'dark:prose-blockquote:text-[#fdfdfe] dark:prose-blockquote:bg-[#334155] dark:prose-blockquote:border-[#d4d5d8]',
+                                                'prose-blockquote:text-[#474748] prose-blockquote:bg-[#fdfdfe] prose-blockquote:border-[#d4d5d8]',
 
-                                          // ul
-                                          'prose-ul:list-[disc] prose-ul:m-0 prose-li:my-[10.667px]'
-                                          )}>
+                                                // ul
+                                                'prose-ul:list-[disc] prose-ul:m-0 prose-li:my-[10.667px]'
+                                            )}>
                                             <MarkdownRender
-                                              markdown={step.tutorial ?? ""}
-                                              theme={currentMode}
+                                                markdown={steps[currentStepIndex].tutorial ?? ""}
+                                                theme={currentMode}
                                             />
                                         </div>
-                                      </div>
-                                    )
-                                  })}
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="w-full relative my-6">
+                            <div className="w-full relative mt-[1rem]">
                               <div className={classNames(
                                 "absolute top-0 left-0 w-full h-[1.5px] -translate-y-1/2",
                                 "bg-gray-200 dark:bg-gray-650",
@@ -453,7 +453,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                               />
                             </div>
 
-                            <div className='text-white flex gap-4 items-center pb-2 overflow-auto'>
+                            <div className='text-white flex gap-4 items-center pt-4 overflow-auto'>
                                 <Button
                                   invisible={isFirstStep}
                                   onClick={() => goToPreviousTutorial()}
@@ -516,7 +516,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                     </div>)}
                 </div>
 
-                {!tooSlow && <div className={classNames(
+                {!Alert && <div className={classNames(
                         "grow ml-4 flex flex-col gap-2 pt-6",
                         !currentStep?.code && !currentStep?.targets &&  "w-[0%]"
                       )}>
@@ -604,26 +604,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
             </div>
           </div>
 
-          {tooSlow && (
-            <div className="grow h-full">
-              <div className="max-w-3xl mx-auto">
-                <Alert title="This is taking too long">
-                  <p>Something may have gone wrong while loading the webcontainer.</p>
-                  <p className="mt-2">
-                    Please, try again later or{" "}
-                    <a
-                      href="#"
-                      className="font-medium text-red-800 underline"
-                      onClick={() => location.reload()}
-                    >
-                      reload the page now
-                    </a>
-                    .
-                  </p>
-                </Alert>
-              </div>
-            </div>
-          )}
+          {Alert && (<Alert />)}
       </ThemeProvider>
     );
 };

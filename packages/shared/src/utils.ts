@@ -9,20 +9,7 @@ export function getBrowser() {
 
 export function isWorkingWithWebContainer() {
 	try {
-		new SharedArrayBuffer(0);
-
-		if (!browserInfo) {
-			return false;
-		}
-
-		if (browserInfo.name === "safari") {
-			const version = parseFloat(browserInfo.version);
-			if (version < 16.4) {
-				return false;
-			}
-		}
-
-		return true;
+		return crossOriginIsolated ?? false;
 	} catch {
 		return false;
 	}

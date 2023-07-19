@@ -103,7 +103,12 @@ const handleTextChange = async (fn: wingCompiler.WingCompilerFunction, params: D
   connection.sendDiagnostics({
     uri: params.textDocument.uri,
     diagnostics: raw_diagnostics.map((rd) => {
-      return Diagnostic.create(Range.create(rd.span.start.line, rd.span.start.col, rd.span.end.line, rd.span.end.col), rd.message)
+      if (rd.span) {
+        return Diagnostic.create(Range.create(rd.span.start.line, rd.span.start.col, rd.span.end.line, rd.span.end.col), rd.message);
+      } else {
+        console.log(11123232)
+        return Diagnostic.create(Range.create(0, 0, 0, 0), rd.message);
+      }
     })
   });
 }
