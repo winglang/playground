@@ -39,7 +39,7 @@ export function Header({
       }
       return (Math.round(number / 100) * 100).toString();
     }
-    const stars = round(Number(watchersCount));
+    const stars = watchersCount ? round(Number(watchersCount)) : "";
     const starsK =
       stars.length > 3
         ? `${stars.slice(0, -3)}.${stars.slice(-3, -2)}k`
