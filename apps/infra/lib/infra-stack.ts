@@ -12,6 +12,7 @@ import { HttpApi } from '@aws-cdk/aws-apigatewayv2-alpha';
 import * as apprunner from '@aws-cdk/aws-apprunner-alpha';
 import { join } from 'path';
 import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets';
+import * as wingPackageJson from '@winglang/compiler/package.json'
 
 export class InfraStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -26,7 +27,10 @@ export class InfraStack extends cdk.Stack {
       }),
       timeout: cdk.Duration.minutes(1),
       memorySize: 3008,
-      ephemeralStorageSize: cdk.Size.mebibytes(1024)
+      ephemeralStorageSize: cdk.Size.mebibytes(1024),
+      environment: {
+        WING_VERSION: wingPackageJson.version
+      }
       // role
     });
 

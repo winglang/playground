@@ -25,7 +25,8 @@
     ],
     "types": [
       "node"
-    ]
+    ],
+    "resolveJsonModule": true
   },
   "exclude": [
     "node_modules",
