@@ -33,7 +33,6 @@ export function Header({
   }, []);
 
   useEffect(() => {
-
     const round = (number: number): string => {
       if(!number) {
         return "";
