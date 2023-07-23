@@ -5,7 +5,7 @@ Let's modify our function's code to send a message to the queue instead of print
 Add some code to call `q.push(s)` in order to send the function's payload to the queue on line 7
 (hint: check out how the payload is added to the `log()` on line 6).
 
-> If you need some help, use the little "SOLVE" bottom to the rescue.
+> If you need some help, use the little "SOLVE" button to the rescue.
 
 ### Connections, connections, connections...
 
