@@ -529,7 +529,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                       'bg-slate-200/40 dark:bg-slate-700/40'
                     )}
                   >
-                    <div className={
+                    <div data-testid="editor-panel" className={
                       classNames(
                         (showWelcome || !currentStep?.code) && "opacity-0",
                         "flex flex-col w-full grow",

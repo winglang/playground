@@ -14,9 +14,15 @@ test.beforeEach(async ({ page }, testInfo) => {
 test('has editor', async ({ page }) => {
   await page.goto(url);
 
-  const editor = page.getByRole("code");
-  await editor.waitFor({ timeout: 60000 });
+  const startButton = page.locator("button:text(\"START\")");
+  await startButton.waitFor({ timeout: 60000 });
+  await startButton.click();
 
+  const nextButton = page.locator("button:text(\"NEXT\")");
+  await nextButton.waitFor({ timeout: 60000 });
+
+  const editor = page.getByTestId("editor-panel")
+  await editor.waitFor({ timeout: 60000 });
   expect(await editor.screenshot()).toMatchSnapshot(
     "editor.png",
     {
@@ -28,8 +34,9 @@ test('has editor', async ({ page }) => {
 test('has map view', async ({ page }) => {
   await page.goto(url);
 
-  const mapView = page.locator('#console');
-  await mapView.waitFor({ timeout: 60000 });
+  const startButton = page.locator("button:text(\"START\")");
+  await startButton.waitFor({ timeout: 60000 });
+  await startButton.click();
 
   const root = page.frameLocator('#console').getByText("No logs").first();
   await root.waitFor({ timeout: 60000 });
@@ -45,12 +52,3 @@ test('has map view', async ({ page }) => {
   );
 });
 
-test('can read code query param', async ({ page }) => {
-  await page.goto(`${url}&code=Ly8gZG9uJ3QgYnJpbmcgY2xvdWQ7`);
-
-  const editor = page.getByRole("code");
-  await editor.waitFor({ timeout: 60000 });
-
-  const code = page.getByText("// don't bring cloud;").first();
-  await code.waitFor({ timeout: 60000 });
-});

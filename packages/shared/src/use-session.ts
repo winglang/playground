@@ -16,11 +16,11 @@ function fromBinary(str: string): string {
   return String.fromCharCode(...new Uint16Array(bytes.buffer));
 }
 
-export const useSession = (key: string) => {
+export const useSession = (key: string, base64: boolean) => {
   const setSession = (value: string): void => {
     try {
       const url = new URL(window.location.href);
-      url.searchParams.set(key, toBinary(value));
+      url.searchParams.set(key, base64 ? toBinary(value) : value);
       window.history.replaceState({}, '', url.toString());
     } catch (e) {
         console.error(e);
@@ -32,7 +32,7 @@ export const useSession = (key: string) => {
       const url = new URL(window.location.href);
       const value = url.searchParams.get(key)?.replaceAll(' ', '+');
       if (value) {
-        return fromBinary(value);
+        return base64 ? fromBinary(value) : value;
       }
       return null;
     } catch (e) {
