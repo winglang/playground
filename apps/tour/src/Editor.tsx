@@ -490,6 +490,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                                     {!showTourLoading && (
                                       <Button
                                         invisible={isLastStep}
+                                        dataTestId="start-button"
                                         onClick={() => {
                                           if (loadingStatus !== LoadingStatus.Completed) {
                                             setShowTourLoading(true);
@@ -506,6 +507,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                                     <Button
                                       invisible={isLastStep}
                                       disabled={loadingStatus !== LoadingStatus.Completed}
+                                      dataTestId="next-button"
                                       onClick={() => goToNextTutorial()}
                                     >
                                       NEXT

@@ -5,6 +5,7 @@ export interface ButtonProps {
   disabled?: boolean;
   invisible?: boolean;
   className?: string;
+  dataTestId?: string;
   onClick?: () => void;
 }
 
@@ -13,11 +14,13 @@ export const Button = ({
   invisible = false,
   onClick = () => {},
   className = "",
+  dataTestId,
   children,
 }:  PropsWithChildren<ButtonProps>) => {
   return (
     <button
     disabled={disabled}
+    data-testid={dataTestId}
     className={classNames(
       "text-slate-600 bg-slate-200 hover:bg-slate-300 hover:text-slate-650 dark:text-[#BDCECC] dark:bg-slate-700 dark:hover:bg-[#2AD5C1] dark:hover:text-slate-700",
       "transition-colors duration-300",

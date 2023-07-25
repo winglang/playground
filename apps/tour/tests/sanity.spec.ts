@@ -8,21 +8,20 @@ test.beforeEach(async ({ page }, testInfo) => {
   });
   await page.exposeBinding('chrome', () => true);
   testInfo.snapshotSuffix = "";
-  test.setTimeout(180000)
 });
 
 test('has editor', async ({ page }) => {
   await page.goto(url);
 
-  const startButton = page.locator("button:text(\"START\")");
-  await startButton.waitFor({ timeout: 60000 });
+  const startButton = page.getByTestId("start-button");
+  await startButton.waitFor();
   await startButton.click();
 
-  const nextButton = page.locator("button:text(\"NEXT\")");
-  await nextButton.waitFor({ timeout: 60000 });
+  const nextButton = page.getByTestId("next-button");
+  await nextButton.waitFor();
 
   const editor = page.getByTestId("editor-panel")
-  await editor.waitFor({ timeout: 60000 });
+  await editor.waitFor();
   expect(await editor.screenshot()).toMatchSnapshot(
     "editor.png",
     {
@@ -34,12 +33,12 @@ test('has editor', async ({ page }) => {
 test('has map view', async ({ page }) => {
   await page.goto(url);
 
-  const startButton = page.locator("button:text(\"START\")");
-  await startButton.waitFor({ timeout: 60000 });
+  const startButton = page.getByTestId("start-button");
+  await startButton.waitFor();
   await startButton.click();
 
   const root = page.frameLocator('#console').getByText("No logs").first();
-  await root.waitFor({ timeout: 60000 });
+  await root.waitFor();
 
   await page.waitForTimeout(2000);
 
