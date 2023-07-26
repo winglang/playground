@@ -8,9 +8,7 @@ test.beforeEach(async ({ page }, testInfo) => {
   });
   await page.exposeBinding('chrome', () => true);
   testInfo.snapshotSuffix = "";
-});
 
-test('has editor', async ({ page }) => {
   await page.goto(url);
 
   const startButton = page.getByTestId("start-button");
@@ -19,7 +17,9 @@ test('has editor', async ({ page }) => {
 
   const nextButton = page.getByTestId("next-button");
   await nextButton.waitFor();
+});
 
+test('has editor', async ({ page }) => {
   const editor = page.getByTestId("editor-panel")
   await editor.waitFor();
   expect(await editor.screenshot()).toMatchSnapshot(
@@ -31,12 +31,6 @@ test('has editor', async ({ page }) => {
 });
 
 test('has map view', async ({ page }) => {
-  await page.goto(url);
-
-  const startButton = page.getByTestId("start-button");
-  await startButton.waitFor();
-  await startButton.click();
-
   const root = page.frameLocator('#console').getByText("No logs").first();
   await root.waitFor();
 
