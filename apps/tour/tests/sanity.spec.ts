@@ -19,7 +19,6 @@ test.beforeEach(async ({ page }, testInfo) => {
 
 test('has editor', async ({ page }) => {
   const editor = page.getByTestId("editor-panel")
-  await editor.waitFor();
   expect(await editor.screenshot()).toMatchSnapshot(
     "editor.png",
     {
