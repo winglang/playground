@@ -14,9 +14,7 @@ test.beforeEach(async ({ page }, testInfo) => {
   const startButton = page.getByTestId("start-button");
   await startButton.waitFor();
   await startButton.click();
-
-  const nextButton = page.getByTestId("next-button");
-  await nextButton.waitFor();
+  await page.frameLocator('#console').getByTestId("loading-overlay").waitFor({ state: "hidden" });
 });
 
 test('has editor', async ({ page }) => {
@@ -31,11 +29,6 @@ test('has editor', async ({ page }) => {
 });
 
 test('has map view', async ({ page }) => {
-  const root = page.frameLocator('#console').getByText("No logs").first();
-  await root.waitFor();
-
-  await page.waitForTimeout(2000);
-
   const updatedMap = page.locator('#console');
   expect(await updatedMap.screenshot()).toMatchSnapshot(
     "map-view.png",
