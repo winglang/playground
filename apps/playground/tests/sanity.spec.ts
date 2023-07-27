@@ -36,5 +36,5 @@ test('has map view', async ({ page }) => {
 test('can read code query param', async ({ page }) => {
   await page.goto(`${url}&code=Ly8gZG9uJ3QgYnJpbmcgY2xvdWQ7`);
   const code = page.getByText("// don't bring cloud;").first();
-  await code.waitFor({ timeout: 60000 });
+  await code.waitFor();
 });
