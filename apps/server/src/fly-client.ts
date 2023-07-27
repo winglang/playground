@@ -161,7 +161,7 @@ export class FlyClient {
       })
     })
     if (!ipRes.ok) {
-      throw new Error("failed to create shared ip: " + appName);
+      throw new Error(`failed to create shared ip: ${appName} + ${await ipRes.text()}`);
     }
   }
 

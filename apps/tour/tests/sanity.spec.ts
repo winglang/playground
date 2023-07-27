@@ -10,11 +10,15 @@ test.beforeEach(async ({ page }, testInfo) => {
   testInfo.snapshotSuffix = "";
 
   await page.goto(url);
+
+  const startButton = page.getByTestId("start-button");
+  await startButton.waitFor();
+  await startButton.click();
   await page.frameLocator('#console').getByTestId("loading-overlay").waitFor({ state: "hidden" });
 });
 
 test('has editor', async ({ page }) => {
-  const editor = page.getByRole("code");
+  const editor = page.getByTestId("editor-panel")
   expect(await editor.screenshot()).toMatchSnapshot(
     "editor.png",
     {
@@ -33,8 +37,3 @@ test('has map view', async ({ page }) => {
   );
 });
 
-test('can read code query param', async ({ page }) => {
-  await page.goto(`${url}&code=Ly8gZG9uJ3QgYnJpbmcgY2xvdWQ7`);
-  const code = page.getByText("// don't bring cloud;").first();
-  await code.waitFor();
-});

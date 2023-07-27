@@ -159,7 +159,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
     });
   };
 
-  const { getSession, setSession } = useSession("code");
+  const { getSession, setSession } = useSession("code", true);
 
   const { evaluateCode, editorWillMount, editorDidMount, serverConsoleFailed } = useEditor({
     editorRef,

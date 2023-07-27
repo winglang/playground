@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { LoadingStatus } from '../loading-status';
 import { AnalyticsBrowser } from '@segment/analytics-next'
 import { isWorkingWithWebContainer } from "../utils";
+import { useSession } from "../use-session";
 
 const isWebContainerConsole = isWorkingWithWebContainer();
 
@@ -17,9 +18,14 @@ const MAX_ANALYTICS_STRING_LENGTH = 1024;
 
 const sessionId = Date.now();
 
-instance.page()
-
 export function useAnalytics({platform, tutorial, state}: AnalyticsProps) {
+  const { getSession } = useSession("disable_analytics", false);
+  // ignore analytics
+  if (getSession() === "true") {
+    return {
+      track: (event: string, properties?: Record<string, any>) => {}
+    }
+  }
 
   const track = (event: string, properties?: Record<string, any>) => {
     instance.track(
@@ -34,6 +40,10 @@ export function useAnalytics({platform, tutorial, state}: AnalyticsProps) {
       },
     );
   }
+
+  useEffect(() => {
+    instance.page();
+  }, []);
 
   // handle state change events
   useEffect(() => {
