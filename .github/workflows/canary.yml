@@ -27,7 +27,6 @@ jobs:
         run: TEST_URL=https://winglang.io/play npx playwright test
         working-directory: apps/playground
       - name: Run Tour tests
-        if: always()
         run: TEST_URL=https://winglang.io/learn npx playwright test
         working-directory: apps/tour
       - uses: actions/upload-artifact@v3

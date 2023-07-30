@@ -25,7 +25,7 @@ ReactDOM.createRoot(document.querySelector("#root")!).render(
   <React.StrictMode>
     <Console 
       trpcUrl="/trpc"
-      wsUrl={`wss://${location.host}`}
+      wsUrl={`${location.protocol === "http:" ? "ws://" : "wss://"}${location.host}`}
       layout={Number(query.get("layout")) || 1} // default to 1 = vscode (2 = playground, 3 = tutorial)
       theme={query.get("theme") as any}
       onTrace={(trace) => {

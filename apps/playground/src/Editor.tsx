@@ -211,9 +211,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
   }, []);
 
   useEffect(() => {
-    editorRef.current?.setValue(
-      examples.find((e) => e.text === languageContext.file)!.value,
-    );
+    const example = examples.find((e) => e.text === languageContext.file);
+    if (example) {
+      editorRef.current?.setValue(example.value);  
+    }
   }, [languageContext]);
 
   const simulatorTarget: TargetView = useMemo(() => {
