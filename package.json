@@ -7,6 +7,8 @@
   "scripts": {
     "build": "turbo run build",
     "update": "turbo run update",
+    "learn": "turbo run dev --filter=@wing-playground/tour",
+    "play": "turbo run dev --filter=@wing-playground/playground",
     "tsc": "turbo run tsc"
   },
   "devDependencies": {

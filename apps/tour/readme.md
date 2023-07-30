@@ -2,8 +2,6 @@
 
 ## Pre-requisites
 - Vite - `npm i -g vite`
-- Vite plugins - `npm i -g vite-plugin-externals -D`
-- A GitHub personal access token **that is exported** (export GITHUB_TOKEN=...)
 
 From repo root:
 
@@ -17,3 +15,13 @@ From apps/tour root:
 ```sh
 npm run dev
 ```
+
+### Special environment variables
+
+#### Running with a local console server
+
+Needs the `VITE_CONSOLE_SERVER_URL` environment variable set to `http://localhost:3000` (or whatever the server url is).
+
+#### Running with a local controller server
+
+Needs the `VITE_CONSOLE_CONTROLLER_URL` environment variable set to `http://localhost:3000/create`.
