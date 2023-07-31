@@ -23,14 +23,13 @@ jobs:
       - name: Build playground
         run: npx turbo run tsc build
         env:
-          GITHUB_TOKEN: ${{ secrets.PROJEN_GITHUB_TOKEN }}
+          NODE_OPTIONS: "--max_old_space_size=4096"
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playground tests
         run: npx playwright test
         working-directory: apps/playground
       - name: Run Tour tests
-        if: always()
         run: npx playwright test --pass-with-no-tests
         working-directory: apps/tour
       - uses: actions/upload-artifact@v3

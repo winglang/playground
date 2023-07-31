@@ -8,11 +8,7 @@ export function getBrowser() {
 }
 
 export function isWorkingWithWebContainer() {
-	try {
-		return crossOriginIsolated ?? false;
-	} catch {
-		return false;
-	}
+	return false;
 }
 
 export const Base64Binary = {

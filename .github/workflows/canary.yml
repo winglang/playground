@@ -20,6 +20,8 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build playground
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
         run: npx turbo run tsc build
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
@@ -27,7 +29,6 @@ jobs:
         run: TEST_URL=https://winglang.io/play npx playwright test
         working-directory: apps/playground
       - name: Run Tour tests
-        if: always()
         run: TEST_URL=https://winglang.io/learn npx playwright test
         working-directory: apps/tour
       - uses: actions/upload-artifact@v3

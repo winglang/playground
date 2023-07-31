@@ -8,6 +8,9 @@
     "update": {
       "dependsOn": ["^update"]
     },
+    "dev": {
+      "dependsOn": ["build", "^dev"]
+    },
     "tsc": {}
   }
 }

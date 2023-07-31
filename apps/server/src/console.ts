@@ -6,13 +6,17 @@ import { writeFile } from "fs/promises";
 import { machineIdleLimitInSeconds } from "./config";
 import { createConsoleServer } from "@wingconsole/server";
 
-export async function startConsole() {
+export interface StartConsoleProps {
+  wingfile: string;
+}
+
+export async function startConsole({ wingfile }: StartConsoleProps) {
   let killTimeout: NodeJS.Timeout;
 
   const staticDir = join(dirname(fileURLToPath(import.meta.url)),"../app/dist");
 
   const server = await createConsoleServer({
-    wingfile: "wing/test.w",
+    wingfile,
     requestedPort: 3000,
     config: {
       addEventListener(event, listener) {},
@@ -36,7 +40,7 @@ export async function startConsole() {
     onExpressCreated(app) {
       app.post("/update-code", bodyParser.json(), async (req, res) => {
         console.log("writing code to file", req.body);
-        await writeFile("wing/test.w", req.body.code, "utf-8");
+        await writeFile(wingfile, req.body.code, "utf-8");
         return res.sendStatus(200);
       });
       app.get("/heartbeat", (req, res, next) => {
@@ -49,9 +53,15 @@ export async function startConsole() {
         }, 1000 * machineIdleLimitInSeconds);
         return res.sendStatus(200);
       });
+      app.use((req, res, next) => {
+        res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+        res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+        next();
+      });
       app.use(express.static(staticDir));
     },
   })
 
   console.log(`Server is running on http://localhost:${server.port}`);
+  return server.port;
 }
