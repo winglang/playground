@@ -22,7 +22,7 @@ jobs:
       - name: Build playground
         run: npx turbo run tsc build
         env:
-          GITHUB_TOKEN: ${{ secrets.PROJEN_GITHUB_TOKEN }}
+          NODE_OPTIONS: "--max_old_space_size=4096"
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --image-label latest --vm-memory 512
         working-directory: apps/server

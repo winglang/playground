@@ -20,6 +20,8 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build playground
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
         run: npx turbo run tsc build
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
