@@ -1,4 +1,8 @@
 import { test, expect } from '@playwright/test';
+import {
+  getResourceFromConsoleInteraction,
+  getResourceNodeFromConsoleMap
+} from "./helper";
 
 const url = `${process.env.TEST_URL ?? 'http://localhost:5173'}?disable_analytics=true`;
 
@@ -11,7 +15,6 @@ test.beforeEach(async ({ page }, testInfo) => {
 
   await page.goto(url);
   await page.frameLocator('#console').getByTestId("loading-overlay").waitFor({ state: "hidden" });
-  await page.waitForLoadState("domcontentloaded");
 });
 
 test('has editor', async ({ page }) => {
@@ -36,12 +39,12 @@ test('has map view', async ({ page }) => {
 
 test("executes function and test for successful response", async ({ page }) => {
 
-  const func = page.frameLocator('#console').locator(`[data-testid=map-pane] [data-testid='map-node:root/Default/cloud.Function']`);
+  const func = getResourceNodeFromConsoleMap(page, 'root/Default/cloud.Function');
   await func.click();
-  const invoke = page.frameLocator('#console').locator("[data-testid='cloud.function:invoke']");
+  const invoke = getResourceFromConsoleInteraction(page, "cloud.function:invoke");
   await invoke.click();
   expect(
-      await page.frameLocator('#console').getByTestId("cloud.function:response").textContent(),
+      await getResourceFromConsoleInteraction(page, "cloud.function:response").textContent(),
   ).toEqual(
       JSON.stringify(
           {
