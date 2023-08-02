@@ -9,7 +9,8 @@
       "dependsOn": ["^update"]
     },
     "dev": {
-      "dependsOn": ["build", "^dev"]
+      "dependsOn": ["build", "^dev"],
+      "cache": false
     },
     "tsc": {}
   }
