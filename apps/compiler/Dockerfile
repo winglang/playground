@@ -1,10 +1,11 @@
-FROM node:18
+FROM --platform=linux/amd64 node:18
 WORKDIR /usr/src/app
 
-COPY package.json ./
-RUN npm install
-COPY ./index.ts ./
+RUN npm init -y
+RUN npm install vm2
+COPY ./dist ./dist
+RUN npm install winglang -g
 
 EXPOSE 3000
 
-CMD [ "npm", "start" ]
+CMD [ "node", "dist/index.js" ]

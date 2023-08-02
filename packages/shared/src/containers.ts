@@ -7,7 +7,7 @@ import winglangSdkUrl from '@wing-playground/console-build/dist/winglang-sdk-web
 import winglangUrl from '@wing-playground/console-build/dist/winglang-webpack.tgz?url'
 import codespanWasmUrl from '@wing-playground/console-build/wing/codespan-wasm.tgz?url'
 import vm2Url from '@wing-playground/console-build/wing/vm2.tgz?url'
-import consoleCode from "@wing-playground/console-build/dist/console.server.js?url";
+import consoleCode from "@wing-playground/console-build/dist/console.server.cjs?url";
 import consoleUrl from "@wing-playground/console-build/dist/console.tgz?url";
 
 import constructsJSIIUrl from "constructs/.jsii?url";

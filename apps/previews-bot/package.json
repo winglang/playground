@@ -1,0 +1,25 @@
+{
+  "name": "@wing-playground/previews-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "probot run ./lib/src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-cdk/aws-apigatewayv2-alpha": "^2.80.0-alpha.0",
+    "@aws-cdk/aws-apprunner-alpha": "^2.80.0-alpha.0",
+    "@esm2cjs/execa": "^6.1.1-cjs.1",
+    "@probot/adapter-aws-lambda-serverless": "^3.0.2",
+    "aws-cdk-lib": "^2.80.0",
+    "probot": "^12.3.0"
+  },
+  "devDependencies": {
+    "nock": "^13.3.1",
+    "smee-client": "^1.2.3",
+    "typescript": "^5.0.4"
+  }
+}
