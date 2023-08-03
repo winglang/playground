@@ -5,7 +5,7 @@ export const TooSlowAlert = () => {
     <div className="grow h-full">
       <div className="max-w-3xl mx-auto">
         <Alert title="This is taking too long">
-          <p>Something may have gone wrong while loading the webcontainer.</p>
+          <p>Something may have gone wrong while loading the app.</p>
           <p className="mt-2">
             Please, try again later or{" "}
             <a

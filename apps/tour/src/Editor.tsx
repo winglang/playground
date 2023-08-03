@@ -31,7 +31,7 @@ import classNames from 'classnames';
 import {LoadingStatus} from "@wing-playground/shared/src/loading-status";
 import {useEditor} from "@wing-playground/shared/src/editor/use-editor";
 import {useAnalytics} from "@wing-playground/shared/src/analytics/use-analytics";
-import {ConsoleLayouts} from "@wing-playground/shared/src/containers";
+import {ConsoleLayouts} from "@wing-playground/shared/src/console-layouts";
 
 import { SimulatorTarget } from "@wing-playground/shared/src/SimulatorTarget";
 import { TfAwsTarget } from '@wing-playground/shared/src/TfAwsTarget.js';

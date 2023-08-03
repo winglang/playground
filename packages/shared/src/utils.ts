@@ -7,10 +7,6 @@ export function getBrowser() {
 	return browserInfo?.name ?? "unknown";
 }
 
-export function isWorkingWithWebContainer() {
-	return false;
-}
-
 export const Base64Binary = {
 	_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
 

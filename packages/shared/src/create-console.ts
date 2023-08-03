@@ -1,4 +1,4 @@
-import { ConsoleLayouts } from "./containers";
+import { ConsoleLayouts } from "./console-layouts";
 import { getCurrentMode } from "./theme-provider";
 
 export const createConsole = async (consoleLayout: ConsoleLayouts) => {

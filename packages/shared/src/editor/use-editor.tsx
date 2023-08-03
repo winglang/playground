@@ -1,7 +1,6 @@
 import {wireGrammers} from "../grammers/utils";
-import {ConsoleLayouts, initContainer, prepareForEvaluation, installDependencies} from "../containers";
+import {ConsoleLayouts} from "../console-layouts";
 import {startLsp} from "../lsp/lspClient";
-import {WebContainer} from "@webcontainer/api";
 import wingLanguageConfiguration from '../language-configurations/wing-configration.json';
 import convertTheme from "../monaco-themes/convert-tmtheme";
 import darkPlusTMTheme from "../monaco-themes/dark_plus";
@@ -15,9 +14,6 @@ import {useRef, useState, MutableRefObject, useCallback} from "react";
 import * as monaco from 'monaco-editor';
 import { useDebounce } from "../use-debounce";
 import { createConsole } from "../create-console";
-import { isWorkingWithWebContainer } from "../utils";
-
-const isWebContainerConsole = isWorkingWithWebContainer();
 
 export interface UseEditorOptions {
     editorRef: MutableRefObject<any>;
@@ -56,13 +52,7 @@ export const useEditor = ({
     const [isCompiling, setIsCompiling] = useState(false);
     const [serverConsoleFailed, setServerConsoleFailed] = useState(false);
     const consoleRef = useRef<string>();
-    const containerRef = useRef<WebContainer>();
     const monacoRef = useRef<monaco.editor.IStandaloneCodeEditor>();
-
-    const installWebContainerConsole = async () => {
-      const consoleUrl = await installDependencies(containerRef.current!, layout);
-      setIframeSrc(consoleUrl);
-    }
 
     const installServerConsole = async (): Promise<string> => {
       const { uiUrl, updateUrl } = await createConsole(layout);
@@ -103,32 +93,20 @@ export const useEditor = ({
         await wireGrammers(monaco);
         editorRef.current?.setValue(code);
 
-        if(isWebContainerConsole) {
-            // do not wait for webcontainers
-            initContainer().then(async instance => {
-                containerRef.current = instance;
-                onLoadingStatusChange(LoadingStatus.Install);
-                await installWebContainerConsole();
-                onLoadingStatusChange(LoadingStatus.Eval)
-                startLsp({ onError: onLspError});
-                void evaluateCode();
-            });
-        } else {
-          try {
-            onLoadingStatusChange(LoadingStatus.Eval);
-            const updateUrl = await installServerConsole();
-            consoleRef.current = updateUrl;
-            startLsp({ onError: onLspError});
-            void evaluateCode();
-          } catch (err) {
-            console.error("installing server console", err);
-            setServerConsoleFailed(true);
-          }
+        try {
+          onLoadingStatusChange(LoadingStatus.Eval);
+          const updateUrl = await installServerConsole();
+          consoleRef.current = updateUrl;
+          startLsp({ onError: onLspError});
+          void evaluateCode();
+        } catch (err) {
+          console.error("installing server console", err);
+          setServerConsoleFailed(true);
         }
     };
 
     const evaluateCode = useCallback(async () => {
-      if ((!consoleRef.current && !containerRef.current) || isCompiling) {
+      if (!consoleRef.current || isCompiling) {
           return;
       }
       console.log('evaluating...', languageContext)
@@ -136,21 +114,16 @@ export const useEditor = ({
 
       try {
         let compileValue: string;
-        if (isWebContainerConsole) {
+        do {
           compileValue = editorRef.current?.getValue();
-          await prepareForEvaluation(containerRef.current!, compileValue, languageContext.file);
-        } else {
-          do {
-            compileValue = editorRef.current?.getValue();
-            await fetch(consoleRef.current!, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify({ code: compileValue })
-            })
-          } while (compileValue !== editorRef.current?.getValue());
-        }
+          await fetch(consoleRef.current!, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ code: compileValue })
+          })
+        } while (compileValue !== editorRef.current?.getValue());
 
         targets.forEach(async (target, index) => {
           compiler.submit(new CompilationRequest(compileValue!, target));
@@ -168,7 +141,7 @@ export const useEditor = ({
         onLoadingStatusChange(LoadingStatus.CompileError)
         setIsCompiling(false)
       }
-    }, [containerRef, consoleRef, isCompiling, languageContext, targets, compiler]);
+    }, [consoleRef, isCompiling, languageContext, targets, compiler]);
 
     window.addEventListener('message', function(event: any) {
       if (event && event.data && event.data.heartbeat === false) {
