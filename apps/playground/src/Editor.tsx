@@ -40,7 +40,7 @@ import { LoadingStatus } from "@wing-playground/shared/src/loading-status";
 import { FilePicker } from "@wing-playground/shared/src/FilePicker.js";
 import {
   ConsoleLayouts,
-} from "@wing-playground/shared/src/containers";
+} from "@wing-playground/shared/src/console-layouts";
 import { useEditor } from "@wing-playground/shared/src/editor/use-editor";
 import { useAnalytics } from "@wing-playground/shared/src/analytics/use-analytics";
 import { RightResizableWidget } from "@wing-playground/shared/src/RightResizableWidget";
