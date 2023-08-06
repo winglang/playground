@@ -49,6 +49,7 @@ import { DefaultTheme, ThemeProvider, useTheme, setCurrentTheme } from "@wing-pl
 import { useTimeout } from "usehooks-ts";
 import { TooSlowAlert } from "@wing-playground/shared/src/alerts/TooSlow";
 import { ServerErrorAlert } from "@wing-playground/shared/src/alerts/ServerError";
+import { MobileAlert } from "@wing-playground/shared/src/alerts/Mobile";
 
 import { SendFeedbackButton } from "@wing-playground/shared/src/SendFeedbackButton";
 
@@ -342,6 +343,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
         return TooSlowAlert;
       } else if (serverConsoleFailed) {
         return ServerErrorAlert;
+      } else if (window.innerWidth < 768 || window.innerHeight < 500) {
+        return MobileAlert;
       } else {
         return null;
       }
