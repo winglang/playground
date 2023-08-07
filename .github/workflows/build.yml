@@ -47,7 +47,7 @@ jobs:
         working-directory: apps/server
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-  build:
+  test:
     if: ${{ github.event.action != 'closed' }}
     needs: [preview-app]
     runs-on: ubuntu-latest
@@ -100,10 +100,10 @@ jobs:
         run: npm install --global vercel@latest
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-        working-directory: apps/play
+        # working-directory: apps/play
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --token=${{ secrets.VERCEL_TOKEN }} -e VITE_CONSOLE_SERVER_URL=https://pr-${{github.event.number}}-${{github.event.repository.owner}}-${{github.event.repository.name}}.fly.dev
-        working-directory: apps/play
+        # working-directory: apps/play
   deploy-learn:
     if: ${{ github.event.action != 'closed' }}
     needs: [preview-app]
@@ -124,7 +124,7 @@ jobs:
         run: npm install --global vercel@latest
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-        working-directory: apps/tour
+        # working-directory: apps/tour
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --token=${{ secrets.VERCEL_TOKEN }} -e VITE_CONSOLE_SERVER_URL=https://pr-${{github.event.number}}-${{github.event.repository.owner}}-${{github.event.repository.name}}.fly.dev
-        working-directory: apps/tour
+        # working-directory: apps/tour
