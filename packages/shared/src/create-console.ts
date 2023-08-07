@@ -3,6 +3,9 @@ import { getCurrentMode } from "./theme-provider";
 
 export const createConsole = async (consoleLayout: ConsoleLayouts) => {
   let consoleUrl = import.meta.env.VITE_CONSOLE_SERVER_URL;
+  if (import.meta.env.VITE_VERCEL_GIT_PULL_REQUEST_ID) {
+    consoleUrl = `https://pr-${import.meta.env.VITE_VERCEL_GIT_PULL_REQUEST_ID}-playground.fly.dev`
+  }
   if (!consoleUrl) {
     const response = await fetch(import.meta.env.VITE_CONSOLE_CONTROLLER_URL || "https://winglang-playground.fly.dev/create", {
       method: "POST"
