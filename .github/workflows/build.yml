@@ -40,22 +40,17 @@ jobs:
         run: |
           app=pr-${{github.event.number}}-playground
           if ! flyctl status --app "$app"; then
-            flyctl launch --no-deploy --copy-config --name "$app" --image latest
-            flyctl deploy --config ./fly.preview.toml --app "$app" --image latest --vm-memory 512 --strategy immediate
+            flyctl launch --no-deploy --copy-config --name "$app" --image-label latest
+            flyctl deploy --config ./fly.preview.toml --app "$app" --image-label latest --vm-memory 512 --strategy immediate
+            flyctl scale count 1
           elif [ "$INPUT_UPDATE" != "false" ]; then
-            flyctl deploy --config ./fly.preview.toml --app "$app" --image latest --vm-memory 512 --strategy immediate
+            flyctl deploy --config ./fly.preview.toml --app "$app" --image-label latest --vm-memory 512 --strategy immediate
+            flyctl scale count 1
           fi
           flyctl deploy --image-label latest --vm-memory 512
         working-directory: apps/server
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-      # - name: Deploy to preview app 
-      #   uses: superfly/fly-pr-review-apps@1.0.0
-      #   env:
-      #     FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-      #   with:
-      #     path: apps/server
-      #     config: ./fly.preview.toml
   build:
     if: ${{ github.event.action != 'closed' }}
     needs: [preview-app]
