@@ -26,13 +26,36 @@ jobs:
         run: npx turbo run tsc build
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
-      - name: Deploy to preview app 
-        uses: superfly/fly-pr-review-apps@1.0.0
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Destory preview app
+        if: ${{ github.event.action == 'closed' }}
+        run: |
+          app=pr-${{github.event.number}}-playground
+          flyctl apps destroy "$app" -y
+        working-directory: apps/server
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-        with:
-          path: apps/server
-          config: ./fly.preview.toml
+      - name: Deploy to preview app
+        if: ${{ github.event.action != 'closed' }}
+        run: |
+          app=pr-${{github.event.number}}-playground
+          if ! flyctl status --app "$app"; then
+            flyctl launch --no-deploy --copy-config --name "$app" --image latest
+            flyctl deploy --config ./fly.preview.toml --app "$app" --image latest --vm-memory 512 --strategy immediate
+          elif [ "$INPUT_UPDATE" != "false" ]; then
+            flyctl deploy --config ./fly.preview.toml --app "$app" --image latest --vm-memory 512 --strategy immediate
+          fi
+          flyctl deploy --image-label latest --vm-memory 512
+        working-directory: apps/server
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      # - name: Deploy to preview app 
+      #   uses: superfly/fly-pr-review-apps@1.0.0
+      #   env:
+      #     FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      #   with:
+      #     path: apps/server
+      #     config: ./fly.preview.toml
   build:
     if: ${{ github.event.action != 'closed' }}
     needs: [preview-app]
