@@ -52,6 +52,7 @@ import { ServerErrorAlert } from "@wing-playground/shared/src/alerts/ServerError
 import { MobileAlert } from "@wing-playground/shared/src/alerts/Mobile";
 
 import { SendFeedbackButton } from "@wing-playground/shared/src/SendFeedbackButton";
+import { isMobileDevice } from '@wing-playground/shared/src/utils';
 
 const wingPackageJson = await import("@winglang/compiler/package.json?raw").then(
     (i) => JSON.parse(i.default)
@@ -343,7 +344,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
         return TooSlowAlert;
       } else if (serverConsoleFailed) {
         return ServerErrorAlert;
-      } else if (window.innerWidth < 768 || window.innerHeight < 500) {
+      } else if (isMobileDevice()) {
         return MobileAlert;
       } else {
         return null;

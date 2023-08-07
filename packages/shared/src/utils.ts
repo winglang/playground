@@ -7,6 +7,10 @@ export function getBrowser() {
 	return browserInfo?.name ?? "unknown";
 }
 
+export function isMobileDevice() {
+	return window.innerWidth < 768 || window.innerHeight < 500;
+}
+
 export const Base64Binary = {
 	_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
 
