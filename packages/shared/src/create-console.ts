@@ -3,6 +3,7 @@ import { getCurrentMode } from "./theme-provider";
 
 export const createConsole = async (consoleLayout: ConsoleLayouts) => {
   let consoleUrl = import.meta.env.VITE_CONSOLE_SERVER_URL;
+  // using a preview console if running in a context of vercel previews
   if (import.meta.env.VITE_VERCEL_GIT_PULL_REQUEST_ID) {
     consoleUrl = `https://pr-${import.meta.env.VITE_VERCEL_GIT_PULL_REQUEST_ID}-playground.fly.dev`
   }
