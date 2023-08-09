@@ -4,7 +4,6 @@
   "version": "0.0.0",
   "type": "module",
   "devDependencies": {
-    "nanoid": "^4.0.2",
     "typescript": "^5.0.2"
   }
 }
