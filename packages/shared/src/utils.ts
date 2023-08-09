@@ -7,6 +7,8 @@ export function getBrowser() {
 	return browserInfo?.name ?? "unknown";
 }
 
+export const isMobileDevice = /Mobi/i.test(window.navigator.userAgent);
+
 export const Base64Binary = {
 	_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
 
