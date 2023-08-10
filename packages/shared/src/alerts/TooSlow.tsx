@@ -9,9 +9,9 @@ export const TooSlowAlert = () => {
           <p className="self-center mt-2">
             Please {" "}
             <a
-                href="#"
-                className="font-medium text-red-950 underline"
-                onClick={() => location.reload()}
+              href="#"
+              className="font-medium text-red-950 dark:text-red-200 underline"
+              onClick={() => location.reload()}
             >
               reload
             </a>
