@@ -5,21 +5,22 @@ export const TooSlowAlert = () => {
     <div className="grow h-full">
       <div className="max-w-3xl mx-auto">
         <Alert title="This is taking too long">
-          <p className={"self-center"}>Something may have gone wrong while loading the app.</p>
+          <p className={"self-center"}>
+            Something may have gone wrong while loading the app.
+          </p>
           <p className="self-center mt-2">
-            Please {" "}
+            Please{" "}
             <a
               href="#"
               className="font-medium text-red-950 dark:text-red-200 underline"
               onClick={() => location.reload()}
             >
               reload
-            </a>
-            {" "}
+            </a>{" "}
             or try again later.
           </p>
         </Alert>
       </div>
     </div>
-  )
+  );
 };

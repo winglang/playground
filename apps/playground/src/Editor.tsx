@@ -38,9 +38,7 @@ import { CompilationRequest } from "@wing-playground/shared/src/compiler/request
 import { useExamples } from "@wing-playground/shared/src/use-examples.js";
 import { LoadingStatus } from "@wing-playground/shared/src/loading-status";
 import { FilePicker } from "@wing-playground/shared/src/FilePicker.js";
-import {
-  ConsoleLayouts,
-} from "@wing-playground/shared/src/console-layouts";
+import { ConsoleLayouts } from "@wing-playground/shared/src/console-layouts";
 import { useEditor } from "@wing-playground/shared/src/editor/use-editor";
 import { useAnalytics } from "@wing-playground/shared/src/analytics/use-analytics";
 import { RightResizableWidget } from "@wing-playground/shared/src/RightResizableWidget";
@@ -65,9 +63,9 @@ import { useTimeout } from "usehooks-ts";
 import { TooSlowAlert } from "@wing-playground/shared/src/alerts/TooSlow";
 import { ServerErrorAlert } from "@wing-playground/shared/src/alerts/ServerError";
 
-const wingPackageJson = await import("@winglang/compiler/package.json?raw").then((i) =>
-  JSON.parse(i.default),
-);
+const wingPackageJson = await import(
+  "@winglang/compiler/package.json?raw"
+).then((i) => JSON.parse(i.default));
 
 loader.config({ monaco });
 
@@ -127,18 +125,21 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
     setCurrentMode(newMode);
   }, [currentMode, iframSrc]);
 
-  const onSendFeedback = useCallback((url: URL) => {
-    url.searchParams.set(
-      "body",
-      "\n\n" +
-      `// **wing version:** ${wingPackageJson.version} \n` +
-      "// **wing code snippet:**\n" +
-      "```\n" +
-      `${editorRef.current?.getValue() ?? ""}\n` +
-      "```"
-    );
-    window.open(url.href, "_blank");
-  }, [editorRef.current?.getValue()]);
+  const onSendFeedback = useCallback(
+    (url: URL) => {
+      url.searchParams.set(
+        "body",
+        "\n\n" +
+          `// **wing version:** ${wingPackageJson.version} \n` +
+          "// **wing code snippet:**\n" +
+          "```\n" +
+          `${editorRef.current?.getValue() ?? ""}\n` +
+          "```",
+      );
+      window.open(url.href, "_blank");
+    },
+    [editorRef.current?.getValue()],
+  );
 
   const [fontSize, setFontSize] = useState(14);
   const fontSizes = [12, 14, 16];
@@ -161,18 +162,19 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
 
   const { getSession, setSession } = useSession("code", true);
 
-  const { evaluateCode, editorWillMount, editorDidMount, serverConsoleFailed } = useEditor({
-    editorRef,
-    onLoadingStatusChange: setLoadingStatus,
-    onLspError,
-    editorTheme: currentMode,
-    languageContext,
-    code: getSession() || currentExample.value,
-    compiler,
-    targets: [Target.TFAWS],
-    layout: ConsoleLayouts.Playground,
-    setIframeSrc,
-  });
+  const { evaluateCode, editorWillMount, editorDidMount, serverConsoleFailed } =
+    useEditor({
+      editorRef,
+      onLoadingStatusChange: setLoadingStatus,
+      onLspError,
+      editorTheme: currentMode,
+      languageContext,
+      code: getSession() || currentExample.value,
+      compiler,
+      targets: [Target.TFAWS],
+      layout: ConsoleLayouts.Playground,
+      setIframeSrc,
+    });
 
   const [isCompiling, setIsCompiling] = useState(true);
   const [compilationItems, setCompilationItems] = useState<CompilationItem[]>(
@@ -213,7 +215,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
   useEffect(() => {
     const example = examples.find((e) => e.text === languageContext.file);
     if (example) {
-      editorRef.current?.setValue(example.value);  
+      editorRef.current?.setValue(example.value);
     }
   }, [languageContext]);
 
@@ -261,7 +263,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
     if (tooSlow) {
       return TooSlowAlert;
     } else if (serverConsoleFailed) {
-     return ServerErrorAlert;
+      return ServerErrorAlert;
     } else {
       return null;
     }
@@ -284,7 +286,11 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
             onToggleTheme={onToggleTheme}
             onSendFeedback={onSendFeedback}
           />
-          {Alert && (<div className={"h-full grid content-center"}><Alert /></div>)}
+          {Alert && (
+            <div className={"h-full grid content-center"}>
+              <Alert />
+            </div>
+          )}
           {!Alert && (
             <div className="flex flex-col h-full">
               <div className="flex grow gap-2">
