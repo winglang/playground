@@ -261,7 +261,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
     if (tooSlow) {
       return TooSlowAlert;
     } else if (serverConsoleFailed) {
-      return ServerErrorAlert;
+     return ServerErrorAlert;
     } else {
       return null;
     }
@@ -284,7 +284,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
             onToggleTheme={onToggleTheme}
             onSendFeedback={onSendFeedback}
           />
-          {Alert && (<Alert />)}
+          {Alert && (<div className={"h-full grid content-center"}><Alert /></div>)}
           {!Alert && (
             <div className="flex flex-col h-full">
               <div className="flex grow gap-2">

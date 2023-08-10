@@ -345,7 +345,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
       } else if (serverConsoleFailed) {
         return ServerErrorAlert;
       } else if (isMobileDevice) {
-        return MobileAlert;
+         return MobileAlert;
       } else {
         return null;
       }
@@ -359,7 +359,12 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
             theme.bg4,
             'transition-all duration-300'
           )}>
-            <div className='flex grow relative'>
+              {Alert && (
+                  <div className={"absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10"}>
+                      <Alert />
+                  </div>
+              )}
+              <div className='flex grow relative'>
                 <div className={classNames(
                         "flex flex-col",
                         (currentStep?.code || currentStep?.targets) && "w-[50%]",
@@ -609,8 +614,6 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({tutorial = mainTutoria
                 </div>}
             </div>
           </div>
-
-          {Alert && (<Alert />)}
       </ThemeProvider>
     );
 };
