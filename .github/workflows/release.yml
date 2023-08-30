@@ -26,7 +26,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: |
           flyctl deploy --image-label latest --vm-memory 512
-          flyctl scale count 1 --yes
+          flyctl scale count 1 --max-per-region 1 --yes
         working-directory: apps/server
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
