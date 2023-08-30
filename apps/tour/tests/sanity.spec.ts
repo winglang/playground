@@ -14,7 +14,6 @@ test.beforeEach(async ({ page }, testInfo) => {
   const startButton = page.getByTestId("start-button");
   await startButton.waitFor();
   await startButton.click();
-  await page.frameLocator('#console').getByTestId("loading-overlay").waitFor({ state: "hidden" });
 });
 
 test('has editor', async ({ page }) => {
