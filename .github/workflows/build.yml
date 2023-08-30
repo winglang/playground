@@ -42,7 +42,7 @@ jobs:
           if ! flyctl status --app "$app"; then
             flyctl launch --no-deploy --copy-config --name "$app" --image-label latest
           fi
-          flyctl deploy --config ./fly.preview.toml --app "$app" --image-label latest --vm-memory 512 --strategy immediate
+          flyctl deploy --config ./fly.preview.toml --app "$app" --image-label latest --vm-memory 512
           flyctl scale count 1 --yes --app "$app"
         working-directory: apps/server
         env:
