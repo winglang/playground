@@ -62,6 +62,7 @@ import { Header } from "./Header";
 import { useTimeout } from "usehooks-ts";
 import { TooSlowAlert } from "@wing-playground/shared/src/alerts/TooSlow";
 import { ServerErrorAlert } from "@wing-playground/shared/src/alerts/ServerError";
+import {ServerDown} from "@wing-playground/shared/src/alerts/ServerDown";
 
 const wingPackageJson = await import(
   "@winglang/compiler/package.json?raw"
@@ -78,6 +79,8 @@ const compiler = new Compiler();
 
 const TOO_SLOW_ERROR_SECONDS_THRESHOLD =
   (import.meta.env.VITE_TOO_SLOW_ERROR_SECONDS_THRESHOLD ?? 180) * 1000;
+
+const IS_SERVER_DOWN = import.meta.env.VITE_IS_SERVER_DOWN === "true";
 
 export type EditorProps = {
   defaultCode?: string;
@@ -260,6 +263,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
   }, [simulatorTarget, tfAwsTarget, tfGcpTarget, tfAzureTarget]);
 
   const getAlert = () => {
+    if (IS_SERVER_DOWN) {
+        return ServerDown;
+    }
     if (tooSlow) {
       return TooSlowAlert;
     } else if (serverConsoleFailed) {
