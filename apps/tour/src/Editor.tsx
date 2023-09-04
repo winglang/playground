@@ -72,7 +72,7 @@ import { MobileAlert } from "@wing-playground/shared/src/alerts/Mobile";
 
 import { SendFeedbackButton } from "@wing-playground/shared/src/SendFeedbackButton";
 import { isMobileDevice } from "@wing-playground/shared/src/utils";
-import {ServerDown} from "@wing-playground/shared/src/alerts/ServerDown";
+import { ServerDown } from "@wing-playground/shared/src/alerts/ServerDown";
 
 const wingPackageJson = await import(
   "@winglang/compiler/package.json?raw"
