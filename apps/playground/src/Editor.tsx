@@ -263,7 +263,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
   }, [simulatorTarget, tfAwsTarget, tfGcpTarget, tfAzureTarget]);
 
   const getAlert = () => {
-    if(IS_SERVER_DOWN){
+    if (IS_SERVER_DOWN) {
         return ServerDown;
     }
     if (tooSlow) {
