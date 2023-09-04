@@ -376,7 +376,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
   );
 
   const getAlert = () => {
-    if(IS_SERVER_DOWN){
+    if (IS_SERVER_DOWN) {
       return ServerDown;
     }
     if (tooSlow) {
