@@ -51,11 +51,11 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
 
   try {
     const rand = Math.random();
-    const wingFile = `/tmp/${rand}.w`;
+    const wingFile = `/tmp/${rand}.main.w`;
     const request = JSON.parse(event.body!) as Request;
     await writeFile(wingFile, request.code, "utf-8");
     await util.promisify(exec)(`${join(require.resolve("winglang"), "../../../.bin/wing")} compile ${wingFile} -t ${request.target}`);
-    const outDir = join('/tmp', 'target', `${rand}.${targetToExtension(request.target)}`);
+    const outDir = join('/tmp', 'target', `${rand}.main.${targetToExtension(request.target)}`);
 
     let zip = new Zip();
     zip.addLocalFolder(outDir);
@@ -67,7 +67,7 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
       body: buffer.toString('base64'),
     };
   } catch (err) {
-    console.log(`Error: ${JSON.stringify(err, null, 2)}`);
+    console.log(`Error: ${JSON.stringify(err.toString(), null, 2)}`);
     return {
       statusCode: 500,
       headers: cors,
