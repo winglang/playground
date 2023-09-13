@@ -67,7 +67,7 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
       body: buffer.toString('base64'),
     };
   } catch (err) {
-    console.log(`Error: ${JSON.stringify(err.toString(), null, 2)}`);
+    console.error("compilation error", err);
     return {
       statusCode: 500,
       headers: cors,
