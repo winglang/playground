@@ -42,7 +42,7 @@ if (parsed.code) {
 export function useExamples() {
   const [examples, setExamples] = useState<Example[]>(defaultExamples);
   const [currentExample, setCurrentExample] = useState<Example>(defaultExample || examples[0]);
-  const [languageContext, setLanguageContext] = useState<LanguageContext>({ file: currentExample.text, language: 'wing', path: 'source.w' });
+  const [languageContext, setLanguageContext] = useState<LanguageContext>({ file: currentExample.text, language: 'wing', path: 'main.w' });
 
   return {
     examples, setExamples,
