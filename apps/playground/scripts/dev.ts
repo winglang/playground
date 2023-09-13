@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 import { join } from "path";
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
-const wingfile = join(__dirname, "../dist/test.w");
+const wingfile = join(__dirname, "../dist/main.w");
 const packagefile = join(__dirname, "../dist/package.json");
 
 try {
