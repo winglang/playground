@@ -22,8 +22,10 @@ export class InfraStack extends cdk.Stack {
       code: lambda.DockerImageCode.fromImageAsset(join(__dirname, "../../compiler"), {
         file: 'Dockerfile',
         buildArgs: {
-          "--platform": "linux/amd64"
-        }
+          "--platform": "linux/amd64",
+          WING_VERSION: wingPackageJson.version,
+        },
+        extraHash: wingPackageJson.version,
       }),
       timeout: cdk.Duration.minutes(1),
       memorySize: 3008,
