@@ -383,7 +383,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({
       return TooSlowAlert;
     } else if (serverConsoleFailed) {
       return ServerErrorAlert;
-    } else if (isMobileDevice) {
+    } else if (isMobileDevice()) {
       return MobileAlert;
     } else {
       return null;
