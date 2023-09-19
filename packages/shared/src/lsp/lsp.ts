@@ -100,16 +100,19 @@ const wingInvoke = async (fn: wingCompiler.WingCompilerFunction, params: any) =>
 const handleTextChange = async (fn: wingCompiler.WingCompilerFunction, params: DidOpenTextDocumentParams | DidChangeTextDocumentParams, uri: string) => {
   raw_diagnostics.length = 0;
   wingInvoke(fn, params);
+  
+  const uriDiagnostics: Diagnostic[] = [];
+  for (let rd of raw_diagnostics) {
+    if (rd.span) {
+      if (`file://${rd.span.file_id}` === params.textDocument.uri) {
+        uriDiagnostics.push(Diagnostic.create(Range.create(rd.span.start.line, rd.span.start.col, rd.span.end.line, rd.span.end.col), rd.message));
+      }
+    }
+  }
+
   connection.sendDiagnostics({
     uri: params.textDocument.uri,
-    diagnostics: raw_diagnostics.map((rd) => {
-      if (rd.span) {
-        return Diagnostic.create(Range.create(rd.span.start.line, rd.span.start.col, rd.span.end.line, rd.span.end.col), rd.message);
-      } else {
-        console.log(11123232)
-        return Diagnostic.create(Range.create(0, 0, 0, 0), rd.message);
-      }
-    })
+    diagnostics: uriDiagnostics
   });
 }
 
