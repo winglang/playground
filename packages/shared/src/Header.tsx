@@ -13,7 +13,7 @@ export const Header = ({ tabs, size = "auto" }: HeaderProps) => {
   return (
     <div
       className={classNames(
-        "flex items-center font-sans font-normal text-[#1c1e21] dark:text-[#2bd5c1]",
+        "flex items-center font-sans font-normal text-[#1c1e21] dark:text-[#f1f0f1]",
         "h-[80px] w-full",
       )}
     >
@@ -21,11 +21,11 @@ export const Header = ({ tabs, size = "auto" }: HeaderProps) => {
         href="https://winglang.io/"
         rel="noreferrer"
         className={classNames(
-          "hover:text-slate-600 dark:hover:text-white mr-[16px] decoration-0",
+          "hover:text-slate-600 dark:hover:text-white mr-[16px] decoration-0 mb-[1px]",
           size === "auto" && "small:mr-[40px]",
         )}
       >
-        <WingLogo className="h-[24px] w-[88px]" />
+        <WingLogo className="h-[23px] w-[138px] mr-[1px]" />
       </a>
 
       <div className="overflow-x-auto flex grow">
@@ -38,7 +38,7 @@ export const Header = ({ tabs, size = "auto" }: HeaderProps) => {
               "decoration-0",
               "px-[12px] py-[8px]",
               "text-[16px] leading-[20px]",
-              size === "auto" && "small:px-[24px] small:text-[17px]",
+              size === "auto" && "small:px-[24px] small:text-[14px]",
               "dark:text-[#f1f0f1]",
             )}
           >

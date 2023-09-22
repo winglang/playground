@@ -63,10 +63,10 @@ module.exports = {
     "../../packages/shared/src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   plugins: [require("@tailwindcss/typography")],
-  darkMode: 'class',
+  darkMode: "class",
   theme: {
     fontFamily: {
-      sans: ["IBM Plex Sans"],
+      sans: ["GeneralSans-Regular", "sans-serif"],
     },
     extend: {
       colors: {
@@ -80,7 +80,7 @@ module.exports = {
         "2xs": "0.7rem",
       },
       screens: {
-        'small': '1200px',
+        small: "1200px",
       },
     },
   },
