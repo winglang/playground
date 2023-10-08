@@ -129,7 +129,6 @@ const handleTextChange = async (fn: wingCompiler.WingCompilerFunction, params: D
         uriDiagnostics.push(diag, ...extraNotes);
       }
     }
-
   }
 
   connection.sendDiagnostics({
