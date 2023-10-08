@@ -11,6 +11,8 @@ import {
   TextDocumentSyncKind,
   InitializeResult,
   Diagnostic,
+  DiagnosticSeverity,
+  Location,
   Range,
   DidOpenTextDocumentParams,
   DidChangeTextDocumentParams
@@ -105,9 +107,29 @@ const handleTextChange = async (fn: wingCompiler.WingCompilerFunction, params: D
   for (let rd of raw_diagnostics) {
     if (rd.span) {
       if (`file://${rd.span.file_id}` === params.textDocument.uri) {
-        uriDiagnostics.push(Diagnostic.create(Range.create(rd.span.start.line, rd.span.start.col, rd.span.end.line, rd.span.end.col), rd.message));
+        const diag = Diagnostic.create(Range.create(rd.span.start.line, rd.span.start.col, rd.span.end.line, rd.span.end.col), rd.message)
+        
+        // Add annotations as notes hinting back to the original diagnostic
+        const extraNotes = rd.annotations.map((a) =>
+          Diagnostic.create(
+            Range.create(a.span.start.line, a.span.start.col, a.span.end.line, a.span.end.col),
+            a.message,
+            DiagnosticSeverity.Hint,
+            undefined,
+            undefined,
+            [
+              {
+                location: Location.create(params.textDocument.uri, diag.range),
+                message: `(source) ${diag.message}`,
+              },
+            ]
+          )
+        );
+
+        uriDiagnostics.push(diag, ...extraNotes);
       }
     }
+
   }
 
   connection.sendDiagnostics({
