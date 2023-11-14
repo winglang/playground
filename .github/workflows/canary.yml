@@ -26,11 +26,21 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playground tests
-        run: TEST_URL=https://winglang.io/play npx playwright test
-        working-directory: apps/playground
+        uses: nick-fields/retry@v2
+        with:
+          max_attempts: 7
+          timeout_minutes: 15
+          command: |
+            cd apps/playground
+            TEST_URL=https://winglang.io/play npx playwright test
       - name: Run Tour tests
-        run: TEST_URL=https://winglang.io/learn npx playwright test
-        working-directory: apps/tour
+        uses: nick-fields/retry@v2
+        with:
+          max_attempts: 7
+          timeout_minutes: 15
+          command: |
+            cd apps/tour
+            TEST_URL=https://winglang.io/learn npx playwright test
       - uses: actions/upload-artifact@v3
         if: always()
         with:
