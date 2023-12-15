@@ -99,13 +99,6 @@ export function useAnalytics({platform, tutorial, state}: AnalyticsProps) {
               ...properties
             }
         );
-        // resource specific event
-        const resourceEventName = tutorial ? `${platform}:${tutorial}_${resourceName}_${action}` : `${platform}_${resourceName}_${action}`;
-        track(
-            resourceEventName,
-            properties
-        );
-
       }
     }
 
