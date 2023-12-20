@@ -49,6 +49,7 @@ test("executes function and test for successful response", async ({ page }) => {
       JSON.stringify(
           {
             success: true,
+            response: ""
           },
           undefined,
           2,
