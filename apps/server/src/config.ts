@@ -25,7 +25,7 @@ const rateLimitWindowInSeconds = envToNumber("RATE_LIMIT_WINDOW_IN_SECONDS", 60 
 // rate limit max requests
 const rateLimitMaxRequests = envToNumber("RATE_LIMIT_MAX_REQUESTS", 60);
 
-console.log("environment configuration:", {
+console.log("environment configuration", {
   flyAppsPrefix,
   flyAppsImage,
   queueSize,
