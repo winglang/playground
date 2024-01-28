@@ -6,11 +6,11 @@ COPY . .
 
 RUN ["npm", "install"]
 
-FROM gcr.io/distroless/nodejs20-debian12
+FROM gcr.io/distroless/nodejs20-debian12:nonroot
 
 WORKDIR /app
 
-COPY . .
+COPY --chown=nonroot:nonroot . .
 COPY --from=builder /app/node_modules /app/node_modules
 
 EXPOSE 3000
