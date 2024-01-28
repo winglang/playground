@@ -15,7 +15,4 @@ COPY --from=builder /app/node_modules /app/node_modules
 
 EXPOSE 3000
 
-# esbuild-wasm spawns a node process
-ENV PATH="$PATH:/nodejs/bin"
-
 CMD ["/app/dist/index.js"]
