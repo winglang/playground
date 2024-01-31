@@ -12,7 +12,7 @@ export default defineConfig({
     alias: {
       "wasi-js/dist/bindings/node": "wasi-js/dist/bindings/browser",
       "fs/promises": "debug",
-      "ts4w": "debug"
+      "@wingcloud/framework": "debug"
     },
   },
   plugins: [
