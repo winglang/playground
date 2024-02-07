@@ -1,5 +1,5 @@
 // This is the import statement in Wing.
-// Here we bring the Wing standard library that 
+// Here we bring the Wing standard library that
 // contains abstractions of popular cloud services.
 bring cloud;
 
@@ -11,7 +11,7 @@ let bucket = new cloud.Bucket();
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // You can interact with the app in the console -->
-// 
+//
 // Click on the Function, and then invoke it in the
 // lower right panel, or click on the Bucket
 // to see its contents in the panel, etc.
@@ -26,6 +26,6 @@ let hello_world = inflight () => {
 
 // Inflights can be deployed as serverless functions
 new cloud.Function(hello_world);
-                                      
+
 // ↑ Switch files and see other examples with more
-// explenations above.
+// explanations above.
