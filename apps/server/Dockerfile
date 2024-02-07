@@ -1,4 +1,4 @@
-FROM node:20-alpine as Builder
+FROM node:20 as Builder
 
 WORKDIR /app
 
@@ -6,13 +6,13 @@ COPY . .
 
 RUN ["npm", "install"]
 
-FROM node:20-alpine
+FROM gcr.io/distroless/nodejs20-debian12:nonroot
 
 WORKDIR /app
 
-COPY . .
+COPY --chown=nonroot:nonroot . .
 COPY --from=builder /app/node_modules /app/node_modules
 
 EXPOSE 3000
 
-CMD ["node", "/app/dist/index.js"]
+CMD ["/app/dist/index.js"]

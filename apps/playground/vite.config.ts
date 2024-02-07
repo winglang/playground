@@ -11,6 +11,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "wasi-js/dist/bindings/node": "wasi-js/dist/bindings/browser",
+      "fs/promises": "debug",
+      "@wingcloud/framework": "debug"
     },
   },
   plugins: [

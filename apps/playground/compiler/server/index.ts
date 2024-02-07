@@ -54,7 +54,7 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
     const wingFile = `/tmp/${rand}.w`;
     const request = JSON.parse(event.body!) as Request;
     await writeFile(wingFile, request.code, "utf-8");
-    await util.promisify(exec)(`./node_modules/.bin/wing compile ${wingFile} -t ${request.target}`);
+    await util.promisify(exec)(`./node_modules/.bin/wing compile ${wingFile} -t ${request.target} --no-analytics`);
     const outDir = join('/tmp', 'target', `${rand}.${targetToExtension(request.target)}`);
 
     let zip = new Zip();
