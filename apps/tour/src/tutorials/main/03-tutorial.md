@@ -10,11 +10,11 @@ Below the `new cloud.Queue()` statement (line 4), write the following code (you 
 but typing is always more fun):
 
 ```wing
-new cloud.Function(inflight (s: str) => {
+new cloud.Function(inflight (s: str?) => {
   if s == "" {
     log("Function was invoked without a payload");
   } else {
-    log("Function was called with argument '${s}'");
+    log("Function was called with argument '{s}'");
   }
 });
 ```
