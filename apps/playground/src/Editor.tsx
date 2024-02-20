@@ -62,7 +62,8 @@ import { Header } from "./Header";
 import { useTimeout } from "usehooks-ts";
 import { TooSlowAlert } from "@wing-playground/shared/src/alerts/TooSlow";
 import { ServerErrorAlert } from "@wing-playground/shared/src/alerts/ServerError";
-import {ServerDown} from "@wing-playground/shared/src/alerts/ServerDown";
+import { ServerDown } from "@wing-playground/shared/src/alerts/ServerDown";
+import { AiInput } from "./AiInput";
 
 const wingPackageJson = await import(
   "@winglang/compiler/package.json?raw"
@@ -222,6 +223,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
     }
   }, [languageContext]);
 
+  const setEditorValue = (code: string) => {
+    editorRef.current?.setValue(code);
+  };
+
   const simulatorTarget: TargetView = useMemo(() => {
     return {
       id: "simulator",
@@ -264,7 +269,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
 
   const getAlert = () => {
     if (IS_SERVER_DOWN) {
-        return ServerDown;
+      return ServerDown;
     }
     if (tooSlow) {
       return TooSlowAlert;
@@ -340,7 +345,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
                       </select>
                     </div>
                   </PanelHeader>
-
+                  <AiInput onAiAnswer={setEditorValue} />
                   <Editor
                     theme={currentMode}
                     options={editorOptions}
