@@ -63,7 +63,7 @@ import { useTimeout } from "usehooks-ts";
 import { TooSlowAlert } from "@wing-playground/shared/src/alerts/TooSlow";
 import { ServerErrorAlert } from "@wing-playground/shared/src/alerts/ServerError";
 import { ServerDown } from "@wing-playground/shared/src/alerts/ServerDown";
-import { AiInput } from "./AiInput";
+import { AiInput } from "./ai";
 
 const wingPackageJson = await import(
   "@winglang/compiler/package.json?raw"
@@ -345,7 +345,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
                       </select>
                     </div>
                   </PanelHeader>
-                  <AiInput onAiAnswer={setEditorValue} />
+                  <AiInput
+                    onAiAnswer={setEditorValue}
+                    code={editorRef.current?.getValue()}
+                  />
                   <Editor
                     theme={currentMode}
                     options={editorOptions}
