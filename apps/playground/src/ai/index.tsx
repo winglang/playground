@@ -2,6 +2,8 @@ import { uuid } from "uuidv4";
 import { useEffect, useState } from "react";
 import { AiIcon, FixIcon } from "./icons";
 import { Button, Input } from "./ctas";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const formatCode = (code: string) => {
   let isCode = false;
@@ -18,7 +20,13 @@ const formatCode = (code: string) => {
 };
 
 const AI_API_URL =
-  "https://t4iblpvvr4.execute-api.us-east-1.amazonaws.com/prod";
+  "https://bxsblg1sf2.execute-api.us-east-1.amazonaws.com/prod";
+
+const LOADING_STATES = {
+  GENERATE: "GENERATE",
+  FIX: "FIX",
+  NONE: "",
+};
 
 export const AiInput = ({
   onAiAnswer,
@@ -28,7 +36,7 @@ export const AiInput = ({
   code?: string;
 }) => {
   const [prompt, setPrompt] = useState("");
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(LOADING_STATES.NONE);
 
   useEffect(() => {
     if (sessionStorage.getItem("conversation-id") === null) {
@@ -37,38 +45,48 @@ export const AiInput = ({
   }, []);
 
   const askAi = async () => {
-    setLoading(true);
-    const res = await fetch(`${AI_API_URL}/ai`, {
-      method: "POST",
-      body: JSON.stringify({ prompt, code }),
-      headers: {
-        "conversation-id": sessionStorage.getItem("conversation-id")!,
-        "Access-Control-Allow-Origin": "http://localhost:5173",
-        "Access-Control-Allow-Credentials": "true",
-      },
-    });
-    if (res.ok) {
-      onAiAnswer(formatCode(await res.text()));
+    setIsLoading(LOADING_STATES.GENERATE);
+    try {
+      const res = await fetch(`${AI_API_URL}/generate`, {
+        method: "POST",
+        body: JSON.stringify({ prompt, code }),
+        headers: {
+          "conversation-id": sessionStorage.getItem("conversation-id")!,
+          "Access-Control-Allow-Origin": "http://localhost:5173",
+          "Access-Control-Allow-Credentials": "true",
+        },
+      });
+      if (res.ok) {
+        onAiAnswer(formatCode(await res.text()));
+      }
+      setPrompt("");
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      setIsLoading(LOADING_STATES.NONE);
     }
-    setLoading(false);
-    setPrompt("");
   };
 
   const fixCode = async () => {
-    setLoading(true);
-    const res = await fetch(`${AI_API_URL}/fix-code`, {
-      method: "POST",
-      body: JSON.stringify({ code }),
-      headers: {
-        "conversation-id": sessionStorage.getItem("conversation-id")!,
-        "Access-Control-Allow-Origin": "http://localhost:5173",
-        "Access-Control-Allow-Credentials": "true",
-      },
-    });
-    if (res.ok) {
-      onAiAnswer(formatCode(await res.text()));
+    try {
+      setIsLoading(LOADING_STATES.FIX);
+      const res = await fetch(`${AI_API_URL}/fix`, {
+        method: "POST",
+        body: JSON.stringify({ code }),
+        headers: {
+          "conversation-id": sessionStorage.getItem("conversation-id")!,
+          "Access-Control-Allow-Origin": "http://localhost:5173",
+          "Access-Control-Allow-Credentials": "true",
+        },
+      });
+      if (res.ok) {
+        onAiAnswer(formatCode(await res.text()));
+      }
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      setIsLoading(LOADING_STATES.NONE);
     }
-    setLoading(false);
   };
 
   const restart = () => {
@@ -91,7 +109,10 @@ export const AiInput = ({
 
       <div className="flex gap-4">
         <div className="h-full border-r-2 dark:border-r-slate-800 border-r-slate-400  w-1/6">
-          <Button onClick={fixCode}>
+          <Button
+            onClick={fixCode}
+            isLoading={isLoading === LOADING_STATES.FIX}
+          >
             Fix code <FixIcon />
           </Button>
         </div>
@@ -103,9 +124,14 @@ export const AiInput = ({
           }
           placeholder="Or ask me to build something new..."
         />
-        <Button onClick={askAi}>Generate wing code</Button>
+        <Button
+          onClick={askAi}
+          isLoading={isLoading === LOADING_STATES.GENERATE}
+        >
+          Generate wing code
+        </Button>
         <Button onClick={restart}>Restart</Button>
-        {isLoading && <p>Loading...</p>}
+        <ToastContainer />
       </div>
     </div>
   );
