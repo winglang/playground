@@ -113,7 +113,7 @@ export const AiInput = ({
             onClick={fixCode}
             isLoading={isLoading === LOADING_STATES.FIX}
           >
-            Fix code <FixIcon />
+            Fix <FixIcon />
           </Button>
         </div>
 
