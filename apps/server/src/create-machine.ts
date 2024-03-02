@@ -25,7 +25,7 @@ export async function createMachine(region?: string) {
   let fetchCount = 0;
   console.log('fetching machine...', hostname, Date.now());
   while (true) {
-    if (fetchCount++ > 50) {
+    if (fetchCount++ > 100) {
       throw new Error("failed to fetch machine: " + hostname);
     }
     try {
