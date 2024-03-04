@@ -34,11 +34,11 @@ export function Header({
 
   useEffect(() => {
     const round = (number: number): string => {
-      if(!number) {
+      if (!number) {
         return "";
       }
       return (Math.round(number / 100) * 100).toString();
-    }
+    };
     const stars = watchersCount ? round(Number(watchersCount)) : "";
     const starsK =
       stars.length > 3
@@ -120,7 +120,7 @@ export function Header({
             href="https://github.com/winglang/wing"
             target="_blank"
             className={classNames(
-              "flex gap-x-[8px] rounded-[4px] items-center font-sans text-[15px] py-[8px] px-[16px]",
+              "flex gap-x-[8px] rounded-[4px] items-center font-orbiter text-[15px] py-[8px] px-[16px]",
               "border-[1px] border-slate-300 dark:border-slate-600",
               "transition-colors duration-300",
               "h-[44px]",
@@ -169,7 +169,7 @@ export function Header({
             className={classNames(
               "hidden medium:flex",
               "bg-[#2ad5c1] text-[#03120e] rounded px-[24px] py-[1px] h-[40px]",
-              "items-center gap-2 font-sans font-medium text-[14px]",
+              "items-center gap-2 font-orbiter font-medium text-[14px]",
               "border-[1px] border-[#2ad5c1]",
             )}
           >
