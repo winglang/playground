@@ -11,9 +11,18 @@ const isStaleTimeout = (node: App, staleTimeout: number) => {
 
 export async function deleteMachines(prefix: string, staleTimeout: number, uptimeTimeout: number) {
   const client = new FlyClient();
-  const apps = await client.getApps();
-  console.log("checking apps for deletion...", apps.data.apps.nodes.length);
-  for (const node of apps.data.apps.nodes) {
+  let cursor = "";
+  let allApps: App[] = [];
+  while (true) {
+    const apps = await client.getApps(cursor);
+    allApps = allApps.concat(apps.data.apps.nodes);
+    if (!apps.data.apps.pageInfo.hasNextPage) {
+      break;
+    }
+    cursor = apps.data.apps.pageInfo.endCursor;
+  }
+  console.log("checking apps for deletion...", allApps.length);
+  for (const node of allApps) {
     if (
       node.id.startsWith(prefix) &&
       (isUptimeTimeout(node, uptimeTimeout) || isStaleTimeout(node, staleTimeout))) {
