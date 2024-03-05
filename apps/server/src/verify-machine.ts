@@ -15,11 +15,8 @@ export async function verifyMachine(machine: string) {
   }
 
   if (!isVerified) {
-    try {
-      await client.deleteApp(name);
-    } catch (err) {
-      console.error("failed to delete app", name, err);
-    }
+    // delete app async
+    client.deleteApp(name).catch(err => console.error("failed to delete app", name, err));
   }
 
   return isVerified;

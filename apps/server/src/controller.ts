@@ -14,6 +14,7 @@ import {
   rateLimitWindowInSeconds,
   rateLimitMaxRequests
 } from "./config";
+import { deleteQueue } from "./delete-queue";
 
 const queue: string[] = [];
 let queueToFillSize = 0;
@@ -67,6 +68,11 @@ export async function startController() {
   setTimeout(() => {
     verifyMachines();
   }, 1000 * 60 * 3);
+
+  process.on("SIGINT", async () => {
+    await deleteQueue(queue);
+    process.kill(0);
+  });
 }
 
 const deleteApps = async () => {
