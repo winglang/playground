@@ -44,6 +44,7 @@ export async function startConsole({ wingfile }: StartConsoleProps) {
         return res.sendStatus(200);
       });
       app.get("/heartbeat", (req, res, next) => {
+        console.log("heartbeat", new Date())
         if (killTimeout) {
           clearTimeout(killTimeout);
         }
