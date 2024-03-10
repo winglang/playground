@@ -1,4 +1,4 @@
-import { startConsole } from "@wing-playground/server/src/console";
+import { startConsole } from "@wing-playground/server/dist/console.js";
 import { createServer } from "vite";
 import { writeFile } from "fs/promises";
 import { fileURLToPath } from "url";
