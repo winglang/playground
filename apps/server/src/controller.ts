@@ -14,6 +14,8 @@ import {
   rateLimitWindowInSeconds,
   rateLimitMaxRequests
 } from "./config";
+import { deleteQueue } from "./delete-queue";
+import startHeartbeat from "./start-heartbeat";
 
 const queue: string[] = [];
 let queueToFillSize = 0;
@@ -40,6 +42,11 @@ export async function startController() {
           if (machine && await verifyMachine(machine)) {
             console.log("serving machine...", machine)
             res.json({ machine });
+
+            // start heartbeat async
+            startHeartbeat(machine)
+              .catch(err => console.error("failed to send heartbeat", machine, err));
+
             return fillQueue();
           }
         } while (queue.length > 0);
@@ -67,6 +74,11 @@ export async function startController() {
   setTimeout(() => {
     verifyMachines();
   }, 1000 * 60 * 3);
+
+  process.on("SIGINT", async () => {
+    await deleteQueue(queue);
+    process.kill(0);
+  });
 }
 
 const deleteApps = async () => {

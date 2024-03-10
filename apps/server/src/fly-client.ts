@@ -13,6 +13,10 @@ interface GetAppsResult {
   data: {
     apps: {
       nodes: [App]
+      pageInfo: {
+        endCursor: string;
+        hasNextPage: boolean;
+      };
       totalCount: number;
     }
   }
@@ -66,13 +70,13 @@ export class FlyClient {
     }
   }
 
-  async getApps() {
+  async getApps(cursor?: string) {
     const appsRespone = await fetch(this.graphqlUrl, {
       method: "POST",
       headers: this._headers(),
       body: JSON.stringify({
         "query":`query getapps {
-          apps {
+          apps(after: \"${cursor}\") {
             nodes{
               id
               machines {
@@ -82,6 +86,10 @@ export class FlyClient {
                 totalCount
               }
               createdAt
+            }
+            pageInfo { 
+              endCursor
+              hasNextPage 
             }
             totalCount
           }
