@@ -38,8 +38,7 @@ test('has map view', async ({ page }) => {
 });
 
 test("executes function and test for successful response", async ({ page }) => {
-
-  const func = getResourceNodeFromConsoleMap(page, 'root/Default/cloud.Function');
+  const func = getResourceNodeFromConsoleMap(page, 'root/Default/Function');
   await func.click();
   const invoke = getResourceFromConsoleInteraction(page, "cloud.function:invoke");
   await invoke.click();
