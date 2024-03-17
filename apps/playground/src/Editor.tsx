@@ -62,7 +62,7 @@ import { Header } from "./Header";
 import { useTimeout } from "usehooks-ts";
 import { TooSlowAlert } from "@wing-playground/shared/src/alerts/TooSlow";
 import { ServerErrorAlert } from "@wing-playground/shared/src/alerts/ServerError";
-import {ServerDown} from "@wing-playground/shared/src/alerts/ServerDown";
+import { ServerDown } from "@wing-playground/shared/src/alerts/ServerDown";
 
 const wingPackageJson = await import(
   "@winglang/compiler/package.json?raw"
@@ -101,7 +101,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
   const ref = createRef<HTMLDivElement>();
   const refIframe = useRef(null);
-  const [iframSrc, setIframeSrc] = useState("");
+  const [iframeSrc, setIframeSrc] = useState("");
   const [loadingStatus, setLoadingStatus] = useState(LoadingStatus.Init);
   const { track } = useAnalytics({
     platform: "play",
@@ -124,9 +124,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
 
   const onToggleTheme = useCallback(() => {
     const newMode = currentMode === "light" ? "dark" : "light";
-    setIframeSrc(iframSrc.replace(/theme=(light|dark)/, `theme=${newMode}`));
+    setIframeSrc(iframeSrc.replace(/theme=(light|dark)/, `theme=${newMode}`));
     setCurrentMode(newMode);
-  }, [currentMode, iframSrc]);
+  }, [currentMode, iframeSrc]);
 
   const onSendFeedback = useCallback(
     (url: URL) => {
@@ -165,6 +165,9 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
 
   const { getSession, setSession } = useSession("code", true);
 
+  const url = new URL(window.location.href);
+  const urlLayout = Number(url.searchParams.get("layout"));
+
   const { evaluateCode, editorWillMount, editorDidMount, serverConsoleFailed } =
     useEditor({
       editorRef,
@@ -175,7 +178,8 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
       code: getSession() || currentExample.value,
       compiler,
       targets: [Target.TFAWS],
-      layout: ConsoleLayouts.Playground,
+      layout:
+        urlLayout in ConsoleLayouts ? urlLayout : ConsoleLayouts.Playground,
       setIframeSrc,
     });
 
@@ -227,10 +231,10 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
       id: "simulator",
       title: "Simulator",
       Target: () => (
-        <SimulatorTarget frameSrc={iframSrc} iframeRef={refIframe} />
+        <SimulatorTarget frameSrc={iframeSrc} iframeRef={refIframe} />
       ),
     };
-  }, [iframSrc, refIframe]);
+  }, [iframeSrc, refIframe]);
 
   const tfAwsTarget: TargetView = useMemo(() => {
     return {
@@ -264,7 +268,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
 
   const getAlert = () => {
     if (IS_SERVER_DOWN) {
-        return ServerDown;
+      return ServerDown;
     }
     if (tooSlow) {
       return TooSlowAlert;
