@@ -34,10 +34,19 @@ const constructsPackageJsonContent = await import(
   "constructs/package.json?raw"
 ).then((i) => i.default);
 
+const openaiPackageJsonContent = await import(
+  "@winglibs/openai/package.json?raw"
+).then((i) => i.default);
+const openaiWPackageJsonContent = await import(
+  "@winglibs/openai/openai.w?raw"
+).then((i) => i.default);
+
 const fs = createFsFromVolume(
   Volume.fromJSON({
     "/wingsdk/package.json": wingsdkPackageJsonContent,
     "/wingsdk/.jsii": wingsdkJSIIContent,
+    "/node_modules/@winglibs/openai/openai.w": openaiWPackageJsonContent,
+    "/node_modules/@winglibs/openai/package.json": openaiPackageJsonContent,
     "/node_modules/constructs/.jsii": constructsJSIIContent,
     "/node_modules/constructs/package.json": constructsPackageJsonContent,
     "/node_modules/constructs/lib/index.js": "",
