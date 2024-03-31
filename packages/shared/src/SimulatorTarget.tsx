@@ -2,19 +2,20 @@ import { MutableRefObject } from "react";
 
 export interface SimulatorTargetProps {
   frameSrc: string;
-  iframeRef: MutableRefObject<any>
+  iframeRef: MutableRefObject<any>;
+  className?: string;
 }
 
 export const SimulatorTarget = (props: SimulatorTargetProps) => {
   return (
-    <div className="h-full">
+    <div className={`h-full ${props.className ?? ""}`}>
       <iframe
-        id='console'
-        className='basis-auto w-full h-full'
+        id="console"
+        className="basis-auto w-full h-full"
         src={props.frameSrc}
         allowFullScreen={true}
         ref={props.iframeRef}
       ></iframe>
     </div>
-  )
-}
+  );
+};

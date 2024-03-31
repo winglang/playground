@@ -167,6 +167,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
 
   const url = new URL(window.location.href);
   const urlLayout = Number(url.searchParams.get("layout"));
+  const isFullScreen = Number(url.searchParams.get("full"));
 
   const { evaluateCode, editorWillMount, editorDidMount, serverConsoleFailed } =
     useEditor({
@@ -231,7 +232,13 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
       id: "simulator",
       title: "Simulator",
       Target: () => (
-        <SimulatorTarget frameSrc={iframeSrc} iframeRef={refIframe} />
+        <SimulatorTarget
+          frameSrc={iframeSrc}
+          iframeRef={refIframe}
+          className={
+            isFullScreen ? "absolute w-full h-full top-0 right-0 border-2" : ""
+          }
+        />
       ),
     };
   }, [iframeSrc, refIframe]);
