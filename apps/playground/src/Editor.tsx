@@ -365,9 +365,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
                     "grow h-full basis-auto border",
                     theme.border4,
                     "transition-colors duration-300",
-                    isFullScreen
-                      ? "absolute w-full h-full top-2 right-0 border-2"
-                      : "",
+                    isFullScreen ? "w-full h-full top-2 right-0 border-2" : "",
                   )}
                 >
                   {loadingStatus !== LoadingStatus.Completed && (
