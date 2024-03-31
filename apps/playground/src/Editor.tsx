@@ -316,6 +316,7 @@ export const ReactMonacoEditor: React.FC<EditorProps> = ({}) => {
                       "w-[38%]": fontSize === 14,
                       "w-[43%]": fontSize === 16,
                     },
+                    isFullScreen ? "hidden" : "",
                   )}
                 >
                   <PanelHeader>
