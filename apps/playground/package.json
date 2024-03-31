@@ -20,6 +20,7 @@
     "@segment/analytics-next": "^1.53.0",
     "@winglang/compiler": "latest",
     "@winglang/sdk": "latest",
+    "@winglibs/openai": "^0.0.3",
     "adm-zip": "^0.5.10",
     "buffer": "^6.0.3",
     "color": "^4.2.3",
