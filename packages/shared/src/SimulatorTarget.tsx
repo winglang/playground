@@ -3,12 +3,11 @@ import { MutableRefObject } from "react";
 export interface SimulatorTargetProps {
   frameSrc: string;
   iframeRef: MutableRefObject<any>;
-  className?: string;
 }
 
 export const SimulatorTarget = (props: SimulatorTargetProps) => {
   return (
-    <div className={`h-full ${props.className ?? ""}`}>
+    <div className="h-full">
       <iframe
         id="console"
         className="basis-auto w-full h-full"
