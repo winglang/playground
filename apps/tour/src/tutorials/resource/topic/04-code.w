@@ -14,7 +14,7 @@ topic.onMessage(inflight (message: str) => {
   bucket.put("${message.split(":").at(0)}_lowecase.txt", message.lowercase());
 });
 
-new cloud.Function(inflight (payload: str) => {
+new cloud.Function(inflight (payload: str?) => {
   let val = counter.inc();
-  topic.publish("#${val}: '${payload}'");
+  topic.publish("#${val}: '${payload ?? "default"}'");
 }) as "Publisher";
