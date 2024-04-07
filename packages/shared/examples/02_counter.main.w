@@ -25,7 +25,7 @@ new cloud.Function(inflight (payload: str?) => {
 }) as "Pusher";
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// Click the "Compile to ..." buttons above ↑
-// to compile the app to a Javascript and Terraform 
-// of specific cloud providers.
+// You can see the terraform and javascript compilation
+// artifacts by clicking on the "AWS/TERRAFORM" tab
+// above and to the right of this code editor.
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
