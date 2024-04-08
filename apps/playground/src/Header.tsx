@@ -47,8 +47,11 @@ export function Header({
     setStars(starsK);
   }, [watchersCount]);
 
+  const url = new URL(window.location.href);
+  const isFullScreen = Number(url.searchParams.get("full"));
+
   return (
-    <div className="flex">
+    <div className={isFullScreen ? "hidden" : "flex"}>
       <div className="flex justify-between w-full">
         <GlobalHeader
           tabs={[
