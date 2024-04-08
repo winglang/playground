@@ -6,6 +6,6 @@ new cloud.Function(inflight (s: str?) => {
   if s == "" {
       log("Function was invoked without a payload");
   } else {
-      log("Function was called with argument '{s}'");
+      log("Function was called with argument '{s!}'");
   }
 });
