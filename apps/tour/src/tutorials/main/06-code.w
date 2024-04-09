@@ -8,6 +8,6 @@ q.setConsumer(inflight (m: str) => {
 });
 
 new cloud.Function(inflight (s: str?) => {
-  log("Function was called with {s}");
-  q.push(s ?? "NA");
+  log("Function was called with {s!}");
+  q.push(s!);
 });
