@@ -35,10 +35,10 @@ To read the content of the files you've just created, use the following code:
 
 ```wing
 let s = bucket.get("file.txt");
-log("content is '${s}'");
+log("content is '{s}'");
 
 let j = bucket.getJson("file.json");
-log("name is '${j.get("name")}'");
+log("name is '{j.get("name")}'");
 ```
 
 Insert the code in the "Reading files" TODO section and run exampleCode once again.
