@@ -54,12 +54,6 @@ export const useEditor = ({
     const consoleRef = useRef<string>();
     const monacoRef = useRef<monaco.editor.IStandaloneCodeEditor>();
 
-    const installServerConsole = async (): Promise<string> => {
-      const { uiUrl, updateUrl } = await createConsole(layout);
-      setIframeSrc(uiUrl)
-      return updateUrl;
-    }
-
     const editorWillMount = (monaco: any) => {
 
         try {
@@ -95,10 +89,11 @@ export const useEditor = ({
 
         try {
           onLoadingStatusChange(LoadingStatus.Eval);
-          const updateUrl = await installServerConsole();
+          const { uiUrl, updateUrl } = await createConsole(layout);
           consoleRef.current = updateUrl;
+          await evaluateCode();
+          setIframeSrc(uiUrl)
           startLsp({ onError: onLspError});
-          void evaluateCode();
         } catch (err) {
           console.error("installing server console", err);
           setServerConsoleFailed(true);
