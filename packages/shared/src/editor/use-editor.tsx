@@ -88,7 +88,7 @@ export const useEditor = ({
         editorRef.current?.setValue(code);
 
         try {
-          onLoadingStatusChange(LoadingStatus.Eval);
+          onLoadingStatusChange(LoadingStatus.Completed);
           const { uiUrl, updateUrl } = await createConsole(layout);
           consoleRef.current = updateUrl;
           setIframeSrc(uiUrl)
