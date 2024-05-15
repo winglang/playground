@@ -23,4 +23,4 @@ or jump into [the Bucket tutorial](/learn/bucket).
 
 It is early days for Wing, and we'd love to hear what you think about this tutorial and about this
 project. Please don't hesitate to [file an issue](https://github.com/winglang/wing) or submit a pull
-request on GitHub, or come hang out with us on the [Wing Slack](https://t.winglang.io/slack).
+request on GitHub, or come hang out with us on the [Wing Discord](https://t.winglang.io/discord).
