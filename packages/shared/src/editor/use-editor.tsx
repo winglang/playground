@@ -88,11 +88,11 @@ export const useEditor = ({
         editorRef.current?.setValue(code);
 
         try {
-          onLoadingStatusChange(LoadingStatus.Completed);
+          onLoadingStatusChange(LoadingStatus.Eval);
           const { uiUrl, updateUrl } = await createConsole(layout);
           consoleRef.current = updateUrl;
-          await evaluateCode(true);
           setIframeSrc(uiUrl)
+          await evaluateCode(true);
           startLsp({ onError: onLspError});
         } catch (err) {
           console.error("installing server console", err);
