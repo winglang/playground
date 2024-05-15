@@ -15,9 +15,10 @@ export async function startConsole({ wingfile }: StartConsoleProps) {
 
   const staticDir = join(dirname(fileURLToPath(import.meta.url)),"../app/dist");
 
+  let port = 3000;
   const server = await createConsoleServer({
     wingfile,
-    requestedPort: 3000,
+    requestedPort: port,
     config: {
       addEventListener(event, listener) {},
       removeEventListener(event, listener) {},
@@ -35,12 +36,27 @@ export async function startConsole({ wingfile }: StartConsoleProps) {
       },
       error: (...args) => {
         console.error(...args);
+      },
+      warning: (...args) => {
+        console.warn(...args);
       }
     },
     onExpressCreated(app) {
       app.post("/update-code", bodyParser.json(), async (req, res) => {
         console.log("writing code to file", req.body);
         await writeFile(wingfile, req.body.code, "utf-8");
+        let isReady = false;
+        let retries = 0;
+        if (req.query.wait) {
+          do {
+            const res = await fetch(`http://localhost:${port}/trpc/app.state`, { method: "GET" });
+            if (res.ok) {
+              const data = await res.json();
+              isReady = data.result.data === "success" || data.result.data === "error";
+            }
+            await new Promise((resolve) => setTimeout(resolve, 75));
+          } while (!isReady && retries++ < 30);
+        }
         return res.sendStatus(200);
       });
       app.get("/heartbeat", (req, res, next) => {
@@ -64,5 +80,6 @@ export async function startConsole({ wingfile }: StartConsoleProps) {
   })
 
   console.log(`Server is running on http://localhost:${server.port}`);
-  return server.port;
+  port = server.port;
+  return port;
 }

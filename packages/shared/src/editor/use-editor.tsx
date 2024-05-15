@@ -88,10 +88,10 @@ export const useEditor = ({
         editorRef.current?.setValue(code);
 
         try {
-          onLoadingStatusChange(LoadingStatus.Eval);
+          onLoadingStatusChange(LoadingStatus.Completed);
           const { uiUrl, updateUrl } = await createConsole(layout);
           consoleRef.current = updateUrl;
-          await evaluateCode();
+          await evaluateCode(true);
           setIframeSrc(uiUrl)
           startLsp({ onError: onLspError});
         } catch (err) {
@@ -100,7 +100,7 @@ export const useEditor = ({
         }
     };
 
-    const evaluateCode = useCallback(async () => {
+    const evaluateCode = useCallback(async (wait: boolean = false) => {
       if (!consoleRef.current || isCompiling) {
           return;
       }
@@ -111,7 +111,7 @@ export const useEditor = ({
         let compileValue: string;
         do {
           compileValue = editorRef.current?.getValue();
-          await fetch(consoleRef.current!, {
+          await fetch(wait ? `${consoleRef.current}?wait=true` : consoleRef.current, {
             method: "POST",
             headers: {
               "Content-Type": "application/json"
