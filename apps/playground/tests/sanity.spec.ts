@@ -30,7 +30,7 @@ test("has editor", async ({ page }) => {
 });
 
 test("has map view", async ({ page }) => {
-  const updatedMap = page.locator("#console");
+  const updatedMap = await page.waitForSelector("#console");
   expect(await updatedMap.screenshot()).toMatchSnapshot("map-view.png", {
     maxDiffPixelRatio: 0.3,
   });
