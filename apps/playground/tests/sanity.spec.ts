@@ -1,8 +1,4 @@
 import { test, expect } from "@playwright/test";
-import {
-  getResourceFromConsoleInteraction,
-  getResourceNodeFromConsoleMap,
-} from "./helper";
 
 const url = `${
   process.env.TEST_URL ?? "http://localhost:5173"
@@ -64,4 +60,19 @@ test("can read code query param", async ({ page }) => {
   await page.goto(`${url}&code=Ly8gZG9uJ3QgYnJpbmcgY2xvdWQ7`);
   const code = page.getByText("// don't bring cloud;").first();
   await code.waitFor();
+});
+
+test("can copy console error", async ({ page, context }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+
+  // Navigate to a page with an error ('bring aaa;')
+  await page.goto(`${url}&code=YnJpbmcgYWFhOwo=`);
+  await page.frameLocator("#console").getByTestId("loading-overlay").waitFor({ state: "hidden" });
+  const updatedMap = page.frameLocator("#console");
+  const copyButton = updatedMap.locator('button:text("Copy")');
+  await copyButton.click();
+
+  // Check that the clipboard contains the error
+  let clipboardText = await page.evaluate("navigator.clipboard.readText()");
+  expect(clipboardText).toContain("bring aaa;");
 });

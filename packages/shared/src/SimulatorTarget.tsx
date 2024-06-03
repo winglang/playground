@@ -13,6 +13,7 @@ export const SimulatorTarget = (props: SimulatorTargetProps) => {
         className="basis-auto w-full h-full"
         src={props.frameSrc}
         allowFullScreen={true}
+        allow="clipboard-read; clipboard-write"
         ref={props.iframeRef}
       ></iframe>
     </div>
