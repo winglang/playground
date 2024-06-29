@@ -21,7 +21,7 @@
     "@winglang/compiler": "latest",
     "@winglang/sdk": "latest",
     "@winglibs/openai": "^0.0.5",
-    "adm-zip": "^0.5.10",
+    "adm-zip": "0.5.12",
     "buffer": "^6.0.3",
     "color": "^4.2.3",
     "detect-browser": "^5.3.0",
@@ -41,7 +41,7 @@
     "semantic-ui-react": "^2.1.4",
     "tar": "^6.1.13",
     "vite-plugin-externals": "^0.6.2",
-    "vite-plugin-node-polyfills": "^0.7.0",
+    "vite-plugin-node-polyfills": "^0.22.0",
     "vscode-json-languageservice": "^5.3.2",
     "vscode-ws-jsonrpc": "^2.0.2"
   },
