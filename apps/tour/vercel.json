@@ -1,5 +1,5 @@
 {
-  "installCommand": "npm ci  --prefix=../..",
+  "installCommand": "npm ci --prefix=../..",
   "headers": [
     {
       "source": "/(.*)",
