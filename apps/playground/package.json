@@ -21,7 +21,7 @@
     "@winglang/compiler": "latest",
     "@winglang/sdk": "latest",
     "@winglibs/openai": "^0.0.5",
-    "adm-zip": "^0.5.10",
+    "adm-zip": "0.5.12",
     "buffer": "^6.0.3",
     "color": "^4.2.3",
     "detect-browser": "^5.3.0",
