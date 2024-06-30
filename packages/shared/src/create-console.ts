@@ -6,7 +6,7 @@ export const createConsole = async (consoleLayout: ConsoleLayouts) => {
   let consoleUrl = import.meta.env.VITE_CONSOLE_SERVER_URL;
   if (isSelfHosted()) {
     consoleUrl = "";
-  } else if (consoleUrl !== undefined) {
+  } else if (!consoleUrl) {
     const response = await fetch(import.meta.env.VITE_CONSOLE_CONTROLLER_URL || "https://winglang-playground.fly.dev/create", {
       method: "POST"
     })
