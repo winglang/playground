@@ -77,8 +77,8 @@ export async function startConsole({ wingfile }: StartConsoleProps) {
         res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
         next();
       });
-      app.use("/play", express.static(playStaticDir));
-      app.use("/tour", express.static(tourStaticDir));
+      app.use("/play", express.static(playStaticDir, { dotfiles: "allow" }));
+      app.use("/tour", express.static(tourStaticDir, { dotfiles: "allow" }));
       app.use(express.static(staticDir));
     },
   })
