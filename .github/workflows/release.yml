@@ -70,8 +70,6 @@ jobs:
           VITE_SELF_HOSTED: "true"
       - name: Copy playground and tour assets
         run: |
-          mkdir -p apps/server/play
-          mkdir -p apps/server/tour
           cp -rf apps/playground/dist apps/server/play
           cp -rf apps/tour/dist apps/server/tour
       - name: Log in to Docker Hub
