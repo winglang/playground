@@ -1,6 +1,7 @@
 import Zip from 'adm-zip';
 import { Base64Binary } from '../utils';
 import { CompilationRequest } from './request';
+import { isSelfHosted } from '../config';
 
 export enum Target {
   TFAWS = 'tf-aws',
@@ -30,6 +31,17 @@ const compile = async (code: string, target: string): Promise<CompilationResult>
   };
 
   try {
+    if (isSelfHosted()) {
+      return {
+        files: [],
+        zip: new Zip(),
+        error: {
+          stderr: 'Not supported in self-hosted mode.',
+          stdout: '',
+        }
+      }
+    }
+
     const result = await fetch('https://re0pxufp83.execute-api.us-east-1.amazonaws.com/prod', options)
     if (!result.ok) {
       if (result.status === 500) {

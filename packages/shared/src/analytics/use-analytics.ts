@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { LoadingStatus } from '../loading-status';
 import { AnalyticsBrowser } from '@segment/analytics-next';
 import { useSession } from "../use-session";
+import { isSelfHosted } from "../config";
 
 const instance = AnalyticsBrowser.load({ writeKey: 'MvkxDOKWzcs7MFrWu1UNaO2bGn1S2RvA' })
 
@@ -18,7 +19,7 @@ const sessionId = Date.now();
 export function useAnalytics({platform, tutorial, state}: AnalyticsProps) {
   const { getSession } = useSession("disable_analytics", false);
   // ignore analytics
-  if (getSession() === "true") {
+  if (isSelfHosted() || getSession() === "true") {
     return {
       track: (event: string, properties?: Record<string, any>) => {}
     }
