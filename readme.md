@@ -2,9 +2,18 @@ This is a mono-repo for two projects, the playground and the tour.
 
 #### Run Playground/Tour with local console server
 
+Learn:
+
 ```sh
 npm install
-npm run <learn/play>
+npm run learn
+```
+
+Play:
+
+```sh
+npm install
+npm run play
 ```
 
 Please see the readme in each project for more information.
@@ -19,6 +28,6 @@ Please see the readme in each project for more information.
 #### Run Self Hosted Version
 
 ```sh
-1. docker run -it  -p 3000:3000 wingcloudbot/playground:latest
+1. docker run -it -p 3000:3000 wingcloudbot/playground:latest
 2. Go To http://localhost:3000/play
 ```
