@@ -1,18 +1,22 @@
 This is a mono-repo for two projects, the playground and the tour.
 
+#### Install
+
+```sh
+npm install
+```
+
 #### Run Playground/Tour with local console server
 
 Learn:
 
 ```sh
-npm install
 npm run learn
 ```
 
 Play:
 
 ```sh
-npm install
 npm run play
 ```
 
