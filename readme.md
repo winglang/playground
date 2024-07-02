@@ -4,7 +4,7 @@ This is a mono-repo for two projects, the playground and the tour.
 
 ```sh
 npm install
-npm run learn/play
+npm run <learn/play>
 ```
 
 Please see the readme in each project for more information.
