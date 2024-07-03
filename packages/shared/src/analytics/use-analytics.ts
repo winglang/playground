@@ -4,7 +4,7 @@ import { AnalyticsBrowser } from '@segment/analytics-next';
 import { useSession } from "../use-session";
 import { isSelfHosted } from "../config";
 
-let instance: AnalyticsBrowser | undefined;
+let instance: AnalyticsBrowser;
 if (!isSelfHosted()) {
   instance = AnalyticsBrowser.load({ writeKey: 'MvkxDOKWzcs7MFrWu1UNaO2bGn1S2RvA' });
 }
