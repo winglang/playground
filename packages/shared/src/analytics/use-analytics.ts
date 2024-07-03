@@ -4,7 +4,10 @@ import { AnalyticsBrowser } from '@segment/analytics-next';
 import { useSession } from "../use-session";
 import { isSelfHosted } from "../config";
 
-const instance = AnalyticsBrowser.load({ writeKey: 'MvkxDOKWzcs7MFrWu1UNaO2bGn1S2RvA' })
+let instance: AnalyticsBrowser | undefined;
+if (!isSelfHosted()) {
+  instance = AnalyticsBrowser.load({ writeKey: 'MvkxDOKWzcs7MFrWu1UNaO2bGn1S2RvA' });
+}
 
 export interface AnalyticsProps {
   platform: "learn" | "play";
@@ -19,7 +22,7 @@ const sessionId = Date.now();
 export function useAnalytics({platform, tutorial, state}: AnalyticsProps) {
   const { getSession } = useSession("disable_analytics", false);
   // ignore analytics
-  if (isSelfHosted() || getSession() === "true") {
+  if (!instance || getSession() === "true") {
     return {
       track: (event: string, properties?: Record<string, any>) => {}
     }
