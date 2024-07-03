@@ -14,6 +14,8 @@ export async function startConsole({ wingfile }: StartConsoleProps) {
   let killTimeout: NodeJS.Timeout;
 
   const staticDir = join(dirname(fileURLToPath(import.meta.url)),"../app/dist");
+  const playStaticDir = join(dirname(fileURLToPath(import.meta.url)),"../play");
+  const tourStaticDir = join(dirname(fileURLToPath(import.meta.url)),"../tour");
 
   let port = 3000;
   const server = await createConsoleServer({
@@ -75,6 +77,8 @@ export async function startConsole({ wingfile }: StartConsoleProps) {
         res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
         next();
       });
+      app.use("/play", express.static(playStaticDir, { dotfiles: "allow" }));
+      app.use("/tour", express.static(tourStaticDir, { dotfiles: "allow" }));
       app.use(express.static(staticDir));
     },
   })
