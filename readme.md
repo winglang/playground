@@ -34,4 +34,5 @@ Please see the readme in each project for more information.
 ```sh
 1. docker run -it -p 3000:3000 wingcloudbot/playground:latest
 2. Go To http://localhost:3000/play
+3. Go To http://localhost:3000/tour  (our learn site)
 ```
