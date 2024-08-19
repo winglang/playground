@@ -20,8 +20,8 @@ queue.setConsumer(inflight (message: str) => {
 
 // This Function receives a payload, and pushes it
 // to the queue
-new cloud.Function(inflight (payload: str?) => {
-    queue.push(payload ?? "empty");
+new cloud.Function(inflight (payload: Json?) => {
+    queue.push(Json.stringify(payload));
 }) as "Pusher";
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
