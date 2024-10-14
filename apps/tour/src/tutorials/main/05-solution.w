@@ -9,5 +9,5 @@ q.setConsumer(inflight (m: str) => {
 
 new cloud.Function(inflight (s: Json?) => {
   log("Function was called with {s!}");
-  q.push(s!);
+  q.push("{s!}");
 });
