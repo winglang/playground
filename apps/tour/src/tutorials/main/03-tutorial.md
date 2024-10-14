@@ -10,7 +10,7 @@ Below the `new cloud.Queue()` statement (line 4), write the following code (you 
 but typing is always more fun):
 
 ```wing
-new cloud.Function(inflight (s: str?) => {
+new cloud.Function(inflight (s: Json?) => {
   if s == "" {
     log("Function was invoked without a payload");
   } else {
